@@ -118,12 +118,11 @@ public:
 
     /** \return Location of documentation (README) files (GUI) */
     const string getDocDir();
-    
-    /** \param snytax name
+
+    /** \param syntax name
         \return Encoding hint assigned to the syntax */
     const string getEncodingHint (const string &);
-    
-        
+
     /**
      * \param fileName input file name 
      * \return file extension or the base filename if no file extension exists

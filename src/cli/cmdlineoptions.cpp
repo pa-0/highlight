@@ -138,7 +138,6 @@ const Arg_parser::Option options[] = {
         { S_OPT_PIPED_FNAME,      OPT_PIPED_FNAME,     Arg_parser::yes },
         { S_OPT_ISOLATE,          OPT_ISOLATE_TAGS,    Arg_parser::no },
         { S_OPT_MAX_FILE_SIZE,    OPT_MAX_FILE_SIZE,   Arg_parser::yes },
-        //{ S_OPT_TWO_PASS,         OPT_TWO_PASS,        Arg_parser::yes },
         
         { 0, 0, Arg_parser::no }
     };

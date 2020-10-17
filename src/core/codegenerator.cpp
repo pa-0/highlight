@@ -41,7 +41,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "pangogenerator.h"
 #include "odtgenerator.h"
 #include "astyle/astyle.h"
-#include "astyle/ASStreamIterator.h"
 
 #if !defined (QT)
 #include "ansigenerator.h"
@@ -150,6 +149,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
 
      terminatingChar ( '\0' ),
      formatter ( NULL ),
+     streamIterator ( NULL ),
      formattingEnabled ( false ),
      formattingPossible ( false ),
      validateInput ( false ),
@@ -169,6 +169,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
 CodeGenerator::~CodeGenerator()
 {
     delete formatter;
+    delete streamIterator;
 
     resetSyntaxReaders();
     
@@ -1560,7 +1561,8 @@ ParseError CodeGenerator::generateFile ( const string &inFileName,
 
     if ( error==PARSE_OK ) {
         if ( formatter != NULL ) {
-            formatter->init ( new astyle::ASStreamIterator ( in ) );
+            streamIterator =  new astyle::ASStreamIterator ( in );
+            formatter->init ( streamIterator );
         }
         currentSyntax->setInputFileName(inFile);
         printHeader();
@@ -1596,7 +1598,8 @@ string CodeGenerator::generateString ( const string &input )
     }
 
     if ( formatter != NULL ) {
-        formatter->init ( new astyle::ASStreamIterator ( in ) );
+        streamIterator =  new astyle::ASStreamIterator ( in );
+        formatter->init ( streamIterator );
     }
     printHeader();
     printBody();
@@ -1635,7 +1638,8 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
     }
 
     if ( formatter != NULL ) {
-        formatter->init ( new astyle::ASStreamIterator ( in ) );
+        streamIterator =  new astyle::ASStreamIterator ( in );
+        formatter->init ( streamIterator );
     }
     currentSyntax->setInputFileName(inFile);
     
@@ -2331,7 +2335,8 @@ void CodeGenerator::processWsState()
         if ( excludeWs && styleID!=_UNKNOWN ) {
             *out << closeTags[styleID];
         }
-        *out << maskWsBegin ;
+        
+        *out << maskWsBegin;
         for ( int i=0; i<cntWs; i++ ) {
             *out <<  spacer;
             if (applySyntaxTestCase){
@@ -2346,7 +2351,7 @@ void CodeGenerator::processWsState()
     
         *out << spacer; //Bugfix fehlender Space nach Strings
         if (applySyntaxTestCase){
-            stateTraceCurrent.push_back(ps);            
+            stateTraceCurrent.push_back(ps);
         }
     }
     token.clear();
@@ -2358,14 +2363,14 @@ void CodeGenerator::flushWs(int arg)
     //workaround condition
     for ( size_t i=0; i<wsBuffer.size() && ((arg > 3) || ( (arg<4) && lineIndex>1)) && applySyntaxTestCase ; i++ ) {
         stateTraceCurrent.push_back(ps);
-        //std::cerr <<"\nflush >"<<wsBuffer<<"< arg:"<<arg;           
+        //std::cerr <<"\nflush >"<<wsBuffer<<"< arg:"<<arg;
     }
-     
+
     //fix canvas whitespace
     if (wsBuffer.length() && (outputType==ESC_XTERM256 || outputType==ESC_TRUECOLOR) ){
         *out<< maskWsBegin;
     }
-     
+
     *out<<wsBuffer;
     wsBuffer.clear();
 }

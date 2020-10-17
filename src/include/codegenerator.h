@@ -36,7 +36,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "syntaxreader.h"
 #include "themereader.h"
+
 #include "astyle/astyle.h"
+#include "astyle/ASStreamIterator.h"
+
 #include "preformatter.h"
 #include "enums.h"
 #include "stringtools.h"
@@ -812,6 +815,7 @@ private:
 
     /** Class for reformatting */
     astyle::ASFormatter *formatter;
+    astyle::ASStreamIterator *streamIterator;
 
     /** Flag to test if formatting is enabled with current input document*/
     bool formattingEnabled;

@@ -298,7 +298,7 @@ does no longer match.
 ================================================================================
 If both the syntax file and the plug-in script contain an `OnStateChange` 
 function, the plug-in definition will replace the function of the syntax file.
-In order to prevent this, the exising function can be assigned to an new 
+In order to prevent this, the existing function can be assigned to an new 
 variable and called using this name in the plug-in `OnStateChange` code chunk.
 
 See this example in the plug-in `bash_functions.lua`:

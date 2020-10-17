@@ -126,7 +126,7 @@ void HtmlGenerator::printBody()
                  <<((quoteFont)?"'":"")
                  << this->getBaseFont()
                  <<((quoteFont)?"'":"")
-                 <<";\">";
+                 <<";overflow-x: auto;\">";
         }
     }
     if ( showLineNumbers && orderedList ) {
@@ -255,7 +255,7 @@ string HtmlGenerator::getStyleDefinition()
            << "; font-size:" << this->getBaseFontSize();
 
         os << "pt; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
-           << ";}\n";
+           << "; overflow-x: auto; }\n";
 
         os  << getAttributes ( STY_NAME_NUM, docStyle.getNumberStyle() )
             << getAttributes ( STY_NAME_ESC, docStyle.getEscapeCharStyle() )

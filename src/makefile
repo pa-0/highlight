@@ -17,7 +17,6 @@ CXX ?= g++
 
 QMAKE ?= qmake
 
-# Added -std=c++11 because of auto_ptr to unique_ptr transition
 CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG -std=c++11 -D_FILE_OFFSET_BITS=64
 
 #CFLAGS:= -fPIC -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -fasynchronous-unwind-tables -fstack-clash-protection
@@ -26,7 +25,7 @@ CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG -std=c++11 -D_FILE_OFFSET_BITS=64
 
 CFLAGS_DILU=-fno-strict-aliasing
 
-SO_VERSION=3.58
+SO_VERSION=3.59
 
 # Source paths
 CORE_DIR=./core/
