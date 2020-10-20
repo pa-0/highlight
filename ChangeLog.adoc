@@ -11,6 +11,7 @@
 xx.10.2020
 
   - mark_lines.lua plug-in accepts line ranges as input
+  - improved Ruby code folding (outhtml_codefold plug-in)
 
 == highlight 3.58
 

@@ -638,9 +638,6 @@ protected:
     /** Current state*/
     State currentState;
 
-    /** history of preceding states in the current line of input code (max 200 entries) */
-    vector<State> stateTrace;
-    
     /** keyword class id, used to apply the corresponding keyword style*/
     unsigned int currentKeywordClass;
 
@@ -808,7 +805,6 @@ private:
     
     /** Flag to test if trailing newline should be printed */
     int noTrailingNewLine;
-
     
     /**last character of the last line*/
     unsigned char terminatingChar;
@@ -833,7 +829,9 @@ private:
     bool resultOfHook;
     
     bool lineContainedTestCase;
-    
+
+    bool lineContainedStmt;
+
     bool applySyntaxTestCase;
 
     bool toggleDynRawString;

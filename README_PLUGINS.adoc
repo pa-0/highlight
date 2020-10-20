@@ -1,6 +1,6 @@
 = HIGHLIGHT PLUGIN MANUAL
 André Simon
-v3.58, August 2020
+v3.59, October 2020
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -368,12 +368,11 @@ target output format (e.g. hyperlinks).
 Decorate(token, state, kwGroupID, stateTrace)
 
   Hook Event: Token identification
-  Parameters: token:      current token
-              state:      current state
-              kwGroupID:  if state is HL_KEYWORD, the parameter
-                          contains the keyword group ID
-              stateTrace: string containing past states of the current line;
-                          separated by ';'; limited to 100 entries
+  Parameters: token:       current token
+              state:       current state
+              kwGroupID:   if state is HL_KEYWORD, the parameter
+                           contains the keyword group ID
+              lineHasStmt: true if current line contains a statement
   Returns:    Altered token string or nothing if original token should be
               outputted
 ................................................................................
