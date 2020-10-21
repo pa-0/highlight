@@ -76,9 +76,9 @@ win32 {
 macx-clang {
     QMAKE_CC = clang
     QMAKE_CXX = clang++
-    INCLUDEPATH+=/usr/local/Cellar/lua/5.2.4_4/include/
+    INCLUDEPATH+=/usr/local/Cellar/lua/5.3.5_1/include/
     INCLUDEPATH += ../../include
-    INCLUDEPATH+=/usr/local/Cellar/boost/1.62.0/include
+    INCLUDEPATH+=/usr/local/Cellar/boost/1.73.0/include
 
     QT_CONFIG -= no-pkg-config
     CONFIG += link_pkgconfig

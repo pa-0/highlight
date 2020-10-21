@@ -72,7 +72,6 @@ ASBeautifier::ASBeautifier()
 	setAlignMethodColon(false);
 
 	// initialize ASBeautifier member vectors
-	ownsVectors = true;
 	beautifierFileType = 9;		// reset to an invalid type
 	headers = new vector<const string*>;
 	nonParenHeaders = new vector<const string*>;
@@ -122,7 +121,7 @@ ASBeautifier::ASBeautifier(const ASBeautifier& other) : ASBase(other)
 	continuationIndentStack = new vector<int>;
 	*continuationIndentStack = *other.continuationIndentStack;
 
-	continuationIndentStackSizeStack = new vector<int>;
+	continuationIndentStackSizeStack = new vector<size_t>;
 	*continuationIndentStackSizeStack = *other.continuationIndentStackSizeStack;
 
 	parenIndentStack = new vector<int>;
@@ -134,7 +133,6 @@ ASBeautifier::ASBeautifier(const ASBeautifier& other) : ASBase(other)
 	// Copy the pointers to vectors.
 	// This is ok because the original ASBeautifier object
 	// is not deleted until end of job.
-	ownsVectors = false;
 	beautifierFileType = other.beautifierFileType;
 	headers = other.headers;
 	nonParenHeaders = other.nonParenHeaders;
@@ -284,9 +282,6 @@ ASBeautifier::~ASBeautifier()
 	deleteContainer(continuationIndentStackSizeStack);
 	deleteContainer(parenIndentStack);
 	deleteContainer(preprocIndentStack);
-
-	if (ownsVectors)
-		deleteBeautifierVectors();
 }
 
 /**
@@ -310,8 +305,8 @@ void ASBeautifier::init(ASSourceIterator* iter)
 	initContainer(waitingBeautifierStack, new vector<ASBeautifier*>);
 	initContainer(activeBeautifierStack, new vector<ASBeautifier*>);
 
-	initContainer(waitingBeautifierStackLengthStack, new vector<int>);
-	initContainer(activeBeautifierStackLengthStack, new vector<int>);
+	initContainer(waitingBeautifierStackLengthStack, new vector<size_t>);
+	initContainer(activeBeautifierStackLengthStack, new vector<size_t>);
 
 	initContainer(headerStack, new vector<const string*>);
 
@@ -322,9 +317,10 @@ void ASBeautifier::init(ASSourceIterator* iter)
 	initContainer(blockStatementStack, new vector<bool>);
 	initContainer(parenStatementStack, new vector<bool>);
 	initContainer(braceBlockStateStack, new vector<bool>);
+	// do not use emplace_back on vector<bool> until supported by macOS
 	braceBlockStateStack->push_back(true);
 	initContainer(continuationIndentStack, new vector<int>);
-	initContainer(continuationIndentStackSizeStack, new vector<int>);
+	initContainer(continuationIndentStackSizeStack, new vector<size_t>);
 	continuationIndentStackSizeStack->emplace_back(0);
 	initContainer(parenIndentStack, new vector<int>);
 	initContainer(preprocIndentStack, new vector<pair<int, int> >);
@@ -621,7 +617,7 @@ string ASBeautifier::beautify(const string& originalLine)
 			if (isInIndentablePreprocBlock || isInIndentablePreproc)
 			{
 				string indentedLine;
-				if ((preproc.length() >= 2 && preproc.substr(0, 2) == "if")) // #if, #ifdef, #ifndef
+				if (preproc.length() >= 2 && preproc.substr(0, 2) == "if") // #if, #ifdef, #ifndef
 				{
 					indentedLine = preLineWS(preprocBlockIndent, 0) + line;
 					preprocBlockIndent += 1;
@@ -1403,7 +1399,7 @@ int ASBeautifier::getNextProgramCharDistance(const string& line, int i) const
 	bool inComment = false;
 	int  remainingCharNum = line.length() - i;
 	int  charDistance;
-	char ch;
+	char ch = ' ';
 
 	for (charDistance = 1; charDistance < remainingCharNum; charDistance++)
 	{
@@ -1483,7 +1479,7 @@ string ASBeautifier::trim(const string& str) const
 		end--;
 
 	// don't trim if it ends in a continuation
-	if (end >= 0 && str[end] == '\\')
+	if (end > -1 && str[end] == '\\')
 		end = str.length() - 1;
 
 	string returnStr(str, start, end + 1 - start);
@@ -1531,7 +1527,6 @@ vector<vector<const string*>*>* ASBeautifier::copyTempStacks(const ASBeautifier&
  */
 void ASBeautifier::deleteBeautifierVectors()
 {
-	ownsVectors = false;
 	beautifierFileType = 9;		// reset to an invalid type
 	delete headers;
 	delete nonParenHeaders;
@@ -1760,7 +1755,7 @@ int ASBeautifier::getContinuationIndentAssign(const string& line, size_t currPos
 }
 
 /**
- * get the instatement indent for a comma
+ * get the continuation indent for a comma
  *
  * @return is the indent to the second word on the line (the in statement indent).
  */
@@ -1970,8 +1965,8 @@ void ASBeautifier::processPreprocessor(const string& preproc, const string& line
 		if (isPreprocessorConditionalCplusplus(line) && !g_preprocessorCppExternCBrace)
 			g_preprocessorCppExternCBrace = 1;
 		// push a new beautifier into the stack
-		waitingBeautifierStackLengthStack->push_back(waitingBeautifierStack->size());
-		activeBeautifierStackLengthStack->push_back(activeBeautifierStack->size());
+		waitingBeautifierStackLengthStack->emplace_back(waitingBeautifierStack->size());
+		activeBeautifierStackLengthStack->emplace_back(activeBeautifierStack->size());
 		if (activeBeautifierStackLengthStack->back() == 0)
 			waitingBeautifierStack->emplace_back(new ASBeautifier(*this));
 		else
@@ -2257,9 +2252,9 @@ int ASBeautifier::adjustIndentCountForBreakElseIfComments() const
 	vector<const string*>* lastTempStack = tempStacks->back();
 	if (lastTempStack != nullptr)
 	{
-		for (size_t i = 0; i < lastTempStack->size(); i++)
+		for (const string* const lastTemp : *lastTempStack)
 		{
-			if (*lastTempStack->at(i) == AS_ELSE)
+			if (*lastTemp == AS_ELSE)
 				indentCountIncrement++;
 		}
 	}
@@ -2437,7 +2432,6 @@ int ASBeautifier::computeObjCColonAlignment(const string& line, int colonAlignPo
  */
 int ASBeautifier::getObjCFollowingKeyword(const string& line, int bracePos) const
 {
-	assert(bracePos >= 0);
 	assert(line[bracePos] == '[');
 	size_t firstText = line.find_first_not_of(" \t", bracePos + 1);
 	if (firstText == string::npos)
@@ -2612,7 +2606,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 				{
 					string delim = ')' + verbatimDelimiter;
 					int delimStart = i - delim.length();
-					if (delimStart > 0 && line.substr(delimStart, delim.length()) == delim)
+					if (delimStart >= 0 && line.substr(delimStart, delim.length()) == delim)
 					{
 						isInQuote = false;
 						isInVerbatimQuote = false;
@@ -2774,7 +2768,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 			if (ch == '<')
 			{
 				++templateDepth;
-				continuationIndentStackSizeStack->push_back(continuationIndentStack->size());
+				continuationIndentStackSizeStack->emplace_back(continuationIndentStack->size());
 				registerContinuationIndent(line, i, spaceIndentCount, tabIncrementIn, 0, true);
 			}
 			else if (ch == '>')
@@ -2810,6 +2804,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 
 				if (parenDepth == 0)
 				{
+					// do not use emplace_back on vector<bool> until supported by macOS
 					parenStatementStack->push_back(isContinuation);
 					isContinuation = true;
 				}
@@ -2824,7 +2819,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 					}
 				}
 
-				continuationIndentStackSizeStack->push_back(continuationIndentStack->size());
+				continuationIndentStackSizeStack->emplace_back(continuationIndentStack->size());
 
 				if (currentHeader != nullptr)
 					registerContinuationIndent(line, i, spaceIndentCount, tabIncrementIn, minConditionalIndent, true);
@@ -2912,19 +2907,20 @@ void ASBeautifier::parseCurrentLine(const string& line)
 
 			if (!isBlockOpener && currentHeader != nullptr)
 			{
-				for (size_t n = 0; n < nonParenHeaders->size(); n++)
-					if (currentHeader == (*nonParenHeaders)[n])
+				for (const string* const nonParenHeader : *nonParenHeaders)
+					if (currentHeader == nonParenHeader)
 					{
 						isBlockOpener = true;
 						break;
 					}
 			}
 
+			// do not use emplace_back on vector<bool> until supported by macOS
 			braceBlockStateStack->push_back(isBlockOpener);
 
 			if (!isBlockOpener)
 			{
-				continuationIndentStackSizeStack->push_back(continuationIndentStack->size());
+				continuationIndentStackSizeStack->emplace_back(continuationIndentStack->size());
 				registerContinuationIndent(line, i, spaceIndentCount, tabIncrementIn, 0, true);
 				parenDepth++;
 				if (i == 0)
@@ -2978,6 +2974,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 
 			// is a brace inside a paren?
 			parenDepthStack->emplace_back(parenDepth);
+			// do not use emplace_back on vector<bool> until supported by macOS
 			blockStatementStack->push_back(isContinuation);
 
 			if (!continuationIndentStack->empty())
@@ -3052,7 +3049,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 
 				isInHeader = true;
 
-				vector<const string*>* lastTempStack = nullptr;;
+				vector<const string*>* lastTempStack = nullptr;
 				if (!tempStacks->empty())
 					lastTempStack = tempStacks->back();
 
@@ -3222,7 +3219,7 @@ void ASBeautifier::parseCurrentLine(const string& line)
 				++i;
 				continue;
 			}
-			else if (isInQuestion)
+			else if (isInQuestion)		// NOLINT
 			{
 				// do nothing special
 			}
@@ -3609,7 +3606,8 @@ void ASBeautifier::parseCurrentLine(const string& line)
 				i += name.length() - 1;
 				continue;
 			}
-			else if (isInObjCInterface)
+
+			if (isInObjCInterface)
 			{
 				--indentCount;
 				isInObjCInterface = false;
@@ -3626,7 +3624,8 @@ void ASBeautifier::parseCurrentLine(const string& line)
 				i += name.length() - 1;
 				continue;
 			}
-			else if (curWord == AS_END)
+
+			if (curWord == AS_END)
 			{
 				popLastContinuationIndent();
 				spaceIndentCount = 0;
