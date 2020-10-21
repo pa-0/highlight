@@ -711,8 +711,7 @@ State CodeGenerator::validateState(State newState, State oldState)
 
         resultOfHook = res.size()>=1;
         if (resultOfHook) {
-            
-            // test balloon
+
             if (currentSyntax->requiresParamUpdate()) {
                 
                  if ( currentSyntax->getOverrideConfigVal("state.string.raw")=="true"){
@@ -725,7 +724,7 @@ State CodeGenerator::validateState(State newState, State oldState)
                      spacer=currentSyntax->getOverrideConfigVal("format.spacer");
                  }
             }
-            
+
             State validatedState = (State)res[0].asInteger();
             if ( validatedState== _REJECT) {
                 // proceed using only the first character of the token
@@ -1553,10 +1552,7 @@ ParseError CodeGenerator::generateFile ( const string &inFileName,
     }
 
     if ( error==PARSE_OK ) {
-        if ( formatter != NULL ) {
-            streamIterator =  new astyle::ASStreamIterator ( in );
-            formatter->init ( streamIterator );
-        }
+        initASStream();
         currentSyntax->setInputFileName(inFile);
         printHeader();
         printBody();
@@ -1590,10 +1586,8 @@ string CodeGenerator::generateString ( const string &input )
         return "";
     }
 
-    if ( formatter != NULL ) {
-        streamIterator =  new astyle::ASStreamIterator ( in );
-        formatter->init ( streamIterator );
-    }
+    initASStream();
+    
     printHeader();
     printBody();
     printFooter();
@@ -1606,6 +1600,14 @@ string CodeGenerator::generateString ( const string &input )
     in=NULL;
 
     return result;
+}
+
+void CodeGenerator::initASStream() {
+    if ( formatter != NULL ) {
+        if (streamIterator) delete streamIterator;
+        streamIterator =  new astyle::ASStreamIterator ( in );
+        formatter->init ( streamIterator );
+    }
 }
 
 string CodeGenerator::generateStringFromFile ( const string &inFileName )
@@ -1630,10 +1632,8 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
         return "ERROR: detected binary input";
     }
 
-    if ( formatter != NULL ) {
-        streamIterator =  new astyle::ASStreamIterator ( in );
-        formatter->init ( streamIterator );
-    }
+    initASStream();
+    
     currentSyntax->setInputFileName(inFile);
     
     printHeader();

@@ -10,8 +10,13 @@
 
 xx.10.2020
 
-  - mark_lines.lua plug-in accepts line ranges as input
+  - HTML output: added `white-space: pre-wrap` to pre tag CSS
+  - mark_lines.lua plug-in accepts line range as input
   - improved Ruby code folding (outhtml_codefold plug-in)
+  - updated astyle lib to rev 672
+  - CLI: adapted default xterm256/truecolor theme to terminal background colour
+  - GUI: initial font set to Monospace
+
 
 == highlight 3.58
 

@@ -70,6 +70,10 @@ int isColorEscCapable() {
     return 0;
 }
 
+int isDarkTerminal() {
+    return 1;
+}
+
 
 std::string getTempFilePath(){
 
@@ -105,7 +109,7 @@ std::string getHomePath()
 
 
 int isColorEscCapable() {
-    
+
     if (!isatty(fileno(stdout)) || !isatty(fileno(stdin))){
         return 0;
     }
@@ -126,6 +130,18 @@ int isColorEscCapable() {
     
     return 0;
 }
+
+int isDarkTerminal() {
+
+    char* colorOption=getenv("COLORFGBG");
+    if (colorOption!=NULL) {
+        if (!strncmp(colorOption, "0;15", 4)){
+            return 0;
+        }
+    }
+    return 1;
+}
+
 
 std::string getTempFilePath(){
     std::string path("/tmp");

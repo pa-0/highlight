@@ -548,7 +548,7 @@ void MainWindow::readSettings()
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        "andre-simon.de", "highlight-gui");
 
-   // QMessageBox::information(this, "path", settings.fileName());
+    //QMessageBox::information(this, "path", settings.fileName());
     if (!QFile(settings.fileName()).exists()) return;
 
     settings.beginGroup("MainWindow");
@@ -1200,7 +1200,6 @@ void MainWindow::on_pbStartConversion_clicked()
 
         if (i==ui->lvInputFiles->count()-1 && generator->requiresTwoPassParsing() && twoPassOutFile.size()
                     && inputErrors.size()==0 && outputErrors.size()==0 && !twoPassMode) {
-                //QMessageBox::information(this, "print3", "print 3");
 
                 bool success=generator->printPersistentState(twoPassOutFile.toStdString());
                 if ( !success ) {

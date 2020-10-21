@@ -52,6 +52,8 @@ off_t fileSize(const std::string& fName);
 
 int isColorEscCapable();
 
+int isDarkTerminal();
+
 }
 #endif
 

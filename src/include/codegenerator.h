@@ -953,6 +953,8 @@ private:
     
     void applyPluginChunk(const string& fctName, string *result, bool *keepDefault);
     
+    void initASStream();
+    
     static vector<Diluculum::LuaFunction*> pluginChunks;
 };
 

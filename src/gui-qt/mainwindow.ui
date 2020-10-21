@@ -2356,12 +2356,15 @@ Set the width to 0 to keep tabs.</string>
              <property name="toolTip">
               <string>Select or enter the font name. HTML supports a list of fonts, separated with comma.</string>
              </property>
+             <property name="currentText">
+              <string>Monospace</string>
+             </property>
              <property name="fontFilters">
               <set>QFontComboBox::MonospacedFonts</set>
              </property>
              <property name="currentFont">
               <font>
-               <family>cursor.pcf</family>
+               <family>DejaVu Sans Mono</family>
               </font>
              </property>
             </widget>

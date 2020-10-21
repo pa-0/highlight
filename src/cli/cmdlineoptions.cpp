@@ -244,7 +244,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     }
     
     // no batch mode + no explicit format given
-    if (inputFileNames.size()==1 && !explicit_output_format){
+    if (inputFileNames.size()==1 && !explicit_output_format) {
         int colorOptions = Platform::isColorEscCapable();
         if (colorOptions) {
             outputType = colorOptions==2 ? highlight::ESC_TRUECOLOR : highlight::ESC_XTERM256;
@@ -715,10 +715,11 @@ string CmdLineOptions::getThemeName() const
         return styleName+".theme";
     
     bool isEscOutput = outputType==highlight::ESC_XTERM256 || outputType==highlight::ESC_TRUECOLOR;
+    bool isDarkTerminal = Platform::isDarkTerminal();
     if (opt_base16_theme)
-        return isEscOutput ? "harmonic-dark.theme" : "harmonic-light.theme";
+        return isEscOutput && isDarkTerminal ? "harmonic-dark.theme" : "harmonic-light.theme";
     
-    return isEscOutput ? "edit-vim-dark.theme" : "edit-kwrite.theme";
+    return isEscOutput && isDarkTerminal ? "edit-vim-dark.theme" : "edit-kwrite.theme";
 }
 
 bool CmdLineOptions::enableBatchMode() const
