@@ -41,7 +41,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "pangogenerator.h"
 #include "odtgenerator.h"
 #include "astyle/astyle.h"
-#include "astyle/ASStreamIterator.h"
 
 #if !defined (QT)
 #include "ansigenerator.h"
@@ -150,12 +149,14 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
 
      terminatingChar ( '\0' ),
      formatter ( NULL ),
+     streamIterator ( NULL ),
      formattingEnabled ( false ),
      formattingPossible ( false ),
      validateInput ( false ),
      numberWrappedLines ( true ),
      resultOfHook(false),
      lineContainedTestCase(false),
+     lineContainedStmt(false),
      applySyntaxTestCase(false),
      toggleDynRawString(false),
      
@@ -169,6 +170,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
 CodeGenerator::~CodeGenerator()
 {
     delete formatter;
+    delete streamIterator;
 
     resetSyntaxReaders();
     
@@ -598,11 +600,11 @@ unsigned char CodeGenerator::getInputChar()
             stateTraceTest = stateTraceCurrent;
             stateTraceCurrent.clear();
         } 
-        
+
         lineContainedTestCase=false;
-            
+        lineContainedStmt=false;
         matchRegex ( line );
-        stateTrace.clear();
+
         return ( eof ) ?'\0':'\n';
     }
 
@@ -742,14 +744,11 @@ State CodeGenerator::validateState(State newState, State oldState)
                 return oldState;
             }
             
-            stateTrace.push_back(validatedState);
-            if (stateTrace.size()>200) stateTrace.erase(stateTrace.begin(), stateTrace.begin() + 100 );
             return validatedState;
         }
     }
     resultOfHook  = false;
-    stateTrace.push_back(newState);
-    if (stateTrace.size()>200) stateTrace.erase(stateTrace.begin(), stateTrace.begin() + 100 );    
+
     return newState;
 }
 
@@ -776,36 +775,27 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
     
     // The test markers position should also be deternmined by calculating the code points
     if ( applySyntaxTestCase ) {
-            
+
         PositionState ps(currentState, getCurrentKeywordClassId(), false);
-        
-        int slen = encoding=="utf-8" ? StringTools::utf8_strlen(s) : s.length();  
+
+        int slen = encoding=="utf-8" ? StringTools::utf8_strlen(s) : s.length();
         for (int i=0; i< slen; i++ ) {
             stateTraceCurrent.push_back(ps);
         }
         if (stateTraceCurrent.size()>200) 
-            stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 ); 
+            stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 );
     }
 }
 
 
-Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string&token)
+Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string& token)
 {
+    
     Diluculum::LuaValueList params;
     params.push_back(Diluculum::LuaValue(token));
     params.push_back(Diluculum::LuaValue(currentState));
     params.push_back(Diluculum::LuaValue(currentKeywordClass));
-    string trace(";");
-    if (stateTrace.size()>1){
-        for (size_t i=0; i<stateTrace.size()-1;i++){
-            trace += std::to_string (stateTrace[i]);
-            trace += ";";
-        }
-    }
-    
-    //std::cerr <<"TRC1: "<<trace<<"\n";
-    
-    params.push_back(Diluculum::LuaValue(trace));
+    params.push_back(Diluculum::LuaValue(lineContainedStmt));
 
     return currentSyntax->getLuaState()->call ( *currentSyntax->getDecorateFct(),
             params,"getDecorateFct call")  ;
@@ -828,6 +818,10 @@ void CodeGenerator::printMaskedToken (bool flushWhiteSpace, StringTools::Keyword
         maskString ( *out, caseToken );
     }
 
+    // check this *after* the decorate call
+    if (currentState == STANDARD || currentState == KEYWORD || currentState == NUMBER || currentState == STRING || currentState == IDENTIFIER_BEGIN) {
+        lineContainedStmt = true;
+    }
     token.clear();
 }
 
@@ -1560,7 +1554,8 @@ ParseError CodeGenerator::generateFile ( const string &inFileName,
 
     if ( error==PARSE_OK ) {
         if ( formatter != NULL ) {
-            formatter->init ( new astyle::ASStreamIterator ( in ) );
+            streamIterator =  new astyle::ASStreamIterator ( in );
+            formatter->init ( streamIterator );
         }
         currentSyntax->setInputFileName(inFile);
         printHeader();
@@ -1596,7 +1591,8 @@ string CodeGenerator::generateString ( const string &input )
     }
 
     if ( formatter != NULL ) {
-        formatter->init ( new astyle::ASStreamIterator ( in ) );
+        streamIterator =  new astyle::ASStreamIterator ( in );
+        formatter->init ( streamIterator );
     }
     printHeader();
     printBody();
@@ -1635,7 +1631,8 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
     }
 
     if ( formatter != NULL ) {
-        formatter->init ( new astyle::ASStreamIterator ( in ) );
+        streamIterator =  new astyle::ASStreamIterator ( in );
+        formatter->init ( streamIterator );
     }
     currentSyntax->setInputFileName(inFile);
     
@@ -1730,8 +1727,6 @@ void CodeGenerator::processRootState()
     }
 
     State state=STANDARD;
-
-    //if (outputType!=ESC_TRUECOLOR && outputType!=ESC_XTERM256)
     openTag ( STANDARD );
     
     do {
@@ -1787,12 +1782,11 @@ void CodeGenerator::processRootState()
             openTag ( STANDARD );
             break;
         case _EOL:
-
             // XTERM256 fix (issue with less cmd)
             if  (!firstLine || showLineNumbers) {
                 closeTag ( STANDARD );
             }
-            insertLineNumber ( !firstLine );
+            insertLineNumber(!firstLine);
             if (!firstLine || showLineNumbers) {
                 flushWs(5);
                 stateTraceCurrent.clear();
@@ -1807,12 +1801,7 @@ void CodeGenerator::processRootState()
             processWsState();
             break;
         default:
-           
-            // see https://gitlab.com/saalen/highlight/-/issues/152
-          //  if (lineNumber==1 && lineIndex==1 && (outputType==ESC_TRUECOLOR || outputType==ESC_XTERM256) && token.size())
-          //      openTag ( STANDARD );
-
-            printMaskedToken ();
+            printMaskedToken();
             break;
         }
     } while ( !eof );
@@ -2320,7 +2309,7 @@ void CodeGenerator::processWsState()
     int cntWs=0;
     lineIndex--;
     PositionState ps(currentState, 0, true);
-            
+
     while ( line[lineIndex]==' ' || line[lineIndex]=='\t' ) {
         ++cntWs;
         ++lineIndex;
@@ -2331,7 +2320,8 @@ void CodeGenerator::processWsState()
         if ( excludeWs && styleID!=_UNKNOWN ) {
             *out << closeTags[styleID];
         }
-        *out << maskWsBegin ;
+        
+        *out << maskWsBegin;
         for ( int i=0; i<cntWs; i++ ) {
             *out <<  spacer;
             if (applySyntaxTestCase){
@@ -2346,7 +2336,7 @@ void CodeGenerator::processWsState()
     
         *out << spacer; //Bugfix fehlender Space nach Strings
         if (applySyntaxTestCase){
-            stateTraceCurrent.push_back(ps);            
+            stateTraceCurrent.push_back(ps);
         }
     }
     token.clear();
@@ -2358,14 +2348,14 @@ void CodeGenerator::flushWs(int arg)
     //workaround condition
     for ( size_t i=0; i<wsBuffer.size() && ((arg > 3) || ( (arg<4) && lineIndex>1)) && applySyntaxTestCase ; i++ ) {
         stateTraceCurrent.push_back(ps);
-        //std::cerr <<"\nflush >"<<wsBuffer<<"< arg:"<<arg;           
+        //std::cerr <<"\nflush >"<<wsBuffer<<"< arg:"<<arg;
     }
-     
+
     //fix canvas whitespace
     if (wsBuffer.length() && (outputType==ESC_XTERM256 || outputType==ESC_TRUECOLOR) ){
         *out<< maskWsBegin;
     }
-     
+
     *out<<wsBuffer;
     wsBuffer.clear();
 }
@@ -2418,11 +2408,6 @@ void CodeGenerator::printTrace(const string &s){
     for (unsigned int i=0; i< stateTraceTest.size(); i++) {
         std::cout<<" "<<stateTraceTest[i].state;
     }
-    /*
-    for (unsigned int i=0; i< stateTrace.size(); i++) {
-        std::cout<<" "<<stateTrace[i];
-    }
-   */
     std::cout<<"\n";
 }
 

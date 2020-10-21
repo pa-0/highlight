@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python
 
-# Script to pull one of the thousands of themes avaliable at eclipsecolorthemes.org.
+# Script to pull one of the thousands of themes available at eclipsecolorthemes.org.
 # The XML file is converted to the highlight Lua file format.
 
 import requests

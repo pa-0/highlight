@@ -293,8 +293,6 @@ void MainWindow::fillThemeCombo(int restoreVal)
 {
     QString catFilter = ui->comboThemeFilter->currentData().toString();
     bool isBase16 = ui->comboThemeFilter->currentIndex() >1;
-    //catFilter = catFilter.remove(0,2);
-    //qDebug()<<"catFilter "<<catFilter <<isBase16;
 
     ui->comboTheme->clear();
 
@@ -305,7 +303,6 @@ void MainWindow::fillThemeCombo(int restoreVal)
           ui->comboTheme->addItem(curTheme.at(1), curTheme.at(0));
     }
     ui->comboTheme->setCurrentIndex(restoreVal);
-
 }
 
 MainWindow::~MainWindow()
@@ -821,7 +818,6 @@ highlight::OutputType MainWindow::getOutputType()
         return highlight::ESC_XTERM256;
     case 10:
         return highlight::ESC_TRUECOLOR;
-
     }
     return highlight::HTML;
 }
@@ -920,11 +916,10 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
 
     generator->setPrintLineNumbers( ui->cbIncLineNo->isChecked(), ui->sbLineNoStart->value());
     generator->setPrintZeroes(ui->cbPadZeroes->isEnabled() && ui->cbPadZeroes->isChecked());
-    
-    //TODO Check Windows MB Path
+
     generator->setPluginParameter(ui->lePluginReadFilePath->text().toStdString());
     generator->setOmitVersionComment(ui->cbHTMLPasteMIME->isChecked() || ui->cbOmitVersionInfo->isChecked());
-    
+
     generator->setFilesCnt( previewMode ? 1 :  ui->lvInputFiles->count() );
 
     QString themePath=getUserScriptPath("theme");
@@ -936,9 +931,6 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
 #ifdef Q_OS_WIN
         themePath = getWindowsShortPath(themePath);                
 #endif
-
-
-    //TODO Check Windows MB Path
 
     for (int i=0; i<ui->lvPluginScripts->count(); i++) {
         if (ui->lvPluginScripts->item(i)->checkState()==Qt::Checked) {
@@ -956,7 +948,6 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         QMessageBox::critical(this,"Theme init error", QString::fromStdString(generator->getThemeInitError()));
     }
 
-   
     generator->setValidateInput(ui->cbValidateInput->isChecked());
     generator->setLineNumberWidth(ui->sbLineNoWidth->value());
     generator->setNumberWrappedLines(!ui->cbOmitWrappedLineNumbers->isChecked());
@@ -1385,93 +1376,89 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
     for (int twoPass=0; twoPass<2; twoPass++) {
 
-    if ( generator->loadLanguage(langPath.toStdString()) != highlight::LOAD_FAILED) {
-        
-        applyEncoding(generator.get(), langPath);
+        if ( generator->loadLanguage(langPath.toStdString()) != highlight::LOAD_FAILED) {
+            
+            applyEncoding(generator.get(), langPath);
 
-
-        if (getDataFromCP) {
-            clipBoardData= QString::fromStdString( generator->generateString(savedClipboardContent.toStdString()));
-        } else {
-            clipBoardData= QString::fromStdString( generator->generateStringFromFile(previewFilePath.toStdString()));
-        }
-
-        if ( twoPass==0 ) {
-
-           if (generator->requiresTwoPassParsing()) {
-                   // QMessageBox::information(this, "print1", "print 1");
-
-                   if (generator->printPersistentState(twoPassOutFile.toStdString())) {
-                   generator->resetSyntaxReaders();
-                   generator->initPluginScript(twoPassOutFile.toStdString());
-
-                    }
-               continue;
-           } else {
-
-               //TODO method
-               QClipboard *clipboard = QApplication::clipboard();
-               if (clipboard) {
-                   highlight::OutputType outputType = getOutputType();
-                   if ( outputType==highlight::RTF) {
-                       QMimeData *mimeData = new QMimeData();
-       #ifdef Q_OS_WIN
-                       mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
-       #else
-                       mimeData->setData("text/rtf", clipBoardData.toLatin1());
-       #endif
-                       clipboard->setMimeData(mimeData);
-                   }
-                   else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
-                       QMimeData *mimeData = new QMimeData();
-
-                       if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
-                           mimeData->setHtml(clipBoardData.toUtf8());
-                       } else {
-                           mimeData->setHtml(clipBoardData.toLatin1());
-                       }
-                       clipboard->setMimeData(mimeData);
-                   }
-                   else {
-                       clipboard->setText(clipBoardData);
-                   }
-               }
-
-               break;
-           }
-       }
-
-           //TODO method
-        QClipboard *clipboard = QApplication::clipboard();
-        if (clipboard) {
-            highlight::OutputType outputType = getOutputType();
-            if ( outputType==highlight::RTF) {
-                QMimeData *mimeData = new QMimeData();
-#ifdef Q_OS_WIN
-                mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
-#else
-                mimeData->setData("text/rtf", clipBoardData.toLatin1());
-#endif
-                clipboard->setMimeData(mimeData);
+            if (getDataFromCP) {
+                clipBoardData= QString::fromStdString( generator->generateString(savedClipboardContent.toStdString()));
+            } else {
+                clipBoardData= QString::fromStdString( generator->generateStringFromFile(previewFilePath.toStdString()));
             }
-            else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
-                QMimeData *mimeData = new QMimeData();
 
-                if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
-                    mimeData->setHtml(clipBoardData.toUtf8());
+            if ( twoPass==0 ) {
+
+                if (generator->requiresTwoPassParsing()) {
+
+                        if (generator->printPersistentState(twoPassOutFile.toStdString())) {
+                            generator->resetSyntaxReaders();
+                            generator->initPluginScript(twoPassOutFile.toStdString());
+                        }
+                        continue;
                 } else {
-                    mimeData->setHtml(clipBoardData.toLatin1());
+
+                    //TODO method
+                    QClipboard *clipboard = QApplication::clipboard();
+                    if (clipboard) {
+                        highlight::OutputType outputType = getOutputType();
+                        if ( outputType==highlight::RTF) {
+                            QMimeData *mimeData = new QMimeData();
+            #ifdef Q_OS_WIN
+                            mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
+            #else
+                            mimeData->setData("text/rtf", clipBoardData.toLatin1());
+            #endif
+                            clipboard->setMimeData(mimeData);
+                        }
+                        else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
+                            QMimeData *mimeData = new QMimeData();
+
+                                if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
+                                    mimeData->setHtml(clipBoardData.toUtf8());
+                                } else {
+                                    mimeData->setHtml(clipBoardData.toLatin1());
+                                }
+                                clipboard->setMimeData(mimeData);
+                        }
+                        else {
+                            clipboard->setText(clipBoardData);
+                        }
+                    }
+                    break;
                 }
-                clipboard->setMimeData(mimeData);
             }
-            else {
-                clipboard->setText(clipBoardData);
+
+            //TODO method
+            QClipboard *clipboard = QApplication::clipboard();
+            if (clipboard) {
+                highlight::OutputType outputType = getOutputType();
+                if ( outputType==highlight::RTF) {
+                    QMimeData *mimeData = new QMimeData();
+    #ifdef Q_OS_WIN
+                    mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
+    #else
+                    mimeData->setData("text/rtf", clipBoardData.toLatin1());
+    #endif
+                    clipboard->setMimeData(mimeData);
+                }
+                else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
+                    QMimeData *mimeData = new QMimeData();
+
+                    if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
+                        mimeData->setHtml(clipBoardData.toUtf8());
+                    } else {
+                        mimeData->setHtml(clipBoardData.toLatin1());
+                    }
+                    clipboard->setMimeData(mimeData);
+                }
+                else {
+                    clipboard->setText(clipBoardData);
+                }
             }
+        } else {
+            statusBar()->showMessage(
+                tr("Conversion of \"%1\" not possible.").arg((getDataFromCP)?tr("clipboard data"):previewFilePath));
         }
-    } else {
-        statusBar()->showMessage(
-            tr("Conversion of \"%1\" not possible.").arg((getDataFromCP)?tr("clipboard data"):previewFilePath));
-    }
 
     }
 
@@ -1493,7 +1480,6 @@ void MainWindow::plausibility()
     ui->comboReformat->setEnabled(ui->cbReformat->isChecked());
     ui->comboKwCase->setEnabled(ui->cbKwCase->isChecked());
     ui->comboTheme->setEnabled(getUserScriptPath("theme").isEmpty());
-   // ui->cbUseBase16->setEnabled(getUserScriptPath("theme").isEmpty());
     ui->comboSelectSyntax->setEnabled(getUserScriptPath("lang").isEmpty());
 
     ui->cbHTMLInlineCSS->setEnabled(ui->cbHTMLEmbedStyle->isChecked());
@@ -1571,9 +1557,7 @@ void MainWindow::updatePreview()
     QString croppedName = QFileInfo(previewInputPath).fileName();
 
 #ifdef Q_OS_WIN
-
-        previewInputPath = getWindowsShortPath(previewInputPath);
-
+    previewInputPath = getWindowsShortPath(previewInputPath);
 #endif
 
     if (getDataFromCP) {
@@ -1622,7 +1606,6 @@ void MainWindow::updatePreview()
                 statusBar()->showMessage(QString("%1 | %2 | %3").arg(syntaxDesc, themeDesc, contrastDesc));
             }
 
-
             // fix utf-8 data preview - to be improved (other encodings??)
             if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
                 if (getDataFromCP) {
@@ -1640,9 +1623,7 @@ void MainWindow::updatePreview()
 
             if ( twoPass==0 ) {
 
-                if (pwgenerator.requiresTwoPassParsing()
-                   ) {
-                   //QMessageBox::information(this, "print2", "print 2");
+                if (pwgenerator.requiresTwoPassParsing() ) {
 
                    if (pwgenerator.printPersistentState(twoPassOutFile.toStdString())) {
                         pwgenerator.resetSyntaxReaders();

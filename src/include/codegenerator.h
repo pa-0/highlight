@@ -36,7 +36,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "syntaxreader.h"
 #include "themereader.h"
+
 #include "astyle/astyle.h"
+#include "astyle/ASStreamIterator.h"
+
 #include "preformatter.h"
 #include "enums.h"
 #include "stringtools.h"
@@ -635,9 +638,6 @@ protected:
     /** Current state*/
     State currentState;
 
-    /** history of preceding states in the current line of input code (max 200 entries) */
-    vector<State> stateTrace;
-    
     /** keyword class id, used to apply the corresponding keyword style*/
     unsigned int currentKeywordClass;
 
@@ -805,13 +805,13 @@ private:
     
     /** Flag to test if trailing newline should be printed */
     int noTrailingNewLine;
-
     
     /**last character of the last line*/
     unsigned char terminatingChar;
 
     /** Class for reformatting */
     astyle::ASFormatter *formatter;
+    astyle::ASStreamIterator *streamIterator;
 
     /** Flag to test if formatting is enabled with current input document*/
     bool formattingEnabled;
@@ -829,7 +829,9 @@ private:
     bool resultOfHook;
     
     bool lineContainedTestCase;
-    
+
+    bool lineContainedStmt;
+
     bool applySyntaxTestCase;
 
     bool toggleDynRawString;

@@ -1,5 +1,5 @@
 
-Description="Marks the lines defined as comma separated list in the plug-in parameter (HTML and RTF only)."
+Description="Marks the lines defined as comma separated list or range in the plug-in parameter (HTML and RTF only)."
 
 Categories = {"format", "html", "rtf" }
 
@@ -37,7 +37,25 @@ function syntaxUpdate(desc)
     return t
   end
 
-  linesToMark=explode(',', HL_PLUGIN_PARAM)
+  function range(p)
+    local t, ll
+    t={}
+    ll=0
+    l=string.find(p,'-',ll,true)
+    if l~=nil then
+      for i=tonumber(string.sub(p,ll,l-1)), tonumber(string.sub(p,l+1)), 1 do
+        t[i] = 1
+      end
+    end
+    return t
+  end
+
+  if (string.find(HL_PLUGIN_PARAM,'-')) == nil then
+    linesToMark=explode(',', HL_PLUGIN_PARAM)
+  else
+    linesToMark=range(HL_PLUGIN_PARAM)
+  end
+
   currentLineNumber=0
 
   function Decorate(token, state)
