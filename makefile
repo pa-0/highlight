@@ -30,7 +30,7 @@ conf_dir = /etc/highlight/
 
 # Location of additional gui files
 desktop_apps = ${PREFIX}/share/applications/
-desktop_pixmaps = ${PREFIX}/share/pixmaps/
+desktop_icons = ${PREFIX}/share/icons/hicolor/256x256/apps/
 
 # Commands:
 GZIP=gzip -9f
@@ -134,12 +134,12 @@ install-gui:
 		${DESTDIR}${data_dir}gui_files/ext \
 		${DESTDIR}${data_dir}gui_files/l10n \
 		${DESTDIR}${desktop_apps} \
-		${DESTDIR}${desktop_pixmaps}
+		${DESTDIR}${desktop_icons}
 
 	${INSTALL_DATA} ./gui_files/l10n/* ${DESTDIR}${data_dir}gui_files/l10n/
 	${INSTALL_DATA} ./gui_files/ext/* ${DESTDIR}${data_dir}gui_files/ext/
 	${INSTALL_DATA} ./highlight.desktop ${DESTDIR}${desktop_apps}
-	${INSTALL_DATA} ./src/gui-qt/highlight.xpm ${DESTDIR}${desktop_pixmaps}
+	${INSTALL_DATA} ./src/gui-qt/highlight.png ${DESTDIR}${desktop_icons}
 	${INSTALL_PROGRAM} ./src/highlight-gui ${DESTDIR}${bin_dir}
 
 uninstall:
@@ -154,7 +154,7 @@ uninstall:
 	rm -rf ${DESTDIR}${bin_dir}highlight
 	rm -rf ${DESTDIR}${bin_dir}highlight-gui
 	rm -rf ${DESTDIR}${desktop_apps}highlight.desktop
-	rm -rf ${DESTDIR}${desktop_pixmaps}highlight.xpm
+	rm -rf ${DESTDIR}${desktop_icons}highlight.png
 	@echo "Done."
 
 clean cleanall:

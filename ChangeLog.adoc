@@ -12,11 +12,11 @@ xx.10.2020
 
   - HTML output: added `white-space: pre-wrap` to pre tag CSS
   - mark_lines.lua plug-in accepts line range as input
-  - improved Ruby code folding (outhtml_codefold plug-in)
+  - improved Ruby code folding of the outhtml_codefold plug-in
   - updated astyle lib to rev 672
   - CLI: adapted default xterm256/truecolor theme to terminal background colour
   - GUI: initial font set to Monospace
-
+  - GUI: replaced highlight.xpm by highlight.png icon
 
 == highlight 3.58
 

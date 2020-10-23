@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="highlight-gui.qrc">
-    <normaloff>:/hl_icon2.png</normaloff>:/hl_icon2.png</iconset>
+    <normaloff>:/highlight.png</normaloff>:/highlight.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_17">

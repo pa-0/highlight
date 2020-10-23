@@ -288,7 +288,6 @@ bool CodeGenerator::getValidateInput()
     return validateInput;
 }
 
-
 void CodeGenerator::setNumberWrappedLines ( bool flag )
 {
     numberWrappedLines=flag;
@@ -611,8 +610,9 @@ unsigned char CodeGenerator::getInputChar()
     return line[lineIndex++];
 }
 
-/** changing this method requires regression testing with nested syntax files (HTML+PHP+JS+CSS, Coffeescript with block regex, Pas + ASM) 
-    especially nested syntax in one line
+/** changing this method requires regression testing with nested syntax files (HTML+PHP+JS+CSS,
+ *  Coffeescript with block regex, Pas + ASM) 
+ *  especially nested syntax in one line
  */
 State CodeGenerator::getCurrentState (State oldState)
 {
@@ -644,7 +644,7 @@ State CodeGenerator::getCurrentState (State oldState)
         
     // at this position the syntax change takes place
     if (lineIndex >= syntaxChangeIndex-1 || syntaxChangeLineNo < lineNumber){
-        loadEmbeddedLang(embedLangDefPath);  // load new syntax                     
+        loadEmbeddedLang(embedLangDefPath);  // load new syntax
         matchRegex(line);                    // recognize new patterns in the (remaining) line
         syntaxChangeIndex = syntaxChangeLineNo = UINT_MAX;
     }
@@ -818,7 +818,8 @@ void CodeGenerator::printMaskedToken (bool flushWhiteSpace, StringTools::Keyword
     }
 
     // check this *after* the decorate call
-    if (currentState == STANDARD || currentState == KEYWORD || currentState == NUMBER || currentState == STRING || currentState == IDENTIFIER_BEGIN) {
+    if (   currentState == STANDARD || currentState == KEYWORD || currentState == NUMBER 
+        || currentState == STRING || currentState == IDENTIFIER_BEGIN) {
         lineContainedStmt = true;
     }
     token.clear();
@@ -829,8 +830,7 @@ bool CodeGenerator::styleFound()
     return docStyle.found();
 }
 
-bool CodeGenerator::printIndexFile ( const vector<string> &fileList,
-                                     const string &outPath )
+bool CodeGenerator::printIndexFile ( const vector<string> &fileList, const string &outPath )
 {
     return true;
 }
@@ -977,7 +977,6 @@ void CodeGenerator::setIndentationOptions (const vector<string>& options){
                     tabNum = atoi(tabNumParam.c_str());
                 if (tabNum >= 2 && tabNum <= 20)
                     formatter->setForceTabXIndentation(tabNum);
-                
             }
             else if (isOption(arg, "indent=force-tab-x"))
             {
@@ -1433,9 +1432,9 @@ bool CodeGenerator::validateInputStream()
 }
 
 void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool *keepDefault) {
-    
+
     if (currentSyntax && pluginChunks.size()) {
-    
+
         Diluculum::LuaState luaState;
 
         Diluculum::LuaValueList chunkParams;
@@ -1443,7 +1442,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
         for (unsigned int i=0; i<pluginChunks.size(); i++) {
             luaState.call(*pluginChunks[i], chunkParams, "format user function");
         }
-        
+
         if (luaState.globals().count(fctName)) {
             Diluculum::LuaFunction* documentFct=new Diluculum::LuaFunction(luaState[fctName].value().asFunction());
         
@@ -1461,7 +1460,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
             luaState["HL_FORMAT_BBCODE"]=BBCODE;
             luaState["HL_FORMAT_PANGO"]=PANGO;
             luaState["HL_FORMAT_ODT"]=ODTFLAT;
-                        
+
             Diluculum::LuaValueList params;
             Diluculum::LuaValueMap options;
             options[Diluculum::LuaValue("title")] =  Diluculum::LuaValue( docTitle );   
@@ -1705,9 +1704,9 @@ void CodeGenerator::processRootState()
 {
     bool eof=false,
          firstLine=true; // avoid newline before printing the first output line
-         
+
     applySyntaxTestCase = inFile.find("syntax_test_")!=string::npos;
-    
+
     if ( currentSyntax->highlightingDisabled() ) {
         string line;
         while ( getline ( *in, line ) && lineNumber < maxLineCnt ) {
@@ -1728,7 +1727,7 @@ void CodeGenerator::processRootState()
 
     State state=STANDARD;
     openTag ( STANDARD );
-    
+
     do {
         // determine next state
         state= getCurrentState(STANDARD);
@@ -2165,7 +2164,7 @@ bool CodeGenerator::processStringState ( State oldState )
         case STRING:
             // if there exist multiple string delimiters, close string if
             // current delimiter is equal to the opening delimiter
-            exitState=currentSyntax->delimiterIsDistinct(currentSyntax->getOpenDelimiterID ( token, STRING  ))&&token==openDelim;
+            exitState=currentSyntax->delimiterIsDistinct(currentSyntax->getOpenDelimiterID ( token, STRING  )) && token==openDelim;
             printMaskedToken();
             break;
         case ESC_CHAR:
@@ -2601,12 +2600,12 @@ bool CodeGenerator::printPersistentState ( const string &outFile )
                         <<"function syntaxUpdate(desc)\n\n";
                         
         pluginOutFile << currentSyntax->getPersistentHookConditions();
-     
+
         for (auto snippet: currentSyntax->getPersistentSnippets())
         {   
             pluginOutFile << snippet <<"\n\n";
         }
-        
+
         pluginOutFile<<"end\n\n"
                      <<"Plugins={\n"
                      <<"  { Type=\"lang\", Chunk=syntaxUpdate }\n"
@@ -2624,18 +2623,18 @@ string CodeGenerator::readUserStyleDef()
     if ( !styleInputPath.empty() ) {
         ifstream userStyleDef ( styleInputPath.c_str() );
         if ( userStyleDef ) {
-            ostr 	<< "\n" << styleCommentOpen
-                    << " Content of " << styleInputPath
-                    << ": " <<styleCommentClose << "\n";
+            ostr << "\n" << styleCommentOpen
+                << " Content of " << styleInputPath
+                << ": " <<styleCommentClose << "\n";
             string line;
             while ( getline ( userStyleDef, line ) ) {
                 ostr << line << "\n";
             }
             userStyleDef.close();
         } else {
-            ostr 	<< styleCommentOpen
-                    << " ERROR: Could not include " << styleInputPath
-                    << "." << styleCommentClose << "\n";
+            ostr << styleCommentOpen
+                << " ERROR: Could not include " << styleInputPath
+                << "." << styleCommentClose << "\n";
         }
     }
 
