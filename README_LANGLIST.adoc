@@ -1,6 +1,6 @@
 = HIGHLIGHT LANGUAGES LIST
 André Simon
-v3.57, May 2020
+v3.59, October 2020
 :lang: en
 :experimental:
 :icons: font
@@ -238,6 +238,7 @@ Packaged language definitions, obtained via `highlight --list-scripts=langs`
 | Qu                             | link:./langDefs/qu.lang[`qu.lang`,title="View source file"] | 
 | Rebol                          | link:./langDefs/rebol.lang[`rebol.lang`,title="View source file"] | 
 | Relax NG                       | link:./langDefs/rnc.lang[`rnc.lang`,title="View source file"] | 
+| reStructured Text              | link:./langDefs/rst.lang[`rst.lang`,title="View source file"] | 
 | Rexx                           | link:./langDefs/rexx.lang[`rexx.lang`,title="View source file"] |  rex rx the
 | R                              | link:./langDefs/r.lang[`r.lang`,title="View source file"] | 
 | RPG                            | link:./langDefs/rpg.lang[`rpg.lang`,title="View source file"] | 
@@ -277,9 +278,10 @@ Packaged language definitions, obtained via `highlight --list-scripts=langs`
 | Vala                           | link:./langDefs/vala.lang[`vala.lang`,title="View source file"] | 
 | Verilog                        | link:./langDefs/verilog.lang[`verilog.lang`,title="View source file"] |  v
 | VHDL                           | link:./langDefs/vhd.lang[`vhd.lang`,title="View source file"] | 
-| vimscript                      | link:./langDefs/vimscript.lang[`vimscript.lang`,title="View source file"] |  vim vimrc gvimrc
+| vimscript                      | link:./langDefs/vimscript.lang[`vimscript.lang`,title="View source file"] |  gvimrc vim vimrc
 | Visual Basic                   | link:./langDefs/vb.lang[`vb.lang`,title="View source file"] |  bas basic bi vbs
 | vue.js (beta)                  | link:./langDefs/vue.lang[`vue.lang`,title="View source file"] | 
+| Web Assembly Text              | link:./langDefs/wat.lang[`wat.lang`,title="View source file"] | 
 | Whiley                         | link:./langDefs/whiley.lang[`whiley.lang`,title="View source file"] | 
 | Wren                           | link:./langDefs/wren.lang[`wren.lang`,title="View source file"] | 
 | XML                            | link:./langDefs/xml.lang[`xml.lang`,title="View source file"] |  csproj dtd ecf ent glade hdr hub jnlp nrm opml resx rss sgm sgml tld vxml wml xsd xsl

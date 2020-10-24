@@ -1,0 +1,55 @@
+Description="reStructured Text"
+
+Categories = {"markup"}
+
+Keywords={
+  -- URLs
+  { Id=3,
+    Regex=[[ http[^\s`]+ ]],
+  },
+  -- tables
+  { Id=4,
+    Regex=[[ ^\+[\-=]{2,}\S+|^[=]{3,}\s[=\s]+|^[\-]{3,}\s[-\s]+]],
+  },
+  --headers
+  --needs to be placed before kwd 4
+  { Id=1,
+    Regex=[[ ^[=]{3,}(?!\s)|^[\-]{3,}(?!\s)|^[`]{3,}|^[:]{3,}|^[']{3,}|^["]{3,}|^[~]{3,}|^[_]{3,}|^[\*]{3,}|^[\+]{3,}|^[<]{3,}|^[>]{3,} ]],
+  },
+  --emphasizers
+  { Id=4,
+    Regex=[[ ^\s*(\-\s|\*{1,2}.*?\*{1,2}|>|[\d\#]+?\.) ]],
+  },
+  --lists
+  { Id=5,
+    Regex=[[ ^(\:.*?:|^\/\w|^\-{1,2}[\S]+) ]],
+  },
+
+  { Id=5,
+    Regex=[[ (\[[\w#\*]+?\])? ]],
+  },
+  --references
+  { Id=5,
+    Regex=[[ ^(\.\.\s+?(\_?\w+?\:\:?)?) ]],
+  },
+  --directives
+  { Id=4,
+    Regex=[[ \|.*?\||\| ]],
+  },
+
+}
+
+Strings={
+  Delimiter=[[```|``|`]]
+}
+
+IgnoreCase=false
+
+function OnStateChange(oldState, newState, token, kwgroup, lineNumber, column)
+  if newState==HL_KEYWORD and kwgroup==1 and token[0]~='#' and lineNumber>1 then
+    AddPersistentState(lineNumber-1, kwgroup, column, #token)
+  end
+  if newState==HL_ESC_SEQ then
+    return HL_REJECT
+  end
+end
