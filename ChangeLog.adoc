@@ -15,6 +15,7 @@ xx.10.2020
   - improved Ruby code folding of the outhtml_codefold plug-in
   - updated astyle lib to rev 672
   - added support for reStructured Text (https://gitlab.com/saalen/highlight/-/issues/170)
+  - added support for Rego (openpolicyagent.org)
   - CLI: adapted default xterm256/truecolor theme to terminal background colour
   - GUI: initial font set to Monospace
   - GUI: replaced highlight.xpm by highlight.png icon
