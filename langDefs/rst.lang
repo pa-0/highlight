@@ -18,7 +18,13 @@ Keywords={
   },
   --emphasizers
   { Id=4,
-    Regex=[[ ^\s*(\-\s|\*{1,2}.*?\*{1,2}|>|[\d\#]+?\.) ]],
+    Regex=[[ ^\s*(\-\s|>|[\d\#]+?\.) ]],
+  },
+  { Id=4,
+    Regex=[[ \*{1,2}.*?\*{1,2} ]],
+  },
+  { Id=4,
+    Regex=[[ \:.*?\: ]],
   },
   --lists
   { Id=5,
@@ -36,7 +42,10 @@ Keywords={
   { Id=4,
     Regex=[[ \|.*?\||\| ]],
   },
-
+--directives
+  { Id=666,
+    Regex=[[ \( ]],
+  },
 }
 
 Strings={
@@ -45,11 +54,55 @@ Strings={
 
 IgnoreCase=false
 
+Comments = {
+ {
+    Block=false,
+    Delimiter = { [[^\.\.(?!.+[\:\[])]] }
+  }
+}
+
+
+commentIdent=0
+commentLine=0
+initComment=0
+
 function OnStateChange(oldState, newState, token, kwgroup, lineNumber, column)
+
+  -- add somewhat whacky logic to support comments based on indention
+  -- emtpy lines end comments, as do smaller indentations than the initial
+
+  if newState==HL_LINE_COMMENT  then
+      commentLine = lineNumber
+      commentIdent = column
+      initComment=1
+  end
+
+  if oldState==HL_LINE_COMMENT then
+    if (commentLine ==0 and commentIdent==0) or initComment==1 then
+      commentLine = lineNumber
+      initComment=0
+    end
+  end
+
+  if lineNumber == 1+commentLine and commentLine>0 then
+      commentLine = lineNumber
+      if (column >= commentIdent ) then
+        return HL_LINE_COMMENT
+      else
+        commentIdent = 0
+        commentLine = 0
+        return HL_REJECT
+      end
+    end
+
   if newState==HL_KEYWORD and kwgroup==1 and token[0]~='#' and lineNumber>1 then
     AddPersistentState(lineNumber-1, kwgroup, column, #token)
   end
+
   if newState==HL_ESC_SEQ then
+    return HL_REJECT
+  end
+  if newState==HL_KEYWORD and kwgroup==666 then
     return HL_REJECT
   end
 end
