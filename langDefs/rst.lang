@@ -5,7 +5,7 @@ Categories = {"markup"}
 Keywords={
   -- URLs
   { Id=3,
-    Regex=[[ http[^\s`]+ ]],
+    Regex=[[ https?\:\/\/[^\s`]+ ]],
   },
   -- tables
   { Id=4,
