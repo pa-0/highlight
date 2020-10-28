@@ -1,4 +1,5 @@
-Description="reStructured Text"
+
+Description = "reStructured Text"
 
 Categories = {"markup"}
 
@@ -30,7 +31,6 @@ Keywords={
   { Id=5,
     Regex=[[ ^(\:.*?:|^\/\w|^\-{1,2}[\S]+) ]],
   },
-
   { Id=5,
     Regex=[[ (\[[\w#\*]+?\])? ]],
   },
@@ -55,7 +55,7 @@ Strings={
 IgnoreCase=false
 
 Comments = {
- {
+  {
     Block=false,
     Delimiter = { [[^\.\.(?!.+[\:\[])]] }
   }
