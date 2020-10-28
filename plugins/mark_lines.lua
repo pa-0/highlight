@@ -1,11 +1,12 @@
 
-Description="Marks the lines defined as comma separated list or range in the plug-in parameter (HTML and RTF only)."
+Description="Marks the lines defined as comma separated list or range in the plug-in parameter (HTML, RTF or Truecolor/xterm256 Escape)."
 
-Categories = {"format", "html", "rtf" }
+Categories = {"format", "html", "rtf", "truecolor", "xterm256" }
 
 function syntaxUpdate(desc)
 
-  if HL_OUTPUT ~= HL_FORMAT_HTML and HL_OUTPUT ~= HL_FORMAT_XHTML and HL_OUTPUT ~= HL_FORMAT_RTF and HL_OUTPUT ~= HL_FORMAT_TRUECOLOR then
+  if HL_OUTPUT ~= HL_FORMAT_HTML and HL_OUTPUT ~= HL_FORMAT_XHTML and HL_OUTPUT ~= HL_FORMAT_RTF
+      and HL_OUTPUT ~= HL_FORMAT_TRUECOLOR and HL_OUTPUT ~= HL_FORMAT_XTERM256  then
       return
   end
 
@@ -60,7 +61,7 @@ function syntaxUpdate(desc)
 
   function Decorate(token, state)
     if (linesToMark[currentLineNumber]) then
-      if HL_OUTPUT==HL_FORMAT_TRUECOLOR then
+      if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
           return ansiOpenSeq..token
       end
     end
@@ -69,7 +70,7 @@ function syntaxUpdate(desc)
   function DecorateLineBegin(lineNumber)
     currentLineNumber = lineNumber
     if (linesToMark[currentLineNumber]) then
-      if HL_OUTPUT==HL_FORMAT_TRUECOLOR then
+      if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
           return ansiOpenSeq
       end
       if HL_OUTPUT==HL_FORMAT_RTF then
@@ -82,7 +83,7 @@ function syntaxUpdate(desc)
 
   function DecorateLineEnd()
     if (linesToMark[currentLineNumber]) then
-      if HL_OUTPUT==HL_FORMAT_TRUECOLOR then
+      if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
           return ""
       end
       if HL_OUTPUT==HL_FORMAT_RTF then
@@ -135,6 +136,14 @@ function themeUpdate(desc)
 
   if (HL_OUTPUT == HL_FORMAT_TRUECOLOR) then
     StoreValue("ansiOpenSeq", lighten(Canvas.Colour, "\x1B[48;2;%02x;%02x;%02xm"))
+  elseif (HL_OUTPUT == HL_FORMAT_XTERM256) then
+    --https://gist.github.com/MicahElliott/719710/8b8b962033efed8926ad8a8635b0a48630521a67
+    lightCanvas = lighten(Canvas.Colour, "%03d %03d %03d")
+    rr = tonumber(string.match(lightCanvas, "%d%d%d", 0))
+    gg = tonumber(string.match(lightCanvas, "%d%d%d", 4))
+    bb = tonumber(string.match(lightCanvas, "%d%d%d", 8))
+    approx = math.floor(36 * (rr * 5) + 6 * (gg * 5) + (bb * 5) + 16)
+    StoreValue("ansiOpenSeq", "\x1B[48;5;"..approx.."m")
   elseif (HL_OUTPUT == HL_FORMAT_HTML or HL_OUTPUT == HL_FORMAT_XHTML) then
     Injections[#Injections+1]=".hl.mark { background-color:"..lighten(Canvas.Colour, "#%02x%02x%02x").."; width:100%;float:left;}"
   elseif (HL_OUTPUT == HL_FORMAT_RTF) then

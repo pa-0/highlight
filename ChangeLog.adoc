@@ -8,10 +8,10 @@
 
 == highlight 3.59
 
-xx.10.2020
+28.10.2020
 
   - HTML output: added `white-space: pre-wrap` to pre tag CSS
-  - mark_lines.lua plug-in accepts line range as input
+  - updated mark_lines.lua plug-in accept a line range as input parameter and output xterm256 terminal sequences
   - improved Ruby code folding of the outhtml_codefold plug-in
   - updated astyle lib to rev 672
   - added support for reStructured Text (https://gitlab.com/saalen/highlight/-/issues/170)
@@ -52,7 +52,7 @@ xx.10.2020
 == highlight 3.56
 
 06.04.2020
-  
+
   - added support for Sequence Alignment Maps (SAM files)
   - added empty-file mode to `--no-trailing-nl` (https://gitlab.com/saalen/highlight/issues/147)
   - fixed issue with `--syntax-by-name` waiting for stdin (https://gitlab.com/saalen/highlight/-/issues/151)
@@ -140,7 +140,7 @@ xx.10.2020
   - CLI: added optional argument to `--base16` (https://gitlab.com/saalen/highlight/issues/113)
   - CLI: added default base16 themes (https://gitlab.com/saalen/highlight/issues/113)
   - CLI: added `--isolate` option (https://gitlab.com/saalen/highlight/issues/118)
-  - GUI: improved UTF16 input path handling on Windows 
+  - GUI: improved UTF16 input path handling on Windows
 
 
 == highlight 3.50
@@ -169,7 +169,7 @@ xx.10.2020
  - CLI: added `--list-cat` option (https://gitlab.com/saalen/highlight/issues/99)
  - CLI: added optional topic parameter to `--help`
  - GUI: added theme category selection
- - GUI: display categories of selected syntax or theme 
+ - GUI: display categories of selected syntax or theme
 
 
 == highlight 3.48

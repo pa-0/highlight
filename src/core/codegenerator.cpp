@@ -159,7 +159,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      lineContainedStmt(false),
      applySyntaxTestCase(false),
      toggleDynRawString(false),
-     
+
      keywordCase ( StringTools::CASE_UNCHANGED ),
      eolDelimiter ('\n'),
      outputType ( type )
@@ -173,7 +173,7 @@ CodeGenerator::~CodeGenerator()
     delete streamIterator;
 
     resetSyntaxReaders();
-    
+
     for (unsigned int i=0; i<pluginChunks.size(); i++) {
         delete pluginChunks[i];
     }
@@ -502,9 +502,9 @@ unsigned int CodeGenerator::getLineNumber()
 bool CodeGenerator::readNewLine ( string &newLine )
 {
     bool eof=false;
-    
+
     if ( lineIndex ) terminatingChar=newLine[lineIndex-1];
-    
+
     while (!eof && startLineCntCurFile>0) {
         if ( formattingPossible && formattingEnabled ) {
             eof=!formatter->hasMoreLines();
@@ -541,7 +541,7 @@ void CodeGenerator::matchRegex ( const string &line, State skipState)
         if (regexElem->constraintLineNum && regexElem->constraintLineNum != lineNumber) {
             continue;
         }
-        
+
         if (regexElem->constraintFilename.size() && regexElem->constraintFilename != inFile) {
             continue;
         }
@@ -552,7 +552,7 @@ void CodeGenerator::matchRegex ( const string &line, State skipState)
         for( ; cur != end; ++cur )  {
             groupID = ( regexElem->capturingGroup<0 ) ? cur->size()-1 : regexElem->capturingGroup;
             matchBegin = cur->position(groupID);
-        
+
             regexGroups.insert (
                 make_pair ( matchBegin + 1, ReGroup ( regexElem->open, cur->length(groupID), regexElem->kwClass, regexElem->langName ) ) );
 
@@ -568,11 +568,11 @@ unsigned char CodeGenerator::getInputChar()
 {
     // end of line?
     if ( lineIndex == line.length() ) {
-        
+
         //more testing required:
         if (outputType==ESC_TRUECOLOR || outputType==ESC_XTERM256)
             lastLineLength=StringTools::utf8_strlen(line);
-        
+
         bool eof=false;
         if ( preFormatter.isEnabled() ) {
             if ( !preFormatter.hasMoreLines() ) {
@@ -594,11 +594,11 @@ unsigned char CodeGenerator::getInputChar()
             numberCurrentLine = true;
         }
         lineIndex=0;
-        
+
         if (!lineContainedTestCase && applySyntaxTestCase){
             stateTraceTest = stateTraceCurrent;
             stateTraceCurrent.clear();
-        } 
+        }
 
         lineContainedTestCase=false;
         lineContainedStmt=false;
@@ -611,7 +611,7 @@ unsigned char CodeGenerator::getInputChar()
 }
 
 /** changing this method requires regression testing with nested syntax files (HTML+PHP+JS+CSS,
- *  Coffeescript with block regex, Pas + ASM) 
+ *  Coffeescript with block regex, Pas + ASM)
  *  especially nested syntax in one line
  */
 State CodeGenerator::getCurrentState (State oldState)
@@ -641,7 +641,7 @@ State CodeGenerator::getCurrentState (State oldState)
         token= c;
         return _TESTPOS;
     }
-        
+
     // at this position the syntax change takes place
     if (lineIndex >= syntaxChangeIndex-1 || syntaxChangeLineNo < lineNumber){
         loadEmbeddedLang(embedLangDefPath);  // load new syntax
@@ -650,7 +650,7 @@ State CodeGenerator::getCurrentState (State oldState)
     }
 
 SKIP_EMBEDDED:
-    
+
     // Test if a regular expression was found at the current position
     if ( !regexGroups.empty() ) {
         if ( regexGroups.count ( lineIndex ) ) {
@@ -660,14 +660,14 @@ SKIP_EMBEDDED:
             if ( regexGroups[oldIndex].length>1 ) lineIndex+= regexGroups[oldIndex].length-1;
 
             if ( regexGroups[oldIndex].state==EMBEDDED_CODE_BEGIN ) {
-                //do not handle a nested section if the syntax is marked as "sealed" 
+                //do not handle a nested section if the syntax is marked as "sealed"
                 if (embedLangDefPath.length()==0 || currentSyntax->allowsInnerSection(embedLangDefPath) ) {
                     embedLangDefPath = currentSyntax->getNewPath(regexGroups[oldIndex].name);
-                    //remember position 
+                    //remember position
                     syntaxChangeIndex = lineIndex+2;
                     syntaxChangeLineNo = lineNumber;
                 }
-                
+
                 // repeat parsing of this line without nested state recognition to highlight opening delimiter in the host syntax
                 matchRegex(line, EMBEDDED_CODE_BEGIN);
                 lineIndex = oldIndex;
@@ -677,7 +677,7 @@ SKIP_EMBEDDED:
             if ( regexGroups[oldIndex].state==IDENTIFIER_BEGIN || regexGroups[oldIndex].state==KEYWORD ) {
                 string reservedWord= ( currentSyntax->isIgnoreCase() ) ? StringTools::change_case ( token ) :token;
                 currentKeywordClass=currentSyntax->getKeywordListGroup ( reservedWord ); //check in lists (no regex)
-                
+
                 if ( !currentKeywordClass && regexGroups[oldIndex].state==KEYWORD ){
                     currentKeywordClass = regexGroups[oldIndex].kwClass;
                 }
@@ -713,7 +713,7 @@ State CodeGenerator::validateState(State newState, State oldState)
         if (resultOfHook) {
 
             if (currentSyntax->requiresParamUpdate()) {
-                
+
                  if ( currentSyntax->getOverrideConfigVal("state.string.raw")=="true"){
                      toggleDynRawString=true; // reset to false in string state fct
                  }
@@ -729,11 +729,11 @@ State CodeGenerator::validateState(State newState, State oldState)
             if ( validatedState== _REJECT) {
                 // proceed using only the first character of the token
                 // TODO evaluate if token clear would be better
-                if (res.size()==1) { 
+                if (res.size()==1) {
                     lineIndex -= (token.length() -1);
                     token=token.substr(0, 1);
                 }
-                
+
                 //experimental for slim.lang: evaluate second return arg after _REJECT
                 if (res.size()>=2) {
                     lineIndex -= (token.length() );
@@ -742,7 +742,7 @@ State CodeGenerator::validateState(State newState, State oldState)
                 }
                 return oldState;
             }
-            
+
             return validatedState;
         }
     }
@@ -771,7 +771,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
     for ( unsigned int i=0; i< s.length(); i++ ) {
         ss << maskCharacter ( s[i] );
     }
-    
+
     // The test markers position should also be deternmined by calculating the code points
     if ( applySyntaxTestCase ) {
 
@@ -781,7 +781,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
         for (int i=0; i< slen; i++ ) {
             stateTraceCurrent.push_back(ps);
         }
-        if (stateTraceCurrent.size()>200) 
+        if (stateTraceCurrent.size()>200)
             stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 );
     }
 }
@@ -789,7 +789,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
 
 Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string& token)
 {
-    
+
     Diluculum::LuaValueList params;
     params.push_back(Diluculum::LuaValue(token));
     params.push_back(Diluculum::LuaValue(currentState));
@@ -818,7 +818,7 @@ void CodeGenerator::printMaskedToken (bool flushWhiteSpace, StringTools::Keyword
     }
 
     // check this *after* the decorate call
-    if (   currentState == STANDARD || currentState == KEYWORD || currentState == NUMBER 
+    if (   currentState == STANDARD || currentState == KEYWORD || currentState == NUMBER
         || currentState == STRING || currentState == IDENTIFIER_BEGIN) {
         lineContainedStmt = true;
     }
@@ -927,7 +927,7 @@ void CodeGenerator::setIndentationOptions (const vector<string>& options){
         string arg;
         for (unsigned int i=0; i<options.size(); i++) {
             arg=options[i];
-            
+
             if (isOption(arg, "mode=cs"))
             {
                 formatter->setSharpStyle();
@@ -1329,9 +1329,9 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
     if (!embedded) {
         while (!nestedLangs.empty()) {
             nestedLangs.pop();
-        }   
+        }
     }
-    
+
     bool reloadNecessary= currentSyntax ? currentSyntax->needsReload ( langDefPath ): true;
     LoadResult result=LOAD_OK;
     if ( reloadNecessary ) {
@@ -1361,7 +1361,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
                 openTags.push_back ( getKeywordOpenTag ( i ) );
                 closeTags.push_back ( getKeywordCloseTag ( i ) );
             }
-            
+
             //test balloon
             string overrideSpacer(currentSyntax->getOverrideConfigVal("spacer"));
             if (!overrideSpacer.empty()) {
@@ -1371,7 +1371,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
             if (!overrideMaskWS.empty()) {
                 maskWs = overrideMaskWS=="true";
             }
-            
+
         }
     }
     return result;
@@ -1445,7 +1445,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
 
         if (luaState.globals().count(fctName)) {
             Diluculum::LuaFunction* documentFct=new Diluculum::LuaFunction(luaState[fctName].value().asFunction());
-        
+
             luaState["HL_INPUT_FILE"] = luaState["HL_PLUGIN_PARAM"] = pluginParameter;
             luaState["HL_OUTPUT"] = outputType;
             luaState["HL_FORMAT_HTML"]=HTML;
@@ -1463,17 +1463,17 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
 
             Diluculum::LuaValueList params;
             Diluculum::LuaValueMap options;
-            options[Diluculum::LuaValue("title")] =  Diluculum::LuaValue( docTitle );   
-            options[Diluculum::LuaValue("encoding")] =  Diluculum::LuaValue(encoding);   
-            options[Diluculum::LuaValue("fragment")] =  Diluculum::LuaValue(fragmentOutput);   
-            options[Diluculum::LuaValue("font")] =  Diluculum::LuaValue(getBaseFont());   
-            options[Diluculum::LuaValue("fontsize")] =  Diluculum::LuaValue(getBaseFontSize());   
+            options[Diluculum::LuaValue("title")] =  Diluculum::LuaValue( docTitle );
+            options[Diluculum::LuaValue("encoding")] =  Diluculum::LuaValue(encoding);
+            options[Diluculum::LuaValue("fragment")] =  Diluculum::LuaValue(fragmentOutput);
+            options[Diluculum::LuaValue("font")] =  Diluculum::LuaValue(getBaseFont());
+            options[Diluculum::LuaValue("fontsize")] =  Diluculum::LuaValue(getBaseFontSize());
 
             params.push_back(inputFilesCnt);
             params.push_back(processedFilesCnt);
             params.push_back(options);
-            
-            Diluculum::LuaValueList res=luaState.call ( *documentFct, params, fctName+" call")  ;
+
+            Diluculum::LuaValueList res=luaState.call ( *documentFct, params, fctName+" call");
             if (res.size()>=1) {
                 *keepDefault=false;
                 *result = res[0].asString();
@@ -1489,33 +1489,33 @@ void CodeGenerator::printHeader()
 {
     bool keepDefaultHeader=true;
     string pluginHeader;
-    
+
     processedFilesCnt++;
-    
+
     applyPluginChunk("DocumentHeader", &pluginHeader, &keepDefaultHeader);
 
     if ( ! fragmentOutput && keepDefaultHeader)
         *out << getHeader();
-    
-    *out << pluginHeader; 
-   
+
+    *out << pluginHeader;
+
     if ( !fragmentOutput || keepInjections)
         *out << currentSyntax->getHeaderInjection();
 }
 
 void CodeGenerator::printFooter()
 {
-    
+
     bool keepDefaultFooter=true;
     string pluginFooter;
-    
+
     applyPluginChunk("DocumentFooter", &pluginFooter, &keepDefaultFooter);
-    
+
     if ( !fragmentOutput || keepInjections)
         *out << currentSyntax->getFooterInjection();
 
-    *out << pluginFooter; 
-    
+    *out << pluginFooter;
+
     if ( ! fragmentOutput && keepDefaultFooter )
         *out << getFooter();
 }
@@ -1533,7 +1533,7 @@ ParseError CodeGenerator::generateFile ( const string &inFileName,
 
     inFile=inFileName;
     outFile=outFileName;
-        
+
     in = ( inFileName.empty() ? &cin :new ifstream ( inFileName.c_str() ) );
 
     if ( validateInput )
@@ -1586,7 +1586,7 @@ string CodeGenerator::generateString ( const string &input )
     }
 
     initASStream();
-    
+
     printHeader();
     printBody();
     printFooter();
@@ -1619,7 +1619,7 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
     reset();
 
     inFile = inFileName;
-    
+
     in = new ifstream ( inFileName.c_str() );
     out = new ostringstream ();
 
@@ -1632,9 +1632,9 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
     }
 
     initASStream();
-    
+
     currentSyntax->setInputFileName(inFile);
-    
+
     printHeader();
     printBody();
     printFooter();
@@ -1804,7 +1804,7 @@ void CodeGenerator::processRootState()
             break;
         }
     } while ( !eof );
-    
+
     if (token.size() || lineNumber>1 || (outputType!=ESC_TRUECOLOR && outputType!=ESC_XTERM256))
         closeTag ( STANDARD );
 
@@ -1839,7 +1839,7 @@ bool CodeGenerator::processSyntaxChangeState(State myState)
             }
             matchRegex(line, EMBEDDED_CODE_BEGIN); // match remaining line using the host syntax
         }
-        
+
         printMaskedToken ( newState!=_WS );
 
         newState= getCurrentState(myState);
@@ -1886,7 +1886,7 @@ bool CodeGenerator::processKeywordState ( State myState )
         case _EOL:
             insertLineNumber();
             exitState=true;
-            
+
             break;
         case _EOF:
             eof = true;
@@ -1994,7 +1994,7 @@ bool CodeGenerator::processMultiLineCommentState()
     } while ( !exitState  &&  !eof );
 
     closeTag ( ML_COMMENT );
-   
+
     if (containedTestCase){
         stateTraceCurrent.clear();
     }
@@ -2037,18 +2037,18 @@ bool CodeGenerator::processSingleLineCommentState()
             printMaskedToken();
             containedTestCase=true;
             break;
-     
+
         default:
             break;
         }
     } while ( !exitState  &&  !eof );
 
     closeTag ( SL_COMMENT );
-    
+
     if (containedTestCase) {
         stateTraceCurrent.clear();
     }
-    
+
     return eof;
 }
 
@@ -2071,13 +2071,13 @@ bool CodeGenerator::processDirectiveState()
             break;
         case _EOL:
             printMaskedToken();
-            
+
             if ( preFormatter.isEnabled() && preFormatter.isWrappedLine ( lineNumber-1 ) ) {
                 exitState=false;
             } else {
                 if (currentSyntax->getContinuationChar()!=0x13){
                     exitState= ( terminatingChar!=currentSyntax->getContinuationChar() );
-                } 
+                }
             }
             if ( !exitState ) wsBuffer += closeTags[DIRECTIVE];
             insertLineNumber();
@@ -2185,7 +2185,7 @@ bool CodeGenerator::processStringState ( State oldState )
             openTag ( myState );
             returnedFromOtherState=true;
             break;
-    
+
         case _EOF:
             eof = true;
             break;
@@ -2196,9 +2196,9 @@ bool CodeGenerator::processStringState ( State oldState )
     } while ( !exitState && !eof );
 
     closeTag ( myState );
-    
+
     toggleDynRawString = false;
-    
+
     return eof;
 }
 
@@ -2319,7 +2319,7 @@ void CodeGenerator::processWsState()
         if ( excludeWs && styleID!=_UNKNOWN ) {
             *out << closeTags[styleID];
         }
-        
+
         *out << maskWsBegin;
         for ( int i=0; i<cntWs; i++ ) {
             *out <<  spacer;
@@ -2332,7 +2332,7 @@ void CodeGenerator::processWsState()
             *out << openTags[styleID];
         }
     } else {
-    
+
         *out << spacer; //Bugfix fehlender Space nach Strings
         if (applySyntaxTestCase){
             stateTraceCurrent.push_back(ps);
@@ -2361,7 +2361,7 @@ void CodeGenerator::flushWs(int arg)
 
 string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
     switch (s) {
-        
+
         case STANDARD:
             return STY_NAME_STD;
         case STRING:
@@ -2385,10 +2385,10 @@ string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
         case _WS:
             return "ws";
         case KEYWORD: {
-            
+
             if (!kwClass)
                 return "ws";
-            
+
             char kwName[5] = {0};
             snprintf(kwName, sizeof(kwName), "kw%c", ('a'+kwClass-1));
             return string(kwName);
@@ -2412,29 +2412,29 @@ void CodeGenerator::printTrace(const string &s){
 
 //column: lineIndex (not a UTF-8 validated string position)
 void CodeGenerator::runSyntaxTestcases(unsigned int column){
-    
+
     if (encoding=="utf-8")
         column = StringTools::utf8_strlen(line.substr(0, column));
-    
+
     unsigned int assertGroup=0;
     size_t typeDescPos=line.find_first_not_of("\t ^", lineIndex);
     State assertState=_UNKNOWN;
     bool negation=false;
     bool testFailed=false;
-   
+
     ostringstream errMsg;
     string prefix;
     //printTrace("trace 2");
-    
+
     if (typeDescPos!=string::npos) {
-    
+
         if (line[typeDescPos]=='~') {
-        
+
             negation=true;
             prefix="~";
             ++typeDescPos;
         }
-        
+
         if (line.find(STY_NAME_NUM, typeDescPos)==typeDescPos)
             assertState=NUMBER;
         else if (line.find(STY_NAME_STR, typeDescPos)==typeDescPos)
@@ -2457,38 +2457,38 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
             assertState=STANDARD;
         else if (line.find(STY_NAME_DST, typeDescPos)==typeDescPos)
             assertState=DIRECTIVE_STRING;
-        
+
         else if (line.find("kw", typeDescPos)==typeDescPos) {
             assertState=KEYWORD;
             if (isalpha(line[typeDescPos+2]))
                 assertGroup=line[typeDescPos+2] - 'a' +1;
         }
-    
+
        if (   (assertState!=_WS && stateTraceTest[column].state != assertState && !stateTraceTest[column].isWhiteSpace )
             || (assertState==_WS && !stateTraceTest[column].isWhiteSpace)
             || assertGroup != stateTraceTest[column].kwClass) {
-            
+
             testFailed=!negation;
-       
+
         } else if (negation ) {
-            
-            //TODO Fix ~ws 
+
+            //TODO Fix ~ws
             if (assertState!=_WS  && !stateTraceTest[column].isWhiteSpace )
                 testFailed=true;
-            
+
         }
 
         if (testFailed) {
-            errMsg << inFile << " line " << lineNumber << ", column "<< column 
-                    << ": got " << getTestcaseName(stateTraceTest[column].state, stateTraceTest[column].kwClass)  
+            errMsg << inFile << " line " << lineNumber << ", column "<< column
+                    << ": got " << getTestcaseName(stateTraceTest[column].state, stateTraceTest[column].kwClass)
                     << " instead of " << prefix << getTestcaseName(assertState, assertGroup);
-        
-            failedPosTests.push_back(errMsg.str());    
+
+            failedPosTests.push_back(errMsg.str());
         }
-        
+
     }
-    
-    lineContainedTestCase=true; 
+
+    lineContainedTestCase=true;
 }
 
 
@@ -2594,15 +2594,15 @@ bool CodeGenerator::printPersistentState ( const string &outFile )
 
     ofstream pluginOutFile( outFile.c_str());
     if ( !pluginOutFile.fail() ) {
-        
+
         pluginOutFile   <<"Description=\"Plugin generated by highlight using the --two-pass option\"\n\n"
                         <<"Categories = {\"two-pass\" }\n\n"
                         <<"function syntaxUpdate(desc)\n\n";
-                        
+
         pluginOutFile << currentSyntax->getPersistentHookConditions();
 
         for (auto snippet: currentSyntax->getPersistentSnippets())
-        {   
+        {
             pluginOutFile << snippet <<"\n\n";
         }
 
@@ -2613,7 +2613,7 @@ bool CodeGenerator::printPersistentState ( const string &outFile )
     } else {
         return false;
     }
-    
+
     return true;
 }
 
@@ -2656,7 +2656,7 @@ bool CodeGenerator::initPluginScript(const string& script)
 
         userScriptError="";
         Diluculum::LuaState ls;
-        
+
         ls.doFile (script);
         int listIdx=1;
 
@@ -2680,7 +2680,7 @@ bool CodeGenerator::initPluginScript(const string& script)
                     addUserChunk(ls["Plugins"][listIdx]["Chunk"].value().asFunction());
                 }
             }
-            
+
             listIdx++;
         }
     }  catch (Diluculum::LuaError &err) {
