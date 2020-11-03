@@ -8,7 +8,7 @@
 
 == highlight 3.59
 
-02.11.2020
+03.11.2020
 
   - HTML output: added `white-space: pre-wrap` to pre tag CSS
   - updated mark_lines.lua plug-in accept a line range as input parameter and output xterm256 terminal sequences
@@ -16,8 +16,10 @@
   - updated astyle lib to rev 672
   - added support for reStructured Text (https://gitlab.com/saalen/highlight/-/issues/170)
   - added support for Rego (openpolicyagent.org)
+  - added `outhtml_copy_clipboard.lua` plugin
   - CLI: adapted default xterm256/truecolor theme to terminal background colour
   - CLI: adapted ANSI line numbers to terminal background colour (https://gitlab.com/saalen/highlight/-/issues/172)
+  - CLI: fixed segfault if the user home directory cannot be determined (https://gitlab.com/saalen/highlight/-/issues/171)
   - GUI: initial font set to Monospace
   - GUI: replaced highlight.xpm by highlight.png icon
 

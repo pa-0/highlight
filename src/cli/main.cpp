@@ -51,7 +51,7 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n Copyright (C) 2002-2020 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
-            << "\n\n Artistic Style Classes (3.1)"
+            << "\n\n Artistic Style Classes (3.1 rev. 672)"
             << "\n Copyright (C) 2006-2018 by Jim Pattee <jimp03 at email.com>"
             << "\n Copyright (C) 1998-2002 by Tal Davidson"
             << "\n\n Diluculum Lua wrapper (1.0)"
@@ -92,10 +92,10 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
     string suffix, desc;
     Diluculum::LuaValueMap categoryMap;
     cout << "\nInstalled " << kind << "s";
-    
+
     if (categoryFilterList.size())
         cout << " matching \""<<categoryFilterList<<"\"";
-    
+
     cout << " (located in " << where << "):\n\n";
     int matchedFileCnt=0;
     std::set<string> categoryNames;
@@ -107,14 +107,14 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
     while ( getline ( valueStream, catFilter, ';' ) ) {
         categoryFilters.insert ( catFilter );
     }
-            
+
     for ( unsigned int i=0; i< filePaths.size(); i++ ) {
         try {
             Diluculum::LuaState ls;
             highlight::SyntaxReader::initLuaState(ls, filePaths[i],"");
             ls.doFile(filePaths[i]);
             desc = ls["Description"].value().asString();
-            
+
             suffix = ( filePaths[i] ).substr ( where.length() ) ;
             suffix = suffix.substr ( 1, suffix.length()- wildcard.length() );
 
@@ -123,7 +123,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
                 filterOKCnt=0;
 
                 categoryMap = ls["Categories"].value().asTable();
-                
+
                 //TODO: negation
                 for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
@@ -131,15 +131,15 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
                     if (categoryFilters.size() && categoryFilters.count(it->second.asString())) {
                         ++filterOKCnt;
                     }
-                }     
+                }
             }
-           
+
             if (filterOKCnt!=categoryFilters.size() && categoryFilters.size() ) continue;
-            
+
             matchedFileCnt++;
             if (kind=="langDef") {
                 cout << setw ( 30 ) <<setiosflags ( ios::left ) <<desc<<": "<<suffix;
-            
+
                 int extCnt=0;
                 for (StringMap::iterator it=dataDir.assocByExtension.begin(); it!=dataDir.assocByExtension.end(); it++) {
                     if (it->second==suffix ) {
@@ -149,35 +149,35 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
                 cout << ((extCnt)?" )":"");
             } else {
                 cout << setw ( 30 ) <<setiosflags ( ios::left ) <<suffix<<": "<<desc;
-            
+
             }
             cout << endl;
         } catch (std::runtime_error &error) {
             cout << "Failed to read '" << filePaths[i] << "': " << error.what() << endl;
         }
     }
-    
+
     if (!matchedFileCnt) {
         cout <<"No files found." << endl;
     } else {
-        
+
         if (!categoryFilters.size()){
             cout << "\nFound "<<kind<<" categories:\n\n";
             for (std::set<string>::iterator it=categoryNames.begin(); it!=categoryNames.end(); ++it)
                 std::cout << *it<< ' ';
             cout << "\n";
         }
-        
+
         cout <<"\nUse name of the desired "<<kind
             << " with --" << option << ". Filter categories with --list-cat." << endl;
-            
+
         if (kind=="theme") {
             cout <<"\nAdd base16/ prefix to apply a Base16 theme." << endl;
         }
-        
+
         printConfigInfo();
     }
-    
+
     return EXIT_SUCCESS;
 }
 
@@ -185,9 +185,9 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
                                     const string & langDefPath )
 {
     if (!lang) return;
-    
+
     map <int, string> HLStateMap;
-    
+
     cerr << "\nLoading language definition:\n" << langDefPath;
     cerr << "\n\nDescription: " << lang->getDescription();
     Diluculum::LuaState* luaState=lang->getLuaState();
@@ -220,23 +220,23 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
         }
 
     }
-    
+
     highlight::RegexElement *re=NULL;
     for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
     {
         if (i==0)
              cerr << "\nREGEX:\n";
-   
+
         re = lang->getRegexElements() [i];
         cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
     }
-    
+
     highlight::KeywordMap::iterator it;
     highlight::KeywordMap keys=lang->getKeywords();
     for ( it=keys.begin(); it!=keys.end(); it++ ) {
         if (it==keys.begin())
             cerr << "\nKEYWORDS:\n";
-    
+
         cerr << " "<< it->first << "("<< it->second << ")";
     }
     cerr <<"\n\n";
@@ -298,20 +298,20 @@ void HLCmdLineApp::printIOErrorReport ( unsigned int numberErrorFiles,
                                         vector<string> & fileList,
                                         const string &action, const string &streamName  )
 {
-    
-    
+
+
     cerr << "highlight: Could not "
          << action
          << " file"
          << ( ( numberErrorFiles>1 ) ?"s":"" ) <<":\n";
-    
+
     if (numberErrorFiles==1 && fileList[0].size()==0){
         cerr<<streamName<<"\n";
     }
     else {
         copy ( fileList.begin(), fileList.end(), ostream_iterator<string> ( cerr, "\n" ) );
     }
-    
+
     if ( fileList.size() < numberErrorFiles ) {
         cerr << "... ["
              << ( numberErrorFiles - fileList.size() )
@@ -386,7 +386,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     }
 
     string themePath=options.getAbsThemePath().empty() ? dataDir.getThemePath ( options.getThemeName(), options.useBase16Theme() ): options.getAbsThemePath();
-    
+
     unique_ptr<highlight::CodeGenerator> generator ( highlight::CodeGenerator::getInstance ( options.getOutputType() ) );
 
     generator->setHTMLAttachAnchors ( options.attachLineAnchors() );
@@ -400,11 +400,11 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     generator->setLATEXNoShorthands ( options.disableBabelShorthands() );
     generator->setLATEXPrettySymbols ( options.prettySymbols() );
     generator->setLATEXBeamerMode ( options.enableBeamerMode() );
-    
+
     generator->setRTFPageSize ( options.getPageSize() );
     generator->setRTFCharStyles ( options.includeCharStyles() );
     generator->setRTFPageColor ( options.includePageColor() );
-    
+
     generator->setSVGSize ( options.getSVGWidth(),  options.getSVGHeight() );
 
     generator->setESCCanvasPadding ( options.getCanvasPadding() );
@@ -437,10 +437,10 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     generator->setStartingNestedLang( options.getStartNestedLang());
     generator->disableTrailingNL(options.disableTrailingNL());
     generator->setPluginParameter(options.getPluginParameter());
-    
+
     if (options.getLineRangeStart()>0 && options.getLineRangeEnd()>0){
         generator->setStartingInputLine(options.getLineRangeStart());
-        generator->setMaxInputLineCnt(options.getLineRangeEnd());    
+        generator->setMaxInputLineCnt(options.getLineRangeEnd());
     }
 
     bool styleFileWanted = !options.fragmentOutput() || options.styleOutPathDefined();
@@ -487,7 +487,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
              << ".\n";
         return EXIT_FAILURE;
     }
-    
+
     generator->setIndentationOptions(options.getAStyleOptions());
 
     string outDirectory = options.getOutDirectory();
@@ -517,24 +517,24 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     string twoPassOutFile=Platform::getTempFilePath();
     if ( options.syntaxGiven() ) { // user defined language definition, valid for all files
         string syntaxByFile=options.getSyntaxByFilename();
-        string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile); 
+        string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile);
         //FIXME
-        suffix = dataDir.guessFileType (testSuffix, syntaxByFile, syntaxByFile.empty(), options.getSingleOutFilename().length()==0 );         
+        suffix = dataDir.guessFileType (testSuffix, syntaxByFile, syntaxByFile.empty(), options.getSingleOutFilename().length()==0 );
     }
 
     generator->setFilesCnt(fileCount);
 
     while ( i < fileCount && !initError ) {
-        
+
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {
-            
+
             if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
                 badInputFiles.push_back ( inFileList[i] + " (size)" );
             }
             ++i;
             continue;
         }
-        
+
         if (i==0 && twoPassMode) {
              if ( !generator->initPluginScript(twoPassOutFile) ) {
                 cerr << "highlight: "
@@ -546,13 +546,13 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 break;
             }
         }
-    
+
         if ( !options.syntaxGiven() ) { // determine file type for each file
             suffix = dataDir.guessFileType ( dataDir.getFileSuffix ( inFileList[i] ), inFileList[i] );
         }
 
         if ( suffix.empty()  && options.forceOutput()) suffix=options.getFallbackSyntax(); //avoid segfault
-        
+
         if ( suffix.empty() ) {
             if ( !options.enableBatchMode() )
                 cerr << "highlight: Undefined language definition. Use --"
@@ -564,9 +564,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
 
         if ( suffix != lastSuffix ) {
-            
+
             string langDefPath=options.getAbsLangPath().empty() ? dataDir.getLangPath ( suffix+".lang" ) : options.getAbsLangPath();
-            
+
             if (!Platform::fileExists(langDefPath) && !options.getFallbackSyntax().empty()) {
                 langDefPath = dataDir.getLangPath ( options.getFallbackSyntax()+".lang" );
             }
@@ -603,16 +603,16 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 printDebugInfo ( generator->getSyntaxReader(), langDefPath );
             }
             lastSuffix = suffix;
-            
+
             string encoding= options.getEncoding();
             //user has explicitly defined the encoding:
             if (!options.encodingDefined()) {
-                
+
                 //syntax definition setting:
                 string encodingHint= generator->getSyntaxEncodingHint();
                 if (encodingHint.size())
                     encoding=encodingHint;
-                
+
                 // filetypes.conf setting has higher priority:
                 encodingHint= dataDir.getEncodingHint(suffix);
                 if (encodingHint.size())
@@ -625,7 +625,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             ++i;
             continue;
         }
-        
+
         string::size_type pos= ( inFileList[i] ).find_last_of ( Platform::pathSeparator );
         inFileName = inFileList[i].substr ( pos+1 );
 
@@ -683,12 +683,12 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 badFormattedFiles.push_back ( outFilePath );
             }
         }
-        
+
         ++i;
-        
-        if (i==fileCount && outFilePath.size() && generator->requiresTwoPassParsing() && twoPassOutFile.size() 
+
+        if (i==fileCount && outFilePath.size() && generator->requiresTwoPassParsing() && twoPassOutFile.size()
             && !numBadInput && !numBadOutput && !twoPassMode) {
-            
+
             bool success=generator->printPersistentState(twoPassOutFile);
             if ( !success ) {
                 cerr << "highlight: Could not write "<< twoPassOutFile <<".\n";
@@ -704,7 +704,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 i=0;
                 lastSuffix.clear();
                 numBadFormatting=0;
-                badFormattedFiles.clear();    
+                badFormattedFiles.clear();
             }
         }
     }
@@ -728,7 +728,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             IOError = true;
         }
     }
-    
+
     if ( numBadInput ) {
         printIOErrorReport ( numBadInput, badInputFiles, "read input", "<stdin>" );
         IOError = true;
@@ -740,17 +740,17 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     if ( numBadFormatting ) {
         printIOErrorReport ( numBadFormatting, badFormattedFiles, "reformat", "<stdout>" );
     }
-    
+
     vector<string> posTestErrors = generator->getPosTestErrors();
     if (posTestErrors.size()){
         IOError = true;
         printIOErrorReport ( posTestErrors.size(), posTestErrors, "validate", "<stdin>" );
     }
-    
+
     if (twoPassMode) {
         unlink(twoPassOutFile.c_str());
     }
-        
+
     return ( initError || IOError ) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 

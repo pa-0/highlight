@@ -80,10 +80,10 @@ std::string getTempFilePath(){
     char tmpPath[MAX_PATH], tmpFile[MAX_PATH];
     if (!GetTempPath(MAX_PATH, tmpPath))
         return "";
-    
+
     if (!GetTempFileName(tmpPath, "hlt", 0, tmpFile))
         return "";
-   
+
     return std::string(tmpFile);
 }
 
@@ -100,22 +100,20 @@ std::string getAppPath()
     return "";
 }
 
-
 std::string getHomePath()
 {
     struct passwd *pw = getpwuid(getuid());
-    return string(pw->pw_dir);
+    return pw != NULL ? string(pw->pw_dir) : "";
 }
-
 
 int isColorEscCapable() {
 
     if (!isatty(fileno(stdout)) || !isatty(fileno(stdin))){
         return 0;
     }
-            
+
     char* colorOption=getenv("COLORTERM");
-     
+
     if (colorOption!=NULL) {
         if (!strncmp(colorOption, "truecolor", 9)){
             return 2;
@@ -127,7 +125,7 @@ int isColorEscCapable() {
             return 1;
         }
     }
-    
+
     return 0;
 }
 
@@ -142,10 +140,9 @@ int isDarkTerminal() {
     return 1;
 }
 
-
 std::string getTempFilePath(){
     std::string path("/tmp");
-    
+
     char* tempOption=getenv("TEMP");
     if (tempOption) path=string(tempOption);
     char tmpPath[100];
@@ -207,7 +204,7 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
             continue;
 
         // if a sub directory and recursive, save sub directory
-        if ( ( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) && true /*g_isRecursive*/ ) {
+        if ( ( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) && true ) {
             string subDirectoryPath = directory + pathSeparator + FindFileData.cFileName;
             subDirectory.push_back ( subDirectoryPath );
             continue;
@@ -260,9 +257,6 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
     DIR *dp = opendir ( directory.c_str() );
     if ( errno ) return;
 
-    // save the first fileName entry for this recursion
-    //const unsigned firstEntry = fileName.size();
-
     // save files and sub directories
     while ( ( entry = readdir ( dp ) ) != NULL ) {
         // get file status
@@ -293,12 +287,6 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
     closedir ( dp );
 
     if ( errno ) return;
-
-    // sort the current entries for fileName
-    // https://gitlab.com/saalen/highlight/issues/84
-    // coredump with GLIBCXX_ASSERTIONS compiler option, use iterators if sort is needed
-    //if ( firstEntry < fileName.size() )
-    //    sort ( &fileName[firstEntry], &fileName[fileName.size() ] );
 
     // recurse into sub directories
     // if not doing recursive, subDirectory is empty
@@ -382,7 +370,7 @@ off_t fileSize(const string& fName) {
     if(stat(fName.c_str(), &fileInfo) != 0) {
         return 0;
     }
-    return fileInfo.st_size;   
+    return fileInfo.st_size;
 }
 
 }
