@@ -70,7 +70,7 @@ win32 {
     }
 
     RC_FILE = highlight-gui.rc
-    QMAKE_POST_LINK = F:\upx393w\upx.exe --best F:\git\highlight\highlight-gui.exe
+    QMAKE_POST_LINK = F:\upx393w\upx.exe --best --force F:\git\highlight\highlight-gui.exe
 }
 
 macx-clang {
