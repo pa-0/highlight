@@ -8,7 +8,7 @@
 
 == highlight 3.59
 
-03.11.2020
+13.11.2020
 
   - HTML output: added `white-space: pre-wrap` to pre tag CSS
   - updated mark_lines.lua plug-in accept a line range as input parameter and output xterm256 terminal sequences

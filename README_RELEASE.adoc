@@ -22,13 +22,9 @@ André Simon
 :bclear: pass:q[link:themes/bclear.theme[bclear^]]
 :src_makefile: pass:q[link:src/makefile[`src/makefile`^]]
 
-
-
-
 == GIT: FIRST COMMIT -- THEN EXPORT
 
 Triple check.
-
 
 == TESTS
 
@@ -71,8 +67,7 @@ Test filetype recognition:
 * file suffix (default)
 * no suffix (i.e. makefile)
 * shebang (i.e. Bash script)
-* force syntax using `-S` and `--syntax-by-name` 
-
+* force syntax using `-S` and `--syntax-by-name`
 
 
 == UNNEEDED FILES

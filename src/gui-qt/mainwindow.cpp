@@ -356,11 +356,7 @@ void MainWindow::addToView(const QStringList& list, QListWidget* listWidget, con
 
 void MainWindow::on_pbOutputDest_clicked()
 {
-    QFileDialog dialog(this, tr("Select destination directory"), "");
-    dialog.setFileMode(QFileDialog::Directory);
-    if (dialog.exec() && !dialog.selectedFiles().empty()) {
-        ui->leOutputDest->setText(dialog.selectedFiles().at(0));
-    }
+    ui->leOutputDest->setText(QFileDialog::getExistingDirectory(this, tr("Select destination directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
 }
 
 void MainWindow::writeSettings()
@@ -929,7 +925,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
     }
 
 #ifdef Q_OS_WIN
-        themePath = getWindowsShortPath(themePath);                
+        themePath = getWindowsShortPath(themePath);
 #endif
 
     for (int i=0; i<ui->lvPluginScripts->count(); i++) {
@@ -1006,7 +1002,7 @@ void MainWindow::applyEncoding(highlight::CodeGenerator* generator, QString &lan
         string encodingHint= generator->getSyntaxEncodingHint();
         if (encodingHint.size())
             encoding=encodingHint;
-        
+
         // filetypes.conf setting has higher priority:
         encodingHint= encodingHints[QFileInfo(langDefPath).baseName().toStdString()];
         if (encodingHint.size())
@@ -1112,7 +1108,7 @@ void MainWindow::on_pbStartConversion_clicked()
         langDefPath = (userLangPath.isEmpty()) ? getDistLangPath(getFileType(getFileSuffix(currentFile), currentFile)) : userLangPath;
 
 #ifdef Q_OS_WIN
-        langDefPath = getWindowsShortPath(langDefPath);                
+        langDefPath = getWindowsShortPath(langDefPath);
 #endif
 
         loadRes=generator->loadLanguage(langDefPath.toStdString());
@@ -1184,9 +1180,9 @@ void MainWindow::on_pbStartConversion_clicked()
                 generator->setHTMLAnchorPrefix(inFileName.toStdString());
             }
             generator->setTitle(inFileName.toStdString());
-      
+
             applyEncoding(generator.get(), langDefPath);
-            
+
             error = generator->generateFile(currentFile, outfileName );
             if (error != highlight::PARSE_OK) {
                 if (error == highlight::BAD_INPUT) {
@@ -1367,16 +1363,16 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
     }
 
 #ifdef Q_OS_WIN
-        langPath = getWindowsShortPath(langPath);                
+        langPath = getWindowsShortPath(langPath);
 #endif
 
-      
+
     QString clipBoardData;
 
     for (int twoPass=0; twoPass<2; twoPass++) {
 
         if ( generator->loadLanguage(langPath.toStdString()) != highlight::LOAD_FAILED) {
-            
+
             applyEncoding(generator.get(), langPath);
 
             if (getDataFromCP) {
@@ -1572,9 +1568,9 @@ void MainWindow::updatePreview()
         langInfo="";
         langPath = getDistLangPath(suffix);
     }
-    
+
 #ifdef Q_OS_WIN
-    langPath = getWindowsShortPath(langPath);                
+    langPath = getWindowsShortPath(langPath);
 #endif
 
     QString themePath = getUserScriptPath("theme");
