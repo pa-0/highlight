@@ -96,9 +96,9 @@ install:
 	${INSTALL_DATA} ./themes/base16/*.theme ${DESTDIR}${data_dir}themes/base16/
 	${INSTALL_DATA} ./plugins/*.lua ${DESTDIR}${data_dir}plugins/
 	${INSTALL_DATA} ./man/highlight.1 ${DESTDIR}${man_dir}man1/
-	-${GZIP} ${DESTDIR}${man_dir}man1/highlight.1
+	${GZIP} ${DESTDIR}${man_dir}man1/highlight.1
 	${INSTALL_DATA} ./man/filetypes.conf.5 ${DESTDIR}${man_dir}man5/
-	-${GZIP} ${DESTDIR}${man_dir}man5/filetypes.conf.5
+	${GZIP} ${DESTDIR}${man_dir}man5/filetypes.conf.5
 
 	${INSTALL_DATA} ./AUTHORS ${DESTDIR}${doc_dir}
 	${INSTALL_DATA} ./README* ${DESTDIR}${doc_dir}

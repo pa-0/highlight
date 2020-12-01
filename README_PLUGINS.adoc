@@ -227,10 +227,10 @@ RemoveKeyword(keyword)
 === FUNCTION ADDPERSISTENTSTATE
 
 [[AddPersistentState]]
-This function enables storage of keywords and keyword ranges in a plug-in file. 
-If the syntax contains elements which depend on a context, you can highlight 
+This function enables storage of keywords and keyword ranges in a plug-in file.
+If the syntax contains elements which depend on a context, you can highlight
 them although this context is lost in other input files or code sections.
-The invocation of AddPersistentState will cause highlight to save a plugin as 
+The invocation of AddPersistentState will cause highlight to save a plugin as
 temporary file and parse input files using this plug-in again if necessary.
 
 ................................................................................
@@ -296,9 +296,9 @@ does no longer match.
 
 [IMPORTANT]
 ================================================================================
-If both the syntax file and the plug-in script contain an `OnStateChange` 
+If both the syntax file and the plug-in script contain an `OnStateChange`
 function, the plug-in definition will replace the function of the syntax file.
-In order to prevent this, the existing function can be assigned to an new 
+In order to prevent this, the existing function can be assigned to an new
 variable and called using this name in the plug-in `OnStateChange` code chunk.
 
 See this example in the plug-in `bash_functions.lua`:
@@ -365,7 +365,7 @@ identified. It can be used to alter the token or to add additional text in the
 target output format (e.g. hyperlinks).
 
 ................................................................................
-Decorate(token, state, kwGroupID, stateTrace)
+Decorate(token, state, kwGroupID, lineHasStmt, lineno, column)
 
   Hook Event: Token identification
   Parameters: token:       current token
@@ -373,6 +373,8 @@ Decorate(token, state, kwGroupID, stateTrace)
               kwGroupID:   if state is HL_KEYWORD, the parameter
                            contains the keyword group ID
               lineHasStmt: true if current line contains a statement
+              lineno:    line number (since 3.60)
+              column:    line column (since 3.60)
   Returns:    Altered token string or nothing if original token should be
               outputted
 ................................................................................
@@ -426,7 +428,7 @@ The return values are not modified or validated by highlight.
 StoreValue(name, value)
 
   Set or get a value to exchange information across Lua states
-  Parameters: name: the parameter name 
+  Parameters: name: the parameter name
               value: the parameter value
   Returns:   if value is not set, the previously assigned value of name
 ................................................................................

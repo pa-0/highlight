@@ -101,7 +101,7 @@ void  SyntaxReader::initLuaState(Diluculum::LuaState& ls, const string& langDefP
     string::size_type Pos = langDefPath.find_last_of ( Platform::pathSeparator );
     ls["HL_LANG_DIR"] =langDefPath.substr ( 0, Pos+1 );
 
-    ls["HL_INPUT_FILE"] = ls["HL_PLUGIN_PARAM"] = pluginParameter;
+    ls["HL_PLUGIN_PARAM"] = pluginParameter;
     ls["HL_OUTPUT"] = type;
 
     ls["Identifiers"]=REGEX_IDENTIFIER;
@@ -184,12 +184,12 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
         ls.doFile (langDefPath);
 
         langDesc = ls["Description"].value().asString();
-        
+
         if (ls["Categories"].value() !=Diluculum::Nil){
 
             Diluculum::LuaValueMap categoryMap;
             categoryMap = ls["Categories"].value().asTable();
-                
+
             for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
             {
                 categories.append(it->second.asString());
@@ -217,7 +217,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
         int kwId=0;
         while (ls["Keywords"][idx].value() !=Diluculum::Nil) {
             kwId= generateNewKWClass ( ls["Keywords"][idx]["Id"].value().asInteger() );
-            
+
             if (ls["Keywords"][idx]["List"].value()!=Diluculum::Nil) {
                 int listIdx=1;
                 Diluculum::LuaVariable luaList=ls["Keywords"][idx]["List"];
@@ -250,12 +250,12 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
             }
             idx++;
         }
-        
+
         if (globals.count("KeywordFormatHints")) {
             idx=1;
             Diluculum::LuaValue lVal = ls["KeywordFormatHints"][idx].value();
             while (lVal !=Diluculum::Nil) {
-                
+
                 int kwStyleOverride = lVal["Id"].asInteger();
 
                 if (lVal["Bold"]!=Diluculum::Nil){
@@ -267,13 +267,13 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
                 if (lVal["Underline"]!=Diluculum::Nil){
                     kwStyleOverride += lVal["Underline"].asBoolean() ? 512 : 4096;
                 }
-                 
+
                 overrideStyles.push_back(kwStyleOverride);
                 idx++;
                 lVal = ls["KeywordFormatHints"][idx].value();
             }
         }
-        
+
         if (globals.count("Comments")) {
 
             int listIdx=1;
@@ -396,16 +396,16 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
                 string lang= ls["NestedSections"][listIdx]["Lang"].value().asString();
                 string openDelim=StringTools::trim(ls["NestedSections"][listIdx]["Delimiter"][1].value().asString());
                 regex.insert(regex.begin(), 1, new RegexElement(EMBEDDED_CODE_BEGIN, EMBEDDED_CODE_BEGIN, openDelim, 0, -1, lang));
-                
+
                 string closeDelim=StringTools::trim(ls["NestedSections"][listIdx]["Delimiter"][2].value().asString());
                 nestedStateEndDelimiters[getNewPath(lang)] = closeDelim;
-                
+
                 bool allowInnerSectionsFlag=true;
                 if (ls["NestedSections"][listIdx]["Sealed"].value()!=Diluculum::Nil){
                     allowInnerSectionsFlag = !ls["NestedSections"][listIdx]["Sealed"].value().asBoolean();
                 }
                 allowInnerSections[getNewPath(lang)] = allowInnerSectionsFlag;
-                
+
                 ++listIdx;
             }
             //allow host syntax
@@ -423,7 +423,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
         if (globals.count("EncodingHint")) {
             encodingHint = ls["EncodingHint"].value().asString();
         }
-        
+
         // load hook functions
         if (globals.count("OnStateChange")) {
             validateStateChangeFct=new Diluculum::LuaFunction(ls["OnStateChange"].value().asFunction());
@@ -468,7 +468,7 @@ int SyntaxReader::getKeywordListGroup ( const string &s ) {
     }
     return 0;
 }
-    
+
 int SyntaxReader::luaAddKeyword (lua_State *L)
 {
     int retVal=0;
@@ -605,11 +605,11 @@ bool SyntaxReader::matchesOpenDelimiter ( const string& token, State s, int open
 void SyntaxReader::addPersistentKeyword(unsigned int groupID, const string& kw){
     ostringstream expr;
     expr <<"AddKeyword(\""<<kw<<"\", "<<groupID<<")";
-             
+
     persistentSnippets.push_back(expr.str());
     persistentSyntaxDescriptions.insert(langDesc);
 }
-    
+
 void SyntaxReader::addPersistentStateRange(unsigned int groupID, unsigned int column,unsigned int length, unsigned int lineNumber, const string& fileName){
     ostringstream expr;
     expr <<"table.insert(Keywords,\n"
@@ -621,7 +621,7 @@ void SyntaxReader::addPersistentStateRange(unsigned int groupID, unsigned int co
          <<"    Filename = [=["<<fileName<<"]=],\n"
          <<" }\n"
          <<"})";
-                
+
     persistentSnippets.push_back(expr.str());
     persistentSyntaxDescriptions.insert(langDesc);
 }
@@ -629,17 +629,17 @@ void SyntaxReader::addPersistentStateRange(unsigned int groupID, unsigned int co
 string SyntaxReader::getPersistentHookConditions() {
     ostringstream expr;
     expr << "ValidDesc = {";
-    
+
     for (auto desc: persistentSyntaxDescriptions) {
         expr << "\"" << desc << "\",";
     }
-    
+
     expr << "}\nif ValidDesc[desc] ~= nil then return end\n\n";
-    
+
     return expr.str();
-    
+
 }
- 
+
 int SyntaxReader::luaAddPersistentState (lua_State *L)
 {
     int retVal=0;
@@ -653,7 +653,7 @@ int SyntaxReader::luaAddPersistentState (lua_State *L)
                 (*a)->addKeyword(kwgroupID, keyword);
                 (*a)->addPersistentKeyword(kwgroupID, keyword);
             }
-            
+
             retVal=1;
         }
     }
@@ -671,7 +671,7 @@ int SyntaxReader::luaAddPersistentState (lua_State *L)
     }
     lua_pushboolean(L, retVal);
     return 1;
-} 
+}
 
 bool SyntaxReader::requiresTwoPassRun(){
     return persistentSyntaxDescriptions.count(langDesc)>0;

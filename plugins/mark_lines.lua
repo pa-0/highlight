@@ -24,7 +24,10 @@ function syntaxUpdate(desc)
     local t, ll
     t={}
     ll=0
-    if(#p == 1) then return {p} end
+    if(#p == 1) then
+      t[tonumber(p)] = 1
+      return t
+    end
     while true do
       l=string.find(p,d,ll,true) -- find the next d in the string
       if l~=nil then -- if "not not" found then..

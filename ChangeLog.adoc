@@ -6,6 +6,14 @@
 :toc: left
 :toclevels: 1
 
+
+== highlight 3.60
+
+01.12.2020
+
+  - fixed single argument of mark_lines.lua plug-in (https://gitlab.com/saalen/highlight/-/issues/164)
+  - added lineno and column parameters to Decorate hook
+
 == highlight 3.59
 
 13.11.2020

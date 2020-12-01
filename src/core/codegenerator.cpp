@@ -795,6 +795,8 @@ Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string& token)
     params.push_back(Diluculum::LuaValue(currentState));
     params.push_back(Diluculum::LuaValue(currentKeywordClass));
     params.push_back(Diluculum::LuaValue(lineContainedStmt));
+    params.push_back(Diluculum::LuaValue(lineNumber) );
+    params.push_back(Diluculum::LuaValue(lineIndex-(unsigned int)token.length()) );
 
     return currentSyntax->getLuaState()->call ( *currentSyntax->getDecorateFct(),
             params,"getDecorateFct call")  ;
@@ -1446,7 +1448,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
         if (luaState.globals().count(fctName)) {
             Diluculum::LuaFunction* documentFct=new Diluculum::LuaFunction(luaState[fctName].value().asFunction());
 
-            luaState["HL_INPUT_FILE"] = luaState["HL_PLUGIN_PARAM"] = pluginParameter;
+            luaState["HL_PLUGIN_PARAM"] = pluginParameter;
             luaState["HL_OUTPUT"] = outputType;
             luaState["HL_FORMAT_HTML"]=HTML;
             luaState["HL_FORMAT_XHTML"]=XHTML;
