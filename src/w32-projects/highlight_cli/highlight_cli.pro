@@ -6,7 +6,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 win32 {
-    DESTDIR = ..\\..\\..
+    DESTDIR = ..\\..
     SOURCES += ..\\..\\cli\\main.cpp \
         ..\\..\\cli\\help.cpp \
         ..\\..\\cli\\cmdlineoptions.cpp \
@@ -55,4 +55,4 @@ contains( LINKTYPE, LUA52 ) {
     unix:DEFINES += USE_LUA52
 }
 
-win32:QMAKE_POST_LINK = F:\upx393w\upx.exe --best ..\..\..\highlight.exe
+win32:QMAKE_POST_LINK = F:\upx393w\upx.exe --best --force ..\..\highlight.exe
