@@ -80,10 +80,10 @@ macx-clang {
     INCLUDEPATH += ../../include
     INCLUDEPATH+=/usr/local/Cellar/boost/1.73.0/include
 
-    QT_CONFIG -= no-pkg-config
-    CONFIG += link_pkgconfig
-    PKGCONFIG += lua
+    QMAKE_MACOSX_DEPLOYMENT_TARGET=10.13
+    CONFIG += app_bundle
     LIBS += -L.. -lhighlight
-    LIBS += -L/Users/andresimon/Downloads/tarballs/lua-5.3.4/src -llua
+    LIBS += -L/Users/andresimon/MyProjects/lua-5.4.1/src -llua
+
     ICON = $${PWD}/highlight.icns
 }

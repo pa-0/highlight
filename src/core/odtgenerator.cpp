@@ -33,7 +33,7 @@ namespace highlight
 ODTGenerator::ODTGenerator() : CodeGenerator ( ODTFLAT )
 {
     newLineTag = "</text:p>\n<text:p text:style-name=\"Standard\">";
-    spacer = "<text:s text:c=\"1\"/>"; // TODO insert number of spaces
+    spacer = initialSpacer = "<text:s text:c=\"1\"/>";
     maskWs=true;
     if ( !preFormatter.getReplaceTabs()) { // TODO use <text:tab/>
 

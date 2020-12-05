@@ -55,7 +55,7 @@ PangoGenerator::PangoGenerator() : CodeGenerator ( PANGO )
 {
 
     newLineTag = "\n";
-    spacer = " ";
+    spacer = initialSpacer = " ";
 }
 
 PangoGenerator::~PangoGenerator() {}

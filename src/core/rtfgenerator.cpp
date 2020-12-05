@@ -45,7 +45,7 @@ RtfGenerator::RtfGenerator()
       utf8SeqLen(0)
 {
     newLineTag = "}\\par\\pard\n\\cbpat1{";
-    spacer = " ";
+    spacer = initialSpacer = " ";
 
     // Page dimensions
     psMap["a3"] = PageSize ( 16837,23811 );
@@ -163,12 +163,12 @@ void RtfGenerator::printBody()
        on the order. We access the keyword style with an ID, which is calculated
        ignoring the alphabetic order.
     */
-    
-    ///FIXME: nested syntax may be highlighted incorrectly if it contains more 
+
+    ///FIXME: nested syntax may be highlighted incorrectly if it contains more
     //        keyword definitions than the hosting syntax.
     //        Workaround: Add keyword group to hosting syntax (see html.lang)
     vector<string>  keywordClasses = currentSyntax->getKeywordClasses();
-        
+
     for ( unsigned int i=0; i<keywordClasses.size(); i++ ) {
         *out << getAttributes ( docStyle.getKeywordStyle ( keywordClasses[i] ) );
     }

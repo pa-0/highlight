@@ -50,7 +50,7 @@ AnsiGenerator::AnsiGenerator() : CodeGenerator ( ESC_ANSI )
 {
 
     newLineTag = "\n";
-    spacer = " ";
+    spacer = initialSpacer = " ";
 }
 
 AnsiGenerator::~AnsiGenerator() {}

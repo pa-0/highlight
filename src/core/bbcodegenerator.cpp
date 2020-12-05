@@ -35,7 +35,7 @@ namespace highlight
 BBCodeGenerator::BBCodeGenerator() : CodeGenerator ( BBCODE )
 {
     newLineTag = "\n";
-    spacer = " ";
+    spacer = initialSpacer = " ";
 }
 
 BBCodeGenerator::~BBCodeGenerator() {}

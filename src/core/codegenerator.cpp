@@ -727,8 +727,8 @@ State CodeGenerator::validateState(State newState, State oldState)
 
             State validatedState = (State)res[0].asInteger();
             if ( validatedState== _REJECT) {
+
                 // proceed using only the first character of the token
-                // TODO evaluate if token clear would be better
                 if (res.size()==1) {
                     lineIndex -= (token.length() -1);
                     token=token.substr(0, 1);
@@ -750,7 +750,6 @@ State CodeGenerator::validateState(State newState, State oldState)
 
     return newState;
 }
-
 
 unsigned int CodeGenerator::getCurrentKeywordClassId(){
     unsigned int kwClassId=0;
@@ -785,7 +784,6 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
             stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 );
     }
 }
-
 
 Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string& token)
 {
@@ -1363,17 +1361,6 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
                 openTags.push_back ( getKeywordOpenTag ( i ) );
                 closeTags.push_back ( getKeywordCloseTag ( i ) );
             }
-
-            //test balloon
-            string overrideSpacer(currentSyntax->getOverrideConfigVal("spacer"));
-            if (!overrideSpacer.empty()) {
-                spacer = overrideSpacer;
-            }
-            string overrideMaskWS(currentSyntax->getOverrideConfigVal("maskws"));
-            if (!overrideMaskWS.empty()) {
-                maskWs = overrideMaskWS=="true";
-            }
-
         }
     }
     return result;
@@ -2299,6 +2286,8 @@ bool CodeGenerator::processInterpolationState()
 
 void CodeGenerator::processWsState()
 {
+
+    spacer = initialSpacer;
     if ( !maskWs ) {
         wsBuffer += token;
         token.clear();
@@ -2315,6 +2304,8 @@ void CodeGenerator::processWsState()
         ++cntWs;
         ++lineIndex;
     }
+
+
     if ( cntWs>1 ) {
 
         unsigned int styleID=getStyleID ( currentState, currentKeywordClass );
@@ -2477,7 +2468,6 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
             //TODO Fix ~ws
             if (assertState!=_WS  && !stateTraceTest[column].isWhiteSpace )
                 testFailed=true;
-
         }
 
         if (testFailed) {
@@ -2493,7 +2483,6 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
     lineContainedTestCase=true;
 }
 
-
 string CodeGenerator::getNewLine()
 {
     return (printNewLines) ? newLineTag : "";
@@ -2507,8 +2496,7 @@ Diluculum::LuaValueList CodeGenerator::callDecorateLineFct(bool isLineStart)
 
     return currentSyntax->getLuaState()->call ( isLineStart ?
             *currentSyntax->getDecorateLineBeginFct(): *currentSyntax->getDecorateLineEndFct(),
-            params,"getDecorateLineFct call")  ;
-
+            params,"getDecorateLineFct call");
 }
 
 void CodeGenerator::insertLineNumber ( bool insertNewLine )
@@ -2520,7 +2508,6 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
                 wsBuffer +=res[0].asString();
             }
         }
-
         wsBuffer += getNewLine();
     }
 
@@ -2547,7 +2534,9 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
 
         numberPrefix << openTags[LINENUMBER];
         maskString ( numberPrefix, os.str() );
-        numberPrefix << spacer << closeTags[LINENUMBER];
+
+        //use initialSpacer here, spacer can be overriden by plug-in (format.spacer)
+        numberPrefix << initialSpacer << closeTags[LINENUMBER];
 
         wsBuffer += numberPrefix.str();
     }

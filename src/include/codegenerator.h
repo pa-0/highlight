@@ -109,11 +109,11 @@ public:
     Use getInstance for a singleton class instance. Then call the init* methods
     and loadLanguage to initialize the parser. Init methods have to be called first.
     Call generate* methods to get results.<br><br>
-    
+
     Parser workflow (neglecting embedded syntax and other details):
-    
+
     This flow chart shows the method calls, starting in processRootState:
-    
+
     -> lineIndex=0
     -> processRootState()
        -> state = getCurrentState()
@@ -121,7 +121,7 @@ public:
              -> increase lineIndex
              -> if new line: matchRegex()
                 -> cycle through all regexes of Syntaxreader:
-                   KEYWORD, COMMENT, IDENTIFIER, NUMBER, STRING, INTERPOLATION, 
+                   KEYWORD, COMMENT, IDENTIFIER, NUMBER, STRING, INTERPOLATION,
                    PREPROCESSOR, OPERATOR, NESTEDSECTIONS
                 -> save position and length of a match for the current line
           -> is there a match at line[lineIndex]?
@@ -136,7 +136,7 @@ public:
            These methods open and close the delimiter tags in the output format, and most
            importantly decide when the state ends. They also limit the allowed state changes,
            like INTERPOLATION in STRING.
-          
+
 * @author Andre Simon
 */
 
@@ -188,7 +188,7 @@ public:
         \return true if successful
      */
     bool initIndentationScheme ( const string& indentScheme );
-    
+
     void setIndentationOptions (const vector<string>& options);
 
     /** \param langDefPath Absolute path to language definition, may be used multiple times for a generator instance
@@ -225,12 +225,12 @@ public:
       */
     bool printExternalStyle ( const string &outFile );
 
-        /** Print persistent state snippets to external file 
+        /** Print persistent state snippets to external file
       \param outFile Path of plugin file to generate
        \return true if successful
       */
     bool printPersistentState ( const string &outFile );
-    
+
     /** Print index file with all input file names
        \param fileList List of output file names
        \param outPath Output path
@@ -288,7 +288,7 @@ public:
 
     /** \return line number width */
     int getLineNumberWidth();
-    
+
     /** check if input is binary or text
        \param  flag true if input should be checked
     */
@@ -298,14 +298,14 @@ public:
     bool getValidateInput();
 
     /** set keep injections flag
-     * \param  flag true if plug-in injections should be outputted if header 
+     * \param  flag true if plug-in injections should be outputted if header
      * and footer are omitted (fragmentCode is true)
      */
     void setKeepInjections( bool flag );;
 
     /** \return keep injection flag */
     bool getKeepInjections();
-    
+
     bool requiresTwoPassParsing() const;
 
     /** \param  flag true if wrapped lines receive unique line numbers.
@@ -314,19 +314,19 @@ public:
 
     /** return number wrapped lines flag */
     bool getNumberWrappedLines ();
-    
+
     /** \param flag true if version info comment should be omitted */
     void setOmitVersionComment ( bool flag );
 
     /** return version info comment flag */
     bool getOmitVersionComment ();
-    
+
     /** \param flag true if token of the same syntax category should be outputted in separate tags */
     void setIsolateTags ( bool flag );
 
     /** return version info comment flag */
     bool getIsolateTags ();
-    
+
     /** \return style path */
     const string& getStyleName();
 
@@ -352,7 +352,7 @@ public:
     void setIncludeStyle ( bool flag );
 
     /** tell parser to omit trailing newline character
-        \param flag 1 if no trailing newline should be printed, 
+        \param flag 1 if no trailing newline should be printed,
                     2 omit newline only for empty input
      */
     void disableTrailingNL ( int flag );
@@ -411,14 +411,14 @@ public:
     void setPluginParameter ( const string& param );
 
     void resetSyntaxReaders();
-    
+
     /** Load the Lua functions og the plug-in script
     	\param script path of the plug-in script
     */
     bool initPluginScript(const string& script);
-    
+
     bool syntaxRequiresTwoPassRun();
-    
+
     void clearPersistentSnippets();
 
 
@@ -447,7 +447,7 @@ public:
     string getThemeCatDescription();
 
     vector<string> getPosTestErrors() { return failedPosTests; }
-    
+
     /** \return Pointer Syntaxreader, intended for debug output  */
     SyntaxReader* getSyntaxReader()
     {
@@ -495,7 +495,7 @@ public:
     virtual void setLATEXPrettySymbols ( bool )  {};
 
     virtual void setLATEXBeamerMode ( bool )  {};
-        
+
     /** set RTF page size
      */
     virtual void setRTFPageSize ( const string& )  {};
@@ -507,11 +507,11 @@ public:
     /** set RTF page color flag
      */
     virtual void setRTFPageColor ( bool )  {};
-    
+
     /** set SVG page size
      */
     virtual void setSVGSize ( const string&, const string& )  {};
-    
+
     /** set True Color flag
      */
     virtual void setESCTrueColor ( bool )  {};
@@ -565,7 +565,7 @@ protected:
     string newLineTag;
 
     /** String that represents a white space in output */
-    string spacer;
+    string spacer, initialSpacer;
 
     /** file input*/
     istream *in;
@@ -590,19 +590,19 @@ protected:
 
     string inFile,   ///< input file name
            outFile;  ///< output file name
-           
+
     /** Test if maskWsBegin and maskWsEnd should be applied */
     bool maskWs;
 
     /** Test if whitespace should always be separated from enclosing tokens */
     bool excludeWs;
-	
+
     /** Test if header and footer should be omitted */
     bool fragmentOutput;
 
     /** Test if plugin injections should be printed if fragmentOutput is true */
     bool keepInjections;
-    
+
     /** Test if line numbers should be printed */
     bool showLineNumbers;
 
@@ -614,12 +614,12 @@ protected:
 
     /** Test if version info comment printed */
     bool omitVersionComment;
-    
+
     /** Flag to output token of the same syntax category in separate tags */
     bool isolateTags;
-    
+
     bool disableStyleCache;
-    
+
     /** The base font to use */
     string baseFont ;
 
@@ -659,7 +659,7 @@ protected:
 
     /** \return last line index */
     unsigned int getLastLineLength();
-    
+
     /** print all remaining white space*/
     void flushWs(int );
 
@@ -680,12 +680,12 @@ protected:
 
     /** Invoke plugin decorate user function */
     Diluculum::LuaValueList callDecorateFct(const string& token);
-    
-    /** Invoke plugin decorate line user function 
-     @param isLineStart set true if line start function should be called, 
+
+    /** Invoke plugin decorate line user function
+     @param isLineStart set true if line start function should be called,
             otherwise line end function is invoked */
     Diluculum::LuaValueList callDecorateLineFct(bool isLineStart);
-    
+
     /** contains white space, which will be printed after a closing tag */
     string wsBuffer;
 
@@ -699,15 +699,15 @@ protected:
      *  If the line is just the continuation of a wrapped line,
      *  and numberWrappedLines is false, this is set true. */
     bool numberCurrentLine;
-    
-    /** method to fix output type in Lua state for XHTML and Truecolor 
+
+    /** method to fix output type in Lua state for XHTML and Truecolor
         @param output type */
     void setOutputType(OutputType t) { outputType = t; }
-    
+
 private:
 
     void printTrace(const string &s);
-    
+
     CodeGenerator ( const CodeGenerator& ) {}
 
     CodeGenerator& operator= ( CodeGenerator& )
@@ -715,7 +715,7 @@ private:
         return *this;
     }
 
-    /** Insert line number at the beginning of current output line 
+    /** Insert line number at the beginning of current output line
         @param insertNewLine set true if newline should be outputted
      */
     virtual void insertLineNumber ( bool insertNewLine=true);
@@ -725,19 +725,19 @@ private:
     virtual string getFooter() = 0;
 
     /** returns output specific document header
-      * @return header */             
+      * @return header */
     virtual string getHeader() = 0;
-    
+
     /** Prints document header*/
     void printHeader();
-    
+
     /** Prints document body*/
     virtual void printBody() = 0;
 
     /** Prints document footer*/
     void printFooter();
 
-    /** initialize tags in specific format according to colouring information 
+    /** initialize tags in specific format according to colouring information
      *  provided in DucumentStyle */
     virtual void initOutputTags() = 0;
 
@@ -794,18 +794,18 @@ private:
     /**first input line to be processed*/
     unsigned int startLineCnt;
     unsigned int startLineCntCurFile;
-    
+
     /**maximum count of input lines to be processed*/
     unsigned int maxLineCnt;
-    
-    
+
+
     /**number of files to be processed and counter*/
     unsigned int inputFilesCnt;
     unsigned int processedFilesCnt;
-    
+
     /** Flag to test if trailing newline should be printed */
     int noTrailingNewLine;
-    
+
     /**last character of the last line*/
     unsigned char terminatingChar;
 
@@ -827,7 +827,7 @@ private:
 
     /** indicator if current state was set by Lua hook function */
     bool resultOfHook;
-    
+
     bool lineContainedTestCase;
 
     bool lineContainedStmt;
@@ -864,7 +864,7 @@ private:
 
     /** return new state */
     State getCurrentState (State oldState);
-    
+
     std::stack<std::string> nestedLangs;
 
     /* Methods that represent a parsing state */
@@ -880,13 +880,13 @@ private:
     bool processSymbolState();                ///< process symbols
     void processWsState();                    ///< process whitespace
     bool processSyntaxChangeState(State myState ); ///< process syntax change of embedded languages
-    
+
     /* checks whether the given state was defined in the same column of the last parsed input line */
     void runSyntaxTestcases(unsigned int column);
-    
+
     /* returns name of testcase state */
     string getTestcaseName(State s, unsigned int kwClass);
-    
+
     /** print escaped token and clears it
        \param flushWhiteSpace set true if white space should be flushed
        \param tcase keyword case
@@ -896,9 +896,9 @@ private:
 
     /** association of matched regexes and the corresponding keyword class ids*/
     map <int, ReGroup> regexGroups;
-    
+
     /** history of states per line position in the current line of input code (max 200 entries) */
-    
+
     struct PositionState {
         State state;
         unsigned int kwClass;
@@ -910,8 +910,8 @@ private:
     };
     vector<PositionState> stateTraceCurrent, stateTraceTest;
 
-    vector<string> failedPosTests; 
-    
+    vector<string> failedPosTests;
+
     /** association of syntax definitions and their paths*/
     map <string, SyntaxReader*> syntaxReaders;
 
@@ -933,16 +933,16 @@ private:
      \param oldState old state
      */
     State validateState(State newState, State oldState);
-    
+
     unsigned int getCurrentKeywordClassId();
-  
+
     string getParam(const string& arg, const char* op);
     string getParam(const string& arg, const char* op1, const char* op2);
     bool isOption(const string& arg, const char* op);
     bool isOption(const string& arg, const char* op1, const char* op2);
     bool isParamOption(const string& arg, const char* option);
     bool isParamOption(const string& arg, const char* option1, const char* option2);
-  
+
     /**
     	\param chunk Lua function to be added to the function list
     */
@@ -950,11 +950,11 @@ private:
     {
         pluginChunks.push_back(new Diluculum::LuaFunction(chunk));
     }
-    
+
     void applyPluginChunk(const string& fctName, string *result, bool *keepDefault);
-    
+
     void initASStream();
-    
+
     static vector<Diluculum::LuaFunction*> pluginChunks;
 };
 

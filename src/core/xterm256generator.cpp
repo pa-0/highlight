@@ -43,7 +43,7 @@ Xterm256Generator::Xterm256Generator() :
     canvasPadding(0)
 {
     newLineTag = "\n";
-    spacer = " ";
+    spacer = initialSpacer = " ";
 }
 
 Xterm256Generator::~Xterm256Generator() {}
@@ -79,7 +79,7 @@ void Xterm256Generator::initOutputTags ( )
         bg_rgb[0] = ( unsigned char ) strtoll ( bg.getRed ( HTML ).c_str(), NULL, 16 );
         bg_rgb[1] = ( unsigned char ) strtoll ( bg.getGreen ( HTML ).c_str(), NULL, 16 );
         bg_rgb[2] = ( unsigned char ) strtoll ( bg.getBlue ( HTML ).c_str(), NULL, 16 );
-        
+
         if (use16mColours) {
             //use 24bit true colour ("888" colours (aka 16 million))
             bgs << "\033[48;2;"<< ( int ) bg_rgb[0] << ";" << ( int ) bg_rgb[1] << ";" << ( int ) bg_rgb[2] << "m";
@@ -90,8 +90,8 @@ void Xterm256Generator::initOutputTags ( )
         }
         canvasColSeq = bgs.str();
         maskWsBegin = canvasColSeq;
-    }    
-    
+    }
+
     openTags.push_back ( getOpenTag ( docStyle.getDefaultStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getStringStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getNumberStyle() ) );
@@ -106,7 +106,7 @@ void Xterm256Generator::initOutputTags ( )
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "\033[m" );
-    }    
+    }
 }
 
 string  Xterm256Generator::getOpenTag ( const ElementStyle &col )
@@ -118,9 +118,9 @@ string  Xterm256Generator::getOpenTag ( const ElementStyle &col )
     rgb[2] = ( unsigned char ) strtoll ( c.getBlue ( HTML ).c_str(), NULL, 16 );
 
     ostringstream s;
-    
+
     s << canvasColSeq;
-    
+
     s  << "\033[";
 
     if ( col.isBold() ) s << "1;";
@@ -134,7 +134,7 @@ string  Xterm256Generator::getOpenTag ( const ElementStyle &col )
         // apply color approximation, 256 colour palette (216 colours + 16 ansi + 24 gray) (colors are 24bit)
         s << "38;5;"<< ( int ) rgb2xterm ( rgb ) << "m";
     }
-    
+
     return  s.str();
 }
 
@@ -151,30 +151,30 @@ string Xterm256Generator::getKeywordCloseTag ( unsigned int styleID )
 string Xterm256Generator::getNewLine()
 {
     string nlStr;
-    
+
     if (canvasPadding>0) {
         unsigned int lastLineLength=getLastLineLength();
-        
+
         //adapt to long lines; avoid lag with very long lines
         if (lastLineLength<512 && lastLineLength > canvasPadding && lastLineLength)
             canvasPadding = lastLineLength;
-        
+
         nlStr += canvasColSeq;
         if (canvasPadding > lastLineLength)
             nlStr += string(canvasPadding - lastLineLength, ' ');
-        nlStr += "\033[m";    
-    } 
+        nlStr += "\033[m";
+    }
     nlStr += (printNewLines) ? newLineTag : "";
     return nlStr;
 }
 
- void Xterm256Generator::setESCTrueColor(bool b) { 
-    use16mColours = b; 
-    if (b) setOutputType(ESC_TRUECOLOR); 
-} 
-    
-void Xterm256Generator::setESCCanvasPadding(unsigned int p) { 
-    if (p<512) canvasPadding = p; 
+ void Xterm256Generator::setESCTrueColor(bool b) {
+    use16mColours = b;
+    if (b) setOutputType(ESC_TRUECOLOR);
+}
+
+void Xterm256Generator::setESCCanvasPadding(unsigned int p) {
+    if (p<512) canvasPadding = p;
 }
 
 /* the following functions are based on Wolfgang Frischs xterm256 converter utility:

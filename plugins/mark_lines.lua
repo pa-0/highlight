@@ -62,9 +62,27 @@ function syntaxUpdate(desc)
 
   currentLineNumber=0
 
+  if OnStateChange ~= nil then
+      OrigOnStateChange = OnStateChange;
+  end
+
+  function OnStateChange(oldState, newState, token, groupID, lineno, column)
+
+    if  (linesToMark[currentLineNumber]) then
+      OverrideParam("format.spacer", ansiOpenSeq.." ")
+      OverrideParam("format.maskws", "true")
+    end
+
+    if OrigOnStateChange then
+        return OrigOnStateChange(oldState, newState, token, groupID, lineno, column)
+    end
+    return newState
+  end
+
   function Decorate(token, state)
     if (linesToMark[currentLineNumber]) then
       if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
+
           return ansiOpenSeq..token
       end
     end
@@ -85,6 +103,7 @@ function syntaxUpdate(desc)
   end
 
   function DecorateLineEnd()
+
     if (linesToMark[currentLineNumber]) then
       if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
           return ""
