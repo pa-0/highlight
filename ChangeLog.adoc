@@ -9,7 +9,7 @@
 
 == highlight 3.60
 
-01.12.2020
+05.12.2020
 
   - fixed single argument and truecolor output of mark_lines.lua plug-in (https://gitlab.com/saalen/highlight/-/issues/164)
   - added lineno and column parameters to Decorate hook

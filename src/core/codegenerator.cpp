@@ -2305,7 +2305,6 @@ void CodeGenerator::processWsState()
         ++lineIndex;
     }
 
-
     if ( cntWs>1 ) {
 
         unsigned int styleID=getStyleID ( currentState, currentKeywordClass );
