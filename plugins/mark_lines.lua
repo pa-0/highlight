@@ -76,21 +76,23 @@ function syntaxUpdate(desc)
 
       if (currentColumn==0) then
         currentColumn = column
-        if markStarts then
-          io.write("\x1B["..string.format("%d", 1).."C")
-        else
-          io.write("\x1B["..string.format("%d", column).."D")
-        end
-        io.write(ansiOpenSeq)
-        if markStarts then
+        if column> 1 then
+          if markStarts then
+            io.write("\x1B["..string.format("%d", 1).."C")
+          elseif (column>0) then
+            --io.write("\x1B["..string.format("%d", column).."D")
+          end
+          io.write(ansiOpenSeq)
+          if markStarts then
 
-          --io.write("\x1B["..string.format("%d", 1).."D")
-          io.write(string.rep(" ", column))
-          io.write("\x1B["..string.format("%d", column).."D")
-        else
-          io.write(string.rep(" ", column))
+            ----io.write("\x1B["..string.format("%d", 1).."D")
+            io.write(string.rep(" ", column))
+            io.write("\x1B["..string.format("%d", column+1).."D")
+          elseif (column>0) then
+            --io.write(string.rep(" ", column))
+          end
+          markStarts=false
         end
-        markStarts=false
       end
     else
       markStarts=true
