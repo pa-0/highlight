@@ -955,6 +955,8 @@ private:
 
     void initASStream();
 
+    void setOverrideParams();
+
     static vector<Diluculum::LuaFunction*> pluginChunks;
 };
 

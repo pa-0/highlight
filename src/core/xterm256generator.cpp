@@ -60,7 +60,6 @@ void Xterm256Generator::printBody()
 
 string Xterm256Generator::getFooter()
 {
-    //return noTrailingNewLine ? "" : "\033[m";
     return string();
 }
 

@@ -63,6 +63,7 @@ function syntaxUpdate(desc)
   currentLineNumber=0
   currentColumn=0
   markStarts=true
+  linesNoIdent = {}
 
   if OnStateChange ~= nil then
     OrigOnStateChange = OnStateChange;
@@ -70,32 +71,39 @@ function syntaxUpdate(desc)
 
   function OnStateChange(oldState, newState, token, groupID, lineno, column)
 
-    if  (linesToMark[currentLineNumber]) then
-      OverrideParam("format.spacer", ansiOpenSeq.." ")
-      OverrideParam("format.maskws", "true")
+    if (HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256) then
+      if  linesToMark[currentLineNumber] then
+        OverrideParam("format.spacer", ansiOpenSeq.." ")
+        OverrideParam("format.maskws", "true")
 
-      if (currentColumn==0) then
-        currentColumn = column
-        if column> 1 then
-          if markStarts then
-            io.write("\x1B["..string.format("%d", 1).."C")
-          elseif (column>0) then
-            --io.write("\x1B["..string.format("%d", column).."D")
-          end
-          io.write(ansiOpenSeq)
-          if markStarts then
+        if (currentColumn==0) then
+          currentColumn = column
+          if column> 1 then
+            if markStarts then
+              io.write("\x1B["..string.format("%d", 1).."C")
+            elseif not linesNoIdent[currentLineNumber] then
+              io.write("\x1B["..string.format("%d", column).."D")
+            end
+            io.write(ansiOpenSeq)
+            if markStarts then
 
-            ----io.write("\x1B["..string.format("%d", 1).."D")
-            io.write(string.rep(" ", column))
-            io.write("\x1B["..string.format("%d", column+1).."D")
-          elseif (column>0) then
-            --io.write(string.rep(" ", column))
+              io.write(string.rep(" ", column))
+              io.write("\x1B["..string.format("%d", column+1).."D")
+
+            elseif not linesNoIdent[currentLineNumber] then
+              io.write(string.rep(" ", column))
+            end
+            markStarts=false
+          else
+            linesNoIdent[currentLineNumber] = 1
           end
-          markStarts=false
         end
+      else
+        markStarts=true
+        OverrideParam("format.spacer", " ")
+        OverrideParam("format.maskws", "false")
       end
-    else
-      markStarts=true
+
     end
 
     if OrigOnStateChange then
@@ -105,11 +113,8 @@ function syntaxUpdate(desc)
   end
 
   function Decorate(token, state)
-    if (linesToMark[currentLineNumber]) then
-      if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
-
-          return ansiOpenSeq..token
-      end
+    if ((HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256) and linesToMark[currentLineNumber]) then
+      return ansiOpenSeq..token
     end
   end
 
@@ -119,7 +124,9 @@ function syntaxUpdate(desc)
 
     if (linesToMark[currentLineNumber]) then
       if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
-          return ""
+          OverrideParam("format.spacer", ansiOpenSeq.." ")
+          OverrideParam("format.maskws", "true")
+          return ansiOpenSeq
       end
       if HL_OUTPUT==HL_FORMAT_RTF then
         patternIdx = 12 + #Keywords  -- Index of the style which was added before
@@ -132,6 +139,8 @@ function syntaxUpdate(desc)
   function DecorateLineEnd()
     if (linesToMark[currentLineNumber]) then
       if HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256 then
+          OverrideParam("format.spacer", " ")
+          OverrideParam("format.maskws", "false")
           return ""
       end
       if HL_OUTPUT==HL_FORMAT_RTF then

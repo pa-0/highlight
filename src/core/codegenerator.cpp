@@ -712,18 +712,7 @@ State CodeGenerator::validateState(State newState, State oldState)
         resultOfHook = res.size()>=1;
         if (resultOfHook) {
 
-            if (currentSyntax->requiresParamUpdate()) {
-
-                 if ( currentSyntax->getOverrideConfigVal("state.string.raw")=="true"){
-                     toggleDynRawString=true; // reset to false in string state fct
-                 }
-                 if ( currentSyntax->getOverrideConfigVal("format.maskws")=="true") {
-                     maskWs=true;
-                 }
-                 if ( currentSyntax->getOverrideConfigVal("format.spacer").size()) {
-                     spacer=currentSyntax->getOverrideConfigVal("format.spacer");
-                 }
-            }
+            setOverrideParams();
 
             State validatedState = (State)res[0].asInteger();
             if ( validatedState== _REJECT) {
@@ -2287,7 +2276,6 @@ bool CodeGenerator::processInterpolationState()
 void CodeGenerator::processWsState()
 {
 
-    spacer = initialSpacer;
     if ( !maskWs ) {
         wsBuffer += token;
         token.clear();
@@ -2314,7 +2302,7 @@ void CodeGenerator::processWsState()
 
         *out << maskWsBegin;
         for ( int i=0; i<cntWs; i++ ) {
-            *out <<  spacer;
+            *out << spacer;
             if (applySyntaxTestCase){
                 stateTraceCurrent.push_back(ps);
             }
@@ -2330,6 +2318,9 @@ void CodeGenerator::processWsState()
             stateTraceCurrent.push_back(ps);
         }
     }
+
+    spacer = initialSpacer;
+
     token.clear();
 }
 
@@ -2344,10 +2335,10 @@ void CodeGenerator::flushWs(int arg)
 
     //fix canvas whitespace
     if (wsBuffer.length() && (outputType==ESC_XTERM256 || outputType==ESC_TRUECOLOR) ){
-        *out<< maskWsBegin;
+        *out<<maskWsBegin;
     }
 
-    *out<<wsBuffer;
+    *out << wsBuffer;
     wsBuffer.clear();
 }
 
@@ -2498,12 +2489,27 @@ Diluculum::LuaValueList CodeGenerator::callDecorateLineFct(bool isLineStart)
             params,"getDecorateLineFct call");
 }
 
+void CodeGenerator::setOverrideParams() {
+    if (currentSyntax->requiresParamUpdate()) {
+        if ( currentSyntax->getOverrideConfigVal("state.string.raw")=="true"){
+            toggleDynRawString=true; // reset to false in string state fct
+        }
+        if ( currentSyntax->getOverrideConfigVal("format.maskws")=="true") {
+            maskWs=true;
+        }
+        if ( currentSyntax->getOverrideConfigVal("format.spacer").size()) {
+            spacer=currentSyntax->getOverrideConfigVal("format.spacer");
+        }
+    }
+}
+
 void CodeGenerator::insertLineNumber ( bool insertNewLine )
 {
     if ( insertNewLine ) {
         if (currentSyntax->getDecorateLineEndFct()) {
             Diluculum::LuaValueList res=callDecorateLineFct(false);
             if (res.size()==1) {
+                setOverrideParams();
                 wsBuffer +=res[0].asString();
             }
         }
@@ -2513,7 +2519,8 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
     if (currentSyntax->getDecorateLineBeginFct()) {
         Diluculum::LuaValueList res=callDecorateLineFct(true);
         if (res.size()==1) {
-            wsBuffer +=res[0].asString();
+            setOverrideParams();
+            wsBuffer += res[0].asString();
         }
     }
 
@@ -2536,7 +2543,6 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
 
         //use initialSpacer here, spacer can be overriden by plug-in (format.spacer)
         numberPrefix << initialSpacer << closeTags[LINENUMBER];
-
         wsBuffer += numberPrefix.str();
     }
 }
