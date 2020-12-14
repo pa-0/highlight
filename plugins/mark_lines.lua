@@ -71,6 +71,8 @@ function syntaxUpdate(desc)
 
   function OnStateChange(oldState, newState, token, groupID, lineno, column)
 
+    -- a bit rough using cursor movement and resetting space properties but
+    -- this kind of stuff is not intended at all in the core code
     if (HL_OUTPUT==HL_FORMAT_TRUECOLOR or HL_OUTPUT==HL_FORMAT_XTERM256) then
       if  linesToMark[currentLineNumber] then
         OverrideParam("format.spacer", ansiOpenSeq.." ")
@@ -86,10 +88,8 @@ function syntaxUpdate(desc)
             end
             io.write(ansiOpenSeq)
             if markStarts then
-
               io.write(string.rep(" ", column))
               io.write("\x1B["..string.format("%d", column+1).."D")
-
             elseif not linesNoIdent[currentLineNumber] then
               io.write(string.rep(" ", column))
             end
