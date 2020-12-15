@@ -9,9 +9,10 @@
 
 == highlight 3.60
 
-14.12.2020
+15.12.2020
 
   - improved PHP 8 syntax support
+  - added Emacs Org-Mode support (https://gitlab.com/saalen/highlight/-/issues/174)
   - fixed single argument and truecolor output of mark_lines.lua plug-in (https://gitlab.com/saalen/highlight/-/issues/164)
   - added lineno and column parameters to Decorate hook
 
