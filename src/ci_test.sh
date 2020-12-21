@@ -21,7 +21,7 @@ fi
 
 # new set of test scripts
 
-declare -a arr=("bash" "cpp" "exapunks" "hugo" "js" "lua"  "nim"  "perl"  "purebasic" "ruby")
+declare -a arr=("bash" "cpp" "exapunks" "hugo" "js" "lua"  "nim"  "perl"  "purebasic" "ruby", "org")
 
 for d in "${arr[@]}"
 do

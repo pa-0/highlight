@@ -225,7 +225,7 @@ public:
       */
     bool printExternalStyle ( const string &outFile );
 
-        /** Print persistent state snippets to external file
+    /** Print persistent state snippets to external file
       \param outFile Path of plugin file to generate
        \return true if successful
       */
@@ -454,6 +454,15 @@ public:
         return currentSyntax;
     }
 
+    /** \return Content of user defined input style */
+    string readUserStyleDef();
+
+    /** \return Style definition of the chosen output format */
+    virtual string  getStyleDefinition()
+    {
+        return "";
+    }
+
     /** set HTML output anchor flag
      */
     virtual void setHTMLAttachAnchors ( bool )  {};
@@ -662,15 +671,6 @@ protected:
 
     /** print all remaining white space*/
     void flushWs(int );
-
-    /** \return Content of user defined input style */
-    string readUserStyleDef();
-
-    /** \return Style definition of the chosen output format */
-    virtual string  getStyleDefinition()
-    {
-        return "";
-    };
 
     /** \return true id encoding is defined */
     bool encodingDefined()
