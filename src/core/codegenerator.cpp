@@ -330,7 +330,7 @@ void CodeGenerator::setBaseFontSize ( const string& fontSize)
 
 void CodeGenerator::setStyleCaching ( bool flag )
 {
-    disableStyleCache=flag;
+    disableStyleCache=!flag;
 }
 
 void CodeGenerator::setStartingNestedLang(const string &langName)
