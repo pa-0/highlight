@@ -125,7 +125,7 @@ const Arg_parser::Option options[] = {
         { S_OPT_FORCE_STDOUT,     OPT_FORCE_STDOUT,    Arg_parser::no },
         { S_OPT_LATEX_BEAMER,     OPT_LATEX_BEAMER,    Arg_parser::no },
         { S_OPT_NO_VERSION_INFO,  OPT_NO_VERSION_INFO, Arg_parser::no },
-        
+
         { S_OPT_PLUGIN,           OPT_PLUGIN,          Arg_parser::yes },
         { S_OPT_PLUGIN_READFILE,  OPT_PLUGIN_READFILE, Arg_parser::yes },
         { S_OPT_PLUGIN_PARAMETER, OPT_PLUGIN_PARAMETER, Arg_parser::yes },
@@ -138,7 +138,7 @@ const Arg_parser::Option options[] = {
         { S_OPT_PIPED_FNAME,      OPT_PIPED_FNAME,     Arg_parser::yes },
         { S_OPT_ISOLATE,          OPT_ISOLATE_TAGS,    Arg_parser::no },
         { S_OPT_MAX_FILE_SIZE,    OPT_MAX_FILE_SIZE,   Arg_parser::yes },
-        
+
         { 0, 0, Arg_parser::no }
     };
 
@@ -201,7 +201,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     helpLang ( "en" ),
     encodingName ( "ISO-8859-1" )
 {
-    
+
     char* hlEnvOptions=getenv("HIGHLIGHT_OPTIONS");
     if (hlEnvOptions!=NULL) {
         std::ostringstream envos;
@@ -212,15 +212,15 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
         std::vector<char*> options;
         while (ss >> arg)
         {
-            ls.push_back(arg); 
+            ls.push_back(arg);
             options.push_back(const_cast<char*>(ls.back().c_str()));
         }
-        options.push_back(0); 
+        options.push_back(0);
         parseRuntimeOptions(options.size()-1, (const char**) &options[0], false);
     }
-    
+
     parseRuntimeOptions(argc, argv);
-    
+
     if ( skipArg.size() && inputFileNames.size() > 1) {
         istringstream valueStream;
         string elem;
@@ -229,7 +229,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
         while ( getline ( valueStream, elem, ';' ) ) {
             ignoredFileTypes.insert ( elem );
         }
-       
+
         vector<string>::iterator file=inputFileNames.begin();
         while ( file!=inputFileNames.end()) {
             for ( set<string>::iterator ext=ignoredFileTypes.begin(); ext!=ignoredFileTypes.end(); ext++ ) {
@@ -242,7 +242,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
                 file++;
         }
     }
-    
+
     // no batch mode + no explicit format given
     if (inputFileNames.size()==1 && !explicit_output_format) {
         int colorOptions = Platform::isColorEscCapable();
@@ -255,7 +255,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
 CmdLineOptions::~CmdLineOptions() {}
 
 void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bool readInputFilenames) {
-    
+
 
     Arg_parser parser ( argc, argv, options );
     if ( parser.error().size() ) { // bad option
@@ -263,7 +263,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         cerr << "Try 'highlight --help' for more information.\n";
         exit ( EXIT_FAILURE );
     }
-    
+
     int argind = 0;
     for ( ; argind < parser.arguments(); ++argind ) {
         const int code = parser.code ( argind );
@@ -402,14 +402,14 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case 's':
             styleName = arg;
             if (Platform::fileExists(styleName)){
-                absThemePath = styleName; 
+                absThemePath = styleName;
             }
             break;
         case 'S':
         case S_OPT_COMPAT_SRCLANG:
             syntax = arg;
             opt_syntax = true;
-            
+
             if (Platform::fileExists(arg) && string::npos!=arg.find_last_of('.')){
                 absLangPath = arg;
                 syntax = arg.substr(0, arg.find_last_of('.'));
@@ -455,7 +455,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_force_output = true;
             if  ( !arg.empty() ) {
                 fallbackSyntax=arg;
-            } 
+            }
             break;
         case S_OPT_INLINE_CSS:
             opt_inline_css=true;
@@ -468,6 +468,8 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 keywordCase = StringTools::CASE_LOWER;
             else if ( tmp == "capitalize" )
                 keywordCase = StringTools::CASE_CAPITALIZE;
+            else
+                cerr << "highlight: unknown argument " << arg << endl;
         }
         break;
         case S_OPT_PRINT_CONFIG:
@@ -532,8 +534,13 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             break;
         case S_OPT_NO_TRAILING_NL:
             opt_no_trailing_nl = 1;
-            if (arg=="empty-file" || arg=="blank")
-                opt_no_trailing_nl = 2;
+            if (arg.size()) {
+              if (arg=="empty-file")
+                  opt_no_trailing_nl = 2;
+              else
+                  cerr << "highlight: unknown argument " << arg << endl;
+            }
+
             break;
         case S_OPT_KEEP_INJECTIONS:
             opt_keep_injections = true;
@@ -549,7 +556,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             } else if (arg.find(".theme")!=string::npos) absThemePath=arg;
             else cerr << "highlight: unknown config file type" << endl;
             break;
-        
+
         case S_OPT_RANGE_OPT: {
             size_t delimPos=arg.find("-");
             if (delimPos!=string::npos) {
@@ -568,10 +575,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_CANVAS:
             canvasPaddingWidth=80;
             numberSpaces=4; // get around problem with maskWs and tab output
-            if  ( !arg.empty() ) 
+            if  ( !arg.empty() )
                 StringTools::str2num<unsigned int> ( canvasPaddingWidth, arg, std::dec );
             break;
-            
+
         case S_OPT_CATEGORIES:
             listScriptCategory=arg;
             if (listScriptType.empty()) listScriptType = "langs";
@@ -592,7 +599,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             }
             break;
         }
-        
+
         default:
             cerr << "highlight: option parsing failed" << endl;
         }
@@ -713,12 +720,12 @@ string CmdLineOptions::getThemeName() const
 {
     if (!styleName.empty())
         return styleName+".theme";
-    
+
     bool isEscOutput = outputType==highlight::ESC_XTERM256 || outputType==highlight::ESC_TRUECOLOR;
     bool isDarkTerminal = Platform::isDarkTerminal();
     if (opt_base16_theme)
         return isEscOutput && isDarkTerminal ? "harmonic-dark.theme" : "harmonic-light.theme";
-    
+
     return isEscOutput && isDarkTerminal ? "edit-vim-dark.theme" : "edit-kwrite.theme";
 }
 
@@ -733,7 +740,7 @@ bool CmdLineOptions::fragmentOutput() const
 }
 
 bool CmdLineOptions::omitVersionInfo() const {
-    return opt_no_version_info;    
+    return opt_no_version_info;
 }
 
 bool CmdLineOptions::isolateTags() const

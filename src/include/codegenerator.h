@@ -421,6 +421,8 @@ public:
 
     void clearPersistentSnippets();
 
+    /** \param flag true if styles should be cached for repeated file output calls */
+    void setStyleCaching ( bool flag );
 
     /** \return Syntaxreader Regex error message */
     string getSyntaxRegexError();

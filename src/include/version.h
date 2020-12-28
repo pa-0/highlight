@@ -28,12 +28,36 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef VERSION_H
 #define VERSION_H
 
+#include <string>
+
 #define HIGHLIGHT_MAJOR "3"
-#define HIGHLIGHT_MINOR "60"
+#define HIGHLIGHT_MINOR "61"
 
 #define HIGHLIGHT_VERSION  HIGHLIGHT_MAJOR "." HIGHLIGHT_MINOR
 
 #define HIGHLIGHT_URL "http://www.andre-simon.de/"
 #define HIGHLIGHT_EMAIL "a.simon@mailbox.org"
+
+namespace highlight
+{
+
+class Info
+{
+public:
+
+    static std::string getVersion() {
+        return HIGHLIGHT_VERSION;
+    }
+
+    static std::string getWebsite() {
+        return HIGHLIGHT_URL;
+    }
+
+    static std::string getEmail() {
+        return HIGHLIGHT_EMAIL;
+    }
+};
+
+}
 
 #endif

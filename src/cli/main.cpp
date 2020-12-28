@@ -430,7 +430,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                                   options.getLineLength() - options.getNumberWidth() : options.getLineLength(),
                                   options.getNumberSpaces() );
 
-    //generator->setEncoding ( options.getEncoding() );
     generator->setBaseFont ( options.getBaseFont() ) ;
     generator->setBaseFontSize ( options.getBaseFontSize() ) ;
     generator->setLineNumberWidth ( options.getNumberWidth() );

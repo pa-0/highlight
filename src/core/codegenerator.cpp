@@ -328,6 +328,11 @@ void CodeGenerator::setBaseFontSize ( const string& fontSize)
     baseFontSize = fontSize;
 }
 
+void CodeGenerator::setStyleCaching ( bool flag )
+{
+    disableStyleCache=flag;
+}
+
 void CodeGenerator::setStartingNestedLang(const string &langName)
 {
     embedLangStart = langName;

@@ -25,7 +25,7 @@ CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG -std=c++11 -D_FILE_OFFSET_BITS=64
 
 CFLAGS_DILU=-fno-strict-aliasing
 
-SO_VERSION=3.60
+SO_VERSION=3.61
 
 # Source paths
 CORE_DIR=./core/

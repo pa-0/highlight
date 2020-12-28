@@ -9,7 +9,7 @@ Categories = {"source", "functional"}
 table.insert(Keywords,
   { Id=1,
     List={"abstract", "def", "object", "override", "sealed", "trait", "type", "val", "var", "yield",
-          "forSome", "implicit", "lazy", "match", "null", "with"},
+          "forSome", "implicit", "lazy", "match", "null", "with", "given"},
   }
 )
 

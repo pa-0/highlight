@@ -29,7 +29,7 @@
 
 #include <algorithm>
 #include <string>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <Diluculum/CppObject.hpp>
 #include <Diluculum/LuaExceptions.hpp>
 #include <Diluculum/LuaState.hpp>
@@ -113,7 +113,7 @@ namespace Diluculum
 int DILUCULUM_WRAPPER_FUNCTION(FUNC) (lua_State* ls)                          \
 {                                                                             \
    using std::for_each;                                                       \
-   using boost::bind;                                                         \
+   using boost::placeholders;                                                 \
    using Diluculum::PushLuaValue;                                             \
    using Diluculum::Impl::ReportErrorFromCFunction;                           \
                                                                               \
@@ -247,7 +247,7 @@ int Diluculum__ ## CLASS ## __Destructor_Wrapper_Function (lua_State* ls)     \
 int DILUCULUM_METHOD_WRAPPER(CLASS, METHOD) (lua_State* ls)                   \
 {                                                                             \
    using std::for_each;                                                       \
-   using boost::bind;                                                         \
+   using boost::placeholders;                                                 \
    using Diluculum::PushLuaValue;                                             \
    using Diluculum::Impl::CppObject;                                          \
    using Diluculum::Impl::ReportErrorFromCFunction;                           \
