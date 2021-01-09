@@ -1,4 +1,4 @@
-.TH highlight 1 "2020-01-18" "Andre Simon" "user documentation"
+.TH highlight 1 "2021-01-09" "Andre Simon" "user documentation"
 
 .SH NAME
 Highlight - a universal sourcecode to formatted text converter
@@ -26,8 +26,8 @@ set path to highlight data directory
 .IP "--config-file=<file>"
 set path to a lang or theme file
 .IP "-h, --help[=topic]"
- print this help or a topic description 
- <topic> = [syntax, theme, plugin, config]
+print this help or a topic description
+<topic> = [syntax, theme, plugin, config]
 .IP "-i, --input=<file>"
 name of input file
 .IP "-o, --output=<file>"
@@ -40,6 +40,8 @@ print progress bar in batch mode
 set type of source code, necessary if input file suffix is missing. The syntax may also be defined as path of the language file.
 .IP "--syntax-by-name=<name>"
 specify type of source code by given name.  Will not read a file of this name, useful for stdin and to determine the syntax of the file before piping its content to highlight. This option overrides --syntax.
+.IP "--syntax-supported"
+test if the given syntax can be loaded and print the result  (assumes -S or --syntax-by-name)
 .IP "-v, --verbose"
 print debug info to stderr
 .IP "-q, --quiet"
@@ -47,10 +49,10 @@ suppress progress info in batch mode
 .IP "--force[=syntax]"
 generate output if input syntax is unknown. The fallback syntax may be set here, Plain Text is default.
 .IP "--list-scripts=<type>"
-list installed scripts 
+list installed scripts
 <type> = [langs, themes, plugins]
 .IP "--list-cat=<categories>"
-filter the scripts by the given categories (example: --list-cat='source;script') 
+filter the scripts by the given categories (example: --list-cat='source;script')
 .IP "--max-size=<size>"
 set maximum input file size (examples: 512M, 1G; default: 256M)
 .IP "--plug-in=<script>"
@@ -212,7 +214,7 @@ sets the path to highlight's configuration scripts
 may contain command line options, but no input file paths.
 
 .SH HINTS
-If no in- or output files are specified, stdin and stdout will be used for  in- or output.
+If no in- or output files are specified, stdin and stdout will be used for in- or output.
 Since version 3.44, reading from stdin can also be triggered by the '-' option.
 
 Default output format: xterm256 or truecolor if appropriate, HTML otherwise.
@@ -224,8 +226,8 @@ will be no style definitions.
 
 Reformatting code (-F) will only work with C, C++, C# and Java input files.
 .SH BUGS
-Wrapping lines with -V or -W will cause faulty highlighting of long single line comments and directives. 
-Using line-range might interfere with multi line syntax elements. Use with caution.    
+Wrapping lines with -V or -W will cause faulty highlighting of long single line comments and directives.
+Using line-range might interfere with multi line syntax elements. Use with caution.
 .SH FILES
 The configuration files are stored in
 .I /usr/share/highlight/.

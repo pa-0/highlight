@@ -7,6 +7,12 @@
 :toclevels: 1
 
 
+== highlight 3.61
+
+09.01.2021
+
+  - added `--syntax-supported` option
+
 == highlight 3.60
 
 21.12.2020

@@ -112,10 +112,12 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_REFORMAT_OPT     "reformat-option"
 #define OPT_RANGE_OPT        "line-range"
 #define OPT_BASE16           "base16"
-#define OPT_CATEGORIES       "list-cat"  
+#define OPT_CATEGORIES       "list-cat"
 #define OPT_PIPED_FNAME      "syntax-by-name"
 #define OPT_ISOLATE_TAGS     "isolate"
 #define OPT_MAX_FILE_SIZE    "max-size"
+#define OPT_SYNTAX_SUPPORTED "syntax-supported"
+
 
 // Improve CLI option compatibility with GNU source-highlight
 #define OPT_COMPAT_DOC       "doc"
@@ -128,7 +130,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_COMPAT_LINENUM   "line-number"
 #define OPT_COMPAT_LINEREF   "line-number-ref"
 
-using namespace std;
 
 /// handle command line options
 
@@ -144,29 +145,29 @@ public:
     ~CmdLineOptions();
 
     /** \return Single output file name*/
-    const string &getSingleOutFilename();
+    const std::string &getSingleOutFilename();
 
     /** \return Single input file name*/
-    const string &getSingleInFilename() const;
+    const std::string &getSingleInFilename() const;
 
     /** \return Output directory*/
-    const string& getOutDirectory() ;
+    const std::string& getOutDirectory() ;
 
     /** \return Style output file name*/
-    const string getStyleOutFilename() const;
+    const std::string getStyleOutFilename() const;
 
     /** \return Style input file name*/
-    const string& getStyleInFilename() const;
+    const std::string& getStyleInFilename() const;
 
     /** \return Char set*/
-    const string& getEncoding() const;
+    const std::string& getEncoding() const;
 
     /** \return SVG width*/
-    const string& getSVGWidth() const;
+    const std::string& getSVGWidth() const;
 
     /** \return SVG height*/
-    const string& getSVGHeight() const;
-    
+    const std::string& getSVGHeight() const;
+
     /** \return Number of spaces to replace a tab*/
     int getNumberSpaces() const;
 
@@ -192,7 +193,7 @@ public:
     bool useCRDelimiter() const;
 
     /** \return colour theme name */
-    string getThemeName() const ;
+    std::string getThemeName() const ;
 
     /** gibt true zurck, falls deutsche Hilfe ausgegeben werden soll */
     int helpLanguage() const;
@@ -204,7 +205,7 @@ public:
     bool fragmentOutput() const;
 
     /** \return output file suffix */
-    string getOutFileSuffix() const;
+    std::string getOutFileSuffix() const;
 
     /** \return True if anchors should be attached to line numbers*/
     bool attachLineAnchors() const;
@@ -223,7 +224,7 @@ public:
 
     /** \return True if shorthands of LaTeX Babel package should be disabled*/
     bool disableBabelShorthands() const;
-    
+
     /** \return True if support for the Beamer package should be enabled*/
     bool enableBeamerMode() const;
 
@@ -231,7 +232,7 @@ public:
     bool useFNamesAsAnchors() const;
 
     /** \return Data directory*/
-    const string &getDataDir() const;
+    const std::string &getDataDir() const;
 
     /** \return True if language syntax is given*/
     bool syntaxGiven() const;
@@ -244,7 +245,7 @@ public:
 
     /** \return True if line numbers are filled with leading zeroes */
     bool fillLineNrZeroes() const;
-    
+
     /** \return True if plug-in injections are outputted despite of --fragment */
     bool keepInjections() const;
 
@@ -253,21 +254,21 @@ public:
 
      /** \return True if output should not contain version info comment */
     bool omitVersionInfo() const;
-    
+
     /** \return programming syntax */
-    const string &getSyntax() const ;
+    const std::string &getSyntax() const ;
 
     /** \return Wrapping style*/
     highlight::WrapMode getWrappingStyle() const;
 
     /** \return List of input file names*/
-    const vector <string> & getInputFileNames() const;
+    const std::vector <std::string> & getInputFileNames() const;
 
     /** \return indentation and reformatting scheme*/
-    string getIndentScheme() const;
+    std::string getIndentScheme() const;
 
     /** \return RTF page size */
-    const string &getPageSize() const;
+    const std::string &getPageSize() const;
 
     /** \return Output file format */
     highlight::OutputType getOutputType() const;
@@ -289,13 +290,13 @@ public:
         {
         return opt_encoding_explicit;
     }
-   
+
     /** \return True if style was defined by user*/
     bool styleDefined() const
     {
         return !styleName.empty();
     }
-    
+
     /** \return True if output should be generated if language type is unknown*/
     bool forceOutput() const;
 
@@ -322,7 +323,7 @@ public:
 
     /** \return True if RTF output should include page color */
     bool includePageColor() const ;
-    
+
     /** \return True if LaTeX output should include fancier symbols */
     bool prettySymbols() const;
 
@@ -334,61 +335,67 @@ public:
 
     /** \return True if output token of the same syntax category should be in separate tags */
     bool isolateTags() const;
-    
+
+    /** \return true if file extension should be ignored */
+    bool isSkippedExt ( const std::string& ext ) const;
+
+    /** \return true if syntax load result should be reported */
+    bool checkSyntaxSupport () const;
+
     /** \return max. input file size (default 256 MB) */
     off_t getMaxFileSize() const;
-    
-    /** \return The given base font, empty string by default */
-    const string& getBaseFont() const ;
+
+    /** \return The given base font, empty std::string by default */
+    const std::string& getBaseFont() const ;
 
     /** \return Document title */
-    const string& getDocumentTitle() const ;
+    const std::string& getDocumentTitle() const ;
 
     /** \return anchor prefix */
-    const string& getAnchorPrefix() const ;
+    const std::string& getAnchorPrefix() const ;
 
     /** \return class name */
-    const string& getClassName() const ;
+    const std::string& getClassName() const ;
 
     /** \return list of plugin file paths */
-    const vector <string> &getPluginPaths() const;
+    const std::vector <std::string> &getPluginPaths() const;
 
     /** \return list of astyle options */
-    const vector <string> &getAStyleOptions() const;
-        
-    /** \return 1 if trailing nl should be omitted, 
+    const std::vector <std::string> &getAStyleOptions() const;
+
+    /** \return 1 if trailing nl should be omitted,
      *          2 if it should only be omitted for empty input */
     int disableTrailingNL() const ;
 
     /** \return The given base font size, empty string by default */
-    const string& getBaseFontSize() const ;
+    const std::string& getBaseFontSize() const ;
 
     /** \return name of nested syntax which starts the input */
-    const string& getStartNestedLang() const ;
+    const std::string& getStartNestedLang() const ;
 
     /** \return absolute theme definition path name */
-    const string& getAbsThemePath() const ;
+    const std::string& getAbsThemePath() const ;
 
     /** \return absolute language definition path name */
-    const string& getAbsLangPath() const ;
+    const std::string& getAbsLangPath() const ;
 
     /** \return parameter passed to plugin */
-    const string& getPluginParameter() const ;
+    const std::string& getPluginParameter() const ;
 
     /** \return category to filter scripts of --list-scripts */
-    const string& getCategories() const ;
+    const std::string& getCategories() const ;
 
     /** \return optional help topic */
-    const string& getHelpTopic() const;
+    const std::string& getHelpTopic() const;
 
     /** \return name of the file which will later be redirected to highlight's stdin */
-    const string& getSyntaxByFilename() const;
+    const std::string& getSyntaxByFilename() const;
 
     /** \return category of scripts which should be listed */
-    const string& getListScriptKind() const;
-    
+    const std::string& getListScriptKind() const;
+
         /** \return fallback syntax if not defined or found by filename or shebang */
-    const string& getFallbackSyntax() const;
+    const std::string& getFallbackSyntax() const;
 
     /** \return line number width */
     int getNumberWidth();
@@ -401,21 +408,15 @@ public:
 
     /** \return ANSI background color padding width */
     int getCanvasPadding();
-    
+
     /** \return line range start */
     int getLineRangeStart();
-    
+
     /** \return line range end (number of lines starting from getLineRangeStart() ) */
     int getLineRangeEnd();
-    
+
     /** \return Keyword Case (upper, lower, unchanged) */
     StringTools::KeywordCase getKeywordCase() const;
-
-    /** \return true if file extension should be ignored */
-    bool isSkippedExt ( const string& ext )
-    {
-        return ignoredFileTypes.count ( ext );
-    }
 
 private:
 
@@ -423,7 +424,7 @@ private:
     int lineNrWidth;    // width of line number (left padding)
     int lineLength;    // length of line before wrapping
     int lineNrStart;    // line number start count
-    int lineRangeStart;    // line range start 
+    int lineRangeStart;    // line range start
     int lineRangeEnd;    // line range end
     int opt_no_trailing_nl;
 
@@ -434,7 +435,7 @@ private:
     StringTools::KeywordCase keywordCase;
 
     // name of single output file
-    string outFilename,
+    std::string outFilename,
            // output directory
            outDirectory,
            // programming syntax which will be loaded
@@ -447,17 +448,17 @@ private:
            styleInFilename,
            // used to define data directories at runtime
            dataDir;
-           
+
     // name of indenation scheme
-    string indentScheme,
-           pageSize, 
+    std::string indentScheme,
+           pageSize,
            startNestedLang;
 
-    string baseFont, baseFontSize;
-    string docTitle, className;
-    string skipArg;
-    string svg_height, svg_width;
-    string absThemePath, absLangPath/*, twoPassFile*/;
+    std::string baseFont, baseFontSize;
+    std::string docTitle, className;
+    std::string skipArg;
+    std::string svg_height, svg_width;
+    std::string absThemePath, absLangPath/*, twoPassFile*/;
 
     bool opt_syntax;
     bool opt_include_style;
@@ -496,39 +497,40 @@ private:
     bool explicit_output_format;
     bool opt_isolate;
     bool opt_encoding_explicit;
-    
+    bool opt_syntax_supported_check;
+
     off_t maxFileSize;
 
-    string fallbackSyntax, anchorPrefix;
-    string helpLang, encodingName;
+    std::string fallbackSyntax, anchorPrefix;
+    std::string helpLang, encodingName;
 
-    string pluginPath, pluginParameter, 
+    std::string pluginPath, pluginParameter,
            listScriptCategory, helpTopic, redirectedFilename, listScriptType;
 
     /** list of all input file names */
-    vector <string> inputFileNames;
+    std::vector <std::string> inputFileNames;
 
     /** list of plugin file names */
-    vector <string> userPlugins;
+    std::vector <std::string> userPlugins;
 
     /** list of additional Artistic Style options */
-    vector <string> astyleOptions;
-    
+    std::vector <std::string> astyleOptions;
+
     /** list of file types which should be ignored */
-    set <string> ignoredFileTypes;
+    set <std::string> ignoredFileTypes;
 
     /** \return file suffix */
-    string getFileSuffix ( const string & fileName ) const;
+    std::string getFileSuffix ( const std::string & fileName ) const;
 
     /** \return directory name of path */
-    string getDirName ( const string & path );
+    std::string getDirName ( const std::string & path );
 
     /** get all entries in the directory defined by wildcard */
-    void readDirectory ( const string & wildcard );
+    void readDirectory ( const std::string & wildcard );
 
     /** \return Valid path name */
-    string validateDirPath ( const string & path );
-    
+    std::string validateDirPath ( const std::string & path );
+
     void parseRuntimeOptions( const int argc, const char *argv[], bool readInputFilenames=true);
 };
 

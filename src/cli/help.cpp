@@ -2,7 +2,7 @@
                           help.cpp  -  description
                              -------------------
     begin                : Die Apr 23 2002
-    copyright            : (C) 2002-2019 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -85,7 +85,7 @@ void printHelp(const std::string &topic)
         cout <<"HIGHLIGHT_OPTIONS: may contain command line options, but no input file paths\n\n";
         cout <<"Highlight reads TERM and COLORTERM to determine the appropriate default output.\n";
     } else if (topic=="plugin" || topic=="plug-in") {
-        cout <<"PLUG-IN HELP:\n\n";    
+        cout <<"PLUG-IN HELP:\n\n";
         cout <<"The plug-in interface allows modifications of syntax parsing, colouring and\n";
         cout <<"the document's header and footer.\n";
         cout <<"\n";
@@ -134,14 +134,15 @@ void printHelp(const std::string &topic)
         cout<<" -S, --syntax=<type|path>       specify type of source code or syntax file path\n";
         cout<<"     --syntax-by-name=<name>    specify type of source code by given name\n";
         cout<<"                                  will not read a file of this name, useful for stdin\n";
+        cout<<"     --syntax-supported         test if the given syntax can be loaded\n";
         cout<<" -v, --verbose                  print debug info\n";
         cout<<"     --force[=syntax]           generate output if input syntax is unknown\n";
         cout<<"     --list-scripts=<type>      list installed scripts\n";
         cout<<"                                  <type> = [langs, themes, plugins]\n";
-        cout<<"     --list-cat=<categories>    filter the scripts by the given categories\n"; 
+        cout<<"     --list-cat=<categories>    filter the scripts by the given categories\n";
         cout<<"                                  (example: --list-cat='source;script')\n";
         cout<<"     --max-size=<size>          set maximum input file size\n";
-        cout<<"                                  (examples: 512M, 1G; default: 256M)\n"; 
+        cout<<"                                  (examples: 512M, 1G; default: 256M)\n";
         cout<<"     --plug-in=<script>         execute Lua plug-in script; repeat option to\n";
         cout<<"                                  execute multiple plug-ins\n";
         cout<<"     --plug-in-param=<value>    set plug-in input parameter\n";
@@ -206,7 +207,7 @@ void printHelp(const std::string &topic)
         cout<<"     --no-version-info          omit version info comment\n";
        // cout<<"     --two-pass=<file>          write plug-in with persistent state information\n";
        // cout<<"                                  (beta; requires syntax with store instructions)\n";
-        
+
         cout<<"\n\n";
         cout<<"(X)HTML output options:\n";
         cout<<"\n";

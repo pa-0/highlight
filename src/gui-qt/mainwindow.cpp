@@ -2,7 +2,7 @@
                                mainwindow.cpp
                              -------------------
     begin                : Mo 16.03.2009
-    copyright            : (C) 2009-2020 by Andre Simon
+    copyright            : (C) 2009-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -776,7 +776,7 @@ void MainWindow::on_action_About_Highlight_triggered()
     QMessageBox::about( this, "About Highlight",
                         QString("Highlight is a code to formatted text converter.\n\n"
                                 "Highlight GUI %1\n"
-                                "(C) 2002-2020 Andre Simon <a.simon at mailbox.org>\n\n"
+                                "(C) 2002-2021 Andre Simon <a.simon at mailbox.org>\n\n"
                                 "Artistic Style Classes\n(C) 1998-2002 Tal Davidson\n"
                                 "(C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
                                 "Diluculum Lua wrapper\n"

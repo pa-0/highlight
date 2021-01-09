@@ -49,7 +49,7 @@ enum Optcode {
         S_OPT_PLUGIN_READFILE, S_OPT_PLUGIN_PARAMETER, S_OPT_LIST_SCRIPTS, S_OPT_CANVAS,
         S_OPT_KEEP_INJECTIONS, S_OPT_FORCE_STDOUT, S_OPT_LATEX_BEAMER, S_OPT_NO_VERSION_INFO,
         S_OPT_REFORMAT_OPT, S_OPT_RANGE_OPT, S_OPT_BASE16, S_OPT_CATEGORIES, S_OPT_PIPED_FNAME,
-        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE
+        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED
     };
 
 const Arg_parser::Option options[] = {
@@ -138,6 +138,7 @@ const Arg_parser::Option options[] = {
         { S_OPT_PIPED_FNAME,      OPT_PIPED_FNAME,     Arg_parser::yes },
         { S_OPT_ISOLATE,          OPT_ISOLATE_TAGS,    Arg_parser::no },
         { S_OPT_MAX_FILE_SIZE,    OPT_MAX_FILE_SIZE,   Arg_parser::yes },
+        { S_OPT_SYNTAX_SUPPORTED, OPT_SYNTAX_SUPPORTED, Arg_parser::no },
 
         { 0, 0, Arg_parser::no }
     };
@@ -195,6 +196,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     explicit_output_format(false),
     opt_isolate(false),
     opt_encoding_explicit(false),
+    opt_syntax_supported_check(false),
     maxFileSize(268435456),
     fallbackSyntax("txt"),
     anchorPrefix ( "l" ),
@@ -599,6 +601,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             }
             break;
         }
+        case S_OPT_SYNTAX_SUPPORTED:
+            opt_syntax_supported_check = true;
+            break;
 
         default:
             cerr << "highlight: option parsing failed" << endl;
@@ -747,6 +752,17 @@ bool CmdLineOptions::isolateTags() const
 {
     return opt_isolate;
 }
+
+bool CmdLineOptions::isSkippedExt ( const string& ext ) const
+{
+    return ignoredFileTypes.count ( ext );
+}
+
+bool CmdLineOptions::checkSyntaxSupport() const
+{
+    return opt_syntax_supported_check;
+}
+
 
 string CmdLineOptions::getOutFileSuffix() const
 {

@@ -2,7 +2,7 @@
                           main.cpp  -  description
                              -------------------
     begin                : Die Apr 23 22:16:35 CEST 2002
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
 
    Highlight is a universal source code to HTML converter. Syntax highlighting
@@ -44,11 +44,11 @@ using namespace std;
 void HLCmdLineApp::printVersionInfo(bool quietMode)
 {
     if (quietMode) {
-        cout << HIGHLIGHT_VERSION << "\n";
+        cout << highlight::Info::getVersion() << "\n";
     } else {
         cout << "\n highlight version "
-            << HIGHLIGHT_VERSION
-            << "\n Copyright (C) 2002-2020 Andre Simon <a dot simon at mailbox.org>"
+            << highlight::Info::getVersion()
+            << "\n Copyright (C) 2002-2021 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
             << "\n\n Artistic Style Classes (3.1 rev. 672)"
@@ -124,7 +124,6 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                //TODO: negation
                 for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
                     categoryNames.insert(it->second.asString());
@@ -356,7 +355,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     }
 
     if ( options.printConfigInfo() ) {
-        printConfigInfo ( );
+        printConfigInfo();
         return EXIT_SUCCESS;
     }
 
@@ -388,6 +387,27 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     string themePath=options.getAbsThemePath().empty() ? dataDir.getThemePath ( options.getThemeName(), options.useBase16Theme() ): options.getAbsThemePath();
 
     unique_ptr<highlight::CodeGenerator> generator ( highlight::CodeGenerator::getInstance ( options.getOutputType() ) );
+
+    if (options.checkSyntaxSupport()) {
+
+        if (!options.syntaxGiven() ) {
+            cerr << "highlight: Define a syntax to use this option\n";
+            return EXIT_FAILURE;
+        } else {
+            string syntaxByFile=options.getSyntaxByFilename();
+            string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile);
+            string resolvedSuffix (dataDir.guessFileType (testSuffix, syntaxByFile, syntaxByFile.empty(),false ));
+            string langDefPath (options.getAbsLangPath().empty() ? dataDir.getLangPath ( resolvedSuffix +".lang") : options.getAbsLangPath());
+
+            if (generator->loadLanguage( langDefPath ) == highlight::LOAD_OK) {
+                cout << "highlight: This syntax is supported\n";
+                return EXIT_SUCCESS;
+            } else {
+                cerr << "highlight: This syntax is not supported\n";
+                return EXIT_FAILURE;
+            }
+        }
+    }
 
     generator->setHTMLAttachAnchors ( options.attachLineAnchors() );
     generator->setHTMLOrderedList ( options.orderedList() );
@@ -570,7 +590,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 langDefPath = dataDir.getLangPath ( options.getFallbackSyntax()+".lang" );
             }
 
-            highlight::LoadResult loadRes= generator-> loadLanguage( langDefPath );
+            highlight::LoadResult loadRes= generator->loadLanguage( langDefPath );
 
             if ( loadRes==highlight::LOAD_FAILED_REGEX ) {
                 cerr << "highlight: Regex error ( "
