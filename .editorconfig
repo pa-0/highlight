@@ -40,7 +40,7 @@ insert_final_newline = true
 
 ## Make Files
 #############
-[{*[Mm]akefile*,*.mak,*.mk,depend}]
+[makefile]
 indent_style = tab
 indent_size = 2
 end_of_line = lf
