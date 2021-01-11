@@ -312,8 +312,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_batch_mode = true;
             readDirectory ( arg );
             break;
-        case 'c':
+
         case S_OPT_COMPAT_CSS:
+            showDeprecationHint(OPT_COMPAT_CSS, "style-outfile");
+        case 'c':
             styleOutFilename = arg;
             opt_stylepath_explicit=true;
             break;
@@ -329,8 +331,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case 'e':
             styleInFilename = arg;
             break;
-        case 'f':
         case S_OPT_COMPAT_NODOC:
+            showDeprecationHint(OPT_COMPAT_NODOC, "fragment");
+        case 'f':
             opt_fragment = true;
             break;
         case 'F':
@@ -364,6 +367,8 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_COMPAT_LINENUM:
             if ( arg=="0" ) opt_fill_zeroes=true;
             /* Falls through */
+            showDeprecationHint(OPT_COMPAT_LINENUM, "line-numbers, zeroes");
+
         case 'l':
             opt_linenumbers = true;
             break;
@@ -384,8 +389,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             explicit_output_format=true;
             outFilename = arg;
             break;
-        case 'd':
         case S_OPT_COMPAT_OUTDIR:
+            showDeprecationHint(OPT_COMPAT_OUTDIR, "outdir");
+        case 'd':
             explicit_output_format=true;
             outDirectory = validateDirPath ( arg );
             break;
@@ -407,8 +413,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 absThemePath = styleName;
             }
             break;
-        case 'S':
         case S_OPT_COMPAT_SRCLANG:
+            showDeprecationHint(OPT_COMPAT_SRCLANG, "syntax");
+
+        case 'S':
             syntax = arg;
             opt_syntax = true;
 
@@ -417,8 +425,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 syntax = arg.substr(0, arg.find_last_of('.'));
             }
             break;
-        case 't':
         case S_OPT_COMPAT_TAB:
+            showDeprecationHint(OPT_COMPAT_TAB, "replace-tabs");
+
+        case 't':
             StringTools::str2num<int> ( numberSpaces, arg, std::dec );
             break;
         case 'u':
@@ -452,8 +462,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_ENCLOSE_PRE:
             opt_enclose_pre=true;
             break;
-        case S_OPT_FORCE_OUTPUT:
         case S_OPT_COMPAT_FAILSAFE:
+            showDeprecationHint(OPT_COMPAT_FAILSAFE, OPT_FORCE_OUTPUT);
+
+        case S_OPT_FORCE_OUTPUT:
             opt_force_output = true;
             if  ( !arg.empty() ) {
                 fallbackSyntax=arg;
@@ -498,8 +510,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_REFORMAT_OPT:
             astyleOptions.push_back(arg);
             break;
-        case S_OPT_PLUGIN_PARAMETER:
         case S_OPT_PLUGIN_READFILE:
+            showDeprecationHint(OPT_PLUGIN_READFILE, OPT_PLUGIN_PARAMETER);
+
+        case S_OPT_PLUGIN_PARAMETER:
             pluginParameter=arg;
             break;
 
@@ -513,23 +527,33 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_no_version_info = true;
             break;
         case S_OPT_COMPAT_DOC:
+            showDeprecationHint(OPT_COMPAT_DOC, "NONE");
+
             opt_fragment = false;
             break;
         case S_OPT_COMPAT_LINEREF:
+            showDeprecationHint(OPT_COMPAT_LINEREF, "line-numbers, anchors, anchor-prefix");
+
             opt_linenumbers = true;
             opt_attach_line_anchors = true;
             anchorPrefix = ( arg.empty() ) ? "line" : arg;
             break;
         case S_OPT_EOL_DELIM_CR:
+            showDeprecationHint(OPT_EOL_DELIM_CR, "NONE");
+
             opt_delim_CR = true;
             break;
         case S_OPT_START_NESTED:
+            showDeprecationHint(OPT_START_NESTED, "NONE");
+
             startNestedLang=arg;
             break;
         case S_OPT_PRINT_STYLE:
             opt_print_style = true;
             break;
         case S_OPT_BASE16:
+            showDeprecationHint(OPT_BASE16, "theme with base16/ prefix");
+
             opt_base16_theme = true;
             if (!arg.empty())
                 styleName = arg;
@@ -1061,4 +1085,9 @@ const string& CmdLineOptions::getListScriptKind() const{
 const string& CmdLineOptions::getFallbackSyntax() const {
     return fallbackSyntax;
 }
+
+void CmdLineOptions::showDeprecationHint ( const std::string & option, const std::string & alt ) const {
+    cerr << "highlight: deprecated option '"<<option<<"' will be removed in v4.0 stable; valid alternatives: '"<<alt<<"'\n";
+}
+
 

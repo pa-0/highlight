@@ -1,0 +1,66 @@
+= HIGHLIGHT VERSION 4.0 MIGRATION
+André Simon
+:revdate: January 2021
+:lang: en
+:toc: left
+:toc-title: Contents
+:toclevels: 4
+:sectnums:
+:sectnumlevels: 2
+:sectanchors:
+// Misc Settings:
+:experimental: true
+:icons: font
+:linkattrs: true
+
+
+== REMOVED CLI OPTIONS
+
+The following options will be removed:
++
+..........................................................................
+    --start-nested=<lang>      define nested language which starts input
+                                  without opening delimiter
+
+    --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)
+    --base16[=theme]           use a theme of the Base16 collection
+
+    --delim-cr                 set CR as end-of-line delimiter (MacOS 9)
+..........................................................................
+
+These options will no longer be documented but will still continue to work:
+
+=== GNU source-highlight compatibility options:
++
+..........................................................................
+    --doc                      create stand alone document
+    --no-doc                   cancel the --doc option
+    --css=filename             the external style sheet filename
+    --src-lang=STRING          source language
+ -t, --tab=INT                  specify tab length
+ -n, --line-number[=0]          number all output lines, optional padding
+    --line-number-ref[=p]      number all output lines and generate an anchor,
+                                made of the specified prefix p + the line
+                                number  (default='line')
+    --output-dir=path          output directory
+    --failsafe                 if no language definition is found for the
+                                  input, it is simply copied to the output
+..........................................................................
+
+A deprecation notice is outputted during the beta release cycle.
+
+=== renamed files:
++
+..........................................................................
+    langDefs/abap4.lang -> langDefs/abap.lang
+    langDefs/coffee.lang -> langDefs/coffeescript.lang
+    langDefs/docker.lang -> langDefs/dockerfile.lang
+    langDefs/js.lang -> langDefs/javascript.lang
+    langDefs/make.lang -> langDefs/makefile.lang
+    langDefs/ps1.lang -> langDefs/powershell.lang
+    langDefs/rs.lang -> langDefs/rust.lang
+    langDefs/sh.lang -> langDefs/shellscript.lang
+    langDefs/ts.lang -> langDefs/typescript.lang
+..........................................................................
+
+// EOF //

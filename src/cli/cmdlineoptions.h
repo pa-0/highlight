@@ -532,6 +532,8 @@ private:
     std::string validateDirPath ( const std::string & path );
 
     void parseRuntimeOptions( const int argc, const char *argv[], bool readInputFilenames=true);
+
+    void showDeprecationHint ( const std::string & option, const std::string & alt ) const;
 };
 
 #endif
