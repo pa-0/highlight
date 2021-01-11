@@ -1,6 +1,6 @@
 = HIGHLIGHT HANDBUCH
 André Simon
-v3.58, August 2020
+v4.0-beta, January 2021
 :lang: de
 :toc: left
 :toc-title: Contents
@@ -111,7 +111,7 @@ highlight < source.tmp > main.cpp.html --syntax-by-name main.cpp
 .................................................
 +
 Sie werden die HTML-Datei und die CSS-Datei `highlight.css` im aktuellen
-Verzeichnis finden. Falls Sie Eingabe-Umleitung verwenden, geben Sie den 
+Verzeichnis finden. Falls Sie Eingabe-Umleitung verwenden, geben Sie den
 Typ der Programmiersprache mit `--syntax` oder `--syntax-by-name` an.
 
 HTML mit eingebetteter CSS Definition und Zeilennummerierung ausgeben::
@@ -264,7 +264,7 @@ Output formatting options:
      --class-name=<name>        set CSS class name prefix;
                                   omit class name if set to NONE
      --inline-css               output CSS within each tag (verbose output)
-     --enclose-pre              enclose fragmented output with pre tag 
+     --enclose-pre              enclose fragmented output with pre tag
                                   (assumes -f)
 
 
@@ -279,7 +279,7 @@ LaTeX output options:
 RTF output options:
 
      --page-color               include page color attributes
- -x, --page-size=<ps>           set page size 
+ -x, --page-size=<ps>           set page size
                                   <ps> = [a3, a4, a5, b4, b5, b6, letter]
      --char-styles              include character stylesheets
 
@@ -293,24 +293,7 @@ SVG output options:
 Terminal escape output options (xterm256 or truecolor):
 
      --canvas[=width]           set background colour padding (default: 80)
-
-
-GNU source-highlight compatibility options:
-
-     --doc                      create stand alone document
-     --no-doc                   cancel the --doc option
-     --css=filename             the external style sheet filename
-     --src-lang=STRING          source language
- -t, --tab=INT                  specify tab length
- -n, --line-number[=0]          number all output lines, optional padding
-     --line-number-ref[=p]      number all output lines and generate an anchor,
-                                  made of the specified prefix p + the line
-                                  number  (default='line')
-     --output-dir=path          output directory
-     --failsafe                 if no language definition is found for the
-                                  input, it is simply copied to the output
 ................................................................................
-
 
 
 === GUI OPTIONEN
@@ -332,8 +315,8 @@ Wird die Eingabedatei nicht direkt auf der Kommandozeile als Argument bzw. mit
 `--input` angegeben, kann Highlight die passende Sprachinformation nicht
 automatisch anhand der Dateiendung bestimmen. Lediglich einige Skriptsprachen
 werden anhand des Shebangs in der ersten Zeile erkannt.
-Mit der Option `--syntax` oder `--syntax-by-name` muss dann der Typ der Datei 
-vom Benutzer angegeben werden (das Argument ist normalerweise die fuer die 
+Mit der Option `--syntax` oder `--syntax-by-name` muss dann der Typ der Datei
+vom Benutzer angegeben werden (das Argument ist normalerweise die fuer die
 Programmiersprache uebliche Dateierweiterung bzw. der Dateiname).
 Beispiel: Wenn Sie eine Python-Datei konvertieren wollen, muss highlight die
 Sprachdefinition py.lang einlesen. Das korrekte Argument fuer `--syntax` ist
@@ -405,22 +388,6 @@ Wird als Sprachdefinition txt angegeben, findet keine Syntaxhervorhebung statt.
 .......................................................
 highlight -S txt --out-format=latex README > readme.tex
 .......................................................
-
-
-=== GNU SOURCE-HIGHLIGHT KOMPATIBILITAET
-
-Die Kommandozeilenschnittstelle ueberschneidet sich zu einem grossen Teil mit {source-highlight}.
-
-Diese highlight-Optionen haben dieselbe Bedeutung wie bei source-highlight:
- `--input`, `--output`, `--help`, `--version`, `--out-format`, `--title`, `--data-dir`,
- `--verbose`, `--quiet`
-
-Diese Optionen wurden hinzugefuegt, um die Kompatibilitaet zu verbessern:
- `--css`, `--doc`, `--failsafe`, `--line-number`, `--line-number-ref`, `--no-doc`, `--tab`,
- `--output-dir`, `--src-lang`
-
-Die obigen Optionen bilden eine gemeinsame Highlighter-Schnittstelle fuer
-Skripte, Plugins etc.
 
 
 === FORTGESCHRITTENE OPTIONEN
@@ -555,14 +522,14 @@ Keywords = { { Id, List|Regex, Group?, Priority?, Constraints? } }
                Default-Themes unterstuetzen 4  Gruppen, Base16-Themes 6.
   List:        Liste, Auflistung von Schluesselwoertern
   Regex:       String, Regulaerer Ausdruck
-  Group:       Integer, Capturing Group ID der Regex, bestimmt den Teil des 
+  Group:       Integer, Capturing Group ID der Regex, bestimmt den Teil des
                gefundenen Ausdrucks, der als Schluesselwort hervorgehoben werden
-               soll (optional, wenn nicht gesetzt wird der Match mit der 
+               soll (optional, wenn nicht gesetzt wird der Match mit der
                hoechsten Group-ID zurueckgegeben (Zaehlung von links nach rechts))
-  Priority:    Integer, wenn nicht Null werden keine weiteren Ausdruecke 
+  Priority:    Integer, wenn nicht Null werden keine weiteren Ausdruecke
                ausgewertet wenn diese Regex einen Treffer liefert
   Constraints: Tabelle, bestehend aus:
-               Line: Integer, begrenzt Suche auf die Zeilennummer, 
+               Line: Integer, begrenzt Suche auf die Zeilennummer,
                Filename: String, begrenzt Suche auf den DAteinamen
 
 Regulaere Ausdruecke werden in ihrer Reihenfolge innerhalb von Keywords ausgewertet.
@@ -607,7 +574,7 @@ KeywordFormatHints={ { Id, Bold?, Italic?, Underline? } }
   Bold:       Boolean, font weight property
   Italic:     Boolean, font style property
   Underline:  Boolean, font decoration property
-  
+
 Diese Angaben werden bei gemischten Syntaxtypen im Batch-Modus ohne --include-style
 nicht in allen Faellen uebernommen.
 
@@ -841,8 +808,8 @@ String  = { Colour="#00884c" }
 BlockComment  = { Colour="#ff5050" }
 StringPreProc = String
 LineComment   = BlockComment
-Operator      = { Colour="#513d2b" } 
-LineNum       = { Colour="#555555" } 
+Operator      = { Colour="#513d2b" }
+LineNum       = { Colour="#555555" }
 PreProcessor  = {  Colour="#660000" }
 Interpolation = { Colour="#CA6DE1" }
 

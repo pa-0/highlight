@@ -26,6 +26,7 @@ The following options will be removed:
     --base16[=theme]           use a theme of the Base16 collection
 
     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)
+    --plug-in-read             see --plug-in-param
 ..........................................................................
 
 These options will no longer be documented but will still continue to work:
