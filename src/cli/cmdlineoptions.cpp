@@ -664,8 +664,6 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_ls_rainbow = true;
             break;
 
-
-
         default:
             cerr << "highlight: option parsing failed" << endl;
         }

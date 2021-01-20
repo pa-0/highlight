@@ -31,6 +31,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codegenerator.h"
 
+#include "lspclient.h"
+
 #include "htmlgenerator.h"
 #include "xhtmlgenerator.h"
 #include "rtfgenerator.h"
@@ -187,6 +189,21 @@ bool CodeGenerator::initTheme ( const string& themePath )
     bool loadOK = docStyle.load ( themePath, outputType );
     initOutputTags();
     return loadOK;
+}
+
+bool CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace )
+{
+    highlight::LSPClient client;
+
+    client.setExecutable(executable);
+    client.setWorkspace(workspace);
+    client.setOptions(options);
+
+    client.init();
+
+    client.runInitialize();
+
+    return true;
 }
 
 const string& CodeGenerator::getStyleName()

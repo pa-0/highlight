@@ -129,13 +129,13 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_COMPAT_LINENUM   "line-number"
 #define OPT_COMPAT_LINEREF   "line-number-ref"
 
-#define OPT_LS_PROFILE       "--ls-profile"
-#define OPT_LS_WORKSPACE     "--ls-workspace"
-#define OPT_LS_EXEC          "--ls-exec"
-#define OPT_LS_OPTION        "--ls-option"
-#define OPT_LS_HOVER         "--ls-hover"
-#define OPT_LS_SEMANTIC      "--ls-semantic"
-#define OPT_LS_RAINBOW       "--ls-rainbow"
+#define OPT_LS_PROFILE       "ls-profile"
+#define OPT_LS_WORKSPACE     "ls-workspace"
+#define OPT_LS_EXEC          "ls-exec"
+#define OPT_LS_OPTION        "ls-option"
+#define OPT_LS_HOVER         "ls-hover"
+#define OPT_LS_SEMANTIC      "ls-semantic"
+#define OPT_LS_RAINBOW       "ls-rainbow"
 
 /// handle command line options
 

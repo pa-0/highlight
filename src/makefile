@@ -25,7 +25,7 @@ CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG -std=c++11 -D_FILE_OFFSET_BITS=64
 
 CFLAGS_DILU=-fno-strict-aliasing
 
-SO_VERSION=3.61
+SO_VERSION=4.0
 
 # Source paths
 CORE_DIR=./core/
@@ -88,7 +88,7 @@ CORE_OBJECTS:=stylecolour.o stringtools.o \
 	xhtmlgenerator.o latexgenerator.o texgenerator.o rtfgenerator.o \
 	htmlgenerator.o ansigenerator.o svggenerator.o codegenerator.o \
 	xterm256generator.o pangogenerator.o bbcodegenerator.o odtgenerator.o\
-	syntaxreader.o elementstyle.o themereader.o keystore.o\
+	syntaxreader.o elementstyle.o themereader.o keystore.o lspclient.o\
 	datadir.o preformatter.o platform_fs.o\
 	ASStreamIterator.o ASResource.o ASFormatter.o ASBeautifier.o ASEnhancer.o
 
@@ -141,7 +141,7 @@ syntaxreader.o: ${CORE_DIR}syntaxreader.cpp ${INCLUDE_DIR}syntaxreader.h ${INCLU
 
 codegenerator.o: ${CORE_DIR}codegenerator.cpp ${INCLUDE_DIR}codegenerator.h ${INCLUDE_DIR}syntaxreader.h \
 	${INCLUDE_DIR}stringtools.h ${INCLUDE_DIR}enums.h ${INCLUDE_DIR}themereader.h ${INCLUDE_DIR}keystore.h \
-	${INCLUDE_DIR}elementstyle.h ${INCLUDE_DIR}stylecolour.h ${INCLUDE_DIR}preformatter.h \
+	${INCLUDE_DIR}elementstyle.h ${INCLUDE_DIR}stylecolour.h ${INCLUDE_DIR}preformatter.h ${INCLUDE_DIR}lspclient.h \
 	${INCLUDE_DIR}htmlgenerator.h ${INCLUDE_DIR}version.h ${INCLUDE_DIR}charcodes.h ${INCLUDE_DIR}xhtmlgenerator.h ${INCLUDE_DIR}rtfgenerator.h \
 	${INCLUDE_DIR}latexgenerator.h ${INCLUDE_DIR}texgenerator.h ${INCLUDE_DIR}ansigenerator.h
 	${CXX_COMPILE} ${CORE_DIR}codegenerator.cpp
@@ -191,6 +191,9 @@ stylecolour.o: ${CORE_DIR}stylecolour.cpp ${INCLUDE_DIR}stylecolour.h ${INCLUDE_
 
 keystore.o: ${CORE_DIR}keystore.cpp ${INCLUDE_DIR}keystore.h
 	${CXX_COMPILE} ${CORE_DIR}keystore.cpp
+
+lspclient.o: ${CORE_DIR}lspclient.cpp ${INCLUDE_DIR}lspclient.h
+	${CXX_COMPILE} ${CORE_DIR}lspclient.cpp
 
 # cli stuff
 arg_parser.o: ${CLI_DIR}arg_parser.cc

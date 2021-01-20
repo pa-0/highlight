@@ -478,6 +478,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
     }
 
+    //XXX
+    //generator->initLanguageServer ( options.getLsExecutable(), options.getLSOptions(), options.getLsWorkspace() );
+
     if ( !generator->initTheme ( themePath ) ) {
         cerr << "highlight: "
              << generator->getThemeInitError()

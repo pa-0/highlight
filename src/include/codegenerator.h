@@ -172,6 +172,8 @@ public:
     */
     bool initTheme ( const string& themePath );
 
+    bool initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace );
+
     /**
      \return description of the theme init error
     */
