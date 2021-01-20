@@ -181,7 +181,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 }
 
 void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
-                                    const string & langDefPath )
+                                    const string & langDefPath, int level )
 {
     if (!lang) return;
 
@@ -189,54 +189,56 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
 
     cerr << "\nLoading language definition:\n" << langDefPath;
     cerr << "\n\nDescription: " << lang->getDescription();
-    Diluculum::LuaState* luaState=lang->getLuaState();
-    if (luaState) {
-        cerr << "\n\nLUA GLOBALS:\n" ;
-        Diluculum::LuaValueMap::iterator it;
-        Diluculum::LuaValueMap glob =luaState->globals();
-        string elemName;
-        for(it = glob.begin(); it != glob.end(); it++) {
-            Diluculum::LuaValue first = it->first;
-            Diluculum::LuaValue second = it->second;
-            elemName = first.asString();
-            std::cerr << elemName<<": ";
-            switch (second.type()) {
-            case  LUA_TSTRING:
-                cerr << "string [ "<<second.asString()<<" ]";
-                break;
-            case  LUA_TNUMBER:
-                cerr << "number [ "<<second.asNumber()<<" ]";
-                if (elemName.find("HL_")==0 && elemName.find("HL_FORMAT")==string::npos)
-                    HLStateMap[second.asNumber()] = elemName;
-                break;
-            case  LUA_TBOOLEAN:
-                cerr << "boolean [ "<<second.asBoolean()<<" ]";
-                break;
-            default:
-                cerr << second.typeName();
+    if (level>1) {
+        Diluculum::LuaState* luaState=lang->getLuaState();
+        if (luaState) {
+            cerr << "\n\nLUA GLOBALS:\n" ;
+            Diluculum::LuaValueMap::iterator it;
+            Diluculum::LuaValueMap glob =luaState->globals();
+            string elemName;
+            for(it = glob.begin(); it != glob.end(); it++) {
+                Diluculum::LuaValue first = it->first;
+                Diluculum::LuaValue second = it->second;
+                elemName = first.asString();
+                std::cerr << elemName<<": ";
+                switch (second.type()) {
+                    case  LUA_TSTRING:
+                        cerr << "string [ "<<second.asString()<<" ]";
+                        break;
+                    case  LUA_TNUMBER:
+                        cerr << "number [ "<<second.asNumber()<<" ]";
+                        if (elemName.find("HL_")==0 && elemName.find("HL_FORMAT")==string::npos)
+                            HLStateMap[second.asNumber()] = elemName;
+                        break;
+                    case  LUA_TBOOLEAN:
+                        cerr << "boolean [ "<<second.asBoolean()<<" ]";
+                        break;
+                    default:
+                        cerr << second.typeName();
+                }
+                cerr << endl;
             }
-            cerr << endl;
+
         }
 
-    }
+        highlight::RegexElement *re=NULL;
+        for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
+        {
+            if (i==0)
+                cerr << "\nREGEX:\n";
 
-    highlight::RegexElement *re=NULL;
-    for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
-    {
-        if (i==0)
-             cerr << "\nREGEX:\n";
+            re = lang->getRegexElements() [i];
+            cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
+        }
 
-        re = lang->getRegexElements() [i];
-        cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
-    }
+        highlight::KeywordMap::iterator it;
+        highlight::KeywordMap keys=lang->getKeywords();
+        for ( it=keys.begin(); it!=keys.end(); it++ ) {
+            if (it==keys.begin())
+                cerr << "\nKEYWORDS:\n";
 
-    highlight::KeywordMap::iterator it;
-    highlight::KeywordMap keys=lang->getKeywords();
-    for ( it=keys.begin(); it!=keys.end(); it++ ) {
-        if (it==keys.begin())
-            cerr << "\nKEYWORDS:\n";
-
-        cerr << " "<< it->first << "("<< it->second << ")";
+            cerr << " "<< it->first << "("<< it->second << ")";
+        }
     }
     cerr <<"\n\n";
 }
@@ -547,7 +549,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {
 
-            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badInputFiles.push_back ( inFileList[i] + " (size)" );
             }
             ++i;
@@ -618,8 +620,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     break;
                 }
             }
-            if ( options.printDebugInfo() && loadRes==highlight::LOAD_OK ) {
-                printDebugInfo ( generator->getSyntaxReader(), langDefPath );
+            if ( options.verbosityLevel() && loadRes==highlight::LOAD_OK ) {
+                printDebugInfo ( generator->getSyntaxReader(), langDefPath, options.verbosityLevel() );
             }
             lastSuffix = suffix;
 
@@ -689,16 +691,16 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         highlight::ParseError error = generator->generateFile ( inFileList[i], outFilePath );
 
         if ( error==highlight::BAD_INPUT ) {
-            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badInputFiles.push_back ( inFileList[i] );
             }
         } else if ( error==highlight::BAD_OUTPUT ) {
-            if ( numBadOutput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadOutput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badOutputFiles.push_back ( outFilePath );
             }
         }
         if ( formattingEnabled && !generator->formattingIsPossible() ) {
-            if ( numBadFormatting++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadFormatting++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badFormattedFiles.push_back ( outFilePath );
             }
         }

@@ -1,0 +1,22 @@
+= HIGHLIGHT LANGUAGE SERVER PROTOCOL CLIENT
+André Simon
+:revdate: January 2021
+:lang: en
+:toc: left
+:toc-title: Contents
+:toclevels: 4
+:sectnums:
+:sectnumlevels: 2
+:sectanchors:
+// Misc Settings:
+:experimental: true
+:icons: font
+:linkattrs: true
+
+== LSP SUPPORT
+
+== PROFILES
+
+== OPTIONS
+
+// EOF //

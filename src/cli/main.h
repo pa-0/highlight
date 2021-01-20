@@ -2,7 +2,7 @@
                           main.ch  -  description
                              -------------------
     begin                : Die Apr 23 22:16:35 CEST 2002
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
 
  ***************************************************************************/
@@ -67,7 +67,7 @@ public:
 private:
 
     DataDir dataDir;
-    
+
 
     /** print version info*/
     void printVersionInfo(bool quietMode=false);
@@ -79,22 +79,24 @@ private:
     void printBadInstallationInfo();
 
     /** print input and output errors */
-    void printIOErrorReport ( unsigned int numberErrorFiles, vector<string> & fileList, 
+    void printIOErrorReport ( unsigned int numberErrorFiles, vector<string> & fileList,
                               const string &action, const string &streamName );
 
     /** list installed  files
         \return true if files were found
     */
-    int printInstalledFiles(const string& where, const string& wildcard, const string& kind, 
+    int printInstalledFiles(const string& where, const string& wildcard, const string& kind,
                             const string&option, const string& categoryFilterList="");
 
     /** print debug information
-        \param  lang language definition
+        \param lang language definition
         \param langDefPath path to language definition
+        \param level verbosity level
+
     */
     void printDebugInfo ( const highlight::SyntaxReader *lang,
-                          const string &langDefPath );
-    
+                          const string &langDefPath, int level );
+
     void printPersistentStates ( const highlight::SyntaxReader *lang);
 
     int getNumDigits ( int i );

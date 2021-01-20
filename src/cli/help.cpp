@@ -115,7 +115,10 @@ void printHelp(const std::string &topic)
         cout <<"This indicator points at the tested syntax element of the previous line.\n";
         cout <<"The state identifiers match the corresponding HTML output CSS class names.\n\n";
         cout <<"See README_TESTCASES.adoc for a detailed description and examples.\n";
-    }else {
+    } else if (topic=="lsp") {
+        cout <<"LANGUAGE SERVER PROTOCOL HELP:\n\n";
+        cout <<"TBD\n";
+    } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";
         cout<<"General options:\n";
@@ -135,7 +138,7 @@ void printHelp(const std::string &topic)
         cout<<"     --syntax-by-name=<name>    specify type of source code by given name\n";
         cout<<"                                  will not read a file of this name, useful for stdin\n";
         cout<<"     --syntax-supported         test if the given syntax can be loaded\n";
-        cout<<" -v, --verbose                  print debug info\n";
+        cout<<" -v, --verbose                  print debug info; repeat to show more information\n";
         cout<<"     --force[=syntax]           generate output if input syntax is unknown\n";
         cout<<"     --list-scripts=<type>      list installed scripts\n";
         cout<<"                                  <type> = [langs, themes, plugins]\n";
@@ -205,8 +208,6 @@ void printHelp(const std::string &topic)
         cout<<"     --no-trailing-nl[=mode]    omit trailing newline. If mode is empty-file, omit\n";
         cout<<"                                  only for empty input\n";
         cout<<"     --no-version-info          omit version info comment\n";
-       // cout<<"     --two-pass=<file>          write plug-in with persistent state information\n";
-       // cout<<"                                  (beta; requires syntax with store instructions)\n";
 
         cout<<"\n\n";
         cout<<"(X)HTML output options:\n";
@@ -249,8 +250,18 @@ void printHelp(const std::string &topic)
         cout<<"     --canvas[=width]           set background colour padding (default: 80)\n";
         cout<<"\n";
         cout<<"\n";
+
+        cout<<"Language Server options (*tbd):\n\n";
+        cout<<"     --ls-profile *\n";
+        cout<<"     --ls-workspace *\n";
+        cout<<"     --ls-exec *\n";
+        cout<<"     --ls-option *\n";
+        cout<<"     --ls-hover *\n";
+        cout<<"     --ls-semantic *\n";
+        cout<<"     --ls-rainbow *\n\n";
+
         cout<<"If no in- or output files are specified, stdin and stdout will be used.\n";
-        cout<<"Since version 3.44, reading from stdin can also be triggered by the '-' option.\n";
+        cout<<"Reading from stdin can also be triggered using the '-' option.\n";
         cout<<"Default output format: xterm256 or truecolor if appropriate, HTML otherwise.\n";
         cout<<"Style definitions are stored in highlight.css (HTML, XHTML, SVG) or\n";
         cout<<"highlight.sty (LaTeX, TeX) if neither -c nor -I is given.\n";

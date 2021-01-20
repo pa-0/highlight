@@ -2,7 +2,7 @@
                           cmdlineoptions.cpp  -  description
                              -------------------
     begin                : Sun Nov 25 2001
-    copyright            : (C) 2001-2017 by Andre Simon
+    copyright            : (C) 2001-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -49,7 +49,9 @@ enum Optcode {
         S_OPT_PLUGIN_READFILE, S_OPT_PLUGIN_PARAMETER, S_OPT_LIST_SCRIPTS, S_OPT_CANVAS,
         S_OPT_KEEP_INJECTIONS, S_OPT_FORCE_STDOUT, S_OPT_LATEX_BEAMER, S_OPT_NO_VERSION_INFO,
         S_OPT_REFORMAT_OPT, S_OPT_RANGE_OPT, S_OPT_BASE16, S_OPT_CATEGORIES, S_OPT_PIPED_FNAME,
-        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED
+        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED,
+        S_OPT_LS_PROFILE, S_OPT_LS_WORKSPACE, S_OPT_LS_EXEC, S_OPT_LS_OPTION, S_OPT_LS_HOVER,
+        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW
     };
 
 const Arg_parser::Option options[] = {
@@ -140,6 +142,14 @@ const Arg_parser::Option options[] = {
         { S_OPT_MAX_FILE_SIZE,    OPT_MAX_FILE_SIZE,   Arg_parser::yes },
         { S_OPT_SYNTAX_SUPPORTED, OPT_SYNTAX_SUPPORTED, Arg_parser::no },
 
+        { S_OPT_LS_PROFILE, OPT_LS_PROFILE, Arg_parser::yes },
+        { S_OPT_LS_WORKSPACE, OPT_LS_WORKSPACE, Arg_parser::yes },
+        { S_OPT_LS_EXEC, OPT_LS_EXEC, Arg_parser::yes },
+        { S_OPT_LS_OPTION, OPT_LS_OPTION, Arg_parser::yes },
+        { S_OPT_LS_HOVER, OPT_LS_HOVER, Arg_parser::no },
+        { S_OPT_LS_SEMANTIC, OPT_LS_SEMANTIC, Arg_parser::no },
+        { S_OPT_LS_RAINBOW, OPT_LS_RAINBOW, Arg_parser::no },
+
         { 0, 0, Arg_parser::no }
     };
 
@@ -153,6 +163,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     lineRangeStart( 0 ),
     lineRangeEnd( 0 ),
     opt_no_trailing_nl(0),
+    verbosity(0),
     canvasPaddingWidth(0),
     wrappingStyle ( highlight::WRAP_DISABLED ),
     outputType ( highlight::HTML ),
@@ -163,7 +174,6 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_include_style ( false ),
     opt_help ( false ),
     opt_version ( false ),
-    opt_verbose ( false ),
     opt_print_config ( false ),
     opt_linenumbers ( false ),
     opt_batch_mode ( false ),
@@ -197,6 +207,9 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_isolate(false),
     opt_encoding_explicit(false),
     opt_syntax_supported_check(false),
+    opt_ls_hover(false),
+    opt_ls_semantic(false),
+    opt_ls_rainbow(false),
     maxFileSize(268435456),
     fallbackSyntax("txt"),
     anchorPrefix ( "l" ),
@@ -436,7 +449,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_encoding_explicit=true;
             break;
         case 'v':
-            opt_verbose = true;
+            ++verbosity;
             break;
         case 'V':
             wrappingStyle = highlight::WRAP_SIMPLE;
@@ -509,6 +522,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             break;
         case S_OPT_REFORMAT_OPT:
             astyleOptions.push_back(arg);
+            break;
+        case S_OPT_LS_OPTION:
+            lsOptions.push_back(arg);
             break;
         case S_OPT_PLUGIN_READFILE:
             showDeprecationHint(OPT_PLUGIN_READFILE, OPT_PLUGIN_PARAMETER);
@@ -629,6 +645,27 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_syntax_supported_check = true;
             break;
 
+        case  S_OPT_LS_PROFILE:
+            lsProfile = arg;
+            break;
+        case S_OPT_LS_WORKSPACE:
+            lsWorkspace = arg;
+            break;
+        case S_OPT_LS_EXEC:
+            lsExecutable = arg;
+            break;
+        case S_OPT_LS_HOVER:
+            opt_ls_hover = true;
+            break;
+        case S_OPT_LS_SEMANTIC:
+            opt_ls_semantic = true;
+            break;
+        case S_OPT_LS_RAINBOW:
+            opt_ls_rainbow = true;
+            break;
+
+
+
         default:
             cerr << "highlight: option parsing failed" << endl;
         }
@@ -710,9 +747,9 @@ bool CmdLineOptions::printHelp() const
 {
     return opt_help;
 }
-bool CmdLineOptions::printDebugInfo() const
+int CmdLineOptions::verbosityLevel() const
 {
-    return opt_verbose;
+    return verbosity;
 }
 bool CmdLineOptions::printConfigInfo() const
 {
@@ -850,6 +887,19 @@ bool CmdLineOptions::useCRDelimiter() const
 {
     return opt_delim_CR;
 }
+
+bool CmdLineOptions::isLsRainbow () const
+{
+    return opt_ls_rainbow;
+}
+bool CmdLineOptions::isLsHover () const
+{
+    return opt_ls_hover;
+}
+bool CmdLineOptions::isLsSemantic() const
+{
+    return opt_ls_semantic;
+}
 const string &CmdLineOptions::getDataDir() const
 {
     return dataDir;
@@ -861,6 +911,10 @@ const vector<string> &CmdLineOptions::getPluginPaths() const
 const vector<string> &CmdLineOptions::getAStyleOptions() const
 {
     return astyleOptions;
+}
+const vector<string> &CmdLineOptions::getLSOptions() const
+{
+    return lsOptions;
 }
 bool CmdLineOptions::printOnlyStyle() const
 {
@@ -897,6 +951,21 @@ const string& CmdLineOptions::getAnchorPrefix() const
 const string &CmdLineOptions::getPageSize() const
 {
     return pageSize;
+}
+
+const std::string& CmdLineOptions::getLsExecutable() const
+{
+    return lsExecutable;
+}
+
+const std::string& CmdLineOptions::getLsWorkspace() const
+{
+    return lsWorkspace;
+}
+
+const std::string& CmdLineOptions::getLsProfile() const
+{
+    return lsProfile;
 }
 
 bool CmdLineOptions::printIndexFile() const
