@@ -31,8 +31,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "codegenerator.h"
 
-#include "lspclient.h"
-
 #include "htmlgenerator.h"
 #include "xhtmlgenerator.h"
 #include "rtfgenerator.h"
@@ -191,19 +189,38 @@ bool CodeGenerator::initTheme ( const string& themePath )
     return loadOK;
 }
 
-bool CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace )
+LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, int logLevel )
 {
-    highlight::LSPClient client;
+    if (LSPClient.isInitialized()) {
+        return LSResult::INIT_OK;
+    }
 
-    client.setExecutable(executable);
-    client.setWorkspace(workspace);
-    client.setOptions(options);
+    LSPClient.setLogging(logLevel>1);
 
-    client.init();
+    LSPClient.setExecutable(executable);
+    LSPClient.setWorkspace(workspace);
+    LSPClient.setOptions(options);
 
-    client.runInitialize();
+    LSPClient.init();
 
-    return true;
+    if (!LSPClient.runInitialize()){
+        return LSResult::INIT_BAD_REQUEST;
+    }
+
+    if (logLevel) {
+        std::cerr << "LSP Server: "<<LSPClient.getServerName()<<"\n";
+        std::cerr << "LSP Version: "<<LSPClient.getServerVersion()<<"\n";
+
+        std::cerr << "LSP Hover: "<<LSPClient.supportsHoverRequests()<<"\n";
+        std::cerr << "LSP Semantic: "<<LSPClient.supportsSemanticRequests()<<"\n";
+    }
+
+    return LSResult::INIT_OK;
+}
+
+void CodeGenerator::exitLanguageServer () {
+    LSPClient.runShutdown();
+    LSPClient.runExit();
 }
 
 const string& CodeGenerator::getStyleName()

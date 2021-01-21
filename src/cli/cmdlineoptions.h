@@ -136,6 +136,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_LS_HOVER         "ls-hover"
 #define OPT_LS_SEMANTIC      "ls-semantic"
 #define OPT_LS_RAINBOW       "ls-rainbow"
+#define OPT_LS_SYNTAX        "ls-syntax"
+
 
 /// handle command line options
 
@@ -424,6 +426,8 @@ public:
     /** \return language server profile name */
     const std::string& getLsProfile() const;
 
+    /** \return syntax which triggers language server requests */
+    const std::string& getLsSyntax() const;
 
     /** \return line number width */
     int getNumberWidth();
@@ -539,7 +543,7 @@ private:
     std::string pluginPath, pluginParameter,
            listScriptCategory, helpTopic, redirectedFilename, listScriptType;
 
-    std::string lsProfile, lsExecutable, lsWorkspace;
+    std::string lsProfile, lsExecutable, lsWorkspace, lsSyntax;
 
     /** list of all input file names */
     std::vector <std::string> inputFileNames;

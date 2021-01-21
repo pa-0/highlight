@@ -44,6 +44,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "enums.h"
 #include "stringtools.h"
 
+#include "lspclient.h"
+
 /// The highlight namespace contains all classes and data structures needed for parsing input data.
 
 namespace highlight
@@ -172,7 +174,10 @@ public:
     */
     bool initTheme ( const string& themePath );
 
-    bool initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace );
+    LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, int logLevel );
+
+    void exitLanguageServer ();
+
 
     /**
      \return description of the theme init error
@@ -962,6 +967,8 @@ private:
     void setOverrideParams();
 
     static vector<Diluculum::LuaFunction*> pluginChunks;
+
+    highlight::LSPClient LSPClient;
 };
 
 }

@@ -258,6 +258,7 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-option *\n";
         cout<<"     --ls-hover *\n";
         cout<<"     --ls-semantic *\n";
+        cout<<"     --ls-syntax *\n";
         cout<<"     --ls-rainbow *\n\n";
 
         cout<<"If no in- or output files are specified, stdin and stdout will be used.\n";

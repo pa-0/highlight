@@ -478,9 +478,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
     }
 
-    //XXX
-    //generator->initLanguageServer ( options.getLsExecutable(), options.getLSOptions(), options.getLsWorkspace() );
-
     if ( !generator->initTheme ( themePath ) ) {
         cerr << "highlight: "
              << generator->getThemeInitError()
@@ -539,6 +536,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     string inFileName, outFilePath;
     string suffix, lastSuffix;
     string twoPassOutFile=Platform::getTempFilePath();
+    bool usesLSClient=false;
+
     if ( options.syntaxGiven() ) { // user defined language definition, valid for all files
         string syntaxByFile=options.getSyntaxByFilename();
         string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile);
@@ -643,6 +642,32 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     encoding=encodingHint;
             }
             generator->setEncoding (encoding);
+
+            //XXX
+            if (options.getLsSyntax()==suffix) {
+
+                if ( options.getLsExecutable().empty() ) {
+                    cerr << "highlight: no LS executable defined. Consider the --ls-exec or --ls-profile options.\n";
+                    initError = true;
+                    break;
+                }
+
+                highlight::LSResult lsInitRes=generator->initLanguageServer ( options.getLsExecutable(), options.getLSOptions(), options.getLsWorkspace(), options.verbosityLevel() );
+                if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
+                    cerr << "highlight: language server connection failed\n";
+                    initError = true;
+                    break;
+                } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
+                    cerr << "highlight: language server initialization failed\n";
+                    initError = true;
+                    break;
+                } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
+                    cerr << "highlight: language server version too old\n";
+                    initError = true;
+                    break;
+                }
+                usesLSClient=true;
+            }
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
@@ -773,6 +798,10 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     if (twoPassMode) {
         unlink(twoPassOutFile.c_str());
+    }
+
+    if (usesLSClient) {
+        generator->exitLanguageServer();
     }
 
     return ( initError || IOError ) ? EXIT_FAILURE : EXIT_SUCCESS;

@@ -43,10 +43,12 @@ class LSPClient
 private:
 
     bool initialized;
-    bool supportsHover;
-    bool supportsSemanticHighlighting;
+    bool hoverRequests;
+    bool semanticRequests;
+    bool logRequests;
 
     std::string executable, workspace;
+    std::string serverName, serverVersion;
 
     std::vector<std::string> options;
 
@@ -54,9 +56,9 @@ private:
     int inpipefd[2];
     int outpipefd[2];
 
-    bool pipe_write(const std::string &message);
+    bool pipe_write_jsonrpc(const std::string &message);
 
-    std::string pipe_read();
+    std::string pipe_read_jsonrpc();
 
 public:
     /** Constructor */
@@ -73,6 +75,21 @@ public:
 
     bool runInitialize();
 
+    bool runShutdown();
+
+    bool runExit();
+
+
+    bool isInitialized();
+
+    bool supportsHoverRequests();
+
+    bool supportsSemanticRequests();
+
+    void setLogging(bool flag);
+
+    std::string getServerName();
+    std::string getServerVersion();
 };
 
 }

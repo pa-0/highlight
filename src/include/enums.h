@@ -84,6 +84,15 @@ enum LoadResult {
     LOAD_FAILED_LUA
 };
 
+/** language server initialization results*/
+enum LSResult {
+    INIT_OK,
+    INIT_BAD_PIPE,
+    INIT_BAD_REQUEST,
+    INIT_BAD_VERSION
+};
+
+
 /** output formats */
 enum OutputType {
     HTML,
