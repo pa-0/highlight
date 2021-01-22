@@ -49,16 +49,23 @@ private:
 
     std::string executable, workspace;
     std::string serverName, serverVersion;
+    std::string triggerSyntax;
+
 
     std::vector<std::string> options;
 
     pid_t pid;
     int inpipefd[2];
     int outpipefd[2];
+    float msgId;
 
     bool pipe_write_jsonrpc(const std::string &message);
 
     std::string pipe_read_jsonrpc();
+
+    bool runSimpleAction(const std::string action);
+
+    std::string getNestedString(picojson::value &json, const std::string &jpath);
 
 public:
     /** Constructor */
@@ -71,9 +78,14 @@ public:
 
     void setWorkspace ( const std::string& ws );
 
+    void setSyntax ( const std::string& syntax );
+
+
     bool init();
 
     bool runInitialize();
+
+    bool runInitialized();
 
     bool runShutdown();
 

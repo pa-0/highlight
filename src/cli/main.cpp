@@ -34,8 +34,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <Diluculum/LuaState.hpp>
 
 #include "main.h"
-#include "../include/datadir.h"
+#include "datadir.h"
 #include "syntaxreader.h"
+#include "lspprofile.h"
 
 #define MAX_LINE__WIDTH       80
 
@@ -364,6 +365,28 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     //call before printInstalledLanguages!
     dataDir.loadFileTypeConfig ( "filetypes" );
 
+    // set CLI options; if profle is defined read from lsp.conf
+    std::string lsProfile(options.getLsProfile());
+    std::string lsExecutable(options.getLsExecutable());         ///< server executable path
+    std::string lsSyntax(options.getLsSyntax());                   ///< language definition which can be enhanced using the LS
+    std::vector<std::string> lsOptions = options.getLSOptions(); ///< server executable start options
+
+    if (lsProfile.size()) {
+        dataDir.loadLSPConfig("lsp");
+        if (dataDir.profileExists(lsProfile)) {
+            highlight::LSPProfile profile = dataDir.getProfile(lsProfile);
+            if (lsExecutable.empty())
+                lsExecutable = profile.executable;
+            if (lsSyntax.empty())
+                lsSyntax = profile.syntax;
+            if (lsOptions.empty())
+                lsOptions = profile.options;
+        } else {
+            cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
+            return EXIT_FAILURE;
+        }
+    }
+
     string scriptKind=options.getListScriptKind();
     if (scriptKind.length()) {
         if ( scriptKind.find("theme")==0 ) {
@@ -644,15 +667,17 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             generator->setEncoding (encoding);
 
             //XXX
-            if (options.getLsSyntax()==suffix) {
+            if (lsSyntax==suffix) {
 
-                if ( options.getLsExecutable().empty() ) {
+                if ( lsExecutable.empty() ) {
                     cerr << "highlight: no LS executable defined. Consider the --ls-exec or --ls-profile options.\n";
                     initError = true;
                     break;
                 }
 
-                highlight::LSResult lsInitRes=generator->initLanguageServer ( options.getLsExecutable(), options.getLSOptions(), options.getLsWorkspace(), options.verbosityLevel() );
+                highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
+                                                                              options.getLsWorkspace(), lsSyntax,
+                                                                              options.verbosityLevel() );
                 if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
                     cerr << "highlight: language server connection failed\n";
                     initError = true;

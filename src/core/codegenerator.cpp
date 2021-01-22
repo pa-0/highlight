@@ -189,17 +189,18 @@ bool CodeGenerator::initTheme ( const string& themePath )
     return loadOK;
 }
 
-LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, int logLevel )
+LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, const string& syntax, int logLevel )
 {
     if (LSPClient.isInitialized()) {
         return LSResult::INIT_OK;
     }
 
-    LSPClient.setLogging(logLevel>1);
+    LSPClient.setLogging(true || logLevel>1);
 
     LSPClient.setExecutable(executable);
     LSPClient.setWorkspace(workspace);
     LSPClient.setOptions(options);
+    LSPClient.setSyntax(syntax);
 
     LSPClient.init();
 
@@ -207,7 +208,9 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
         return LSResult::INIT_BAD_REQUEST;
     }
 
-    if (logLevel) {
+    LSPClient.runInitialized();
+
+    if (true || logLevel) {
         std::cerr << "LSP Server: "<<LSPClient.getServerName()<<"\n";
         std::cerr << "LSP Version: "<<LSPClient.getServerVersion()<<"\n";
 

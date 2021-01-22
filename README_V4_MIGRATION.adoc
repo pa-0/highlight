@@ -14,6 +14,10 @@ André Simon
 :linkattrs: true
 
 
+== NEW CONFIG FILES
+
+lsp.conf
+
 == REMOVED CLI OPTIONS
 
 The following options will be removed:
@@ -63,5 +67,9 @@ A deprecation notice is outputted during the beta release cycle.
     langDefs/sh.lang -> langDefs/shellscript.lang
     langDefs/ts.lang -> langDefs/typescript.lang
 ..........................................................................
+
+== REMOVED LIB FUNCTIONS
+
+DataDir::searchDataDir -> DataDir::initSearchDirectories
 
 // EOF //
