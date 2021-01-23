@@ -191,6 +191,7 @@ bool CodeGenerator::initTheme ( const string& themePath )
 
 LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, const string& syntax, int logLevel )
 {
+
     if (LSPClient.isInitialized()) {
         return LSResult::INIT_OK;
     }
@@ -210,20 +211,44 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
 
     LSPClient.runInitialized();
 
-    if (true || logLevel) {
-        std::cerr << "LSP Server: "<<LSPClient.getServerName()<<"\n";
-        std::cerr << "LSP Version: "<<LSPClient.getServerVersion()<<"\n";
+    // OK:
+/*
+    LSPClient.runDidOpen("/home/andre/Projekte/r/min.r", "print(\"Hello World!\")");
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 1, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 10, 0);
+*/
 
-        std::cerr << "LSP Hover: "<<LSPClient.supportsHoverRequests()<<"\n";
-        std::cerr << "LSP Semantic: "<<LSPClient.supportsSemanticRequests()<<"\n";
-    }
+    // OK:
+    /*
+    LSPClient.runDidOpen("/home/andre/Projekte/py/min.py", "aaaaaaaa = 1\n");
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/py/min.py", 1, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/py/min.py", 10, 0);
+*/
+
+// OK:
+/*
+    LSPClient.runDidOpen("/home/andre/Projekte/cpp/min.c", "int main() {\nreturn 0;\n}\n");
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/cpp/min.c", 5, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/cpp/min.c", 5, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/cpp/min.c", 5, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/cpp/min.c", 5, 0);
+*/
+
+// NOK
+/*
+ *  LSPClient.runDidOpen("/home/andre/Projekte/rust/hello_world/min.rs", "fn main() {\nstruct Structure(i32);\n}\n");
+ *
+ *  LSPClient.runHover("/home/andre/Projekte/rust/hello_world/min.rs", 5, 0);
+ *  LSPClient.runHover("/home/andre/Projekte/rust/hello_world/min.rs", 5, 0);
+ *  LSPClient.runHover("/home/andre/Projekte/rust/hello_world/min.rs", 5, 0);
+ */
 
     return LSResult::INIT_OK;
 }
 
 void CodeGenerator::exitLanguageServer () {
-    LSPClient.runShutdown();
-    LSPClient.runExit();
+    //LSPClient.runShutdown();
+    //LSPClient.runExit();
 }
 
 const string& CodeGenerator::getStyleName()
@@ -798,6 +823,11 @@ unsigned int CodeGenerator::getCurrentKeywordClassId(){
 //it is faster to pass ostream reference
 void CodeGenerator::maskString ( ostream& ss, const string & s )
 {
+
+    // LSP: if hover exists: call Generator addHoverInfo begin + end here
+    // LSP: new member absPath
+    // check if input path is absolute
+
     for ( unsigned int i=0; i< s.length(); i++ ) {
         ss << maskCharacter ( s[i] );
     }
@@ -807,6 +837,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
 
         PositionState ps(currentState, getCurrentKeywordClassId(), false);
 
+        //TODO avoid repeated string comparison:
         int slen = encoding=="utf-8" ? StringTools::utf8_strlen(s) : s.length();
         for (int i=0; i< slen; i++ ) {
             stateTraceCurrent.push_back(ps);

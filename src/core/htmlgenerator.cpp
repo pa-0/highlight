@@ -367,8 +367,6 @@ void HtmlGenerator::insertLineNumber ( bool insertNewLine )
                                 << lineID
                                 << ">";
             }
-            // Opera 8 ignores empty list items -> add &nbsp;
-            //if ( line.empty() ) numberPrefix<<"&nbsp;";
         }
 
         if ( !orderedList ) {
@@ -394,7 +392,6 @@ void HtmlGenerator::insertLineNumber ( bool insertNewLine )
         }
         wsBuffer += numberPrefix.str();
     }
-
 }
 
 bool HtmlGenerator::printIndexFile ( const vector<string> &fileList,
@@ -476,7 +473,7 @@ string HtmlGenerator::getKeywordCloseTag ( unsigned int styleID )
 void HtmlGenerator::setHTMLOrderedList ( bool b )
 {
     orderedList = b;
-    if( b ) spacer = "&nbsp;";
+    if ( b ) spacer = "&nbsp;";
     maskWs = b;
 
     if (b && !preFormatter.getReplaceTabs()) {

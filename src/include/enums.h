@@ -89,7 +89,8 @@ enum LSResult {
     INIT_OK,
     INIT_BAD_PIPE,
     INIT_BAD_REQUEST,
-    INIT_BAD_VERSION
+    INIT_BAD_VERSION,
+    CMD_ERROR
 };
 
 
@@ -102,12 +103,11 @@ enum OutputType {
     RTF,
     ESC_ANSI,
     ESC_XTERM256,
-    HTML32_UNUSED,
+    ESC_TRUECOLOR,
     SVG,
     BBCODE,
     PANGO,
-    ODTFLAT,
-    ESC_TRUECOLOR
+    ODTFLAT
 };
 
 }

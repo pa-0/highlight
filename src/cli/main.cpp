@@ -826,7 +826,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     }
 
     if (usesLSClient) {
-        generator->exitLanguageServer();
+      //  generator->exitLanguageServer();
     }
 
     return ( initError || IOError ) ? EXIT_FAILURE : EXIT_SUCCESS;

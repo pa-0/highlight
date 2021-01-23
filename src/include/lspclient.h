@@ -43,7 +43,7 @@ class LSPClient
 private:
 
     bool initialized;
-    bool hoverRequests;
+    bool hoverProvider;
     bool semanticRequests;
     bool logRequests;
 
@@ -59,11 +59,18 @@ private:
     int outpipefd[2];
     float msgId;
 
+    int lastErrorCode;
+    std::string lastErrorMessage;
+
     bool pipe_write_jsonrpc(const std::string &message);
 
     std::string pipe_read_jsonrpc();
 
     bool runSimpleAction(const std::string action);
+
+    bool checkErrorResponse(const std::string& picoError, picojson::value &json);
+
+    bool checkWindowsProgress(picojson::value &json);
 
     std::string getNestedString(picojson::value &json, const std::string &jpath);
 
@@ -87,6 +94,12 @@ public:
 
     bool runInitialized();
 
+    bool runDidOpen(const std::string &document, const std::string &textContent);
+
+    bool runDocumentSymbol(const std::string &document);
+
+    std::string runHover(const std::string &document, int character, int line);
+
     bool runShutdown();
 
     bool runExit();
@@ -94,7 +107,7 @@ public:
 
     bool isInitialized();
 
-    bool supportsHoverRequests();
+    bool isHoverProvider();
 
     bool supportsSemanticRequests();
 
@@ -102,6 +115,11 @@ public:
 
     std::string getServerName();
     std::string getServerVersion();
+
+    std::string getErrorMessage();
+
+    int getErrorCode();
+
 };
 
 }
