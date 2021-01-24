@@ -482,4 +482,15 @@ void HtmlGenerator::setHTMLOrderedList ( bool b )
     }
 }
 
+string HtmlGenerator::getHoverTagOpen(const string & hoverText)
+{
+    //\u00a0 -> &#x00C2;
+    return "<span title=\""+hoverText+"\">";
+}
+
+string HtmlGenerator::getHoverTagClose()
+{
+    return "</span>";
+}
+
 }

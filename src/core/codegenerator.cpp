@@ -27,6 +27,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <climits>
 #include <memory>
+
 #include <boost/xpressive/xpressive_dynamic.hpp>
 
 #include "codegenerator.h"
@@ -159,6 +160,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      lineContainedStmt(false),
      applySyntaxTestCase(false),
      toggleDynRawString(false),
+     lsEnableHoverRequests(false),
 
      keywordCase ( StringTools::CASE_UNCHANGED ),
      eolDelimiter ('\n'),
@@ -196,7 +198,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
         return LSResult::INIT_OK;
     }
 
-    LSPClient.setLogging(true || logLevel>1);
+    LSPClient.setLogging(logLevel>1);
 
     LSPClient.setExecutable(executable);
     LSPClient.setWorkspace(workspace);
@@ -212,12 +214,19 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.runInitialized();
 
     // OK:
-/*
+
+    /*
     LSPClient.runDidOpen("/home/andre/Projekte/r/min.r", "print(\"Hello World!\")");
     std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 1, 0);
     std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 10, 0);
-*/
+    LSPClient.runDidClose("/home/andre/Projekte/r/min.r");
 
+
+    LSPClient.runDidOpen("/home/andre/Projekte/r/min.r", "print(\"Hello World!\")");
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 1, 0);
+    std::cerr <<  LSPClient.runHover("/home/andre/Projekte/r/min.r", 10, 0);
+    LSPClient.runDidClose("/home/andre/Projekte/r/min.r");
+*/
     // OK:
     /*
     LSPClient.runDidOpen("/home/andre/Projekte/py/min.py", "aaaaaaaa = 1\n");
@@ -246,9 +255,24 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     return LSResult::INIT_OK;
 }
 
+bool CodeGenerator::lsOpenDocument(const string& fileName, const string & suffix){
+    lsDocumentPath = fileName;
+    return LSPClient.runDidOpen(fileName, suffix);
+}
+
+bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffix){
+    lsDocumentPath.clear();
+    return LSPClient.runDidClose(fileName, suffix);
+}
+
+void CodeGenerator::setLsHover(bool hover){
+    lsEnableHoverRequests = hover;
+}
+
+
 void CodeGenerator::exitLanguageServer () {
-    //LSPClient.runShutdown();
-    //LSPClient.runExit();
+    LSPClient.runShutdown();
+    LSPClient.runExit();
 }
 
 const string& CodeGenerator::getStyleName()
@@ -823,13 +847,29 @@ unsigned int CodeGenerator::getCurrentKeywordClassId(){
 //it is faster to pass ostream reference
 void CodeGenerator::maskString ( ostream& ss, const string & s )
 {
+    string escHoverText;
 
-    // LSP: if hover exists: call Generator addHoverInfo begin + end here
-    // LSP: new member absPath
-    // check if input path is absolute
+    if (lsEnableHoverRequests && lsDocumentPath.size() && (currentState==STANDARD || currentState==NUMBER || currentState==KEYWORD)) {
+        string hoverText = LSPClient.runHover(lsDocumentPath, lineIndex - s.size(), lineNumber-1);
 
-    for ( unsigned int i=0; i< s.length(); i++ ) {
-        ss << maskCharacter ( s[i] );
+        for(auto c : hoverText)
+        {
+            if (isascii(c))
+                escHoverText.append(maskCharacter(c));
+        }
+    }
+
+    if (escHoverText.size()) {
+        ss << getHoverTagOpen(escHoverText);
+    }
+
+    for(auto c : s)
+    {
+        ss << maskCharacter ( c );
+    }
+
+    if (escHoverText.size()) {
+        ss << getHoverTagClose();
     }
 
     // The test markers position should also be deternmined by calculating the code points

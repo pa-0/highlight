@@ -39,6 +39,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <sstream>
 #include <iostream>
+#include <fstream>
+
 
 namespace highlight
 {
@@ -304,7 +306,6 @@ std::string LSPClient::runHover(const std::string &document, int character, int 
         if (   !jsonResponse.get("result").is<picojson::object>()
         //    || !jsonResponse.get("result").get("contents").is<picojson::object>()
         ) {
-
             return "";
         }
 
@@ -343,10 +344,14 @@ std::string LSPClient::runHover(const std::string &document, int character, int 
     return "";
 }
 
-bool LSPClient::runDidOpen(const std::string &document, const std::string &textContent){
+bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 
-    if (document.empty() || textContent.empty())
+    if (document.empty() || syntax !=triggerSyntax)
         return false;
+
+    std::ifstream t(document.c_str());
+    std::stringstream buffer;
+    buffer << t.rdbuf();
 
     picojson::object request;
     picojson::object params;
@@ -360,8 +365,49 @@ bool LSPClient::runDidOpen(const std::string &document, const std::string &textC
     uri.append(document);
     textDocument["uri"] = picojson::value(uri);
     textDocument["languageId"] =  picojson::value(triggerSyntax);
-    textDocument["text"] = picojson::value(textContent);
+    textDocument["text"] = picojson::value(buffer.str());
     textDocument["version"] =  picojson::value(0.0);
+
+    params["textDocument"] = picojson::value(textDocument);
+
+    request["params"] =  picojson::value(params);
+
+    std::string serialized = picojson::value(request).serialize();
+
+    if (logRequests) {
+        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
+        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
+    }
+
+    pipe_write_jsonrpc(serialized);
+
+    std::string response = pipe_read_jsonrpc();
+
+    if (logRequests) {
+        std::cerr<<"LSP RSP:\n"<< response<<"\n";
+    }
+
+    picojson::value jsonResponse;
+    std::string err = picojson::parse(jsonResponse, response);
+    return checkErrorResponse(err, jsonResponse);
+}
+
+bool LSPClient::runDidClose(const std::string &document, const string& syntax){
+
+    if (document.empty() || syntax !=triggerSyntax)
+        return false;
+
+    picojson::object request;
+    picojson::object params;
+    picojson::object textDocument;
+
+    request["jsonrpc"] = picojson::value("2.0");
+    //request["id"] = picojson::value(msgId++);
+    request["method"] = picojson::value("textDocument/didClose");
+
+    std::string uri("file://");
+    uri.append(document);
+    textDocument["uri"] = picojson::value(uri);
 
     params["textDocument"] = picojson::value(textDocument);
 

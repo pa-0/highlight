@@ -666,8 +666,13 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
             generator->setEncoding (encoding);
 
-            //XXX
             if (lsSyntax==suffix) {
+
+                if (inFileList[i].empty()) {
+                    cerr << "highlight: no input file path defined.\n";
+                    initError = true;
+                    break;
+                }
 
                 if ( lsExecutable.empty() ) {
                     cerr << "highlight: no LS executable defined. Consider the --ls-exec or --ls-profile options.\n";
@@ -692,8 +697,14 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     break;
                 }
                 usesLSClient=true;
+                generator->setLsHover(options.isLsHover());
             }
         }
+
+        if (usesLSClient) {
+            generator->lsOpenDocument(inFileList[i], suffix);
+        }
+
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
             ++i;
@@ -758,6 +769,11 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
+        if (usesLSClient) {
+            //pyls hangs
+         //   generator->lsCloseDocument(inFileList[i], suffix);
+        }
+
         ++i;
 
         if (i==fileCount && outFilePath.size() && generator->requiresTwoPassParsing() && twoPassOutFile.size()
@@ -781,6 +797,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 badFormattedFiles.clear();
             }
         }
+
+
     }
 
     if ( i  && !options.includeStyleDef()
@@ -826,7 +844,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     }
 
     if (usesLSClient) {
-      //  generator->exitLanguageServer();
+        generator->exitLanguageServer();
     }
 
     return ( initError || IOError ) ? EXIT_FAILURE : EXIT_SUCCESS;

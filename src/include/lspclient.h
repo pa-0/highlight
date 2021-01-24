@@ -51,7 +51,6 @@ private:
     std::string serverName, serverVersion;
     std::string triggerSyntax;
 
-
     std::vector<std::string> options;
 
     pid_t pid;
@@ -94,7 +93,9 @@ public:
 
     bool runInitialized();
 
-    bool runDidOpen(const std::string &document, const std::string &textContent);
+    bool runDidOpen(const std::string &document, const std::string &syntax);
+
+    bool runDidClose(const std::string &document, const std::string &syntax);
 
     bool runDocumentSymbol(const std::string &document);
 

@@ -467,10 +467,26 @@ public:
     string readUserStyleDef();
 
     /** \return Style definition of the chosen output format */
-    virtual string  getStyleDefinition()
+    virtual string getStyleDefinition()
     {
         return "";
     }
+
+    virtual string getHoverTagOpen(const string & hoverText)
+    {
+        return "";
+    }
+
+    virtual string getHoverTagClose()
+    {
+        return "";
+    }
+
+    bool lsOpenDocument(const string& fileName, const string & suffix);
+
+    bool lsCloseDocument(const string& fileName, const string & suffix);
+
+    void setLsHover(bool hover);
 
     /** set HTML output anchor flag
      */
@@ -845,6 +861,8 @@ private:
 
     bool toggleDynRawString;
 
+    bool lsEnableHoverRequests;
+
     /** flag which determines keyword output (unchangeed, uppercase, lowercase)*/
     StringTools::KeywordCase keywordCase;
 
@@ -855,6 +873,8 @@ private:
            styleOutputPath;  ///< style output file path
 
     string userScriptError;  ///< Plug-In script error message
+
+    string lsDocumentPath;   ///< Language Server input file name
 
     /** end-of-line delimiter*/
     char eolDelimiter;
