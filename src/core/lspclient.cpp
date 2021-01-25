@@ -33,14 +33,17 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #else
 #include <unistd.h>
 #include <sys/wait.h>
-#include <sys/prctl.h>
 #include <signal.h>
+
+#if __linux__
+#include <sys/prctl.h>
+#endif
+
 #endif
 
 #include <sstream>
 #include <iostream>
 #include <fstream>
-
 
 namespace highlight
 {
@@ -48,7 +51,7 @@ namespace highlight
 LSPClient::LSPClient():
 initialized(false),
 hoverProvider(false),
-semanticRequests(false),
+semanticTokensProvider(false),
 logRequests(false),
 pid(0),
 msgId(1.0),
@@ -100,8 +103,10 @@ bool LSPClient::init() {
         dup2(inpipefd[1], STDOUT_FILENO);
         dup2(inpipefd[1], STDERR_FILENO);
 
+#if __linux__
         //ask kernel to deliver SIGTERM in case the parent dies
         prctl(PR_SET_PDEATHSIG, SIGTERM);
+#endif
 
         //https://stackoverflow.com/questions/5797837/how-to-pass-a-vector-of-strings-to-execv
         std::vector<char*> commandVector;
@@ -143,6 +148,10 @@ bool LSPClient::pipe_write_jsonrpc(const std::string &payload){
 
     std::string msg (os.str());
 
+    if (logRequests) {
+        std::cerr << "LSP REQ:\n" << msg << "\n";
+    }
+
     ssize_t w = write(outpipefd[1], msg.c_str(), msg.size());
 
     if ((long unsigned int)w!=msg.size()) {
@@ -152,7 +161,7 @@ bool LSPClient::pipe_write_jsonrpc(const std::string &payload){
 }
 
 std::string LSPClient::pipe_read_jsonrpc(){
-    char buf[256] = {0};
+    char buf[2048] = {0};
     ssize_t r=0;
     std::string resultString;
 
@@ -162,6 +171,10 @@ std::string LSPClient::pipe_read_jsonrpc(){
     }
 
     std::string payLoad;
+
+    if (logRequests) {
+        std::cerr << "LSP RES:\n" << resultString << "\n";
+    }
 
     if (resultString.find("Content-Length:")==0) {
         std::string payloadLenString = resultString.substr(16, resultString.find("\r\n")-16);
@@ -200,11 +213,19 @@ bool LSPClient::runInitialize(){
     publishDiagnostics["relatedInformation"] = picojson::value(true);
     textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
 
-    documentSymbol["hierarchicalDocumentSymbolSupport"] = picojson::value(true);
-    textDocument["documentSymbol"] = picojson::value(documentSymbol);
+   // documentSymbol["hierarchicalDocumentSymbolSupport"] = picojson::value(true);
+   // textDocument["documentSymbol"] = picojson::value(documentSymbol);
 
-    semanticHighlightingCapabilities["semanticHighlighting"] = picojson::value(true);
-    textDocument["semanticHighlightingCapabilities"] = picojson::value(semanticHighlightingCapabilities);
+
+    // triggers
+    /*
+     * {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///home/andre/Projekte/c/re2.cpp","version":0}}Content-Length: 352
+     *
+     { "jsonrp*c":"2.0","method":"textDocument/semanticHighlighting","params":{"lines":[{"isInactive":false,"line":3,"tokens":"AAAAEAAFAA4AAAAXAAkADg=="},{"isInactive":false,"line":5,"tokens":"AAAABAAEAAM="},{"isInactive":false,"line":7,"tokens":"AAAAAAADAA4AAAAFAAYACAAAAAwABgAB"}],"textDocument":{"uri":"file:///home/andre/Projekte/c/re2.cpp","version":0}}}
+     */
+
+  //  semanticHighlightingCapabilities["semanticHighlighting"] = picojson::value(true);
+  //  textDocument["semanticHighlightingCapabilities"] = picojson::value(semanticHighlightingCapabilities);
 
     capabilities["textDocument"] = picojson::value(textDocument);
 
@@ -213,23 +234,14 @@ bool LSPClient::runInitialize(){
 
     std::string serialized = picojson::value(request).serialize();
 
-    if (logRequests) {
-        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-    }
-
     pipe_write_jsonrpc(serialized);
 
     std::string response = pipe_read_jsonrpc();
 
-    if (logRequests) {
-        std::cerr<<"LSP RSP:\n"<< response<<"\n";
-    }
-
     picojson::value jsonResponse;
     std::string err = picojson::parse(jsonResponse, response);
 
-    if (!checkErrorResponse(err, jsonResponse)) {
+    if (!checkErrorResponse(jsonResponse, err)) {
         return false;
     }
 
@@ -277,29 +289,24 @@ std::string LSPClient::runHover(const std::string &document, int character, int 
 
     std::string serialized = picojson::value(request).serialize();
 
+    bool writeRes=pipe_write_jsonrpc(serialized);
+
+    if (!writeRes) {
+        return "";
+    }
+
     while (true) {
 
-        if (logRequests) {
-            std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-            std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-        }
-
-        bool writeRes=pipe_write_jsonrpc(serialized);
-
         std::string response = pipe_read_jsonrpc();
-
-        if (logRequests) {
-            std::cerr<<"LSP RSP:\n"<< response<<"\n";
-        }
 
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);
 
-        if (!checkErrorResponse(err, jsonResponse)) {
+        if (!checkErrorResponse(jsonResponse, err)) {
             return "";
         }
 
-        if (checkWindowsProgress(jsonResponse)) {
+        if (skipUnsupportedNotifications(jsonResponse)) {
             continue;
         }
 
@@ -374,22 +381,13 @@ bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 
     std::string serialized = picojson::value(request).serialize();
 
-    if (logRequests) {
-        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-    }
-
     pipe_write_jsonrpc(serialized);
 
     std::string response = pipe_read_jsonrpc();
 
-    if (logRequests) {
-        std::cerr<<"LSP RSP:\n"<< response<<"\n";
-    }
-
     picojson::value jsonResponse;
     std::string err = picojson::parse(jsonResponse, response);
-    return checkErrorResponse(err, jsonResponse);
+    return checkErrorResponse(jsonResponse, err);
 }
 
 bool LSPClient::runDidClose(const std::string &document, const string& syntax){
@@ -415,22 +413,13 @@ bool LSPClient::runDidClose(const std::string &document, const string& syntax){
 
     std::string serialized = picojson::value(request).serialize();
 
-    if (logRequests) {
-        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-    }
-
     pipe_write_jsonrpc(serialized);
 
     std::string response = pipe_read_jsonrpc();
 
-    if (logRequests) {
-        std::cerr<<"LSP RSP:\n"<< response<<"\n";
-    }
-
     picojson::value jsonResponse;
     std::string err = picojson::parse(jsonResponse, response);
-    return checkErrorResponse(err, jsonResponse);
+    return checkErrorResponse(jsonResponse, err);
 }
 
 
@@ -457,45 +446,16 @@ bool LSPClient::runDocumentSymbol(const std::string &document){
 
     std::string serialized = picojson::value(request).serialize();
 
-    if (logRequests) {
-        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-    }
-
     pipe_write_jsonrpc(serialized);
 
     std::string response = pipe_read_jsonrpc();
 
-    if (logRequests) {
-        std::cerr<<"LSP RSP:\n"<< response<<"\n";
-    }
-
     picojson::value jsonResponse;
     std::string err = picojson::parse(jsonResponse, response);
-    return checkErrorResponse(err, jsonResponse);
+    return checkErrorResponse(jsonResponse, err);
 }
 
-
-//https://github.com/usagi/usagi/blob/master/include/usagi/json/picojson/get_value.hxx
-std::string LSPClient::getNestedString(picojson::value &json, const std::string &jpath){
-    std::vector<std::string> items = StringTools::splitString ( jpath, '|' );
-    std::string retval;
-    /*
-    picojson::value node = json;
-    unsigned int idx=0;
-
-    std::cerr<<"--->"<<items[idx]<<"\n";
-    while (idx<items.size() && !node.get(items[idx]).is<picojson::null>()) {
-     //   retval=node.get(items[idx]).get<std::string>();
-        std::cerr<<"--->"<<items[idx]<<"\n";
-        node = node.get(items[idx]).get<picojson::value>();
-        idx++;
-    }*/
-    return retval;
-}
-
-
-bool LSPClient::checkErrorResponse(const string& picoError, picojson::value &json){
+bool LSPClient::checkErrorResponse(const picojson::value &json, const string& picoError){
     lastErrorCode = 0;
     lastErrorMessage.clear();
     if (! picoError.empty()) {
@@ -524,12 +484,20 @@ bool LSPClient::checkErrorResponse(const string& picoError, picojson::value &jso
  * katelspclientplugin: discarding notification "window/progress"
  *
  * {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///home/andre/Projekte/cpp/min.c","version":0}}
+ *
+ * {"jsonrpc":"2.0","method":"client/registerCapability","id":1,"params":{"registrations":[{"id":"rls-watch","method":"workspace/didChangeWatchedFiles","registerOptions":{"watchers":[{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.lock"},{"globPattern":"/home/andre/Projekte/rust/hello_world/target","kind":4},{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.toml"}]}}]}}
+ *
  * */
-bool LSPClient::checkWindowsProgress(picojson::value &json){
+bool LSPClient::skipUnsupportedNotifications(picojson::value &json){
 
     if (json.get("method").is<std::string>()) {
         std::string method = json.get("method").get<std::string>();
-        return method=="window/progress" || method=="textDocument/publishDiagnostics";
+
+  /*      if ( ( method=="window/progress" || method=="textDocument/publishDiagnostics" || method=="client/registerCapability")) {
+            std::cerr<<"\nSKIP "<< method <<"\n";
+        }
+*/
+        return method=="window/progress" || method=="textDocument/publishDiagnostics" || method=="client/registerCapability";
     }
 
     return false;
@@ -537,33 +505,29 @@ bool LSPClient::checkWindowsProgress(picojson::value &json){
 
 bool LSPClient::runSimpleAction(const std::string action){
     picojson::object request;
-    picojson::value nullValue;
+    //picojson::value nullValue;
+    picojson::object emptyObject;
 
     request["jsonrpc"] = picojson::value("2.0");
     request["id"] = picojson::value(msgId++);
     request["method"] = picojson::value(action);
 
-    request["params"] =  nullValue;
+    request["params"] =  picojson::value(emptyObject);
 
     std::string serialized = picojson::value(request).serialize();
-
-    if (logRequests) {
-        std::cerr << "Content-Length: " << serialized.size() << "\r\n\r\n";
-        std::cerr/*<<"LSP REQ:\n" */<< serialized<<"\n";
-    }
 
     pipe_write_jsonrpc(serialized);
 
     std::string response = pipe_read_jsonrpc();
 
-    if (logRequests) {
-        std::cerr<<"LSP RSP:\n"<< response<<"\n";
-    }
-
     picojson::value jsonResponse;
     std::string err = picojson::parse(jsonResponse, response);
 
-    return checkErrorResponse(err, jsonResponse);
+   // if (skipUnsupportedNotifications(jsonResponse)) {
+  //      return false;
+  //  }
+
+    return checkErrorResponse(jsonResponse, err);
 }
 
 
@@ -588,8 +552,8 @@ bool LSPClient::isHoverProvider(){
     return hoverProvider;
 }
 
-bool LSPClient::supportsSemanticRequests(){
-    return semanticRequests;
+bool LSPClient::isSemanticTokensProvider(){
+    return semanticTokensProvider;
 }
 
 void LSPClient::setLogging(bool flag){
@@ -614,8 +578,8 @@ int LSPClient::getErrorCode(){
 }
 
 /*
- *
- / /documentHighlightProvider, see https://github.com/microsoft/python-language-server/pull/1767                       *
+
+ //documentHighlightProvider, see https://github.com/microsoft/python-language-server/pull/1767
  //referencesProvider,
  //foldingRangeProvider
 

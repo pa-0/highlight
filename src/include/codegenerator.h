@@ -196,8 +196,6 @@ public:
      */
     bool initIndentationScheme ( const string& indentScheme );
 
-    void setIndentationOptions (const vector<string>& options);
-
     /** \param langDefPath Absolute path to language definition, may be used multiple times for a generator instance
      *  \param embedded set True if method is called to load an embedded language
         \return   LOAD_OK, LOAD_FAILED, LOAD_FAILED_REGEX, LOAD_FAILED_LUA
@@ -964,13 +962,6 @@ private:
     State validateState(State newState, State oldState);
 
     unsigned int getCurrentKeywordClassId();
-
-    string getParam(const string& arg, const char* op);
-    string getParam(const string& arg, const char* op1, const char* op2);
-    bool isOption(const string& arg, const char* op);
-    bool isOption(const string& arg, const char* op1, const char* op2);
-    bool isParamOption(const string& arg, const char* option);
-    bool isParamOption(const string& arg, const char* option1, const char* option2);
 
     /**
     	\param chunk Lua function to be added to the function list

@@ -129,7 +129,7 @@ void printHelp(const std::string &topic)
         cout<<"     --config-file=<file>       set path to a lang or theme file\n";
         cout<<" -d, --outdir=<directory>       name of output directory\n";
         cout<<" -h, --help[=topic]             print this help or a topic description\n";
-        cout<<"                                  <topic> = [syntax, theme, plugin, config, test]\n";
+        cout<<"                                  <topic> = [syntax, theme, plugin, config, test, lsp]\n";
         cout<<" -i, --input=<file>             name of single input file\n";
         cout<<" -o, --output=<file>            name of single output file\n";
         cout<<" -P, --progress                 print progress bar in batch mode\n";
@@ -153,13 +153,11 @@ void printHelp(const std::string &topic)
         cout<<"     --print-style              print stylesheet only (see --style-outfile)\n";
         cout<<"     --skip=<list>              ignore listed unknown file types\n";
         cout<<"                                  (Example: --skip='bak;c~;h~')\n";
-        cout<<"     --start-nested=<lang>      define nested language which starts input\n";
-        cout<<"                                  without opening delimiter\n";
+
         cout<<"     --stdout                   output to stdout (batch mode, --print-style)\n";
         cout<<"     --validate-input           test if input is text, remove Unicode BOM\n";
         cout<<"     --version                  print version and copyright information\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"Output formatting options:\n";
         cout<<"\n";
         cout<<" -O, --out-format=<format>      output file in given format\n";
@@ -175,10 +173,8 @@ void printHelp(const std::string &topic)
         cout<<" -F, --reformat=<style>         reformats and indents output in given style\n";
         cout<<"                                  <style> = [allman, gnu, google, horstmann,\n";
         cout<<"                                  java, kr, linux, lisp, mozilla, otbs, pico,\n";
-        cout<<"                                  vtk, ratliff, stroustrup, webkit, whitesmith, user]\n";
-        cout<<"                                  The user style does not apply a predefined scheme.\n";
-        cout<<"                                  Use --reformat-option to define the reformatting.\n";
-        cout<<"     --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)\n";
+        cout<<"                                  vtk, ratliff, stroustrup, webkit, whitesmith]\n";
+
         cout<<" -I, --include-style            include style definition in output file\n";
         cout<<" -J, --line-length=<num>        line length before wrapping (see -V, -W)\n";
         cout<<" -j, --line-number-length=<num> line number width incl. left padding (default: 5)\n";
@@ -199,8 +195,6 @@ void printHelp(const std::string &topic)
         cout<<"     --wrap-no-numbers          omit line numbers of wrapped lines\n";
         cout<<"                                  (assumes -l)\n";
         cout<<" -z, --zeroes                   pad line numbers with 0's\n";
-        cout<<"     --base16[=theme]           use a theme of the Base16 collection\n";
-        cout<<"     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)\n";
         cout<<"     --isolate                  output each syntax token separately (verbose output)\n";
         cout<<"     --keep-injections          output plug-in injections in spite of -f\n";
         cout<<"     --kw-case=<case>           change case of case insensitive keywords\n";
@@ -229,37 +223,34 @@ void printHelp(const std::string &topic)
         cout<<" -r, --replace-quotes           replace double quotes by \\dq{}\n";
         cout<<"     --beamer                   adapt output for the Beamer package\n";
         cout<<"     --pretty-symbols           improve appearance of brackets and other symbols\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"RTF output options:\n";
         cout<<"\n";
         cout<<"     --page-color               include page color attributes\n";
         cout<<" -x, --page-size=<ps>           set page size \n";
         cout<<"                                  <ps> = [a3, a4, a5, b4, b5, b6, letter]\n";
         cout<<"     --char-styles              include character stylesheets\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"SVG output options:\n";
         cout<<"\n";
         cout<<"     --height                   set image height (units allowed)\n";
         cout<<"     --width                    set image width (see --height)\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"Terminal escape output options (xterm256 or truecolor):\n";
         cout<<"\n";
         cout<<"     --canvas[=width]           set background colour padding (default: 80)\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
 
         cout<<"Language Server options (*tbd):\n\n";
-        cout<<"     --ls-profile *\n";
-        cout<<"     --ls-workspace *\n";
-        cout<<"     --ls-exec *\n";
-        cout<<"     --ls-option *\n";
-        cout<<"     --ls-hover *\n";
+        cout<<"     --ls-profile=<server>      read LSP configuration from lsp.conf\n";
+        cout<<"     --ls-exec=<bin>            set server executable name\n";
+        cout<<"     --ls-option=<option>       set server CLI option (can be repeated)\n";
+        cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
         cout<<"     --ls-semantic *\n";
-        cout<<"     --ls-syntax *\n";
+        cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
         cout<<"     --ls-rainbow *\n\n";
+        cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
+        cout<<"\n\n";
 
         cout<<"If no in- or output files are specified, stdin and stdout will be used.\n";
         cout<<"Reading from stdin can also be triggered using the '-' option.\n";

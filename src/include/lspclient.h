@@ -44,7 +44,7 @@ private:
 
     bool initialized;
     bool hoverProvider;
-    bool semanticRequests;
+    bool semanticTokensProvider;
     bool logRequests;
 
     std::string executable, workspace;
@@ -67,11 +67,9 @@ private:
 
     bool runSimpleAction(const std::string action);
 
-    bool checkErrorResponse(const std::string& picoError, picojson::value &json);
+    bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
 
-    bool checkWindowsProgress(picojson::value &json);
-
-    std::string getNestedString(picojson::value &json, const std::string &jpath);
+    bool skipUnsupportedNotifications(picojson::value &json);
 
 public:
     /** Constructor */
@@ -85,7 +83,6 @@ public:
     void setWorkspace ( const std::string& ws );
 
     void setSyntax ( const std::string& syntax );
-
 
     bool init();
 
@@ -105,12 +102,11 @@ public:
 
     bool runExit();
 
-
     bool isInitialized();
 
     bool isHoverProvider();
 
-    bool supportsSemanticRequests();
+    bool isSemanticTokensProvider();
 
     void setLogging(bool flag);
 
@@ -120,7 +116,6 @@ public:
     std::string getErrorMessage();
 
     int getErrorCode();
-
 };
 
 }

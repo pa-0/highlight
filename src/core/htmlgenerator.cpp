@@ -257,6 +257,8 @@ string HtmlGenerator::getStyleDefinition()
         os << "pt; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
            << "; white-space: pre-wrap; }\n";
 
+        os << classNameSuffix<<".hvr {cursor:help; border-bottom: 1px dotted;}\n";
+
         os  << getAttributes ( STY_NAME_NUM, docStyle.getNumberStyle() )
             << getAttributes ( STY_NAME_ESC, docStyle.getEscapeCharStyle() )
             << getAttributes ( STY_NAME_STR, docStyle.getStringStyle() )
@@ -484,8 +486,9 @@ void HtmlGenerator::setHTMLOrderedList ( bool b )
 
 string HtmlGenerator::getHoverTagOpen(const string & hoverText)
 {
-    //\u00a0 -> &#x00C2;
-    return "<span title=\""+hoverText+"\">";
+    ostringstream os;
+    os << "<span class=\""<<cssClassName<< " hvr\" title=\""<<hoverText<<"\">";
+    return os.str();
 }
 
 string HtmlGenerator::getHoverTagClose()

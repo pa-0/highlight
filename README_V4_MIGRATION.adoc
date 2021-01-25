@@ -26,11 +26,14 @@ The following options will be removed:
     --start-nested=<lang>      define nested language which starts input
                                   without opening delimiter
 
+    --reformat=user
     --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)
+
     --base16[=theme]           use a theme of the Base16 collection
 
     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)
     --plug-in-read             see --plug-in-param
+
 ..........................................................................
 
 These options will no longer be documented but will still continue to work:
@@ -71,5 +74,6 @@ A deprecation notice is outputted during the beta release cycle.
 == REMOVED LIB FUNCTIONS
 
 DataDir::searchDataDir -> DataDir::initSearchDirectories
+CodeGenerator::setIndentationOptions
 
 // EOF //

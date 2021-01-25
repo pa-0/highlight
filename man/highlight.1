@@ -1,4 +1,4 @@
-.TH highlight 1 "2021-01-09" "Andre Simon" "user documentation"
+.TH highlight 1 "2021-01-25" "Andre Simon" "user documentation"
 
 .SH NAME
 Highlight - a universal sourcecode to formatted text converter
@@ -88,11 +88,7 @@ name of file to be included in style-outfile
 omit header and footer of the output document (see --keep-injections)
 .IP "-F, --reformat=<style>"
 reformat output in given style.
-<style>=[allman, gnu, google, horstmann, java, kr, linux, lisp, mozilla, otbs, pico, vtk, ratliff, stroustrup, webkit, whitesmith, user]
-
-The user style does not apply a predefined scheme. Use --reformat-option to define reformatting behaviour.
-.IP "--reformat-option=<opt>"
-apply an astyle cmd line option (assumes -F). Can be repeated to override settings of the chosen indentation scheme.
+<style>=[allman, gnu, google, horstmann, java, kr, linux, lisp, mozilla, otbs, pico, vtk, ratliff, stroustrup, webkit, whitesmith]
 .IP "-I, --include-style"
 include style definition in output
 .IP "-J, --line-length=<num>"
@@ -121,10 +117,6 @@ wrap lines after 80 (default) characters without indenting function parameters a
 wrap lines after 80 (default) characters (use with caution).
 .IP "-z, --zeroes"
 fill leading space of line numbers with zeroes
-.IP "--base16[=theme]"
-use a theme of the Base16 collection. Use a classic theme otherwise.
-.IP "--delim-cr"
-set CR as end-of-line delimiter (MacOS 9)
 .IP "--isolate"
 output each syntax token in separate tags (verbose output)
 .IP "--keep-injections"
@@ -183,6 +175,24 @@ set image size (see --height)
 .SH "TERMINAL ESCAPE OUTPUT OPTIONS (XTERM256 OR TRUECOLOR)"
 .IP "--canvas[=width]"
 set background colour padding (default: 80)
+
+.SH ""LANGUAGE SERVER OPTIONS (*tbd)"
+.IP "--ls-profile=<server>
+load LSP configuration from lsp.conf
+.IP "--ls-exec=<bin>
+set server executable name
+.IP "--ls-option=<option>
+set server CLI option (can be repeated)
+.IP "--ls-hover"
+execute hover requests (HTML output only)
+.IP "--ls-semantic "
+tbd
+.IP "--ls-syntax=<lang>"
+set syntax which is understood by the server
+.IP "--ls-rainbow *"
+tbd
+.IP "--ls-workspace=<dir>"
+set workspace directory to init. the server
 
 .SH ENV VARIABLES
 Highlight recognizes these variables:
