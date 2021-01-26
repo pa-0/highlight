@@ -300,8 +300,6 @@ void HLCmdLineApp::printIOErrorReport ( unsigned int numberErrorFiles,
                                         vector<string> & fileList,
                                         const string &action, const string &streamName  )
 {
-
-
     cerr << "highlight: Could not "
          << action
          << " file"

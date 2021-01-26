@@ -61,8 +61,11 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "version.h"
 #include "codegenerator.h"
 #include "htmlgenerator.h"
+#include "lspprofile.h"
+#include "lspclient.h"
 
 #include <map>
+#include <vector>
 #include "enums.h"
 
 typedef multimap<string, string> MMap;
@@ -86,9 +89,17 @@ private:
     Ui::MainWindowClass *ui;
     MMap assocByExtension, assocByFilename;
     SMap assocByShebang, rememberedAssoc, encodingHints;
+    std::map<std::string, highlight::LSPProfile> lspProfiles;
+
+
     QString fileOpenFilter;
     QString savedClipboardContent;
     QString twoPassOutFile;
+
+    std::string lsProfile;
+    std::string lsExecutable;               ///< server executable path
+    std::string lsSyntax;                   ///< language definition which can be enhanced using the LS
+    std::vector<std::string> lsOptions; ///< server executable start options
 
     QShortcut *copyShortcut;
     QShortcut *pasteShortcut;
@@ -111,7 +122,7 @@ private:
     QString getDistThemePath();
     QString getDistLangPath(const string & suffix);
     QString getDistPluginPath();
-    QString getDistFileConfigPath();
+    QString getDistFileConfigPath(QString name);
     QString getDistFileFilterPath();
 
     QString getWindowsShortPath(const QString & path);
@@ -121,6 +132,7 @@ private:
 
     void selectSingleFile(QLineEdit*, const QString&, const QString&);
     bool loadFileTypeConfig();
+    bool loadLSPProfiles();
     bool shortNamesDisabled();
     void highlight2Clipboard(bool getDataFromCP);
 
@@ -167,6 +179,11 @@ private slots:
     void on_pbSVGChooseStyleIncFile_clicked();
     void on_pbCopyAndPaste_clicked();
 
+    void on_pbLSInitialize_clicked();
+    void on_leLSExec_textChanged();
+    void on_pbSelWorkspace_clicked();
+    void on_pbSelExecutable_clicked();
+
     void on_action_License_triggered();
     void on_action_Changelog_triggered();
     void on_action_Plug_Ins_triggered();
@@ -174,6 +191,8 @@ private slots:
     void on_action_Manual_triggered();
     void on_action_About_Highlight_triggered();
     void on_action_Exit_triggered();
+
+    void loadLSPProfile();
 
     void plausibility();
     void updatePreview();

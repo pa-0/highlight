@@ -117,7 +117,10 @@ void printHelp(const std::string &topic)
         cout <<"See README_TESTCASES.adoc for a detailed description and examples.\n";
     } else if (topic=="lsp") {
         cout <<"LANGUAGE SERVER PROTOCOL HELP:\n\n";
-        cout <<"TBD\n";
+        cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
+        cout <<"Language servers can be configured in the lsp.conf file. Each parameter of this file\n";
+        cout <<"can also be set using --ls-exec, --ls-option and --ls-syntax.\n";
+        cout <<"Currently only --ls-hover is implemented as LSP action to add tooltips to HTML output.\n";
     } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";

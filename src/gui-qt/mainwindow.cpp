@@ -36,6 +36,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "io_report.h"
 #include "syntax_chooser.h"
 
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -146,6 +147,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboThemeFilter->addItem(tr("B16 dark"), "dark");
     ui->comboThemeFilter->setCurrentIndex(0);
 
+    ui->comboLSPProfiles->addItem("");
+    ui->comboLSPProfiles->addItem("clangd");
+    ui->comboLSPProfiles->addItem("ccls");
+    ui->comboLSPProfiles->addItem("ccls-objc");
+    ui->comboLSPProfiles->addItem("pyls");
+    ui->comboLSPProfiles->addItem("rls");
+    ui->comboLSPProfiles->addItem("R");
+
     //does not work in GUI editor when adding > 10 items ?!?
     QStringList fmts;
     fmts << "Allman" << "GNU" <<"Google"<< "Horstmann"<<"Lisp"<<"Java"<<"K&R"<<"Linux"
@@ -157,6 +166,12 @@ MainWindow::MainWindow(QWidget *parent)
     if (!loadFileTypeConfig()) {
         QMessageBox::warning(this, tr("Initialization error"),
                              tr("Could not find syntax definitions. Check installation."));
+    }
+
+    // load LSP profiles
+    if (!loadLSPProfiles()) {
+        QMessageBox::warning(this, tr("Initialization error"),
+                             tr("Could not find LSP profiles. Check installation."));
     }
 
     //avoid ugly buttons in MacOS
@@ -244,6 +259,9 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(ui->comboTheme, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->comboSelectSyntax, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->comboThemeFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
+
+    QObject::connect(ui->comboLSPProfiles, SIGNAL(currentIndexChanged(int)), this, SLOT(loadLSPProfile()));
+
 
     QObject::connect(ui->sbLineNoWidth, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->sbLineNoStart, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
@@ -654,9 +672,65 @@ void MainWindow::readLuaList(const string& paramName, const string& langName,Dil
     }
 }
 
+
+bool MainWindow::loadLSPProfiles()
+{
+    QString confPath=getDistFileConfigPath(QString("lsp.conf"));
+#ifdef Q_OS_WIN
+   filetypesPath = getWindowsShortPath(filetypesPath);
+#endif
+
+   try {
+       Diluculum::LuaState ls;
+       Diluculum::LuaValueList ret= ls.doFile (confPath.toStdString());
+
+       int idx=1;
+       std::string serverName;              ///< server name
+       std::string executable;              ///< server executable path
+       std::string syntax;                  ///< language definition which can be enhanced using the LS
+       std::vector<std::string> options;    ///< server executable start options
+       Diluculum::LuaValue mapEntry;
+
+       //{ Server="clangd", Exec="clangd", Syntax="c", Options={"--log=error"} },
+       while ((mapEntry = ls["Servers"][idx].value()) !=Diluculum::Nil) {
+           options.clear();
+           serverName = mapEntry["Server"].asString();
+           executable = mapEntry["Exec"].asString();
+           syntax = mapEntry["Syntax"].asString();
+
+           if (mapEntry["Options"] !=Diluculum::Nil) {
+               int extIdx=1;
+               while (mapEntry["Options"][extIdx] !=Diluculum::Nil) {
+                   options.push_back(mapEntry["Options"][extIdx].asString());
+                   extIdx++;
+               }
+           }
+
+           highlight::LSPProfile profile;
+           profile.executable = executable;
+           profile.serverName = serverName;
+           profile.syntax = syntax;
+           profile.options = options;
+
+           lspProfiles[serverName]=profile;
+
+           idx++;
+       }
+
+   } catch (Diluculum::LuaError &err) {
+
+       QMessageBox::warning(this, "Configuration error", QString::fromStdString( err.what()));
+
+       return false;
+   }
+
+
+    return true;
+}
+
 bool MainWindow::loadFileTypeConfig()
 {
-    QString filetypesPath=getDistFileConfigPath();
+    QString filetypesPath=getDistFileConfigPath(QString("filetypes.conf"));
 #ifdef Q_OS_WIN
    filetypesPath = getWindowsShortPath(filetypesPath);
 #endif
@@ -1930,17 +2004,18 @@ QString MainWindow::getDistPluginPath(){
 #endif
 }
 
-QString MainWindow::getDistFileConfigPath(){
+QString MainWindow::getDistFileConfigPath(QString name){
 #ifdef Q_OS_OSX
     return QDir::toNativeSeparators(QString("%1/../Resources/filetypes.conf").arg(QCoreApplication::applicationDirPath()));
 #else
     #ifdef CONFIG_DIR
-    return QDir::toNativeSeparators(QString("%1/filetypes.conf").arg(CONFIG_DIR));
+    return QDir::toNativeSeparators(QString("%1/%2").arg(CONFIG_DIR).arg(name));
     #else
-    return QDir::toNativeSeparators(QString("%1/filetypes.conf").arg(QDir::currentPath()));
+    return QDir::toNativeSeparators(QString("%1/%2").arg(QDir::currentPath()).arg(name));
     #endif
 #endif
 }
+
 
 QString MainWindow::getDistFileFilterPath(){
 #ifdef Q_OS_OSX
@@ -1975,3 +2050,63 @@ QString MainWindow::getWindowsShortPath(const QString & path){
     return shortPath;
 }
 
+void MainWindow::loadLSPProfile() {
+
+    lsProfile=ui->comboLSPProfiles->currentText().toStdString();
+
+    if (lsProfile.size()) {
+        if (lspProfiles.count(lsProfile)) {
+            highlight::LSPProfile profile = lspProfiles[lsProfile];
+            lsExecutable = profile.executable;
+            lsSyntax = profile.syntax;
+            lsOptions = profile.options;
+            ui->leLSExec->setText(QString::fromStdString(lsExecutable));
+        } else {
+           // cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
+           // return EXIT_FAILURE;
+        }
+    }
+}
+
+void MainWindow::on_pbLSInitialize_clicked(){
+
+    if (ui->leLSWorkspace->text().isEmpty()) {
+        ui->leLSWorkspace->setFocus();
+        return;
+    }
+
+    if (lsExecutable.empty()) {
+        ui->leLSExec->setFocus();
+        return;
+    }
+
+    highlight::HtmlGenerator lspgenerator;
+
+    highlight::LSResult lsInitRes=lspgenerator.initLanguageServer ( lsExecutable, lsOptions,
+                                                                  ui->leLSWorkspace->text().toStdString(), lsSyntax,
+                                                                   2 );
+
+    if ( lsInitRes==highlight::INIT_OK ) {
+        lspgenerator.exitLanguageServer();
+        QMessageBox::information(this, "LSP Init. OK",  "Language server initialization sucessfull");
+    }
+    else if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
+        QMessageBox::critical(this, "LSP Error",  "Language server connection failed");
+    } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
+        QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
+    } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
+        QMessageBox::critical(this,"LSP Error", "Language server version too old");
+    }
+}
+
+void MainWindow::on_leLSExec_textChanged(){
+    lsExecutable = ui->leLSExec->text().toStdString();
+}
+
+void MainWindow::on_pbSelWorkspace_clicked(){
+    ui->leLSWorkspace->setText(QFileDialog::getExistingDirectory(this, tr("Select workspace directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
+}
+
+void MainWindow::on_pbSelExecutable_clicked(){
+    selectSingleFile(ui->leLSExec, tr("Choose the Language Server executable"), "*");
+}

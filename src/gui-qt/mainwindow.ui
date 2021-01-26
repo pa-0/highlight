@@ -148,7 +148,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>4</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -748,6 +748,148 @@
              </widget>
             </item>
            </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_lsp">
+        <property name="toolTip">
+         <string>Configure the LSP Client</string>
+        </property>
+        <attribute name="title">
+         <string>LSP</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_19">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_31">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Language Server:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboLSPProfiles">
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="currentText">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_32">
+           <item>
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>Executable:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="leLSExec"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbSelExecutable">
+             <property name="minimumSize">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Select the server executable.</string>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pbLSInitialize">
+             <property name="text">
+              <string>Test Connection</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_33">
+           <item>
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Workspace:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="leLSWorkspace"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbSelWorkspace">
+             <property name="minimumSize">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Select the workspace directory of your project.</string>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbLSHover">
+           <property name="toolTip">
+            <string>Run hover requests to add tooltips to your output (HTML only).</string>
+           </property>
+           <property name="text">
+            <string>Hover</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbLSSemantic">
+           <property name="text">
+            <string>Semantic Highlighting</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbLSRainbow">
+           <property name="text">
+            <string>Rainbow Highlighting</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -2357,7 +2499,7 @@ Set the width to 0 to keep tabs.</string>
               <string>Select or enter the font name. HTML supports a list of fonts, separated with comma.</string>
              </property>
              <property name="currentText">
-              <string>Monospace</string>
+              <string>DejaVu Sans Mono</string>
              </property>
              <property name="fontFilters">
               <set>QFontComboBox::MonospacedFonts</set>
