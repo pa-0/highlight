@@ -215,25 +215,18 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
         return LSResult::INIT_BAD_REQUEST;
     }
 
-
     /*std::this_thread::sleep_for(std::chrono::milliseconds(200));*/
 
     LSPClient.runInitialized();
-
-    //TODO eat those windows progress notifications
-    if (executable=="rls") {
-        LSPClient.runInitialized();
-        LSPClient.runInitialized();
-        LSPClient.runInitialized();
-        LSPClient.runInitialized();
-    }
-
 
     return LSResult::INIT_OK;
 }
 
 bool CodeGenerator::lsOpenDocument(const string& fileName, const string & suffix){
     lsDocumentPath = fileName;
+
+    LSPClient.waitForNotifications();
+
     return LSPClient.runDidOpen(fileName, suffix);
 }
 
@@ -827,6 +820,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
     string escHoverText;
 
     if (lsEnableHoverRequests && lsDocumentPath.size() && (currentState==STANDARD || currentState==NUMBER || currentState==KEYWORD)) {
+
         string hoverText = LSPClient.runHover(lsDocumentPath, lineIndex - s.size(), lineNumber-1);
 
         for(auto c : hoverText)

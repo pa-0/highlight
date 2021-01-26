@@ -90,6 +90,8 @@ public:
 
     bool runInitialized();
 
+    bool waitForNotifications();
+
     bool runDidOpen(const std::string &document, const std::string &syntax);
 
     bool runDidClose(const std::string &document, const std::string &syntax);
