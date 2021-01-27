@@ -147,15 +147,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboThemeFilter->addItem(tr("B16 dark"), "dark");
     ui->comboThemeFilter->setCurrentIndex(0);
 
-    ui->comboLSPProfiles->addItem("");
-    ui->comboLSPProfiles->addItem("clangd");
-    ui->comboLSPProfiles->addItem("ccls");
-    ui->comboLSPProfiles->addItem("ccls-objc");
-    ui->comboLSPProfiles->addItem("pyls");
-    ui->comboLSPProfiles->addItem("rls");
-    ui->comboLSPProfiles->addItem("R");
+    ui->comboLSProfiles->addItem(tr("Please select a Server"));
 
-    //does not work in GUI editor when adding > 10 items ?!?
+    // load LSP profiles
+    if (!loadLSProfiles()) {
+        QMessageBox::warning(this, tr("Initialization error"),
+                             tr("Could not find LSP profiles. Check installation."));
+    }
+
+    for (const auto& kv : lspProfiles) {
+         ui->comboLSProfiles->addItem(QString::fromStdString( kv.first ));
+    }
+
     QStringList fmts;
     fmts << "Allman" << "GNU" <<"Google"<< "Horstmann"<<"Lisp"<<"Java"<<"K&R"<<"Linux"
          <<"Mozilla"<<"OTBS"<<"Pico"<<"Ratliff"<<"Stroustrup"<<"VTK"<<"Webkit"<<"Whitesmith";
@@ -166,12 +169,6 @@ MainWindow::MainWindow(QWidget *parent)
     if (!loadFileTypeConfig()) {
         QMessageBox::warning(this, tr("Initialization error"),
                              tr("Could not find syntax definitions. Check installation."));
-    }
-
-    // load LSP profiles
-    if (!loadLSPProfiles()) {
-        QMessageBox::warning(this, tr("Initialization error"),
-                             tr("Could not find LSP profiles. Check installation."));
     }
 
     //avoid ugly buttons in MacOS
@@ -260,7 +257,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(ui->comboSelectSyntax, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->comboThemeFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
 
-    QObject::connect(ui->comboLSPProfiles, SIGNAL(currentIndexChanged(int)), this, SLOT(loadLSPProfile()));
+    QObject::connect(ui->comboLSProfiles, SIGNAL(currentIndexChanged(int)), this, SLOT(loadLSProfile()));
 
 
     QObject::connect(ui->sbLineNoWidth, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
@@ -487,6 +484,8 @@ void MainWindow::writeSettings()
                       ui->comboReformat->currentIndex());
     settings.setValue(ui->comboRTFPageSize->property(name).toString(),
                       ui->comboRTFPageSize->currentIndex());
+    settings.setValue(ui->comboLSProfiles->property(name).toString(),
+                      ui->comboLSProfiles->currentIndex());
 
     settings.setValue(ui->comboTheme->property(name).toString(),
                       ui->comboTheme->currentIndex());
@@ -527,6 +526,8 @@ void MainWindow::writeSettings()
                       ui->cbTEXEmbedStyle->isChecked());
     settings.setValue(ui->cbHTMLPasteMIME->property(name).toString(),
                       ui->cbHTMLPasteMIME->isChecked());
+    settings.setValue(ui->cbLSHover->property(name).toString(),
+                      ui->cbLSHover->isChecked());
 
     settings.setValue(ui->leSVGHeight->property(name).toString(),
                       ui->leSVGHeight->text());
@@ -534,6 +535,9 @@ void MainWindow::writeSettings()
                       ui->leSVGWidth->text());
     settings.setValue(ui->leFontSize->property(name).toString(),
                       ui->leFontSize->text());
+    settings.setValue(ui->leLSWorkspace->property(name).toString(),
+                      ui->leLSWorkspace->text());
+
     settings.setValue(ui->sbLineLength->property(name).toString(),
                       ui->sbLineLength->value());
     settings.setValue(ui->sbTabWidth->property(name).toString(),
@@ -617,6 +621,7 @@ void MainWindow::readSettings()
     ui->cbRTFPageColor->setChecked(settings.value(ui->cbRTFPageColor->property(name).toString()).toBool());
     ui->cbWrapping->setChecked(settings.value(ui->cbWrapping->property(name).toString()).toBool());
     ui->cbValidateInput->setChecked(settings.value(ui->cbValidateInput->property(name).toString()).toBool());
+    ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
 
     ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
     ui->comboEncoding->setCurrentIndex(0);
@@ -627,6 +632,7 @@ void MainWindow::readSettings()
     ui->comboReformat->setCurrentIndex(settings.value(ui->comboReformat->property(name).toString()).toInt());
     ui->comboRTFPageSize->setCurrentIndex(settings.value(ui->comboRTFPageSize->property(name).toString()).toInt());
     ui->comboSelectSyntax->setCurrentIndex(settings.value(ui->comboSelectSyntax->property(name).toString()).toInt());
+    ui->comboLSProfiles->setCurrentIndex(settings.value(ui->comboLSProfiles->property(name).toString()).toInt());
 
     oldThemeIndex=settings.value(ui->comboTheme->property(name).toString()).toInt();
     ui->comboThemeFilter->setCurrentIndex(settings.value(ui->comboThemeFilter->property(name).toString()).toInt());
@@ -642,6 +648,7 @@ void MainWindow::readSettings()
     ui->leFontSize->setText(settings.value(ui->leFontSize->property(name).toString()).toString());
     ui->leHTMLCssPrefix->setText(settings.value(ui->leHTMLCssPrefix->property(name).toString()).toString());
     ui->lePluginReadFilePath->setText(settings.value(ui->lePluginReadFilePath->property(name).toString()).toString());
+    ui->leLSWorkspace->setText(settings.value(ui->leLSWorkspace->property(name).toString()).toString());
 
     ui->sbLineLength->setValue(settings.value(ui->sbLineLength->property(name).toString()).toInt());
     ui->sbTabWidth->setValue(settings.value(ui->sbTabWidth->property(name).toString()).toInt());
@@ -673,7 +680,7 @@ void MainWindow::readLuaList(const string& paramName, const string& langName,Dil
 }
 
 
-bool MainWindow::loadLSPProfiles()
+bool MainWindow::loadLSProfiles()
 {
     QString confPath=getDistFileConfigPath(QString("lsp.conf"));
 #ifdef Q_OS_WIN
@@ -720,11 +727,8 @@ bool MainWindow::loadLSPProfiles()
    } catch (Diluculum::LuaError &err) {
 
        QMessageBox::warning(this, "Configuration error", QString::fromStdString( err.what()));
-
        return false;
    }
-
-
     return true;
 }
 
@@ -855,6 +859,11 @@ void MainWindow::on_action_About_Highlight_triggered()
                                 "(C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
                                 "Diluculum Lua wrapper\n"
                                 "(C) 2005-2013 by Leandro Motta Barros\n\n"
+                                "xterm 256 color matching functions"
+                                "Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>\n\n"
+                                "PicoJSON library\n"
+                                "Copyright 2009-2010 Cybozu Labs, Inc.\n"
+                                "Copyright 2011-2014 Kazuho Oku\n\n"
                                 "Built with Qt version %2\n\n"
                                 "Released under the terms of the GNU GPL license.\n\n"
                                 "The highlight logo is based on the image \"Alcedo Atthis\" by Lukasz Lukasik.\n"
@@ -1157,6 +1166,9 @@ void MainWindow::on_pbStartConversion_clicked()
 
     QStringList inputErrors, outputErrors, reformatErrors, syntaxTestErrors;
 
+    bool usesLSClient=false;
+    bool useLSForInput=false;
+
     int i=-1;
     while ( ++i<ui->lvInputFiles->count()) {
 
@@ -1257,6 +1269,21 @@ void MainWindow::on_pbStartConversion_clicked()
 
             applyEncoding(generator.get(), langDefPath);
 
+            if (usesLSClient==false && lsSyntax==generator->getSyntaxDescription()) {
+
+                if (initializeLS(generator.get(), false )) {
+                        usesLSClient=true;
+                }
+            }
+
+            useLSForInput = usesLSClient && lsSyntax==generator->getSyntaxDescription();
+            generator->setLsHover(useLSForInput && ui->cbLSHover->isChecked() );
+
+            if ( useLSForInput ) {
+
+                generator->lsOpenDocument(currentFile, generator->getSyntaxDescription());
+            }
+
             error = generator->generateFile(currentFile, outfileName );
             if (error != highlight::PARSE_OK) {
                 if (error == highlight::BAD_INPUT) {
@@ -1264,6 +1291,9 @@ void MainWindow::on_pbStartConversion_clicked()
                 } else {
                     outputErrors.append(origFilePath);
                 }
+            }
+            if (useLSForInput) {
+               // generator->lsCloseDocument(currentFile, generator->getSyntaxDescription());
             }
             ui->progressBar->setValue(100*i / ui->lvInputFiles->count());
         }
@@ -1287,6 +1317,10 @@ void MainWindow::on_pbStartConversion_clicked()
     }
 
     generator->clearPersistentSnippets();
+
+    if (usesLSClient) {
+        generator->exitLanguageServer();
+    }
 
     // write external Stylesheet
     if ( cbEmbed && leStyleFile && !cbEmbed->isChecked()) {
@@ -1367,6 +1401,8 @@ void MainWindow::on_pbStartConversion_clicked()
             }
         }
     }
+
+
 }
 
 void MainWindow::on_pbCopyFile2CP_clicked()
@@ -2050,9 +2086,12 @@ QString MainWindow::getWindowsShortPath(const QString & path){
     return shortPath;
 }
 
-void MainWindow::loadLSPProfile() {
+void MainWindow::loadLSProfile() {
 
-    lsProfile=ui->comboLSPProfiles->currentText().toStdString();
+    if (ui->comboLSProfiles->currentIndex()==0)
+        return;
+
+    lsProfile=ui->comboLSProfiles->currentText().toStdString();
 
     if (lsProfile.size()) {
         if (lspProfiles.count(lsProfile)) {
@@ -2061,11 +2100,30 @@ void MainWindow::loadLSPProfile() {
             lsSyntax = profile.syntax;
             lsOptions = profile.options;
             ui->leLSExec->setText(QString::fromStdString(lsExecutable));
-        } else {
-           // cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
-           // return EXIT_FAILURE;
         }
     }
+}
+
+bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
+{
+    highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
+                                                                  ui->leLSWorkspace->text().toStdString(), lsSyntax,
+                                                                  ui->cbLSDebug->isChecked() ? 2 : 0 );
+    if ( lsInitRes==highlight::INIT_OK ) {
+        if (tellMe) {
+            generator->exitLanguageServer();
+            QMessageBox::information(this, "LSP Init. OK",  "Language server initialization sucessfull");
+        }
+        return true;
+    }
+    else if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
+        QMessageBox::critical(this, "LSP Error",  "Language server connection failed");
+    } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
+        QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
+    } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
+        QMessageBox::critical(this,"LSP Error", "Language server version too old");
+    }
+    return false;
 }
 
 void MainWindow::on_pbLSInitialize_clicked(){
@@ -2081,22 +2139,7 @@ void MainWindow::on_pbLSInitialize_clicked(){
     }
 
     highlight::HtmlGenerator lspgenerator;
-
-    highlight::LSResult lsInitRes=lspgenerator.initLanguageServer ( lsExecutable, lsOptions,
-                                                                  ui->leLSWorkspace->text().toStdString(), lsSyntax,
-                                                                   2 );
-
-    if ( lsInitRes==highlight::INIT_OK ) {
-        lspgenerator.exitLanguageServer();
-        QMessageBox::information(this, "LSP Init. OK",  "Language server initialization sucessfull");
-    }
-    else if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
-        QMessageBox::critical(this, "LSP Error",  "Language server connection failed");
-    } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
-        QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
-    } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
-        QMessageBox::critical(this,"LSP Error", "Language server version too old");
-    }
+    initializeLS(&lspgenerator, true);
 }
 
 void MainWindow::on_leLSExec_textChanged(){

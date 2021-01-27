@@ -7,5 +7,6 @@
         <file>folder.png</file>
         <file>script.png</file>
         <file>clipboard.png</file>
+        <file>script_blue.png</file>
     </qresource>
 </RCC>

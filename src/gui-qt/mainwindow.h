@@ -132,8 +132,12 @@ private:
 
     void selectSingleFile(QLineEdit*, const QString&, const QString&);
     bool loadFileTypeConfig();
-    bool loadLSPProfiles();
+    bool loadLSProfiles();
+
+    bool initializeLS(highlight::CodeGenerator * generator, bool tellMe);
+
     bool shortNamesDisabled();
+
     void highlight2Clipboard(bool getDataFromCP);
 
     string analyzeFile(const string& file);
@@ -192,11 +196,10 @@ private slots:
     void on_action_About_Highlight_triggered();
     void on_action_Exit_triggered();
 
-    void loadLSPProfile();
-
     void plausibility();
     void updatePreview();
     void openFiles();
+    void loadLSProfile();
 
     void on_actionDock_floating_panels_toggled(bool arg1);
     void on_pbPluginReadFilePath_clicked();

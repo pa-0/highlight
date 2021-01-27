@@ -59,7 +59,9 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n Copyright (C) 2005-2013 by Leandro Motta Barros"
             << "\n\n xterm 256 color matching functions"
             << "\n Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>"
-
+            << "\n\n PicoJSON library"
+            << "\n Copyright 2009-2010 Cybozu Labs, Inc."
+            << "\n Copyright 2011-2014 Kazuho Oku"
             << "\n\n This software is released under the terms of the GNU General "
             << "Public License."
             << "\n For more information about these matters, see the file named "
@@ -664,8 +666,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
             generator->setEncoding (encoding);
 
-            if (lsSyntax==suffix) {
+            if (lsSyntax==generator->getSyntaxDescription()) {
 
+                //LSP requires absolute paths
                 if (inFileList[i].empty()) {
                     cerr << "highlight: no input file path defined.\n";
                     initError = true;
@@ -695,11 +698,12 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     break;
                 }
                 usesLSClient=true;
-                generator->setLsHover(options.isLsHover());
             }
         }
 
-        if (usesLSClient) {
+        generator->setLsHover(usesLSClient && lsSyntax==generator->getSyntaxDescription() );
+
+        if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
             generator->lsOpenDocument(inFileList[i], suffix);
         }
 
@@ -767,9 +771,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        if (usesLSClient) {
+        if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
             //pyls hangs
-         //   generator->lsCloseDocument(inFileList[i], suffix);
+            //generator->lsCloseDocument(inFileList[i], suffix);
         }
 
         ++i;
