@@ -22,6 +22,7 @@ v4.0-beta, Januar 2021
 :README_PLUGINS: pass:q[link:README_PLUGINS.adoc[`README_PLUGINS`]]
 :README_REGEX: pass:q[link:README_REGEX.adoc[`README_REGEX`]]
 :README_TESTCASES: pass:q[link:README_TESTCASES.adoc[`README_TESTCASES`]]
+:README_LSP_CLIENT: pass:q[link:README_LSP_CLIENT.adoc[`README_LSP_CLIENT`]]
 // Highlight Docs (uncovenrted):
 :INSTALL: pass:q[link:INSTALL[`INSTALL`]]
 // Source files:
@@ -187,7 +188,7 @@ General options:
      --config-file=<file>       set path to a lang or theme file
  -d, --outdir=<directory>       name of output directory
  -h, --help[=topic]             print this help or a topic description
-                                  <topic> = [syntax, theme, plugin, config, test]
+                                  <topic> = [syntax, theme, plugin, config, test, lsp]
  -i, --input=<file>             name of single input file
  -o, --output=<file>            name of single output file
  -P, --progress                 print progress bar in batch mode
@@ -195,7 +196,8 @@ General options:
  -S, --syntax=<type|path>       specify type of source code or syntax file path
      --syntax-by-name=<name>    specify type of source code by given name
                                   will not read a file of this name, useful for stdin
- -v, --verbose                  print debug info
+     --syntax-supported         test if the given syntax can be loaded
+ -v, --verbose                  print debug info; repeat to show more information
      --force[=syntax]           generate output if input syntax is unknown
      --list-scripts=<type>      list installed scripts
                                   <type> = [langs, themes, plugins]
@@ -210,8 +212,6 @@ General options:
      --print-style              print stylesheet only (see --style-outfile)
      --skip=<list>              ignore listed unknown file types
                                   (Example: --skip='bak;c~;h~')
-     --start-nested=<lang>      define nested language which starts input
-                                  without opening delimiter
      --stdout                   output to stdout (batch mode, --print-style)
      --validate-input           test if input is text, remove Unicode BOM
      --version                  print version and copyright information
@@ -230,10 +230,7 @@ Output formatting options:
  -F, --reformat=<style>         reformats and indents output in given style
                                   <style> = [allman, gnu, google, horstmann,
                                   java, kr, linux, lisp, mozilla, otbs, pico,
-                                  vtk, ratliff, stroustrup, webkit, whitesmith, user]
-                                  The user style does not apply a predefined scheme.
-                                  Use --reformat-option to define the reformatting.
-     --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)
+                                  vtk, ratliff, stroustrup, webkit, whitesmith]
  -I, --include-style            include style definition in output file
  -J, --line-length=<num>        line length before wrapping (see -V, -W)
  -j, --line-number-length=<num> line number width incl. left padding (default: 5)
@@ -253,8 +250,6 @@ Output formatting options:
      --wrap-no-numbers          omit line numbers of wrapped lines
                                   (assumes -l)
  -z, --zeroes                   pad line numbers with 0's
-     --base16[=theme]           use a theme of the Base16 collection
-     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)
      --isolate                  output each syntax token separately (verbose output)
      --keep-injections          output plug-in injections in spite of -f
      --kw-case=<case>           change case of case insensitive keywords
@@ -303,6 +298,19 @@ SVG output options:
 Terminal escape output options (xterm256 or truecolor):
 
      --canvas[=width]           set background colour padding (default: 80)
+
+
+Language Server options (*tbd):
+
+     --ls-profile=<server>      read LSP configuration from lsp.conf
+     --ls-exec=<bin>            set server executable name
+     --ls-option=<option>       set server CLI option (can be repeated)
+     --ls-hover                 execute hover requests (HTML output only)
+     --ls-semantic *
+     --ls-syntax=<lang>         set syntax which is understood by the server
+     --ls-rainbow *
+
+     --ls-workspace=<dir>       set workspace directory to init. the server
 ................................................................................
 
 === GUI OPTIONS
@@ -457,6 +465,10 @@ Since version 2.45, highlight supports special notations within comments to
 test its syntax recognition.
 See {README_TESTCASES} for details.
 
+=== LSP CLIENT
+
+Since version 4.0, highlight supports LSP to enhance its output.
+See {README_LSP_CLIENT} for details.
 
 == CONFIGURATION
 

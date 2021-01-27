@@ -14,9 +14,8 @@ André Simon
 :linkattrs: true
 
 
-== NEW CONFIG FILES
+The major version bump will be used to enforce the following interface changes:
 
-lsp.conf
 
 == REMOVED CLI OPTIONS
 
@@ -36,9 +35,11 @@ The following options will be removed:
 
 ..........................................................................
 
+
 These options will no longer be documented but will still continue to work:
 
-=== GNU source-highlight compatibility options:
+
+=== GNU SOURCE-HIGHLIGHT COMPATIBILITY OPTIONS
 +
 ..........................................................................
     --doc                      create stand alone document
@@ -57,7 +58,17 @@ These options will no longer be documented but will still continue to work:
 
 A deprecation notice is outputted during the beta release cycle.
 
-=== renamed files:
+
+== REMOVED LIBRARY FUNCTIONS
++
+..........................................................................
+
+DataDir::searchDataDir -> DataDir::initSearchDirectories
+CodeGenerator::setIndentationOptions
+..........................................................................
+
+
+=== RENAMED FILES
 +
 ..........................................................................
     langDefs/abap4.lang -> langDefs/abap.lang
@@ -71,9 +82,9 @@ A deprecation notice is outputted during the beta release cycle.
     langDefs/ts.lang -> langDefs/typescript.lang
 ..........................................................................
 
-== REMOVED LIB FUNCTIONS
+== NEW CONFIG FILES
++
 
-DataDir::searchDataDir -> DataDir::initSearchDirectories
-CodeGenerator::setIndentationOptions
+lsp.conf
 
 // EOF //

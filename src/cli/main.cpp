@@ -704,9 +704,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         generator->setLsHover(usesLSClient && lsSyntax==generator->getSyntaxDescription() );
 
         if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
-            generator->lsOpenDocument(inFileList[i], suffix);
+            generator->lsOpenDocument(inFileList[i], generator->getSyntaxDescription());
         }
-
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
             ++i;
@@ -773,7 +772,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
             //pyls hangs
-            //generator->lsCloseDocument(inFileList[i], suffix);
+            //generator->lsCloseDocument(inFileList[i], generator->getSyntaxDescription());
         }
 
         ++i;

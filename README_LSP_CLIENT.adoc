@@ -13,10 +13,86 @@ André Simon
 :icons: font
 :linkattrs: true
 
+
 == LSP SUPPORT
+
+Starting with version 4.0, highlight will use the LSP protocol to enhance
+its output.
+
+What does this mean?
+
+Many editors make use of "Language Servers" to get syntax information of various
+programming languages without the need to implement a deep understanding of the
+files'' syntax they process. Most prominent editor is VSCode. A lot of language
+servers are designed and tested for this editor, since MS published the LSP
+specification and VSCode is the reference. Another well known editors with
+LSP support are Kate and Eclipse.
+
+More information about LSP and editor support:
+https://langserver.org/
+
+Highlight will also make use of the LSP interface to access syntax specific
+information. Since a general highlighter cannot have a deep understanding of
+the code''s meaning this will improve the highlighing quality.
+
+Several beta releases are planned to introduce these features:
+
+* add enhanced tooltips using hover requests (implemented)
+* add semantic highlighting (tbd)
+* add rainbow highlighting (tbd)
+* add syntax error highlighting (tbd)
+
 
 == PROFILES
 
+Language servers are configured in lsp.conf:
+
++
+..........................................................................
+
+Servers = {
+
+  { Server="clangd", Exec="clangd", Syntax="C and C++", Options={"--log=error"} },
+  { Server="ccls", Exec="ccls", Syntax="C and C++", Options={"-v=-3", "--"} },
+  { Server="ccls-objc", Exec="ccls", Syntax="Objective C", Options={"-v=-3", "--"} },
+
+  { Server="rls", Exec="rls", Syntax="Rust", Options={} },
+  { Server="pyls", Exec="pyls", Syntax="Python", Options={"--check-parent-process"} },
+  { Server="R", Exec="R", Syntax="R", Options={"--slave", "-e", "languageserver::run()"} },
+
+}
+..........................................................................
+
+The profile settings here may be set with the corresponding --ls-* options
+(see highlight -h for details).
+
 == OPTIONS
+
+Command line options:
++
+..........................................................................
+Language Server options (*tbd):
+
+     --ls-profile=<server>      read LSP configuration from lsp.conf
+     --ls-exec=<bin>            set server executable name
+     --ls-option=<option>       set server CLI option (can be repeated)
+     --ls-hover                 execute hover requests (HTML output only)
+     --ls-semantic *
+     --ls-syntax=<lang>         set syntax which is understood by the server
+     --ls-rainbow *
+
+     --ls-workspace=<dir>       set workspace directory to init. the server
+..........................................................................
+
+=== Example invokation:
++
+..........................................................................
+
+highlight  -I --ls-profile ccls --ls-workspace '/home/andre/Projekte/c' /home/andre/Projekte/c/re.cpp --out-format html  --ls-hover > /home/andre/Projekte/c/re.cpp.ccls.html
+
+highlight --ls-profile rls --ls-workspace '/home/andre/Projekte/rust/hello_world' /home/andre/Projekte/rust/hello_world/src/main.rs --outdir ~/test_out
+..........................................................................
+
+The GUI offers an LSP tab to enable these options.
 
 // EOF //
