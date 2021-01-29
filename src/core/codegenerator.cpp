@@ -215,8 +215,6 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
         return LSResult::INIT_BAD_REQUEST;
     }
 
-    /*std::this_thread::sleep_for(std::chrono::milliseconds(200));*/
-
     LSPClient.runInitialized();
 
     return LSResult::INIT_OK;

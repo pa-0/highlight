@@ -1,6 +1,3 @@
-/*OLD*/
-
-
 /***************************************************************************
  *                          lspclient.cpp  -  description
  *                             -------------------
@@ -30,20 +27,6 @@
 #include "lspclient.h"
 #include "stringtools.h"
 
-
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
-
-#if __linux__
-#include <sys/prctl.h>
-#endif
-
-#endif
-
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -56,20 +39,37 @@ namespace highlight
     hoverProvider(false),
     semanticTokensProvider(false),
     logRequests(false),
-    pid(0),
     msgId(1.0),
     lastErrorCode(0)
     {
         serverName=serverVersion="?";
+
+#ifdef WIN32
+        g_hChildStd_IN_Rd = NULL;
+        g_hChildStd_IN_Wr = NULL;
+        g_hChildStd_OUT_Rd = NULL;
+        g_hChildStd_OUT_Wr = NULL;
+#else
+        pid=0;
+#endif
     }
 
     LSPClient::~LSPClient()
     {
+#ifdef WIN32
+       if (initialized) {
+            CloseHandle(g_hChildStd_OUT_Wr);
+            CloseHandle(g_hChildStd_IN_Rd);
+            CloseHandle(g_hChildStd_IN_Wr);
+            CloseHandle(g_hChildStd_OUT_Rd);
+        }
+#else
         if (initialized) {
             int status=0;
             kill(pid, SIGKILL); //send SIGKILL signal to the child process
             waitpid(pid, &status, 0);
         }
+#endif
     }
 
     void LSPClient::setExecutable ( const std::string& exec ) {
@@ -92,6 +92,88 @@ namespace highlight
     bool LSPClient::init() {
 
         initialized=true;
+
+#ifdef WIN32
+
+       // https://docs.microsoft.com/de-de/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
+
+        SECURITY_ATTRIBUTES saAttr;
+
+        // Set the bInheritHandle flag so pipe handles are inherited.
+        saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+        saAttr.bInheritHandle = TRUE;
+        saAttr.lpSecurityDescriptor = NULL;
+
+        // Create a pipe for the child process's STDOUT
+        if (!CreatePipe(&g_hChildStd_OUT_Rd, &g_hChildStd_OUT_Wr, &saAttr, 0))
+            return false;
+
+        // Ensure the read handle to the pipe for STDOUT is not inherited
+        if (!SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0))
+            return false;
+
+        // Create a pipe for the child process's STDIN.
+        if (!CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0))
+            return false;
+
+        // Ensure the write handle to the pipe for STDIN is not inherited.
+        if (!SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0))
+            return false;
+
+        PROCESS_INFORMATION piProcInfo;
+        STARTUPINFO siStartInfo;
+
+        // Set up members of the PROCESS_INFORMATION structure.
+
+        ZeroMemory( &piProcInfo, sizeof(PROCESS_INFORMATION) );
+
+        // Set up members of the STARTUPINFO structure.
+        // This structure specifies the STDIN and STDOUT handles for redirection.
+
+        ZeroMemory( &siStartInfo, sizeof(STARTUPINFO) );
+        siStartInfo.cb = sizeof(STARTUPINFO);
+        siStartInfo.hStdError = g_hChildStd_OUT_Wr;
+        siStartInfo.hStdOutput = g_hChildStd_OUT_Wr;
+        siStartInfo.hStdInput = g_hChildStd_IN_Rd;
+        siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+        // Create the child process.
+
+        std::string cmdLine(executable);
+        for (auto& option : options) {
+            cmdLine.append(" ");
+            cmdLine.append(option);
+        }
+        if (logRequests) {
+            std::cerr << "\nLSP CMD "<<cmdLine<<"\n";
+        }
+
+        BOOL bSuccess = CreateProcess(NULL,
+            const_cast<LPSTR>(cmdLine.c_str()),
+            NULL,          // process security attributes
+            NULL,          // primary thread security attributes
+            TRUE,          // handles are inherited
+            CREATE_NO_WINDOW, // creation flags
+            NULL,          // use parent's environment
+            NULL,          // use parent's current directory
+            &siStartInfo,  // STARTUPINFO pointer
+            &piProcInfo);  // receives PROCESS_INFORMATION
+
+        // If an error occurs, exit the application.
+        if ( ! bSuccess ) {
+             std::cerr <<"highlight: CreateProcess failed\n";
+             return false;
+        } else {
+
+            // Close handles to the child process and its primary thread.
+            // Some applications might keep these handles to monitor the status
+            // of the child process, for example.
+
+            CloseHandle(piProcInfo.hProcess);
+            CloseHandle(piProcInfo.hThread);
+        }
+
+#else
 
         pipe(inpipefd);
         pipe(outpipefd);
@@ -141,6 +223,7 @@ namespace highlight
         //close unused pipe ends
         close(outpipefd[0]);
         close(inpipefd[1]);
+#endif
         return true;
     }
 
@@ -155,19 +238,85 @@ namespace highlight
             std::cerr << "LSP REQ:\n" << msg << "\n";
         }
 
+#ifdef WIN32
+
+        DWORD dwWritten;
+
+        BOOL bSuccess = WriteFile(g_hChildStd_IN_Wr, msg.c_str(), msg.length(), &dwWritten, NULL);
+
+        if ( !bSuccess || (long unsigned int)dwWritten!=msg.size()) {
+            return false;
+        }
+
+#else
+
         ssize_t w = write(outpipefd[1], msg.c_str(), msg.size());
 
         if ((long unsigned int)w!=msg.size()) {
             return false;
         }
+#endif
         return true;
     }
 
     std::string LSPClient::pipe_read_jsonrpc(){
-        char buf[2048] = {0};
-        ssize_t r=0;
+
         std::string resultString;
 
+#ifdef WIN32
+
+        DWORD dwRead = 0;
+
+        resultString.resize(128);
+        BOOL bSuccess = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &dwRead, NULL);
+
+        if (!bSuccess) {
+            return "";
+        }
+
+        if (resultString.find("Content-Length:")==0) {
+
+            // we need to read the length of the message first
+            std::string payloadLenString = resultString.substr(16, resultString.find("\r\n")-16);
+            unsigned int payloadLen = atoi(payloadLenString.c_str());
+
+            // Skip all the headers since they end with two new lines
+            size_t start = resultString.find("\r\n\r\n");
+
+            if (start == string::npos) {
+                return "";
+            }
+
+            start += 4;
+
+            // delete header part
+            resultString.erase(0, start);
+
+            // https://github.com/dail8859/NppLSP/blob/master/src/LspClient.cpp
+            // it is mandatory to tell ReadFile to read exactly the length of the
+            // payload - otherwise no repeated WRITE/READ is possible
+
+            // Probably need to grab more
+            if (resultString.length() < (size_t)payloadLen ) {
+                    // Resize it enough to fit the rest of the data
+                    resultString.resize(payloadLen);
+
+                    ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[dwRead - start],
+                        payloadLen - (dwRead - start), &dwRead, NULL);
+            }
+
+            if (logRequests) {
+                std::cerr << "LSP RES:\nContent-Length:" << payloadLen
+                          << "\n\n" << resultString << "\n";
+            }
+            return resultString;
+        }
+
+       return "";
+
+#else
+        char buf[2048] = {0};
+        ssize_t r=0;
         while ( (r=read(inpipefd[0], buf, sizeof buf)) > 0 ) {
             resultString.append(buf, r);
             if ((long unsigned int)r<sizeof buf) break;
@@ -180,6 +329,7 @@ namespace highlight
         }
 
         if (resultString.find("Content-Length:")==0) {
+
             std::string payloadLenString = resultString.substr(16, resultString.find("\r\n")-16);
             unsigned int payloadLen = atoi(payloadLenString.c_str());
 
@@ -188,7 +338,14 @@ namespace highlight
             }
         }
 
+        if (logRequests) {
+            std::cerr << "LSP PAYLOAD:\n" << payLoad << "\n";
+        }
+
         return payLoad;
+
+#endif
+
     }
 
 
@@ -250,15 +407,16 @@ namespace highlight
 
         if (   !jsonResponse.get("result").is<picojson::object>()
             && !jsonResponse.get("result").get("capabilities").is<picojson::object>()) {
+
             return false;
-            }
+        }
 
-            if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
-                serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
-                serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
-            }
+        if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
+            serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
+            serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
+        }
 
-            hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
+        hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
         //semanticRequests = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>()
 
         return true;
@@ -295,6 +453,7 @@ namespace highlight
         bool writeRes=pipe_write_jsonrpc(serialized);
 
         if (!writeRes) {
+
             return "";
         }
 
@@ -469,7 +628,7 @@ namespace highlight
 
         if (! json.is<picojson::object>()) {
             lastErrorCode = 2;
-            lastErrorMessage = "could not instatiate PicoJSON";
+            lastErrorMessage = "could not instantiate PicoJSON";
             return false;
         }
 
@@ -490,6 +649,7 @@ namespace highlight
      *
      * {"jsonrpc":"2.0","method":"client/registerCapability","id":1,"params":{"registrations":[{"id":"rls-watch","method":"workspace/didChangeWatchedFiles","registerOptions":{"watchers":[{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.lock"},{"globPattern":"/home/andre/Projekte/rust/hello_world/target","kind":4},{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.toml"}]}}]}}
      *
+     *  TODO might be good to look for the message ID
      * */
     bool LSPClient::skipUnsupportedNotifications(picojson::value &json){
 
@@ -583,13 +743,17 @@ namespace highlight
         if (triggerSyntax!="rls")
             return true;
 
-        int cnt=10;
+    #ifndef WIN32
         fd_set rfds;
         struct timeval tv;
         int retval;
+    #endif
+
+        int cnt=10;
 
         while (--cnt) {
 
+#ifndef WIN32
             FD_ZERO(&rfds);
             FD_SET(inpipefd[0], &rfds);
 
@@ -598,12 +762,18 @@ namespace highlight
 
             retval = select(inpipefd[0]+1, &rfds, NULL, NULL, &tv);
             /* Don't rely on the value of tv now! */
-
             if (retval>0) {
                 pipe_read_jsonrpc();
                 ++cnt; // one fly does not come alone
             }
-        }
+#else
+            //if (retval>0) {
+                pipe_read_jsonrpc();
+                ++cnt; // one fly does not come alone
+            //}
+#endif
+
+        }   
         return true;
     }
 }

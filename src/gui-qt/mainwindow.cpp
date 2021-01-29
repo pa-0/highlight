@@ -684,7 +684,7 @@ bool MainWindow::loadLSProfiles()
 {
     QString confPath=getDistFileConfigPath(QString("lsp.conf"));
 #ifdef Q_OS_WIN
-   filetypesPath = getWindowsShortPath(filetypesPath);
+   confPath = getWindowsShortPath(confPath);
 #endif
 
    try {
@@ -854,16 +854,16 @@ void MainWindow::on_action_About_Highlight_triggered()
     QMessageBox::about( this, "About Highlight",
                         QString("Highlight is a code to formatted text converter.\n\n"
                                 "Highlight GUI %1\n"
-                                "(C) 2002-2021 Andre Simon <a.simon at mailbox.org>\n\n"
+                                "Copyright (C) 2002-2021 Andre Simon <a.simon at mailbox.org>\n\n"
                                 "Artistic Style Classes\n(C) 1998-2002 Tal Davidson\n"
-                                "(C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
+                                "Copyright (C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
                                 "Diluculum Lua wrapper\n"
-                                "(C) 2005-2013 by Leandro Motta Barros\n\n"
+                                "Copyright (C) 2005-2013 by Leandro Motta Barros\n\n"
                                 "xterm 256 color matching functions"
                                 "Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>\n\n"
                                 "PicoJSON library\n"
-                                "Copyright 2009-2010 Cybozu Labs, Inc.\n"
-                                "Copyright 2011-2014 Kazuho Oku\n\n"
+                                "Copyright (C) 2009-2010 Cybozu Labs, Inc.\n"
+                                "Copyright (C) 2011-2014 Kazuho Oku\n\n"
                                 "Built with Qt version %2\n\n"
                                 "Released under the terms of the GNU GPL license.\n\n"
                                 "The highlight logo is based on the image \"Alcedo Atthis\" by Lukasz Lukasik.\n"

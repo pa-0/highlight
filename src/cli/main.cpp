@@ -60,8 +60,8 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n\n xterm 256 color matching functions"
             << "\n Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>"
             << "\n\n PicoJSON library"
-            << "\n Copyright 2009-2010 Cybozu Labs, Inc."
-            << "\n Copyright 2011-2014 Kazuho Oku"
+            << "\n Copyright (C) 2009-2010 Cybozu Labs, Inc."
+            << "\n Copyright (C) 2011-2014 Kazuho Oku"
             << "\n\n This software is released under the terms of the GNU General "
             << "Public License."
             << "\n For more information about these matters, see the file named "
@@ -701,7 +701,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        generator->setLsHover(usesLSClient && lsSyntax==generator->getSyntaxDescription() );
+        generator->setLsHover(usesLSClient && options.isLsHover() && lsSyntax==generator->getSyntaxDescription() );
 
         if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
             generator->lsOpenDocument(inFileList[i], generator->getSyntaxDescription());

@@ -28,6 +28,20 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef LSPCLIENT_H
 #define LSPCLIENT_H
 
+#ifdef WIN32
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#else
+#include <unistd.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+#if __linux__
+#include <sys/prctl.h>
+#endif
+
+#endif
 
 #include <vector>
 #include <string>
@@ -53,9 +67,18 @@ private:
 
     std::vector<std::string> options;
 
+#ifdef WIN32
+    HANDLE g_hChildStd_IN_Rd ;
+    HANDLE g_hChildStd_IN_Wr ;
+    HANDLE g_hChildStd_OUT_Rd ;
+    HANDLE g_hChildStd_OUT_Wr ;
+
+#else
     pid_t pid;
     int inpipefd[2];
     int outpipefd[2];
+#endif
+
     float msgId;
 
     int lastErrorCode;
@@ -113,6 +136,7 @@ public:
     void setLogging(bool flag);
 
     std::string getServerName();
+
     std::string getServerVersion();
 
     std::string getErrorMessage();
