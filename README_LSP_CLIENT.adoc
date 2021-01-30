@@ -23,10 +23,10 @@ What does this mean?
 
 Many editors make use of "Language Servers" to get syntax information of various
 programming languages without the need to implement a deep understanding of the
-files'' syntax they process. Most prominent editor is VSCode. A lot of language
-servers are designed and tested for this editor, since MS published the LSP
-specification and VSCode is the reference. Another well known editors with
-LSP support are Kate and Eclipse.
+files'' syntax they process. Most prominent editor using LSP is VSCode.
+A lot of language servers are designed and tested for this editor, since MS
+published the LSP specification and VSCode is the reference. Other well known
+editors with LSP support are Kate, vim, Emacs and Eclipse.
 
 More information about LSP and editor support:
 https://langserver.org/
@@ -84,7 +84,7 @@ Language Server options (*tbd):
      --ls-workspace=<dir>       set workspace directory to init. the server
 ..........................................................................
 
-=== Example invokation:
+=== Example invocation:
 +
 ..........................................................................
 
