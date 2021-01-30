@@ -1,7 +1,7 @@
 /***************************************************************************
  *                          lspclient.cpp  -  description
  *                             -------------------
- *    begin                : Wed Feb 20 2021
+ *    begin                : Wed Jan 20 2021
  *    copyright            : (C) 2002-2021 by Andre Simon
  *    email                : a.simon@mailbox.org
  ***************************************************************************/
@@ -144,6 +144,7 @@ namespace highlight
             cmdLine.append(" ");
             cmdLine.append(option);
         }
+
         if (logRequests) {
             std::cerr << "\nLSP CMD "<<cmdLine<<"\n";
         }
@@ -263,14 +264,22 @@ namespace highlight
 
         std::string resultString;
 
+        resultString.resize(128);
+        bool readOK = false;
+
 #ifdef WIN32
 
-        DWORD dwRead = 0;
+        DWORD headerReadLen = 0;
+        readOK = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &headerReadLen, NULL);
 
-        resultString.resize(128);
-        BOOL bSuccess = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &dwRead, NULL);
+#else
 
-        if (!bSuccess) {
+        ssize_t headerReadLen=read(inpipefd[0], (char*)resultString.data(), 128);
+        readOK = headerReadLen>0;
+
+#endif
+
+        if (!readOK) {
             return "";
         }
 
@@ -296,56 +305,38 @@ namespace highlight
             // it is mandatory to tell ReadFile to read exactly the length of the
             // payload - otherwise no repeated WRITE/READ is possible
 
-            // Probably need to grab more
-            if (resultString.length() < (size_t)payloadLen ) {
-                    // Resize it enough to fit the rest of the data
-                    resultString.resize(payloadLen);
 
-                    ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[dwRead - start],
-                        payloadLen - (dwRead - start), &dwRead, NULL);
+            // Probably need to grab more
+            size_t remainderReadLen=0;
+            size_t remainderLen=payloadLen - (headerReadLen - start);
+            if (resultString.length() < (size_t)payloadLen ) {
+
+                resultString.resize(payloadLen);
+
+#ifdef WIN32
+
+                ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[headerReadLen - start],
+                            payloadLen - (headerReadLen - start), &remainderLen, NULL);
+
+#else
+
+                remainderReadLen = read(inpipefd[0], &resultString[headerReadLen - start], remainderLen);
+
+#endif
+            }
+
+            if (remainderReadLen != remainderLen) {
+                return "";
             }
 
             if (logRequests) {
                 std::cerr << "LSP RES:\nContent-Length:" << payloadLen
-                          << "\n\n" << resultString << "\n";
+                << "\n\n" << resultString << "\n";
             }
             return resultString;
         }
 
-       return "";
-
-#else
-        char buf[2048] = {0};
-        ssize_t r=0;
-        while ( (r=read(inpipefd[0], buf, sizeof buf)) > 0 ) {
-            resultString.append(buf, r);
-            if ((long unsigned int)r<sizeof buf) break;
-        }
-
-        std::string payLoad;
-
-        if (logRequests) {
-            std::cerr << "LSP RES:\n" << resultString << "\n";
-        }
-
-        if (resultString.find("Content-Length:")==0) {
-
-            std::string payloadLenString = resultString.substr(16, resultString.find("\r\n")-16);
-            unsigned int payloadLen = atoi(payloadLenString.c_str());
-
-            if (payloadLen<resultString.size()) {
-                payLoad = resultString.substr(resultString.size() - payloadLen);
-            }
-        }
-
-        if (logRequests) {
-            std::cerr << "LSP PAYLOAD:\n" << payLoad << "\n";
-        }
-
-        return payLoad;
-
-#endif
-
+        return "";
     }
 
 
@@ -432,8 +423,10 @@ namespace highlight
         picojson::object position;
         picojson::object textDocument;
 
+        float myId = msgId++;
+
         request["jsonrpc"] = picojson::value("2.0");
-        request["id"] = picojson::value(msgId++);
+        request["id"] = picojson::value(myId);
         request["method"] = picojson::value("textDocument/hover");
 
         std::string uri("file://");
@@ -468,13 +461,15 @@ namespace highlight
                 return "";
             }
 
-            if (skipUnsupportedNotifications(jsonResponse)) {
+            if ( !jsonResponse.contains("id") ) {
                 continue;
             }
 
-            if (   !jsonResponse.get("result").is<picojson::object>()
-                //    || !jsonResponse.get("result").get("contents").is<picojson::object>()
-            ) {
+            if ( myId != jsonResponse.get("id").get<double>()) {
+                continue;
+            }
+
+            if ( !jsonResponse.get("result").is<picojson::object>() ) {
                 return "";
             }
 
@@ -640,32 +635,6 @@ namespace highlight
         return true;
     }
 
-
-    /*
-     *  "{\"jsonrpc\":\"2.0\",\"method\":\"window/progress\",\"params\":{\"done\":null,\"id\":\"progress_2\",\"message\":null,\"percentage\":null,\"title\":\"Indexing\"}}"
-     * katelspclientplugin: discarding notification "window/progress"
-     *
-     * {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///home/andre/Projekte/cpp/min.c","version":0}}
-     *
-     * {"jsonrpc":"2.0","method":"client/registerCapability","id":1,"params":{"registrations":[{"id":"rls-watch","method":"workspace/didChangeWatchedFiles","registerOptions":{"watchers":[{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.lock"},{"globPattern":"/home/andre/Projekte/rust/hello_world/target","kind":4},{"globPattern":"/home/andre/Projekte/rust/hello_world/Cargo.toml"}]}}]}}
-     *
-     *  TODO might be good to look for the message ID
-     * */
-    bool LSPClient::skipUnsupportedNotifications(picojson::value &json){
-
-        if (json.get("method").is<std::string>()) {
-            std::string method = json.get("method").get<std::string>();
-
-            /*      if ( ( method=="window/progress" || method=="textDocument/publishDiagnostics" || method=="client/registerCapability")) {
-             *            std::cerr<<"\nSKIP "<< method <<"\n";
-        }
-        */
-            return method=="window/progress" || method=="textDocument/publishDiagnostics" || method=="client/registerCapability";
-        }
-
-        return false;
-    }
-
     bool LSPClient::runSimpleAction(const std::string action){
         picojson::object request;
         //picojson::value nullValue;
@@ -685,10 +654,6 @@ namespace highlight
 
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);
-
-        // if (skipUnsupportedNotifications(jsonResponse)) {
-        //      return false;
-        //  }
 
         return checkErrorResponse(jsonResponse, err);
     }
@@ -773,7 +738,7 @@ namespace highlight
             //}
 #endif
 
-        }   
+        }
         return true;
     }
 }

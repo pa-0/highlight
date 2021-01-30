@@ -859,7 +859,7 @@ void MainWindow::on_action_About_Highlight_triggered()
                                 "Copyright (C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
                                 "Diluculum Lua wrapper\n"
                                 "Copyright (C) 2005-2013 by Leandro Motta Barros\n\n"
-                                "xterm 256 color matching functions"
+                                "xterm 256 color matching functions\n"
                                 "Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>\n\n"
                                 "PicoJSON library\n"
                                 "Copyright (C) 2009-2010 Cybozu Labs, Inc.\n"
@@ -868,7 +868,7 @@ void MainWindow::on_action_About_Highlight_triggered()
                                 "Released under the terms of the GNU GPL license.\n\n"
                                 "The highlight logo is based on the image \"Alcedo Atthis\" by Lukasz Lukasik.\n"
                                 "The original was published under the terms of the GNU FDL in the Wikimedia Commons database.\n\n"
-                               ).arg(HIGHLIGHT_VERSION).arg(QString(qVersion ())) );
+                        ).arg(QString::fromStdString(highlight::Info::getVersion())).arg(QString(qVersion ())) );
 }
 
 highlight::OutputType MainWindow::getOutputType()

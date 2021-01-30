@@ -1,7 +1,7 @@
 /***************************************************************************
                           lspclient.h  -  description
                              -------------------
-    begin                : Wed Feb 20 2021
+    begin                : Wed Jan 20 2021
     copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
@@ -91,8 +91,6 @@ private:
     bool runSimpleAction(const std::string action);
 
     bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
-
-    bool skipUnsupportedNotifications(picojson::value &json);
 
 public:
     /** Constructor */
