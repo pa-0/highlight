@@ -441,7 +441,7 @@ private:
     // character which is prefix of raw string (c#)
     unsigned char rawStringPrefix;
 
-    //character which continues curreent style on next line
+    //character which continues current style on next line
     unsigned char continuationChar;
 
     bool readFlag(const Diluculum::LuaVariable& var) ;

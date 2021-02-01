@@ -33,7 +33,7 @@ https://langserver.org/
 
 Highlight will also make use of the LSP interface to access syntax specific
 information. Since a general highlighter cannot have a deep understanding of
-the code''s meaning this will improve the highlighing quality.
+the code''s meaning this will improve the highlighting quality.
 
 Several beta releases are planned to introduce these features:
 

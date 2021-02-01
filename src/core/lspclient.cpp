@@ -211,7 +211,7 @@ namespace highlight
             execvp(executable.c_str(), command);
 
             // Nothing below this line should be executed by child process. If so,
-            // it means that the execl function wasn't successfull, so lets exit:
+            // it means that the execl function wasn't successful, so lets exit:
 
             exit(1);
         }
@@ -473,7 +473,7 @@ namespace highlight
                 return "";
             }
 
-            // Apparantly each server sends the Hover data slightly different:
+            // Apparently each server sends the Hover data slightly different:
             // maybe configure this in the lsp.conf
 
             std::string hoverList;
@@ -522,7 +522,6 @@ namespace highlight
         picojson::object textDocument;
 
         request["jsonrpc"] = picojson::value("2.0");
-        //request["id"] = picojson::value(msgId++);
         request["method"] = picojson::value("textDocument/didOpen");
 
         std::string uri("file://");
@@ -557,7 +556,6 @@ namespace highlight
         picojson::object textDocument;
 
         request["jsonrpc"] = picojson::value("2.0");
-        //request["id"] = picojson::value(msgId++);
         request["method"] = picojson::value("textDocument/didClose");
 
         std::string uri("file://");
@@ -623,7 +621,7 @@ namespace highlight
 
         if (! json.is<picojson::object>()) {
             lastErrorCode = 2;
-            lastErrorMessage = "could not instantiate PicoJSON";
+            lastErrorMessage = "could not initialize PicoJSON";
             return false;
         }
 
@@ -671,7 +669,6 @@ namespace highlight
         return runSimpleAction("exit");
     }
 
-
     bool LSPClient::isInitialized(){
         return initialized;
     }
@@ -703,6 +700,8 @@ namespace highlight
         return lastErrorCode;
     }
 
+    // TODO durch id check erseten wie beim hover
+    //      in methode daten wie syntaxfehler auswerten
     bool LSPClient::waitForNotifications(){
 
         if (triggerSyntax!="rls")
@@ -754,6 +753,8 @@ namespace highlight
  * https://code.visualstudio.com/api/language-extensions/programmatic-language-features
  * https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide
  * https://code.visualstudio.com/api/language-extensions/semantic-highlight-guide
+ *
+ * https://clangd.llvm.org/extensions.html#utf-8-offsets
  *
  * publishDiagnostics:
  * Your language server sends the textDocument/publishDiagnostics message to the language client. The message carries an array of diagnostic items for a resource URI.

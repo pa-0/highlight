@@ -88,7 +88,7 @@ public:
 
     /** @param cs flag to enable character styles*/
     void setRTFCharStyles ( bool cs );
-    
+
     /** @param pc flag to enable page color output */
     void setRTFPageColor ( bool pc );
 
@@ -118,14 +118,14 @@ private:
 
     /** flag to add page color */
     bool addPageColor;
-    
+
     /** flag to enable Unicode conversion */
     bool isUtf8;
-    
+
     /** utf-8 to utf-16 conversion variables */
     unsigned long utf16Char;
     size_t utf8SeqLen;
-    
+
     /** @return escaped character*/
     virtual string maskCharacter ( unsigned char );
 
@@ -144,7 +144,7 @@ private:
     string getCharStyle ( int styleNumber,const ElementStyle &elem, const string&styleName );
 
     /** @param elem associated element style
-        @return RTF formatting sequnce to close element formatting */
+        @return RTF formatting sequence to close element formatting */
     string getCloseTag ( const ElementStyle &elem );
 
     /** @param styleID current style ID

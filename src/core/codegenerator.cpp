@@ -2184,7 +2184,7 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
         numberPrefix << openTags[LINENUMBER];
         maskString ( numberPrefix, os.str() );
 
-        //use initialSpacer here, spacer can be overriden by plug-in (format.spacer)
+        //use initialSpacer here, spacer can be overridden by plug-in (format.spacer)
         numberPrefix << initialSpacer << closeTags[LINENUMBER];
         wsBuffer += numberPrefix.str();
     }

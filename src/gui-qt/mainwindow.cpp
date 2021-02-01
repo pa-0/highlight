@@ -2112,7 +2112,7 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {
             generator->exitLanguageServer();
-            QMessageBox::information(this, "LSP Init. OK",  "Language server initialization sucessfull");
+            QMessageBox::information(this, "LSP Init. OK",  "Language server initialization successful");
         }
         return true;
     }
