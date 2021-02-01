@@ -223,7 +223,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
 bool CodeGenerator::lsOpenDocument(const string& fileName, const string & suffix){
     lsDocumentPath = fileName;
 
-    LSPClient.waitForNotifications();
+    //LSPClient.waitForNotifications();
 
     return LSPClient.runDidOpen(fileName, suffix);
 }

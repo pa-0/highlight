@@ -88,6 +88,8 @@ namespace highlight
         triggerSyntax = syntax;
     }
 
+    void LSPClient::signal_callback_handler(int signum){
+    }
 
     bool LSPClient::init() {
 
@@ -176,6 +178,7 @@ namespace highlight
 
 #else
 
+
         pipe(inpipefd);
         pipe(outpipefd);
 
@@ -224,6 +227,9 @@ namespace highlight
         //close unused pipe ends
         close(outpipefd[0]);
         close(inpipefd[1]);
+
+
+        signal(SIGPIPE, LSPClient::signal_callback_handler);
 #endif
         return true;
     }
@@ -326,6 +332,7 @@ namespace highlight
             }
 
             if (remainderReadLen != remainderLen) {
+
                 return "";
             }
 
@@ -539,11 +546,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
-        std::string response = pipe_read_jsonrpc();
-
-        picojson::value jsonResponse;
-        std::string err = picojson::parse(jsonResponse, response);
-        return checkErrorResponse(jsonResponse, err);
+        return true;
     }
 
     bool LSPClient::runDidClose(const std::string &document, const string& syntax){
@@ -570,11 +573,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
-        std::string response = pipe_read_jsonrpc();
-
-        picojson::value jsonResponse;
-        std::string err = picojson::parse(jsonResponse, response);
-        return checkErrorResponse(jsonResponse, err);
+        return true;
     }
 
 
@@ -649,6 +648,8 @@ namespace highlight
         pipe_write_jsonrpc(serialized);
 
         std::string response = pipe_read_jsonrpc();
+
+        if (response.empty()) return true;
 
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);

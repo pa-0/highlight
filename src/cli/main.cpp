@@ -772,7 +772,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
             //pyls hangs
-            //generator->lsCloseDocument(inFileList[i], generator->getSyntaxDescription());
+            generator->lsCloseDocument(inFileList[i], generator->getSyntaxDescription());
         }
 
         ++i;

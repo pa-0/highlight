@@ -92,6 +92,8 @@ private:
 
     bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
 
+    void static signal_callback_handler(int signum);
+
 public:
     /** Constructor */
     LSPClient();
