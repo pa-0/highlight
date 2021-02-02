@@ -44,32 +44,32 @@ namespace highlight
     {
         serverName=serverVersion="?";
 
-#ifdef WIN32
+        #ifdef WIN32
         g_hChildStd_IN_Rd = NULL;
         g_hChildStd_IN_Wr = NULL;
         g_hChildStd_OUT_Rd = NULL;
         g_hChildStd_OUT_Wr = NULL;
-#else
+        #else
         pid=0;
-#endif
+        #endif
     }
 
     LSPClient::~LSPClient()
     {
-#ifdef WIN32
-       if (initialized) {
+        #ifdef WIN32
+        if (initialized) {
             CloseHandle(g_hChildStd_OUT_Wr);
             CloseHandle(g_hChildStd_IN_Rd);
             CloseHandle(g_hChildStd_IN_Wr);
             CloseHandle(g_hChildStd_OUT_Rd);
         }
-#else
+        #else
         if (initialized) {
             int status=0;
             kill(pid, SIGKILL); //send SIGKILL signal to the child process
             waitpid(pid, &status, 0);
         }
-#endif
+        #endif
     }
 
     void LSPClient::setExecutable ( const std::string& exec ) {
@@ -95,9 +95,9 @@ namespace highlight
 
         initialized=true;
 
-#ifdef WIN32
+        #ifdef WIN32
 
-       // https://docs.microsoft.com/de-de/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
+        // https://docs.microsoft.com/de-de/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
 
         SECURITY_ATTRIBUTES saAttr;
 
@@ -152,20 +152,20 @@ namespace highlight
         }
 
         BOOL bSuccess = CreateProcess(NULL,
-            const_cast<LPSTR>(cmdLine.c_str()),
-            NULL,          // process security attributes
-            NULL,          // primary thread security attributes
-            TRUE,          // handles are inherited
-            CREATE_NO_WINDOW, // creation flags
-            NULL,          // use parent's environment
-            NULL,          // use parent's current directory
-            &siStartInfo,  // STARTUPINFO pointer
-            &piProcInfo);  // receives PROCESS_INFORMATION
+                                      const_cast<LPSTR>(cmdLine.c_str()),
+                                      NULL,          // process security attributes
+                                      NULL,          // primary thread security attributes
+                                      TRUE,          // handles are inherited
+                                      CREATE_NO_WINDOW, // creation flags
+                                      NULL,          // use parent's environment
+                                      NULL,          // use parent's current directory
+                                      &siStartInfo,  // STARTUPINFO pointer
+                                      &piProcInfo);  // receives PROCESS_INFORMATION
 
         // If an error occurs, exit the application.
         if ( ! bSuccess ) {
-             std::cerr <<"highlight: CreateProcess failed\n";
-             return false;
+            std::cerr <<"highlight: CreateProcess failed\n";
+            return false;
         } else {
 
             // Close handles to the child process and its primary thread.
@@ -176,8 +176,7 @@ namespace highlight
             CloseHandle(piProcInfo.hThread);
         }
 
-#else
-
+        #else
 
         pipe(inpipefd);
         pipe(outpipefd);
@@ -198,18 +197,18 @@ namespace highlight
             #endif
 
             //https://stackoverflow.com/questions/5797837/how-to-pass-a-vector-of-strings-to-execv
-            std::vector<char*> commandVector;
+            std::vector<char*> cmdArgs;
 
-            commandVector.push_back(const_cast<char*>(executable.c_str()));
+            cmdArgs.push_back(const_cast<char*>(executable.c_str()));
 
             for (auto& option : options) {
-                commandVector.push_back(const_cast<char*>(option.c_str()));
+                cmdArgs.push_back(const_cast<char*>(option.c_str()));
             }
 
-            commandVector.push_back(NULL);
+            cmdArgs.push_back(NULL);
 
             // pass the vector's internal array to execvp
-            char **command = commandVector.data();
+            char **command = cmdArgs.data();
 
             execvp(executable.c_str(), command);
 
@@ -228,9 +227,8 @@ namespace highlight
         close(outpipefd[0]);
         close(inpipefd[1]);
 
-
         signal(SIGPIPE, LSPClient::signal_callback_handler);
-#endif
+        #endif
         return true;
     }
 
@@ -245,7 +243,7 @@ namespace highlight
             std::cerr << "LSP REQ:\n" << msg << "\n";
         }
 
-#ifdef WIN32
+        #ifdef WIN32
 
         DWORD dwWritten;
 
@@ -255,14 +253,14 @@ namespace highlight
             return false;
         }
 
-#else
+        #else
 
         ssize_t w = write(outpipefd[1], msg.c_str(), msg.size());
 
         if ((long unsigned int)w!=msg.size()) {
             return false;
         }
-#endif
+        #endif
         return true;
     }
 
@@ -273,17 +271,17 @@ namespace highlight
         resultString.resize(128);
         bool readOK = false;
 
-#ifdef WIN32
+        #ifdef WIN32
 
         DWORD headerReadLen = 0;
         readOK = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &headerReadLen, NULL);
 
-#else
+        #else
 
         ssize_t headerReadLen=read(inpipefd[0], (char*)resultString.data(), 128);
         readOK = headerReadLen>0;
 
-#endif
+        #endif
 
         if (!readOK) {
             return "";
@@ -309,35 +307,24 @@ namespace highlight
 
             // https://github.com/dail8859/NppLSP/blob/master/src/LspClient.cpp
             // it is mandatory to tell ReadFile to read exactly the length of the
-            // payload - otherwise no repeated WRITE/READ is possible on Windows
-
+            // payload - otherwise no repeated WRITE/READ is possible
 
             // Probably need to grab more
-
-#ifdef WIN32
-            DWORD remainderReadLen = 0;
-#else
             size_t remainderReadLen=0;
-#endif
             size_t remainderLen=payloadLen - (headerReadLen - start);
             if (resultString.length() < (size_t)payloadLen ) {
 
                 resultString.resize(payloadLen);
 
-#ifdef WIN32
-
+                #ifdef WIN32
                 ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[headerReadLen - start],
-                            payloadLen - (headerReadLen - start), &remainderReadLen, NULL);
-
-#else
-
+                         payloadLen - (headerReadLen - start), &remainderLen, NULL);
+                #else
                 remainderReadLen = read(inpipefd[0], &resultString[headerReadLen - start], remainderLen);
-
-#endif
+                #endif
             }
 
             if (remainderReadLen != remainderLen) {
-
                 return "";
             }
 
@@ -373,8 +360,8 @@ namespace highlight
             params["rootUri"] =  picojson::value("file://" + workspace);
         }
 
-    //    publishDiagnostics["relatedInformation"] = picojson::value(true);
-      //  textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
+        //    publishDiagnostics["relatedInformation"] = picojson::value(true);
+        //  textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
 
 
         capabilities["textDocument"] = picojson::value(textDocument);
@@ -399,16 +386,16 @@ namespace highlight
             && !jsonResponse.get("result").get("capabilities").is<picojson::object>()) {
 
             return false;
-        }
+            }
 
-        if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
-            serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
-            serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
-        }
+            if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
+                serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
+                serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
+            }
 
-        hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
+            hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
 
-        return true;
+            return true;
     }
 
     std::string LSPClient::runHover(const std::string &document, int character, int line){
@@ -663,20 +650,17 @@ namespace highlight
     //      in methode daten wie syntaxfehler auswerten
     bool LSPClient::waitForNotifications(){
 
-        if (triggerSyntax!="rls")
-            return true;
-
-    #ifndef WIN32
+        #ifndef WIN32
         fd_set rfds;
         struct timeval tv;
         int retval;
-    #endif
+        #endif
 
         int cnt=10;
 
         while (--cnt) {
 
-#ifndef WIN32
+            #ifndef WIN32
             FD_ZERO(&rfds);
             FD_SET(inpipefd[0], &rfds);
 
@@ -689,12 +673,12 @@ namespace highlight
                 pipe_read_jsonrpc();
                 ++cnt; // one fly does not come alone
             }
-#else
+            #else
             //if (retval>0) {
-                pipe_read_jsonrpc();
-                ++cnt; // one fly does not come alone
+            pipe_read_jsonrpc();
+            ++cnt; // one fly does not come alone
             //}
-#endif
+            #endif
 
         }
         return true;
