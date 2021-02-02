@@ -31,6 +31,9 @@
 #include <iostream>
 #include <fstream>
 
+#include <chrono>
+#include <thread>
+
 namespace highlight
 {
 
@@ -39,6 +42,7 @@ namespace highlight
     hoverProvider(false),
     semanticTokensProvider(false),
     logRequests(false),
+    initDelay(0),
     msgId(1.0),
     lastErrorCode(0)
     {
@@ -395,6 +399,8 @@ namespace highlight
 
             hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
 
+
+
             return true;
     }
 
@@ -524,6 +530,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
+
         return true;
     }
 
@@ -577,13 +584,13 @@ namespace highlight
         return true;
     }
 
-    bool LSPClient::runSimpleAction(const std::string action){
+    bool LSPClient::runSimpleAction(const std::string action, bool awaitAnswer, int delay){
         picojson::object request;
         //picojson::value nullValue;
         picojson::object emptyObject;
 
         request["jsonrpc"] = picojson::value("2.0");
-        request["id"] = picojson::value(msgId++);
+        //request["id"] = picojson::value(msgId++);
         request["method"] = picojson::value(action);
 
         request["params"] =  picojson::value(emptyObject);
@@ -591,6 +598,15 @@ namespace highlight
         std::string serialized = picojson::value(request).serialize();
 
         pipe_write_jsonrpc(serialized);
+
+        if (delay>0) {
+            if (logRequests) {
+                std::cerr << "waiting " << delay <<"ms for language server\n";
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        }
+
+        if (!awaitAnswer) return true;
 
         std::string response = pipe_read_jsonrpc();
 
@@ -604,7 +620,7 @@ namespace highlight
 
 
     bool LSPClient::runInitialized(){
-        return runSimpleAction("initialized");
+        return runSimpleAction("initialized", false, initDelay);
     }
 
     bool LSPClient::runShutdown(){
@@ -629,6 +645,10 @@ namespace highlight
 
     void LSPClient::setLogging(bool flag){
         logRequests = flag;
+    }
+
+    void LSPClient::setInitializeDelay(int ms) {
+        initDelay = ms;
     }
 
     std::string LSPClient::getServerName(){

@@ -1,7 +1,7 @@
 
 Description="Kwrite Editor"
 
-Categories = {"light"}
+Categories = {"light", "lsp"}
 
 Default        = { Colour="#000000" }
 Canvas         = { Colour="#E0EAEE" }
@@ -21,4 +21,49 @@ Keywords = {
   { Colour= "#0057AE" },
   { Colour= "#000000", Bold=true },
   { Colour= "#010181" },
+}
+
+-- new LSP based elements:
+
+SyntaxError = { Colour="#ff0000" }
+
+-- LSP reports back a number for each type -> use an index as is done for default
+-- keyword groups. Rearrange order as reported by LSP
+
+SemanticTokenTypes  = {
+  Type = 'namespace', Style = { Colour= "#ff3db3" },
+  Type = 'type', Style = Keywords[1],                  -- sample reuse of existing style
+  Type = 'class', Style = { Colour= "#ff3db3" },
+  Type = 'enum', Style = { Colour= "#ff3db3" },
+  Type = 'interface', Style = { Colour= "#ff3db3" },
+  Type = 'struct', Style = { Colour= "#ff3db3" },
+  Type = 'typeParameter', Style = { Colour= "#ff3db3" },
+  Type = 'parameter', Style = { Colour= "#ff3db3" },
+  Type = 'variable', Style = { Colour= "#ff3db3" },
+  Type = 'property', Style = { Colour= "#ff3db3" },
+  Type = 'enumMember', Style = { Colour= "#ff3db3" },
+  Type = 'event', Style = { Colour= "#ff3db3" },
+  Type = 'function', Style = { Colour= "#ff3db3" },
+  Type = 'method', Style = { Colour= "#ff3db3" },
+  Type = 'macro', Style = { Colour= "#ff3db3" },
+  Type = 'keyword', Style = { Colour= "#ff3db3" },
+  Type = 'modifier', Style = { Colour= "#ff3db3" },
+  Type = 'comment', Style = { Colour= "#ff3db3" },
+  Type = 'string', Style = { Colour= "#ff3db3" },
+  Type = 'number', Style = { Colour= "#ff3db3" },
+  Type = 'regexp', Style = { Colour= "#ff3db3" },
+  Type = 'operator', Style = { Colour= "#ff3db3" }
+}
+
+SemanticTokenModifiers  = {
+  Type = 'declaration', Style = { Colour= "#ff9421" },
+  Type = 'definition', Style = { Colour= "#ff9421" },
+  Type = 'readonly', Style = { Colour= "#ff9421" },
+  Type = 'static', Style = { Colour= "#ff9421" },
+  Type = 'deprecated', Style = { Colour= "#ff9421" },
+  Type = 'abstract', Style = { Colour= "#ff9421" },
+  Type = 'async', Style = { Colour= "#ff9421" },
+  Type = 'modification', Style = { Colour= "#ff9421" },
+  Type = 'documentation', Style = { Colour= "#ff9421" },
+  Type = 'defaultLibrary', Style = { Colour= "#ff9421" }
 }

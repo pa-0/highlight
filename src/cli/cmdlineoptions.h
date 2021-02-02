@@ -137,7 +137,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_LS_SEMANTIC      "ls-semantic"
 #define OPT_LS_RAINBOW       "ls-rainbow"
 #define OPT_LS_SYNTAX        "ls-syntax"
-
+#define OPT_LS_DELAY         "ls-delay"
 
 /// handle command line options
 
@@ -429,6 +429,9 @@ public:
     /** \return syntax which triggers language server requests */
     const std::string& getLsSyntax() const;
 
+    /** \return server delay time in ms */
+    const int getLsDelay() const;
+
     /** \return line number width */
     int getNumberWidth();
 
@@ -460,6 +463,7 @@ private:
     int lineRangeEnd;    // line range end
     int opt_no_trailing_nl;
     int verbosity;
+    int lsDelay;
 
     unsigned int canvasPaddingWidth;    // line number start count
 

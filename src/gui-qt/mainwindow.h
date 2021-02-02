@@ -99,6 +99,7 @@ private:
     std::string lsProfile;
     std::string lsExecutable;               ///< server executable path
     std::string lsSyntax;                   ///< language definition which can be enhanced using the LS
+    int lsDelay;
     std::vector<std::string> lsOptions; ///< server executable start options
 
     QShortcut *copyShortcut;

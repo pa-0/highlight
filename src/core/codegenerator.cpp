@@ -195,7 +195,9 @@ bool CodeGenerator::initTheme ( const string& themePath )
     return loadOK;
 }
 
-LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, const string& syntax, int logLevel )
+LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options,
+                                             const string& workspace, const string& syntax,
+                                             int delay, int logLevel )
 {
 
     if (LSPClient.isInitialized()) {
@@ -208,6 +210,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.setWorkspace(workspace);
     LSPClient.setOptions(options);
     LSPClient.setSyntax(syntax);
+    LSPClient.setInitializeDelay(delay);
 
     LSPClient.connect();
 

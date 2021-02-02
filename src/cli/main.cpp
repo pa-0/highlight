@@ -369,6 +369,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     std::string lsProfile(options.getLsProfile());
     std::string lsExecutable(options.getLsExecutable());         ///< server executable path
     std::string lsSyntax(options.getLsSyntax());                   ///< language definition which can be enhanced using the LS
+    int lsDelay=options.getLsDelay();
     std::vector<std::string> lsOptions = options.getLSOptions(); ///< server executable start options
 
     if (lsProfile.size()) {
@@ -381,6 +382,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 lsSyntax = profile.syntax;
             if (lsOptions.empty())
                 lsOptions = profile.options;
+            if (lsDelay==0)
+                lsDelay = profile.delay;
         } else {
             cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
             return EXIT_FAILURE;
@@ -683,6 +686,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
                 highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
                                                                               options.getLsWorkspace(), lsSyntax,
+                                                                              lsDelay,
                                                                               options.verbosityLevel() );
                 if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
                     cerr << "highlight: language server connection failed\n";

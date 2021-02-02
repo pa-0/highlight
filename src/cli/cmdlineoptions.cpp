@@ -51,7 +51,7 @@ enum Optcode {
         S_OPT_REFORMAT_OPT, S_OPT_RANGE_OPT, S_OPT_BASE16, S_OPT_CATEGORIES, S_OPT_PIPED_FNAME,
         S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED,
         S_OPT_LS_PROFILE, S_OPT_LS_WORKSPACE, S_OPT_LS_EXEC, S_OPT_LS_OPTION, S_OPT_LS_HOVER,
-        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX
+        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX, S_OPT_LS_DELAY
     };
 
 const Arg_parser::Option options[] = {
@@ -150,7 +150,7 @@ const Arg_parser::Option options[] = {
         { S_OPT_LS_SEMANTIC, OPT_LS_SEMANTIC, Arg_parser::no },
         { S_OPT_LS_RAINBOW, OPT_LS_RAINBOW, Arg_parser::no },
         { S_OPT_LS_SYNTAX, OPT_LS_SYNTAX, Arg_parser::yes },
-
+        { S_OPT_LS_DELAY, OPT_LS_DELAY, Arg_parser::yes },
 
         { 0, 0, Arg_parser::no }
     };
@@ -166,6 +166,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     lineRangeEnd( 0 ),
     opt_no_trailing_nl(0),
     verbosity(0),
+    lsDelay(0),
     canvasPaddingWidth(0),
     wrappingStyle ( highlight::WRAP_DISABLED ),
     outputType ( highlight::HTML ),
@@ -670,7 +671,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_LS_SYNTAX:
             lsSyntax = arg;
             break;
-
+        case S_OPT_LS_DELAY:
+             StringTools::str2num<int> ( lsDelay, arg, std::dec );
+            break;
         default:
             cerr << "highlight: option parsing failed" << endl;
         }
@@ -975,6 +978,10 @@ const std::string& CmdLineOptions::getLsProfile() const
 const std::string& CmdLineOptions::getLsSyntax() const
 {
     return lsSyntax;
+}
+const int CmdLineOptions::getLsDelay() const
+{
+    return lsDelay;
 }
 
 bool CmdLineOptions::printIndexFile() const

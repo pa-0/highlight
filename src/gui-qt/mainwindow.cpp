@@ -43,7 +43,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 //#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindowClass), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
+: QMainWindow(parent), ui(new Ui::MainWindowClass),
+lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 {
 
     ui->setupUi(this);
@@ -695,6 +696,7 @@ bool MainWindow::loadLSProfiles()
        std::string serverName;              ///< server name
        std::string executable;              ///< server executable path
        std::string syntax;                  ///< language definition which can be enhanced using the LS
+       int delay=0;
        std::vector<std::string> options;    ///< server executable start options
        Diluculum::LuaValue mapEntry;
 
@@ -713,11 +715,17 @@ bool MainWindow::loadLSProfiles()
                }
            }
 
+           delay = 0;
+           if (mapEntry["Delay"] !=Diluculum::Nil) {
+               delay = mapEntry["Delay"].asNumber();
+           }
+
            highlight::LSPProfile profile;
            profile.executable = executable;
            profile.serverName = serverName;
            profile.syntax = syntax;
            profile.options = options;
+           profile.delay = delay;
 
            lspProfiles[serverName]=profile;
 
@@ -1270,10 +1278,6 @@ void MainWindow::on_pbStartConversion_clicked()
             applyEncoding(generator.get(), langDefPath);
 
             string syntaxName = QFileInfo(langDefPath).baseName().toStdString();
-
-            std::cerr<<"syntaxName "<<syntaxName<<"\n";
-
-            std::cerr<<"lsSyntax "<<lsSyntax<<"\n";
 
             if (usesLSClient==false && lsSyntax==syntaxName) {
 
@@ -2105,6 +2109,8 @@ void MainWindow::loadLSProfile() {
             lsExecutable = profile.executable;
             lsSyntax = profile.syntax;
             lsOptions = profile.options;
+            lsDelay = profile.delay;
+
             ui->leLSExec->setText(QString::fromStdString(lsExecutable));
         }
     }
@@ -2112,8 +2118,10 @@ void MainWindow::loadLSProfile() {
 
 bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
 {
+
     highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
                                                                   ui->leLSWorkspace->text().toStdString(), lsSyntax,
+                                                                  lsDelay,
                                                                   ui->cbLSDebug->isChecked() ? 2 : 0 );
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {

@@ -174,7 +174,8 @@ public:
     */
     bool initTheme ( const string& themePath );
 
-    LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace, const string& syntax, int logLevel );
+    LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace,
+                                  const string& syntax, int delay, int logLevel );
 
     void exitLanguageServer ();
 

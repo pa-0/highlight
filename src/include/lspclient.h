@@ -67,6 +67,8 @@ private:
 
     std::vector<std::string> options;
 
+    int initDelay;
+
 #ifdef WIN32
     HANDLE g_hChildStd_IN_Rd ;
     HANDLE g_hChildStd_IN_Wr ;
@@ -88,7 +90,7 @@ private:
 
     std::string pipe_read_jsonrpc();
 
-    bool runSimpleAction(const std::string action);
+    bool runSimpleAction(const std::string action, bool awaitAnswer = true, int delay = 0);
 
     bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
 
@@ -132,6 +134,8 @@ public:
     bool isSemanticTokensProvider();
 
     void setLogging(bool flag);
+
+    void setInitializeDelay(int ms);
 
     std::string getServerName();
 

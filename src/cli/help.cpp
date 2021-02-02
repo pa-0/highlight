@@ -246,6 +246,7 @@ void printHelp(const std::string &topic)
 
         cout<<"Language Server options (*tbd):\n\n";
         cout<<"     --ls-profile=<server>      read LSP configuration from lsp.conf\n";
+        cout<<"     --ls-delay=<ms>            set server initialization delay\n";
         cout<<"     --ls-exec=<bin>            set server executable name\n";
         cout<<"     --ls-option=<option>       set server CLI option (can be repeated)\n";
         cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
