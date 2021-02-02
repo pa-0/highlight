@@ -309,11 +309,16 @@ namespace highlight
 
             // https://github.com/dail8859/NppLSP/blob/master/src/LspClient.cpp
             // it is mandatory to tell ReadFile to read exactly the length of the
-            // payload - otherwise no repeated WRITE/READ is possible
+            // payload - otherwise no repeated WRITE/READ is possible on Windows
 
 
             // Probably need to grab more
+
+#ifdef WIN32
+            DWORD remainderReadLen = 0;
+#else
             size_t remainderReadLen=0;
+#endif
             size_t remainderLen=payloadLen - (headerReadLen - start);
             if (resultString.length() < (size_t)payloadLen ) {
 
@@ -322,7 +327,7 @@ namespace highlight
 #ifdef WIN32
 
                 ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[headerReadLen - start],
-                            payloadLen - (headerReadLen - start), &remainderLen, NULL);
+                            payloadLen - (headerReadLen - start), &remainderReadLen, NULL);
 
 #else
 
