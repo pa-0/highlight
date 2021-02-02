@@ -91,7 +91,7 @@ namespace highlight
     void LSPClient::signal_callback_handler(int signum){
     }
 
-    bool LSPClient::init() {
+    bool LSPClient::connect() {
 
         initialized=true;
 
@@ -368,22 +368,9 @@ namespace highlight
             params["rootUri"] =  picojson::value("file://" + workspace);
         }
 
-        publishDiagnostics["relatedInformation"] = picojson::value(true);
-        textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
+    //    publishDiagnostics["relatedInformation"] = picojson::value(true);
+      //  textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
 
-        // documentSymbol["hierarchicalDocumentSymbolSupport"] = picojson::value(true);
-        // textDocument["documentSymbol"] = picojson::value(documentSymbol);
-
-
-        // triggers
-        /*
-         * {"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[],"uri":"file:///home/andre/Projekte/c/re2.cpp","version":0}}Content-Length: 352
-         *
-         *     { "jsonrp*c":"2.0","method":"textDocument/semanticHighlighting","params":{"lines":[{"isInactive":false,"line":3,"tokens":"AAAAEAAFAA4AAAAXAAkADg=="},{"isInactive":false,"line":5,"tokens":"AAAABAAEAAM="},{"isInactive":false,"line":7,"tokens":"AAAAAAADAA4AAAAFAAYACAAAAAwABgAB"}],"textDocument":{"uri":"file:///home/andre/Projekte/c/re2.cpp","version":0}}}
-         */
-
-        //  semanticHighlightingCapabilities["semanticHighlighting"] = picojson::value(true);
-        //  textDocument["semanticHighlightingCapabilities"] = picojson::value(semanticHighlightingCapabilities);
 
         capabilities["textDocument"] = picojson::value(textDocument);
 
@@ -415,7 +402,6 @@ namespace highlight
         }
 
         hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
-        //semanticRequests = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>()
 
         return true;
     }
@@ -574,39 +560,6 @@ namespace highlight
         pipe_write_jsonrpc(serialized);
 
         return true;
-    }
-
-
-    bool LSPClient::runDocumentSymbol(const std::string &document){
-
-        if (document.empty())
-            return false;
-
-        picojson::object request;
-        picojson::object params;
-        picojson::object textDocument;
-
-        request["jsonrpc"] = picojson::value("2.0");
-        request["id"] = picojson::value(msgId++);
-        request["method"] = picojson::value("textDocument/documentSymbol");
-
-        std::string uri("file://");
-        uri.append(document);
-        textDocument["uri"] = picojson::value(uri);
-
-        params["textDocument"] = picojson::value(textDocument);
-
-        request["params"] =  picojson::value(params);
-
-        std::string serialized = picojson::value(request).serialize();
-
-        pipe_write_jsonrpc(serialized);
-
-        std::string response = pipe_read_jsonrpc();
-
-        picojson::value jsonResponse;
-        std::string err = picojson::parse(jsonResponse, response);
-        return checkErrorResponse(jsonResponse, err);
     }
 
     bool LSPClient::checkErrorResponse(const picojson::value &json, const string& picoError){

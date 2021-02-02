@@ -107,7 +107,7 @@ public:
 
     void setSyntax ( const std::string& syntax );
 
-    bool init();
+    bool connect();
 
     bool runInitialize();
 
@@ -118,8 +118,6 @@ public:
     bool runDidOpen(const std::string &document, const std::string &syntax);
 
     bool runDidClose(const std::string &document, const std::string &syntax);
-
-    bool runDocumentSymbol(const std::string &document);
 
     std::string runHover(const std::string &document, int character, int line);
 

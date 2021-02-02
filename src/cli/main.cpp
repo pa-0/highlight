@@ -666,7 +666,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
             generator->setEncoding (encoding);
 
-            if (lsSyntax==generator->getSyntaxDescription()) {
+            if (lsSyntax==suffix) {
 
                 //LSP requires absolute paths
                 if (inFileList[i].empty()) {
@@ -701,10 +701,10 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        generator->setLsHover(usesLSClient && options.isLsHover() && lsSyntax==generator->getSyntaxDescription() );
+        generator->setLsHover(usesLSClient && options.isLsHover() && lsSyntax==suffix );
 
-        if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
-            generator->lsOpenDocument(inFileList[i], generator->getSyntaxDescription());
+        if (usesLSClient && lsSyntax==suffix) {
+            generator->lsOpenDocument(inFileList[i], suffix);
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {

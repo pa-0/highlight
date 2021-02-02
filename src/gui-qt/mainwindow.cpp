@@ -1269,19 +1269,25 @@ void MainWindow::on_pbStartConversion_clicked()
 
             applyEncoding(generator.get(), langDefPath);
 
-            if (usesLSClient==false && lsSyntax==generator->getSyntaxDescription()) {
+            string syntaxName = QFileInfo(langDefPath).baseName().toStdString();
+
+            std::cerr<<"syntaxName "<<syntaxName<<"\n";
+
+            std::cerr<<"lsSyntax "<<lsSyntax<<"\n";
+
+            if (usesLSClient==false && lsSyntax==syntaxName) {
 
                 if (initializeLS(generator.get(), false )) {
                         usesLSClient=true;
                 }
             }
 
-            useLSForInput = usesLSClient && lsSyntax==generator->getSyntaxDescription();
+            useLSForInput = usesLSClient && lsSyntax==syntaxName;
             generator->setLsHover(useLSForInput && ui->cbLSHover->isChecked() );
 
             if ( useLSForInput ) {
 
-                generator->lsOpenDocument(currentFile, generator->getSyntaxDescription());
+                generator->lsOpenDocument(currentFile, syntaxName);
             }
 
             error = generator->generateFile(currentFile, outfileName );
@@ -1293,7 +1299,7 @@ void MainWindow::on_pbStartConversion_clicked()
                 }
             }
             if (useLSForInput) {
-               // generator->lsCloseDocument(currentFile, generator->getSyntaxDescription());
+                generator->lsCloseDocument(currentFile, generator->getSyntaxDescription());
             }
             ui->progressBar->setValue(100*i / ui->lvInputFiles->count());
         }

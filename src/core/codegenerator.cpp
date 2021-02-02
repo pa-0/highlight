@@ -209,7 +209,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.setOptions(options);
     LSPClient.setSyntax(syntax);
 
-    LSPClient.init();
+    LSPClient.connect();
 
     if (!LSPClient.runInitialize()){
         return LSResult::INIT_BAD_REQUEST;
