@@ -118,9 +118,10 @@ void printHelp(const std::string &topic)
     } else if (topic=="lsp") {
         cout <<"LANGUAGE SERVER PROTOCOL HELP:\n\n";
         cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
-        cout <<"Language servers can be configured in the lsp.conf file. Each parameter of this file\n";
-        cout <<"can also be set using --ls-exec, --ls-option and --ls-syntax.\n";
+        cout <<"Language servers are be configured in the lsp.conf file. Each parameter of this file\n";
+        cout <<"can also be set using --ls-exec, --ls-option, --ls-delay and --ls-syntax.\n";
         cout <<"Currently only --ls-hover is implemented as LSP action to add tooltips to HTML output.\n";
+        cout <<"Important: LSP requires absolute input paths.\n";
     } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";
@@ -252,7 +253,7 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
         cout<<"     --ls-semantic *\n";
         cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
-        cout<<"     --ls-rainbow *\n\n";
+        cout<<"     --ls-rainbow *\n";
         cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
         cout<<"\n\n";
 

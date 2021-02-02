@@ -485,6 +485,8 @@ public:
 
     bool lsCloseDocument(const string& fileName, const string & suffix);
 
+    bool lsGetSemanticInfo(const string& fileName, const string & suffix);
+
     void setLsHover(bool hover);
 
     /** set HTML output anchor flag

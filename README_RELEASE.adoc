@@ -1,6 +1,6 @@
 = HIGHLIGHT IMPORTANT RELEASE AND PACKAGING INFORMATION
 André Simon
-:revdate: August 2017
+:revdate: February 2021
 :lang: en
 :toc: left
 :toc-title: Contents

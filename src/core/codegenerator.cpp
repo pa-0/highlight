@@ -236,6 +236,10 @@ bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffi
     return LSPClient.runDidClose(fileName, suffix);
 }
 
+bool CodeGenerator::lsGetSemanticInfo(const string& fileName, const string & suffix){
+    return LSPClient.runSemanticTokensFull(fileName);
+}
+
 void CodeGenerator::setLsHover(bool hover){
     lsEnableHoverRequests = hover;
 }

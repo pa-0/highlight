@@ -52,13 +52,20 @@ Language servers are configured in lsp.conf:
 
 Servers = {
 
-  { Server="clangd", Exec="clangd", Syntax="C and C++", Options={"--log=error"} },
-  { Server="ccls", Exec="ccls", Syntax="C and C++", Options={"-v=-3", "--"} },
-  { Server="ccls-objc", Exec="ccls", Syntax="Objective C", Options={"-v=-3", "--"} },
+  { Server="clangd", Exec="clangd", Syntax="c", Options={"--log=error"} },
+  { Server="ccls", Exec="ccls", Syntax="c", Options={"-v=-3", "--"} },
+  { Server="ccls-objc", Exec="ccls", Syntax="objc", Options={"-v=-3", "--"} },
 
-  { Server="rls", Exec="rls", Syntax="Rust", Options={} },
-  { Server="pyls", Exec="pyls", Syntax="Python", Options={"--check-parent-process"} },
-  { Server="R", Exec="R", Syntax="R", Options={"--slave", "-e", "languageserver::run()"} },
+  { Server="gopls", Exec="gopls", Syntax="go", Options={} },
+
+  { Server="rls", Exec="rls", Syntax="rust", Options={} },
+  { Server="rust-analyzer", Exec="rust-analyzer", Syntax="rust", Delay=250, Options={} },
+
+  { Server="pyls", Exec="pyls", Syntax="python", Options={"--check-parent-process"} },
+
+  { Server="R", Exec="R", Syntax="r", Options={"--slave", "-e", "languageserver::run()"} },
+
+  { Server="clangd-win", Exec="F:\\LLVM\\bin\\clangd.exe", Syntax="c", Options={"--log=error"} },
 
 }
 ..........................................................................
@@ -73,15 +80,16 @@ Command line options:
 ..........................................................................
 Language Server options (*tbd):
 
-     --ls-profile=<server>      read LSP configuration from lsp.conf
-     --ls-exec=<bin>            set server executable name
-     --ls-option=<option>       set server CLI option (can be repeated)
-     --ls-hover                 execute hover requests (HTML output only)
-     --ls-semantic *
-     --ls-syntax=<lang>         set syntax which is understood by the server
-     --ls-rainbow *
+    --ls-profile=<server>      read LSP configuration from lsp.conf
+    --ls-delay=<ms>            set server initialization delay
 
-     --ls-workspace=<dir>       set workspace directory to init. the server
+    --ls-exec=<bin>            set server executable name
+    --ls-option=<option>       set server CLI option (can be repeated)
+    --ls-hover                 execute hover requests (HTML output only)
+    --ls-semantic *
+    --ls-syntax=<lang>         set syntax which is understood by the server
+    --ls-rainbow *
+    --ls-workspace=<dir>       set workspace directory to init. the server
 ..........................................................................
 
 === Example invocation:

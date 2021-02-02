@@ -67,6 +67,9 @@ private:
 
     std::vector<std::string> options;
 
+    std::vector<std::string> tokenTypes;
+    std::vector<std::string> tokenModifiers;
+
     int initDelay;
 
 #ifdef WIN32
@@ -122,6 +125,8 @@ public:
     bool runDidClose(const std::string &document, const std::string &syntax);
 
     std::string runHover(const std::string &document, int character, int line);
+
+    bool runSemanticTokensFull(const std::string &document);
 
     bool runShutdown();
 

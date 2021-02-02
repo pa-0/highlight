@@ -348,7 +348,9 @@ namespace highlight
         picojson::object request;
         picojson::object params;
         picojson::object capabilities;
-        picojson::object textDocument, documentSymbol, publishDiagnostics, semanticHighlightingCapabilities;
+        picojson::value serverCapabilities;
+
+        picojson::object textDocument, documentSymbol, semanticTokensClientCapabilities, requests;
         picojson::value nullValue;
 
         request["jsonrpc"] = picojson::value("2.0");
@@ -364,8 +366,37 @@ namespace highlight
             params["rootUri"] =  picojson::value("file://" + workspace);
         }
 
-        //    publishDiagnostics["relatedInformation"] = picojson::value(true);
-        //  textDocument["publishDiagnostics"] = picojson::value(publishDiagnostics);
+        requests["range"] = picojson::value(false);
+        requests["full"] = picojson::value(true);
+
+
+
+        picojson::array tokenTypes;
+        tokenTypes.push_back(picojson::value("keyword"));
+        tokenTypes.push_back(picojson::value("type"));
+        tokenTypes.push_back(picojson::value("struct"));
+
+        picojson::array tokenModifiers;
+        tokenModifiers.push_back(picojson::value("static"));
+        tokenModifiers.push_back(picojson::value("abstract"));
+        tokenModifiers.push_back(picojson::value("deprecated"));
+
+        //"documentation","declaration","definition","static","abstract","deprecated","readonly","constant","controlFlow","injected","mutable","consuming","unsafe","attribute","callable"
+
+        picojson::array formats;
+        formats.push_back(picojson::value("relative"));
+
+
+        semanticTokensClientCapabilities["requests"] = picojson::value(requests);
+
+        semanticTokensClientCapabilities["tokenTypes"] = picojson::value(tokenTypes);
+        semanticTokensClientCapabilities["tokenModifiers"] = picojson::value(tokenModifiers);
+        semanticTokensClientCapabilities["formats"] = picojson::value(formats);
+
+        semanticTokensClientCapabilities["overlappingTokenSupport"] = picojson::value(false);
+        semanticTokensClientCapabilities["multilineTokenSupport"] = picojson::value(false);
+
+        textDocument["semanticTokens"] = picojson::value(semanticTokensClientCapabilities);
 
 
         capabilities["textDocument"] = picojson::value(textDocument);
@@ -390,18 +421,31 @@ namespace highlight
             && !jsonResponse.get("result").get("capabilities").is<picojson::object>()) {
 
             return false;
+        }
+
+        if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
+            serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
+            serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
+        }
+
+        serverCapabilities = jsonResponse.get("result").get("capabilities");
+        hoverProvider = serverCapabilities.get("hoverProvider").get<bool>();
+
+        semanticTokensProvider = serverCapabilities.contains("semanticTokensProvider");
+
+        if (semanticTokensProvider) {
+            picojson::array list = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenTypes").get<picojson::array>();
+            for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
+               // tokenTypes.push_back((*iter).get<string>());
             }
 
-            if (jsonResponse.get("result").get("serverInfo").is<picojson::object>()) {
-                serverName= jsonResponse.get("result").get("serverInfo").get("name").get<std::string>();
-                serverVersion= jsonResponse.get("result").get("serverInfo").get("version").get<std::string>();
+            picojson::array modifiersList = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenModifiers").get<picojson::array>();
+            for (picojson::array::iterator iter = modifiersList.begin(); iter != modifiersList.end(); ++iter) {
+               // tokenModifiers.push_back((*iter).get<string>());
             }
+        }
 
-            hoverProvider = jsonResponse.get("result").get("capabilities").get("hoverProvider").get<bool>();
-
-
-
-            return true;
+        return true;
     }
 
     std::string LSPClient::runHover(const std::string &document, int character, int line){
@@ -498,6 +542,52 @@ namespace highlight
 
         return "";
     }
+
+
+    bool LSPClient::runSemanticTokensFull(const std::string &document) {
+        if (document.empty() || !semanticTokensProvider)
+            return false;
+
+        picojson::object request;
+        picojson::object params;
+        picojson::object textDocument;
+
+        request["jsonrpc"] = picojson::value("2.0");
+        request["method"] = picojson::value("textDocument/semanticTokens/full");
+
+        std::string uri("file://");
+        uri.append(document);
+        textDocument["uri"] = picojson::value(uri);
+
+        params["textDocument"] = picojson::value(textDocument);
+
+        request["params"] =  picojson::value(params);
+
+        std::string serialized = picojson::value(request).serialize();
+
+        pipe_write_jsonrpc(serialized);
+
+
+
+        std::string response = pipe_read_jsonrpc();
+
+        std::cerr << "RESP >>"<<response<<"<<\n";
+
+        picojson::value jsonResponse;
+        std::string err = picojson::parse(jsonResponse, response);
+
+        if (!checkErrorResponse(jsonResponse, err)) {
+            return false;
+        }
+
+        if ( !jsonResponse.get("result").is<picojson::object>() ) {
+            return false;
+        }
+
+
+        return true;
+    }
+
 
     bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 

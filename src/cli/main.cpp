@@ -709,6 +709,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         if (usesLSClient && lsSyntax==suffix) {
             generator->lsOpenDocument(inFileList[i], suffix);
+
+            // XXX
+            //generator->lsGetSemanticInfo(inFileList[i], suffix);
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
@@ -774,9 +777,9 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        if (usesLSClient && lsSyntax==generator->getSyntaxDescription()) {
+        if (usesLSClient && lsSyntax==suffix) {
             //pyls hangs
-            generator->lsCloseDocument(inFileList[i], generator->getSyntaxDescription());
+            generator->lsCloseDocument(inFileList[i], suffix);
         }
 
         ++i;
