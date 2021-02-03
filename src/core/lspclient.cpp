@@ -314,7 +314,11 @@ namespace highlight
             // payload - otherwise no repeated WRITE/READ is possible
 
             // Probably need to grab more
+#ifdef WIN32
+            DWORD remainderReadLen = 0;
+#else
             size_t remainderReadLen=0;
+#endif
             size_t remainderLen=payloadLen - (headerReadLen - start);
             if (resultString.length() < (size_t)payloadLen ) {
 
@@ -322,11 +326,13 @@ namespace highlight
 
                 #ifdef WIN32
                 ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[headerReadLen - start],
-                         payloadLen - (headerReadLen - start), &remainderLen, NULL);
+                         payloadLen - (headerReadLen - start), &remainderReadLen, NULL);
                 #else
                 remainderReadLen = read(inpipefd[0], &resultString[headerReadLen - start], remainderLen);
                 #endif
             }
+
+            std::cerr <<"LEN "<<remainderReadLen <<" "<< remainderLen<<"\n";
 
             if (remainderReadLen != remainderLen) {
                 return "";
@@ -624,11 +630,11 @@ namespace highlight
     }
 
     bool LSPClient::runShutdown(){
-        return runSimpleAction("shutdown");
+        return runSimpleAction("shutdown", false);
     }
 
     bool LSPClient::runExit(){
-        return runSimpleAction("exit");
+        return runSimpleAction("exit", false);
     }
 
     bool LSPClient::isInitialized(){
