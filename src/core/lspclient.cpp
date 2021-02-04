@@ -332,8 +332,6 @@ namespace highlight
                 #endif
             }
 
-            std::cerr <<"LEN "<<remainderReadLen <<" "<< remainderLen<<"\n";
-
             if (remainderReadLen != remainderLen) {
                 return "";
             }
@@ -375,23 +373,25 @@ namespace highlight
         requests["range"] = picojson::value(false);
         requests["full"] = picojson::value(true);
 
+        //vector<std::string> supportedTokenTypes {"comment","keyword","string","number","regexp","operator","namespace","type","struct","class","interface","enum","enumMember","typeParameter","function","method","property","macro","variable","parameter","angle","attribute","boolean","brace","bracket","builtinType","comma","colon","dot","escapeSequence","formatSpecifier","generic","constParameter","lifetime","label","parenthesis","punctuation","selfKeyword","semicolon","typeAlias","union","unresolvedReference"};
+
+        vector<std::string> supportedTokenTypes {"keyword","number","regexp","operator","namespace","type","struct","class","interface","enum","enumMember","typeParameter","function","method","property","macro","variable","parameter","angle","attribute","boolean","builtinType","constParameter","lifetime","label","selfKeyword","semicolon","typeAlias","union","unresolvedReference"};
 
 
         picojson::array tokenTypes;
-        tokenTypes.push_back(picojson::value("keyword"));
-        tokenTypes.push_back(picojson::value("type"));
-        tokenTypes.push_back(picojson::value("struct"));
+        for (auto const &type : supportedTokenTypes)  {
+            tokenTypes.push_back(picojson::value(type));
+        }
+
+        vector<std::string> supportedModifiers {"documentation","declaration","definition","static","abstract","deprecated","readonly","constant","controlFlow","injected","mutable","consuming","unsafe","attribute","callable"};
 
         picojson::array tokenModifiers;
-        tokenModifiers.push_back(picojson::value("static"));
-        tokenModifiers.push_back(picojson::value("abstract"));
-        tokenModifiers.push_back(picojson::value("deprecated"));
-
-        //"documentation","declaration","definition","static","abstract","deprecated","readonly","constant","controlFlow","injected","mutable","consuming","unsafe","attribute","callable"
+        for (auto const &mod : supportedModifiers) {
+            tokenModifiers.push_back(picojson::value(mod));
+        }
 
         picojson::array formats;
         formats.push_back(picojson::value("relative"));
-
 
         semanticTokensClientCapabilities["requests"] = picojson::value(requests);
 
@@ -559,6 +559,7 @@ namespace highlight
         picojson::object textDocument;
 
         request["jsonrpc"] = picojson::value("2.0");
+        request["id"] = picojson::value(++msgId);
         request["method"] = picojson::value("textDocument/semanticTokens/full");
 
         std::string uri("file://");
@@ -573,11 +574,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
-
-
         std::string response = pipe_read_jsonrpc();
-
-        std::cerr << "RESP >>"<<response<<"<<\n";
 
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);
@@ -590,10 +587,8 @@ namespace highlight
             return false;
         }
 
-
         return true;
     }
-
 
     bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 
@@ -626,6 +621,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
+        waitForNotifications();
 
         return true;
     }
@@ -686,7 +682,6 @@ namespace highlight
         picojson::object emptyObject;
 
         request["jsonrpc"] = picojson::value("2.0");
-        //request["id"] = picojson::value(msgId++);
         request["method"] = picojson::value(action);
 
         request["params"] =  picojson::value(emptyObject);
@@ -781,7 +776,7 @@ namespace highlight
             FD_SET(inpipefd[0], &rfds);
 
             tv.tv_sec = 0;
-            tv.tv_usec = 250000;
+            tv.tv_usec = 500000;
 
             retval = select(inpipefd[0]+1, &rfds, NULL, NULL, &tv);
             /* Don't rely on the value of tv now! */

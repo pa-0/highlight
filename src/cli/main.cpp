@@ -711,7 +711,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             generator->lsOpenDocument(inFileList[i], suffix);
 
             // XXX
-            //generator->lsGetSemanticInfo(inFileList[i], suffix);
+            generator->lsGetSemanticInfo(inFileList[i], suffix);
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
