@@ -411,20 +411,6 @@ files using `--validate-input`. This flag causes highlight to match the input fi
 header with a list of magic numbers. If a binary file type is detected, highlight
 quits with an error message. This switch also removes an UTF-8 BOM in the output.
 
-==== Highlight nested code without starting delimiter
-
-If a file starts with an embedded code section which misses an appropriate opening
-delimiter, the `--start-nested` option will switch to the nested language mode.
-This can be useful with LuaTeX files:
-
-......................................................
-highlight luatex.tex --latex --start-nested=inc_luatex
-......................................................
-
-`inc_luatex` is a Lua language definition with TeX line comments.
-The nested code section has to end with the ending delimiter defined in the host
-language definition.
-
 ==== Test new configuration scripts
 
 The option `--config-file` helps to test new config files. The argument file must be

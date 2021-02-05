@@ -481,7 +481,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     generator->setBaseFont ( options.getBaseFont() ) ;
     generator->setBaseFontSize ( options.getBaseFontSize() ) ;
     generator->setLineNumberWidth ( options.getNumberWidth() );
-    generator->setStartingNestedLang( options.getStartNestedLang());
     generator->disableTrailingNL(options.disableTrailingNL());
     generator->setPluginParameter(options.getPluginParameter());
 
@@ -671,6 +670,12 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
             if (lsSyntax==suffix) {
 
+                if (options.getWrappingStyle()!=highlight::WRAP_DISABLED || options.getIndentScheme().size()) {
+                    cerr << "highlight: no reformatting allowed with LSP options.\n";
+                    initError = true;
+                    break;
+                }
+
                 //LSP requires absolute paths
                 if (inFileList[i].empty()) {
                     cerr << "highlight: no input file path defined.\n";
@@ -707,11 +712,17 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         generator->setLsHover(usesLSClient && options.isLsHover() && lsSyntax==suffix );
 
+
         if (usesLSClient && lsSyntax==suffix) {
             generator->lsOpenDocument(inFileList[i], suffix);
 
             // XXX
-            generator->lsGetSemanticInfo(inFileList[i], suffix);
+            if (options.isLsSemantic())
+                generator->lsGetSemanticInfo(inFileList[i], suffix);
+
+
+            /// TODO only once
+            generator->updateKeywordClasses();
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {

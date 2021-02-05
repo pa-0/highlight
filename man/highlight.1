@@ -177,18 +177,18 @@ set image size (see --height)
 set background colour padding (default: 80)
 
 .SH ""LANGUAGE SERVER OPTIONS (*tbd)"
-.IP "--ls-profile=<server>
+.IP "--ls-profile=<server>"
 load LSP configuration from lsp.conf
 .IP "--ls-delay=<ms>"
 set server initialization delay in milliseconds
-.IP "--ls-exec=<bin>
+.IP "--ls-exec=<bin>"
 set server executable name
-.IP "--ls-option=<option>
+.IP "--ls-option=<option>"
 set server CLI option (can be repeated)
 .IP "--ls-hover"
 execute hover requests (HTML output only)
-.IP "--ls-semantic "
-tbd
+.IP "--ls-semantic"
+query server for semantic token types (requires LSP 3.16)
 .IP "--ls-syntax=<lang>"
 set syntax which is understood by the server
 .IP "--ls-rainbow *"

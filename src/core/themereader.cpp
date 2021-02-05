@@ -34,7 +34,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false)
+    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false)
 {}
 
 ThemeReader::~ThemeReader()
@@ -85,7 +85,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
         ls["HL_FORMAT_ODT"]=ODTFLAT;
         ls["HL_OUTPUT"] = type;
         ls.doString("Injections={}");
-        
+
         lua_register (ls.getState(), "StoreValue", KeyStore::luaStore);
 
         ls.doFile (styleDefinitionPath);
@@ -96,7 +96,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
 
             Diluculum::LuaValueMap categoryMap;
             categoryMap = ls["Categories"].value().asTable();
-                
+
             for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
             {
                 categories.append(it->second.asString());
@@ -105,7 +105,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
                 }
             }
         }
-        
+
         if (pluginChunks.size()) {
             Diluculum::LuaValueList params;
             params.push_back(desc);
@@ -136,9 +136,21 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
             keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
             idx++;
         }
-        
+
+        int semanticStartIdx = keywordStyles.size();
+
+        idx=1;
+        while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil) {
+
+            initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
+            snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
+            keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
+            semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx;
+            idx++;
+        }
+
         originalStyles=keywordStyles;
-        
+
         idx=1;
         while (ls["Injections"][idx].value() !=Diluculum::Nil) {
             themeInjections +=ls["Injections"][idx].value().asString();
@@ -157,6 +169,14 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
     }
 
     return fileOK;
+}
+
+int ThemeReader::getSemanticStyle(const string &type) {
+    return semanticStyleMap.count(type) ? semanticStyleMap[type] : 0;
+}
+
+int ThemeReader::getSemanticTokenStyleCount() {
+    return semanticStyleMap.size();
 }
 
 string ThemeReader::getErrorMessage() const
@@ -255,19 +275,19 @@ string ThemeReader::getInjections() const
 }
 
 void ThemeReader::overrideAttributes(vector<int>& attributes) {
-    
+
     if (dirtyAttributes)
         keywordStyles=originalStyles;
-    
+
     for ( std::vector<int>::iterator it = attributes.begin() ; it != attributes.end(); ++it)
     {
         int kwGroup=*it & 0xf;
         char kwName[5];
         snprintf(kwName, sizeof(kwName), "kw%c", ('a'+kwGroup-1));
-        
+
         if (keywordStyles.count ( kwName)) {
-   
-            ElementStyle elem = keywordStyles[kwName]; 
+
+            ElementStyle elem = keywordStyles[kwName];
             if (*it & 128) elem.setBold(true);
             if (*it & 256) elem.setItalic(true);
             if (*it & 512) elem.setUnderline(true);
@@ -287,14 +307,14 @@ float ThemeReader::getsRGB(int rgbValue) {
 }
 
 float ThemeReader::getBrightness(const Colour& colour) {
-    return  0.2126*getsRGB(colour.getRed()) + 
-            0.7152*getsRGB(colour.getGreen()) + 
+    return  0.2126*getsRGB(colour.getRed()) +
+            0.7152*getsRGB(colour.getGreen()) +
             0.0722*getsRGB(colour.getBlue());
 }
 float ThemeReader::getContrast() {
     float canvasBrightness = getBrightness(canvas.getColour());
     float defaultBrightness = getBrightness(defaultElem.getColour());
-    return  (std::max(canvasBrightness, defaultBrightness) + 0.05) / 
+    return  (std::max(canvasBrightness, defaultBrightness) + 0.05) /
             (std::min(canvasBrightness, defaultBrightness) + 0.05);
 }
 

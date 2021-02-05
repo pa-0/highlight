@@ -34,6 +34,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <stack>
 #include <vector>
 
+#include "regextoken.h"
+
 #include "syntaxreader.h"
 #include "themereader.h"
 
@@ -41,7 +43,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "astyle/ASStreamIterator.h"
 
 #include "preformatter.h"
-#include "enums.h"
+
 #include "stringtools.h"
 
 #include "lspclient.h"
@@ -50,55 +52,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace highlight
 {
-/** \brief Regular Expression Information
-
-    This class associates a processing state with a keyword class and the length of the matched token.
-
-* @author Andre Simon
-*/
-class ReGroup
-{
-public:
-
-    /// Constructor
-    ReGroup() : length ( 0 ), state ( STANDARD ), kwClass ( 0 ), name()
-    {
-    }
-
-    /// Constructor
-    ReGroup ( State s, unsigned int l , unsigned int c, const string&n ) :
-        length ( l ), state ( s ), kwClass ( c ), name(n)
-    {
-    }
-
-    /// Copy Constructor
-    ReGroup ( const ReGroup& other )
-    {
-        length = other.length;
-        state = other.state;
-        kwClass = other.kwClass;
-        name=other.name;
-    }
-
-    /// Operator overloading
-    ReGroup& operator= ( const ReGroup & other )
-    {
-        length = other.length;
-        state = other.state;
-        kwClass = other.kwClass;
-        name=other.name;
-        return *this;
-    }
-
-    ~ReGroup()
-    {
-    }
-
-    unsigned int length;    ///< length of the token
-    State state;            ///< state of the matched token (keyword, string, etc)
-    unsigned int kwClass;   ///< keyword class if state is keyword
-    string name;           ///< language name needed to handle embedded languages
-};
 
 
 /** \brief Base class for parsing. Works like a finite state machine.
@@ -489,6 +442,10 @@ public:
 
     void setLsHover(bool hover);
 
+    void setLsSemantic(bool semantic);
+
+    void updateKeywordClasses();
+
     /** set HTML output anchor flag
      */
     virtual void setHTMLAttachAnchors ( bool )  {};
@@ -799,9 +756,6 @@ private:
     /// path to plugin input file
     string pluginParameter;
 
-    /// name of nested language which starts the input (ie opening delim missing, but closing delim exists)
-    string embedLangStart;
-
     /// contains current position in line
     unsigned int lineIndex;
 
@@ -864,6 +818,7 @@ private:
 
     bool lsEnableHoverRequests;
 
+
     /** flag which determines keyword output (unchangeed, uppercase, lowercase)*/
     StringTools::KeywordCase keywordCase;
 
@@ -925,7 +880,7 @@ private:
             StringTools::KeywordCase tcase = StringTools::CASE_UNCHANGED );
 
     /** association of matched regexes and the corresponding keyword class ids*/
-    map <int, ReGroup> regexGroups;
+    map <int, RegexToken> regexGroups;
 
     /** history of states per line position in the current line of input code (max 200 entries) */
 

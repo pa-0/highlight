@@ -257,7 +257,7 @@ string HtmlGenerator::getStyleDefinition()
         os << "pt; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
            << "; white-space: pre-wrap; }\n";
 
-        os << classNameSuffix<<".hvr {cursor:help; border-bottom: 1px dotted;}\n";
+        os << classNameSuffix<<".hvr {cursor:help;}\n"; // TODO inline CSS
 
         os  << getAttributes ( STY_NAME_NUM, docStyle.getNumberStyle() )
             << getAttributes ( STY_NAME_ESC, docStyle.getEscapeCharStyle() )

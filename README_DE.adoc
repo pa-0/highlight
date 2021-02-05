@@ -409,18 +409,6 @@ Dieser Schalter fuehrt zu einem Vergleich der Datei-Header mit einer Liste von
 Verarbeitung mit einer Fehlermeldung ab.
 Mit `--validate-input` wird zusaetzlich der UTF-8 BOM in der Ausgabe unterdrueckt.
 
-==== Hervorhebung von eingebettetem Code ohne oeffnenden Delimiter
-
-Wenn eine Datei mit eingebettetem Code ohne einen fuer diese Syntax ueblichen
-einleitenden Delimiter beginnt, kann mit der `--start-nested` Option in diese
-Sprache gewechselt werden. Dies kann bei LuaTeX Dateien noetig sein:
-
-......................................................
-highlight luatex.tex --latex --start-nested=inc_luatex
-......................................................
-
-Die `inc_luatex` Definition ist eine Lua-Beschreibung mit TeX Kommentaren.
-
 ==== Neue Konfigurationsskripte testen:
 
 Die Option `--config-file` ermoeglicht es, neue Skripte vor der Installation zu

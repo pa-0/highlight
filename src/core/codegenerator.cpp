@@ -218,6 +218,10 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
         return LSResult::INIT_BAD_REQUEST;
     }
 
+    for (int i=0; i<docStyle.getSemanticTokenStyleCount();i++) {
+        currentSyntax->generateNewKWClass(i, "sm");
+    }
+
     LSPClient.runInitialized();
 
     return LSResult::INIT_OK;
@@ -392,11 +396,6 @@ void CodeGenerator::setBaseFontSize ( const string& fontSize)
 void CodeGenerator::setStyleCaching ( bool flag )
 {
     disableStyleCache=!flag;
-}
-
-void CodeGenerator::setStartingNestedLang(const string &langName)
-{
-    embedLangStart = langName;
 }
 
 const string CodeGenerator::getBaseFont() const
@@ -620,7 +619,7 @@ void CodeGenerator::matchRegex ( const string &line, State skipState)
             matchBegin = cur->position(groupID);
 
             regexGroups.insert (
-                make_pair ( matchBegin + 1, ReGroup ( regexElem->open, cur->length(groupID), regexElem->kwClass, regexElem->langName ) ) );
+                make_pair ( matchBegin + 1, RegexToken ( regexElem->open, cur->length(groupID), regexElem->kwClass, regexElem->langName ) ) );
 
             // priority regex (match required)
             if (regexElem->priority) {
@@ -716,6 +715,17 @@ State CodeGenerator::getCurrentState (State oldState)
     }
 
 SKIP_EMBEDDED:
+
+    if (LSPClient.tokenExists(lineNumber, lineIndex)) {
+        highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
+        int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
+        if (semStyleKwId) {
+            token = line.substr ( lineIndex-1, semToken.length);
+            lineIndex += semToken.length-1;
+            currentKeywordClass = semStyleKwId;
+            return KEYWORD;
+        }
+    }
 
     // Test if a regular expression was found at the current position
     if ( !regexGroups.empty() ) {
@@ -986,20 +996,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
         if ( result==LOAD_OK ) {
             formattingPossible=currentSyntax->enableReformatting();
 
-            if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
-                // remove dynamic keyword tag delimiters of the old language definition
-                vector<string>::iterator keyStyleOpenBegin =
-                    openTags.begin() + NUMBER_BUILTIN_STATES;
-                vector<string>::iterator keyStyleCloseBegin =
-                    closeTags.begin() + NUMBER_BUILTIN_STATES;
-                openTags.erase ( keyStyleOpenBegin, openTags.end() );
-                closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
-            }
-            // add new keyword tag delimiters
-            for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
-                openTags.push_back ( getKeywordOpenTag ( i ) );
-                closeTags.push_back ( getKeywordCloseTag ( i ) );
-            }
+            updateKeywordClasses();
         }
     }
     return result;
@@ -1347,10 +1344,6 @@ void CodeGenerator::processRootState()
         }
         *out << flush;
         return;
-    }
-
-    if (!embedLangStart.empty()) {
-        if (!loadEmbeddedLang(currentSyntax->getNewPath(embedLangStart))) return;
     }
 
     State state=STANDARD;
@@ -2352,6 +2345,24 @@ bool CodeGenerator::syntaxRequiresTwoPassRun() {
 void CodeGenerator::clearPersistentSnippets(){
     if (currentSyntax) {
         currentSyntax->clearPersistentSnippets();
+    }
+}
+
+
+void CodeGenerator::updateKeywordClasses(){
+    if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
+        // remove dynamic keyword tag delimiters of the old language definition
+        vector<string>::iterator keyStyleOpenBegin =
+        openTags.begin() + NUMBER_BUILTIN_STATES;
+        vector<string>::iterator keyStyleCloseBegin =
+        closeTags.begin() + NUMBER_BUILTIN_STATES;
+        openTags.erase ( keyStyleOpenBegin, openTags.end() );
+        closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
+    }
+    // add new keyword tag delimiters
+    for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
+        openTags.push_back ( getKeywordOpenTag ( i ) );
+        closeTags.push_back ( getKeywordCloseTag ( i ) );
     }
 }
 

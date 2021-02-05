@@ -2,7 +2,7 @@
                           themereader.h  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef THEMEREADER_H
 #define THEMEREADER_H
 
+#include <map>
 #include <string>
 
 #include <Diluculum/LuaState.hpp>
@@ -63,15 +64,17 @@ private:
     string errorMsg;
     string desc, categories;
     string themeInjections;
-        
+
     vector<Diluculum::LuaFunction*> pluginChunks;
+
+    map<string, int> semanticStyleMap;
 
     bool fileOK, restoreStyles, dirtyAttributes;
 
     KeywordStyles keywordStyles, originalStyles;
 
     void initStyle(ElementStyle& style, const Diluculum::LuaVariable& var);
-    
+
     float getsRGB(int rgbValue);
 
     float getBrightness(const Colour& colour);
@@ -158,6 +161,10 @@ public:
 
     /** \return True if language definition was found */
     bool found() const ;
+
+    int getSemanticStyle(const string &type);
+
+    int getSemanticTokenStyleCount();
 
     void overrideAttributes( vector<int>& attributes);
 

@@ -31,39 +31,36 @@ SyntaxError = { Colour="#ff0000" }
 -- keyword groups. Rearrange order as reported by LSP
 
 SemanticTokenTypes  = {
-  Type = 'namespace', Style = { Colour= "#ff3db3" },
-  Type = 'type', Style = Keywords[1],                  -- sample reuse of existing style
-  Type = 'class', Style = { Colour= "#ff3db3" },
-  Type = 'enum', Style = { Colour= "#ff3db3" },
-  Type = 'interface', Style = { Colour= "#ff3db3" },
-  Type = 'struct', Style = { Colour= "#ff3db3" },
-  Type = 'typeParameter', Style = { Colour= "#ff3db3" },
-  Type = 'parameter', Style = { Colour= "#ff3db3" },
-  Type = 'variable', Style = { Colour= "#ff3db3" },
-  Type = 'property', Style = { Colour= "#ff3db3" },
-  Type = 'enumMember', Style = { Colour= "#ff3db3" },
-  Type = 'event', Style = { Colour= "#ff3db3" },
-  Type = 'function', Style = { Colour= "#ff3db3" },
-  Type = 'method', Style = { Colour= "#ff3db3" },
-  Type = 'macro', Style = { Colour= "#ff3db3" },
-  Type = 'keyword', Style = { Colour= "#ff3db3" },
-  Type = 'modifier', Style = { Colour= "#ff3db3" },
-  Type = 'comment', Style = { Colour= "#ff3db3" },
-  Type = 'string', Style = { Colour= "#ff3db3" },
-  Type = 'number', Style = { Colour= "#ff3db3" },
-  Type = 'regexp', Style = { Colour= "#ff3db3" },
-  Type = 'operator', Style = { Colour= "#ff3db3" }
+  { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style sma
+  { Type = 'type', Style = Keywords[2] },                 --style smb ...
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'enum', Style = { Colour= "#ff3db3" } },
+  { Type = 'interface', Style = { Colour= "#ff3db3" } },
+  { Type = 'struct', Style = { Colour= "#3d40ff" } },
+  { Type = 'typeParameter', Style = { Colour= "#ff3db3" } },
+  { Type = 'parameter', Style = { Colour= "#2591f0" } },
+  { Type = 'variable', Style = { Colour= "#ff3d3d" } },
+  { Type = 'property', Style = { Colour= "#ff3db3" } },
+  { Type = 'enumMember', Style = { Colour= "#ff3db3" } },
+  { Type = 'event', Style = { Colour= "#ff3db3" } },
+  { Type = 'function', Style = Keywords[3] },
+  { Type = 'method', Style = Keywords[3] },
+  { Type = 'keyword', Style = Keywords[1] },
+  { Type = 'modifier', Style = { Colour= "#ff3db3" } },
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator }
 }
 
 SemanticTokenModifiers  = {
-  Type = 'declaration', Style = { Colour= "#ff9421" },
-  Type = 'definition', Style = { Colour= "#ff9421" },
-  Type = 'readonly', Style = { Colour= "#ff9421" },
-  Type = 'static', Style = { Colour= "#ff9421" },
-  Type = 'deprecated', Style = { Colour= "#ff9421" },
-  Type = 'abstract', Style = { Colour= "#ff9421" },
-  Type = 'async', Style = { Colour= "#ff9421" },
-  Type = 'modification', Style = { Colour= "#ff9421" },
-  Type = 'documentation', Style = { Colour= "#ff9421" },
-  Type = 'defaultLibrary', Style = { Colour= "#ff9421" }
+  { Type = 'declaration', Style = { Colour= "#ff9421" } },
+  { Type = 'definition', Style = { Colour= "#ff9421" } },
+  { Type = 'readonly', Style = { Colour= "#ff9421" } },
+  { Type = 'static', Style = { Colour= "#ff9421" } },
+  { Type = 'deprecated', Style = { Colour= "#ff9421" } },
+  { Type = 'abstract', Style = { Colour= "#ff9421" } },
+  { Type = 'async', Style = { Colour= "#ff9421" } },
+  { Type = 'modification', Style = { Colour= "#ff9421" } },
+  { Type = 'documentation', Style = { Colour= "#ff9421" } },
+  { Type = 'defaultLibrary', Style = { Colour= "#ff9421" } }
 }

@@ -44,7 +44,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <vector>
+#include <map>
 #include <string>
+
+#include "semantictoken.h"
 
 #include "picojson/picojson.h"
 
@@ -67,8 +70,10 @@ private:
 
     std::vector<std::string> options;
 
-    std::vector<std::string> tokenTypes;
-    std::vector<std::string> tokenModifiers;
+    std::map<int, std::string> tokenTypes;
+    std::map<int, std::string> tokenModifiers;
+
+    std::map< std::tuple<int, int>, highlight::SemanticToken > tokenMap;
 
     int initDelay;
 
@@ -132,23 +137,29 @@ public:
 
     bool runExit();
 
-    bool isInitialized();
+    bool isInitialized() const;
 
-    bool isHoverProvider();
+    bool isHoverProvider() const;
 
-    bool isSemanticTokensProvider();
+    bool isSemanticTokensProvider() const;
 
     void setLogging(bool flag);
 
     void setInitializeDelay(int ms);
 
-    std::string getServerName();
+    std::string getServerName() const;
 
-    std::string getServerVersion();
+    std::string getServerVersion() const;
 
-    std::string getErrorMessage();
+    std::string getErrorMessage() const;
 
-    int getErrorCode();
+    bool tokenExists(unsigned int line, unsigned int col);
+
+    int getSemanticTokenCount() const;
+
+    highlight::SemanticToken getToken(unsigned int line, unsigned int col);
+
+    int getErrorCode() const;
 };
 
 }

@@ -378,6 +378,9 @@ public:
     */
     static void initLuaState(Diluculum::LuaState& ls, const string& langDefPath, const string& pluginReadFilePath, OutputType outputType=HTML );
 
+    // generate a keyword class
+    unsigned int generateNewKWClass ( int classID, const char *prefix="kw" );
+
 private:
 
     static const string REGEX_IDENTIFIER;
@@ -456,8 +459,7 @@ private:
 
     static int luaOverrideParam (lua_State *L);
 
-    // generate a keyword class
-    unsigned int generateNewKWClass ( int classID );
+
 
     void addKeyword(unsigned int groupID, const string& kw);
 

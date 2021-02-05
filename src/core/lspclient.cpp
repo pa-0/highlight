@@ -373,21 +373,22 @@ namespace highlight
         requests["range"] = picojson::value(false);
         requests["full"] = picojson::value(true);
 
-        //vector<std::string> supportedTokenTypes {"comment","keyword","string","number","regexp","operator","namespace","type","struct","class","interface","enum","enumMember","typeParameter","function","method","property","macro","variable","parameter","angle","attribute","boolean","brace","bracket","builtinType","comma","colon","dot","escapeSequence","formatSpecifier","generic","constParameter","lifetime","label","parenthesis","punctuation","selfKeyword","semicolon","typeAlias","union","unresolvedReference"};
+        vector<std::string> supportedTokenTypes {"keyword","number","regexp","operator","namespace","type","struct","class",
+                                                "interface","enum","enumMember","typeParameter","function","method","property",
+                                                "macro","variable","parameter", "event", "modifier", "comment", "string"};
 
-        vector<std::string> supportedTokenTypes {"keyword","number","regexp","operator","namespace","type","struct","class","interface","enum","enumMember","typeParameter","function","method","property","macro","variable","parameter","angle","attribute","boolean","builtinType","constParameter","lifetime","label","selfKeyword","semicolon","typeAlias","union","unresolvedReference"};
-
-
-        picojson::array tokenTypes;
+        picojson::array myTokenTypes;
         for (auto const &type : supportedTokenTypes)  {
-            tokenTypes.push_back(picojson::value(type));
+            myTokenTypes.push_back(picojson::value(type));
         }
 
-        vector<std::string> supportedModifiers {"documentation","declaration","definition","static","abstract","deprecated","readonly","constant","controlFlow","injected","mutable","consuming","unsafe","attribute","callable"};
 
-        picojson::array tokenModifiers;
+        vector<std::string> supportedModifiers {"documentation","declaration","definition","static","abstract","deprecated",
+                                                "readonly", "async","modification","defaultLibrary"};
+
+        picojson::array myTokenModifiers;
         for (auto const &mod : supportedModifiers) {
-            tokenModifiers.push_back(picojson::value(mod));
+            myTokenModifiers.push_back(picojson::value(mod));
         }
 
         picojson::array formats;
@@ -395,15 +396,14 @@ namespace highlight
 
         semanticTokensClientCapabilities["requests"] = picojson::value(requests);
 
-        semanticTokensClientCapabilities["tokenTypes"] = picojson::value(tokenTypes);
-        semanticTokensClientCapabilities["tokenModifiers"] = picojson::value(tokenModifiers);
+        semanticTokensClientCapabilities["tokenTypes"] = picojson::value(myTokenTypes);
+        semanticTokensClientCapabilities["tokenModifiers"] = picojson::value(myTokenModifiers);
         semanticTokensClientCapabilities["formats"] = picojson::value(formats);
 
         semanticTokensClientCapabilities["overlappingTokenSupport"] = picojson::value(false);
         semanticTokensClientCapabilities["multilineTokenSupport"] = picojson::value(false);
 
         textDocument["semanticTokens"] = picojson::value(semanticTokensClientCapabilities);
-
 
         capabilities["textDocument"] = picojson::value(textDocument);
 
@@ -441,13 +441,15 @@ namespace highlight
 
         if (semanticTokensProvider) {
             picojson::array list = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenTypes").get<picojson::array>();
+            int cnt=0;
             for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
-               // tokenTypes.push_back((*iter).get<string>());
+                tokenTypes.insert( make_pair( cnt++, iter->get<std::string>()));
             }
 
             picojson::array modifiersList = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenModifiers").get<picojson::array>();
+            cnt=0;
             for (picojson::array::iterator iter = modifiersList.begin(); iter != modifiersList.end(); ++iter) {
-               // tokenModifiers.push_back((*iter).get<string>());
+                tokenModifiers.insert( make_pair( cnt++, iter->get<std::string>()));
             }
         }
 
@@ -587,12 +589,49 @@ namespace highlight
             return false;
         }
 
+        vector<unsigned int> semAttributes;
+        picojson::array list = jsonResponse.get("result").get("data").get<picojson::array>();
+        for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
+            semAttributes.push_back((unsigned int)iter->get<double>());
+        }
+
+        int semCnt = semAttributes.size();
+
+        if (semCnt%5) {
+            return false;
+        }
+
+        unsigned int line=0;
+        unsigned int col=0;
+        std::string id;
+        for (int i=0; i<semCnt; i+=5){
+
+            if (semAttributes[i]) col=0;
+            line +=semAttributes[i];
+
+            col +=semAttributes[i+1];
+            id = tokenTypes[semAttributes[i+3]];
+
+            // for now disable multiline elements
+            if (id != "comment" && id != "string" && id != "macro") {
+                tokenMap[{ line+1, col+1 }] = highlight::SemanticToken(semAttributes[i+2], semAttributes[i+3], id);
+            }
+        }
+
         return true;
+    }
+
+    bool LSPClient::tokenExists(unsigned int line, unsigned int col) {
+        return semanticTokensProvider && tokenMap.count(make_tuple(line,col));
+    }
+
+    highlight::SemanticToken LSPClient::getToken(unsigned int line, unsigned int col) {
+        return tokenMap.find(make_tuple(line,col))->second;
     }
 
     bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 
-        if (document.empty() || syntax !=triggerSyntax)
+        if (document.empty() || syntax != triggerSyntax)
             return false;
 
         std::ifstream t(document.c_str());
@@ -676,7 +715,7 @@ namespace highlight
         return true;
     }
 
-    bool LSPClient::runSimpleAction(const std::string action, bool awaitAnswer, int delay){
+    bool LSPClient::runSimpleAction(const std::string action, bool awaitAnswer, int delay) {
         picojson::object request;
         //picojson::value nullValue;
         picojson::object emptyObject;
@@ -714,23 +753,23 @@ namespace highlight
         return runSimpleAction("initialized", false, initDelay);
     }
 
-    bool LSPClient::runShutdown(){
+    bool LSPClient::runShutdown() {
         return runSimpleAction("shutdown", false);
     }
 
-    bool LSPClient::runExit(){
+    bool LSPClient::runExit()  {
         return runSimpleAction("exit", false);
     }
 
-    bool LSPClient::isInitialized(){
+    bool LSPClient::isInitialized() const {
         return initialized;
     }
 
-    bool LSPClient::isHoverProvider(){
+    bool LSPClient::isHoverProvider() const {
         return hoverProvider;
     }
 
-    bool LSPClient::isSemanticTokensProvider(){
+    bool LSPClient::isSemanticTokensProvider() const {
         return semanticTokensProvider;
     }
 
@@ -742,19 +781,23 @@ namespace highlight
         initDelay = ms;
     }
 
-    std::string LSPClient::getServerName(){
+    std::string LSPClient::getServerName() const {
         return serverName;
     }
-    std::string LSPClient::getServerVersion(){
+    std::string LSPClient::getServerVersion() const {
         return serverVersion;
     }
 
-    std::string LSPClient::getErrorMessage(){
+    std::string LSPClient::getErrorMessage() const {
         return lastErrorMessage;
     }
 
-    int LSPClient::getErrorCode(){
+    int LSPClient::getErrorCode() const {
         return lastErrorCode;
+    }
+
+    int LSPClient::getSemanticTokenCount() const {
+        return tokenTypes.size();
     }
 
     // TODO durch id check erseten wie beim hover

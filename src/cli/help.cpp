@@ -251,7 +251,7 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-exec=<bin>            set server executable name\n";
         cout<<"     --ls-option=<option>       set server CLI option (can be repeated)\n";
         cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
-        cout<<"     --ls-semantic *\n";
+        cout<<"     --ls-semantic              retrieve semantic token types (requires LSP 3.16)\n";
         cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
         cout<<"     --ls-rainbow *\n";
         cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
