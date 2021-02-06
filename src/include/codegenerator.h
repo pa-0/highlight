@@ -123,9 +123,10 @@ public:
      Define colour theme information; needs to be called before using a generate* method.
      Call this method before loadLanguage().
      \param themePath Path of style description file
+     \param loadSemanticStyles set true if semantic styles should be read
      \return true if successful
     */
-    bool initTheme ( const string& themePath );
+    bool initTheme ( const string& themePath, bool loadSemanticStyles=false );
 
     LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace,
                                   const string& syntax, int delay, int logLevel );
@@ -438,13 +439,11 @@ public:
 
     bool lsCloseDocument(const string& fileName, const string & suffix);
 
-    bool lsGetSemanticInfo(const string& fileName, const string & suffix);
+    bool lsAddSemanticInfo(const string& fileName, const string & suffix);
 
-    void setLsHover(bool hover);
+    void lsAddHoverInfo(bool hover);
 
-    void setLsSemantic(bool semantic);
-
-    void updateKeywordClasses();
+    bool isSemanticTokensProvider();
 
     /** set HTML output anchor flag
      */
@@ -878,6 +877,8 @@ private:
     */
     void printMaskedToken ( bool flushWhiteSpace = true,
             StringTools::KeywordCase tcase = StringTools::CASE_UNCHANGED );
+
+    void updateKeywordClasses();
 
     /** association of matched regexes and the corresponding keyword class ids*/
     map <int, RegexToken> regexGroups;

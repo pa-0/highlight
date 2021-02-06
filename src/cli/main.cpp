@@ -111,15 +111,15 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
         categoryFilters.insert ( catFilter );
     }
 
-    for ( unsigned int i=0; i< filePaths.size(); i++ ) {
+    for (const auto &path : filePaths ) {
         try {
             Diluculum::LuaState ls;
-            highlight::SyntaxReader::initLuaState(ls, filePaths[i],"");
-            ls.doFile(filePaths[i]);
+            highlight::SyntaxReader::initLuaState(ls, path,"");
+            ls.doFile(path);
             desc = ls["Description"].value().asString();
 
-            suffix = ( filePaths[i] ).substr ( where.length() ) ;
-            suffix = suffix.substr ( 1, suffix.length()- wildcard.length() );
+            suffix = ( path ).substr ( where.length() ) ;
+            suffix = suffix.substr ( 0, suffix.length()- wildcard.length()+1 );
 
             unsigned int filterOKCnt=categoryFilters.size();
             if (ls["Categories"].value() !=Diluculum::Nil){
@@ -127,7 +127,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+                for (Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
                     categoryNames.insert(it->second.asString());
                     if (categoryFilters.size() && categoryFilters.count(it->second.asString())) {
@@ -155,7 +155,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
             }
             cout << endl;
         } catch (std::runtime_error &error) {
-            cout << "Failed to read '" << filePaths[i] << "': " << error.what() << endl;
+            cout << "Failed to read '" << path<< "': " << error.what() << endl;
         }
     }
 
@@ -503,7 +503,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
     }
 
-    if ( !generator->initTheme ( themePath ) ) {
+    if ( !generator->initTheme ( themePath, options.isLsSemantic() ) ) {
         cerr << "highlight: "
              << generator->getThemeInitError()
              << "\n";
@@ -566,7 +566,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     if ( options.syntaxGiven() ) { // user defined language definition, valid for all files
         string syntaxByFile=options.getSyntaxByFilename();
         string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile);
-        //FIXME
         suffix = dataDir.guessFileType (testSuffix, syntaxByFile, syntaxByFile.empty(), options.getSingleOutFilename().length()==0 );
     }
 
@@ -701,28 +700,23 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     cerr << "highlight: language server initialization failed\n";
                     initError = true;
                     break;
-                } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
-                    cerr << "highlight: language server version too old\n";
-                    initError = true;
-                    break;
                 }
                 usesLSClient=true;
             }
         }
 
-        generator->setLsHover(usesLSClient && options.isLsHover() && lsSyntax==suffix );
-
-
         if (usesLSClient && lsSyntax==suffix) {
+            generator->lsAddHoverInfo(options.isLsHover() );
             generator->lsOpenDocument(inFileList[i], suffix);
 
-            // XXX
-            if (options.isLsSemantic())
-                generator->lsGetSemanticInfo(inFileList[i], suffix);
-
-
-            /// TODO only once
-            generator->updateKeywordClasses();
+            if (options.isLsSemantic()) {
+                if (!generator->isSemanticTokensProvider()) {
+                    cerr << "highlight: language server is no semantic token provider\n";
+                    initError = true;
+                    break;
+                }
+                generator->lsAddSemanticInfo(inFileList[i], suffix);
+            }
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {

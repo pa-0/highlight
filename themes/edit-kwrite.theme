@@ -49,7 +49,7 @@ SemanticTokenTypes  = {
   { Type = 'modifier', Style = { Colour= "#ff3db3" } },
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },
-  { Type = 'operator', Style = Operator }
+  { Type = 'operator', Style = Operator },
 }
 
 SemanticTokenModifiers  = {

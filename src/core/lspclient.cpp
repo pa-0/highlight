@@ -553,6 +553,7 @@ namespace highlight
 
 
     bool LSPClient::runSemanticTokensFull(const std::string &document) {
+
         if (document.empty() || !semanticTokensProvider)
             return false;
 
@@ -666,6 +667,8 @@ namespace highlight
     }
 
     bool LSPClient::runDidClose(const std::string &document, const string& syntax){
+
+        tokenMap.clear();
 
         if (document.empty() || syntax !=triggerSyntax)
             return false;

@@ -64,7 +64,7 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
     style.setUnderline(styleUnderline);
 }
 
-bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
+bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bool loadSemanticStyles)
 {
     try {
         fileOK=true;
@@ -137,17 +137,20 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
             idx++;
         }
 
-        int semanticStartIdx = keywordStyles.size();
+        if (loadSemanticStyles && ls["SemanticTokenTypes"].value() !=Diluculum::Nil) {
+            int semanticStartIdx = keywordStyles.size();
 
-        idx=1;
-        while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil) {
+            idx=1;
+            while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil && idx < 27) {
 
-            initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
-            snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
-            keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
-            semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx;
-            idx++;
+                initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
+                snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
+                keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
+                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx;
+                idx++;
+            }
         }
+
 
         originalStyles=keywordStyles;
 

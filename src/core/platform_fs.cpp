@@ -261,6 +261,7 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
     while ( ( entry = readdir ( dp ) ) != NULL ) {
         // get file status
         string entryFilepath = directory + pathSeparator + entry->d_name;
+
         if ( -1 == stat ( entryFilepath.c_str(), &statbuf ) || errno) {
             closedir ( dp );
             return;

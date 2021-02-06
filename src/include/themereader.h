@@ -86,8 +86,10 @@ public:
 
     /** load style definition
           \param styleDefinitionFile Style definition path
+          \param outputType
+          \param loadSemanticStyles
           \return True if successful */
-    bool load ( const string & styleDefinitionFile, OutputType outputType=HTML );
+    bool load ( const string & styleDefinitionFile, OutputType outputType=HTML, bool loadSemanticStyles = false );
 
     void addUserChunk(const Diluculum::LuaFunction& chunk)
     {

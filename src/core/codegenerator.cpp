@@ -187,10 +187,10 @@ CodeGenerator::~CodeGenerator()
 }
 
 
-bool CodeGenerator::initTheme ( const string& themePath )
+bool CodeGenerator::initTheme ( const string& themePath, bool loadSemanticStyles)
 {
     this->themePath=themePath;
-    bool loadOK = docStyle.load ( themePath, outputType );
+    bool loadOK = docStyle.load ( themePath, outputType, loadSemanticStyles );
     initOutputTags();
     return loadOK;
 }
@@ -224,6 +224,8 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
 
     LSPClient.runInitialized();
 
+    updateKeywordClasses();
+
     return LSResult::INIT_OK;
 }
 
@@ -240,14 +242,17 @@ bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffi
     return LSPClient.runDidClose(fileName, suffix);
 }
 
-bool CodeGenerator::lsGetSemanticInfo(const string& fileName, const string & suffix){
+bool CodeGenerator::lsAddSemanticInfo(const string& fileName, const string & suffix){
     return LSPClient.runSemanticTokensFull(fileName);
 }
 
-void CodeGenerator::setLsHover(bool hover){
-    lsEnableHoverRequests = hover;
+bool CodeGenerator::isSemanticTokensProvider(){
+    return LSPClient.isSemanticTokensProvider();
 }
 
+void CodeGenerator::lsAddHoverInfo(bool hover){
+    lsEnableHoverRequests = hover;
+}
 
 void CodeGenerator::exitLanguageServer () {
     LSPClient.runShutdown();
@@ -2348,8 +2353,8 @@ void CodeGenerator::clearPersistentSnippets(){
     }
 }
 
-
 void CodeGenerator::updateKeywordClasses(){
+
     if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
         // remove dynamic keyword tag delimiters of the old language definition
         vector<string>::iterator keyStyleOpenBegin =
@@ -2364,6 +2369,7 @@ void CodeGenerator::updateKeywordClasses(){
         openTags.push_back ( getKeywordOpenTag ( i ) );
         closeTags.push_back ( getKeywordCloseTag ( i ) );
     }
+
 }
 
 

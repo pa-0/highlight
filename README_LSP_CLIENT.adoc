@@ -86,7 +86,7 @@ Language Server options (*tbd):
     --ls-exec=<bin>            set server executable name
     --ls-option=<option>       set server CLI option (can be repeated)
     --ls-hover                 execute hover requests (HTML output only)
-    --ls-semantic *
+    --ls-semantic              retrieve semantic token types (requires LSP 3.16)
     --ls-syntax=<lang>         set syntax which is understood by the server
     --ls-rainbow *
     --ls-workspace=<dir>       set workspace directory to init. the server
@@ -102,5 +102,13 @@ highlight --ls-profile rls --ls-workspace '/home/andre/Projekte/rust/hello_world
 ..........................................................................
 
 The GUI offers an LSP tab to enable these options.
+
+=== Example invocation:
+
+Run this command to find themes with semantic style attributes:
++
+..........................................................................
+highlight --list-scripts=themes --list-cat=lsp
+..........................................................................
 
 // EOF //

@@ -268,7 +268,7 @@ string HtmlGenerator::getStyleDefinition()
             << getAttributes ( STY_NAME_DIR, docStyle.getPreProcessorStyle() )
             << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() )
             << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() )
-            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
+            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() ); //TODO user-select: none;
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {

@@ -234,12 +234,16 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     QObject::connect(ui->cbTEXEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbSVGEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbFragment, SIGNAL(clicked()), this, SLOT(plausibility()));
+    QObject::connect(ui->cbLSSemantic, SIGNAL(clicked()), this, SLOT(plausibility()));
+
     QObject::connect(ui->tabIOSelection, SIGNAL(currentChanged(int)), this, SLOT(plausibility()));
 
     QObject::connect(ui->lvInputFiles, SIGNAL(itemSelectionChanged()), this, SLOT(updatePreview()));
     QObject::connect(ui->lvPluginScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(updatePreview()));
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(updatePreview()));
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(plausibility()));
+
+
 
     QObject::connect(ui->cbIncLineNo, SIGNAL(clicked()), this, SLOT(updatePreview()));
     QObject::connect(ui->cbKwCase, SIGNAL(clicked()), this, SLOT(updatePreview()));
@@ -529,6 +533,8 @@ void MainWindow::writeSettings()
                       ui->cbHTMLPasteMIME->isChecked());
     settings.setValue(ui->cbLSHover->property(name).toString(),
                       ui->cbLSHover->isChecked());
+    settings.setValue(ui->cbLSSemantic->property(name).toString(),
+                      ui->cbLSSemantic->isChecked());
 
     settings.setValue(ui->leSVGHeight->property(name).toString(),
                       ui->leSVGHeight->text());
@@ -623,6 +629,7 @@ void MainWindow::readSettings()
     ui->cbWrapping->setChecked(settings.value(ui->cbWrapping->property(name).toString()).toBool());
     ui->cbValidateInput->setChecked(settings.value(ui->cbValidateInput->property(name).toString()).toBool());
     ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
+    ui->cbLSSemantic->setChecked(settings.value(ui->cbLSSemantic->property(name).toString()).toBool());
 
     ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
     ui->comboEncoding->setCurrentIndex(0);
@@ -1031,7 +1038,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         }
     }
 
-    if (!generator->initTheme(themePath.toStdString())) {
+    if (!generator->initTheme(themePath.toStdString(), ui->cbLSSemantic->isChecked() )) {
         QMessageBox::critical(this,"Theme init error", QString::fromStdString(generator->getThemeInitError()));
     }
 
@@ -1046,14 +1053,16 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         if(fntSize.size()) generator->setBaseFontSize(fntSize);
     }
 
-    int lineLength = 0;
-    if (ui->cbWrapping->isChecked()) {
-        lineLength = (   ui->cbIncLineNo->isChecked()
-                         && ui->sbLineNoWidth->value() >  ui->sbLineLength->value())?
-                     ui->sbLineLength->value() - ui->sbLineNoWidth->value()
-                     :  ui->sbLineLength->value();
+    if ( !ui->cbLSSemantic->isChecked()) {
+        int lineLength = 0;
+        if (ui->cbWrapping->isChecked()) {
+            lineLength = (   ui->cbIncLineNo->isChecked()
+                             && ui->sbLineNoWidth->value() >  ui->sbLineLength->value())?
+                         ui->sbLineLength->value() - ui->sbLineNoWidth->value()
+                         :  ui->sbLineLength->value();
+        }
+        generator->setPreformatting(getWrappingStyle(), lineLength, ui->sbTabWidth->value());
     }
-    generator->setPreformatting(getWrappingStyle(), lineLength, ui->sbTabWidth->value());
 
     if(ui->cbKwCase->isChecked()) {
         StringTools::KeywordCase kwCase=StringTools::CASE_UNCHANGED;
@@ -1071,7 +1080,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         generator->setKeyWordCase(kwCase);
     }
 
-    if (ui->cbReformat->isChecked()) {
+    if (ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked()) {
         generator->initIndentationScheme(ui->comboReformat->currentText().toLower().toStdString());
     }
 }
@@ -1211,7 +1220,7 @@ void MainWindow::on_pbStartConversion_clicked()
                                  tr("Invalid regular expression in %1:\n%2").arg(langDefPath).arg(
                                      QString::fromStdString( generator->getSyntaxRegexError())));
             break;
-        } else  if (loadRes==highlight::LOAD_FAILED) {
+        } else if (loadRes==highlight::LOAD_FAILED) {
             QMessageBox::warning(this, tr("Unknown syntax"), tr("Could not convert %1").arg(origFilePath));
             inputErrors.append(origFilePath);
         } else  if (loadRes==highlight::LOAD_FAILED_LUA) {
@@ -1287,11 +1296,15 @@ void MainWindow::on_pbStartConversion_clicked()
             }
 
             useLSForInput = usesLSClient && lsSyntax==syntaxName;
-            generator->setLsHover(useLSForInput && ui->cbLSHover->isChecked() );
 
             if ( useLSForInput ) {
 
+                generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
                 generator->lsOpenDocument(currentFile, syntaxName);
+
+                if (ui->cbLSSemantic->isChecked())
+                    generator->lsAddSemanticInfo(currentFile, syntaxName);
             }
 
             error = generator->generateFile(currentFile, outfileName );
@@ -1411,8 +1424,6 @@ void MainWindow::on_pbStartConversion_clicked()
             }
         }
     }
-
-
 }
 
 void MainWindow::on_pbCopyFile2CP_clicked()
@@ -1439,7 +1450,9 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
     applyCtrlValues(generator.get(), false);
 
+    bool applyLS=false;
     string suffix;
+    string currentFile;
     QString previewFilePath = (getDataFromCP) ? "": ui->lvInputFiles->currentItem()->data(Qt::UserRole).toString();
 
     if (getDataFromCP) {
@@ -1470,11 +1483,28 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
 #endif
 
-        string currentFile = previewFilePath.toStdString();
+        currentFile = previewFilePath.toStdString();
         suffix = getFileType(getFileSuffix(currentFile), currentFile);
 
         QString inFileName = QFileInfo(previewFilePath).fileName();
         generator->setTitle(inFileName.toStdString());
+
+
+        // FIXME
+        //applyLS = getOutputType()==highlight::HTML && !currentFile.empty() && lsSyntax==suffix;
+
+        if ( applyLS ) {
+
+            if (initializeLS(generator.get(), false )) {
+
+                generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
+                generator->lsOpenDocument(currentFile, suffix);
+
+                if (ui->cbLSSemantic->isChecked())
+                    generator->lsAddSemanticInfo(currentFile, suffix);
+                }
+           }
     }
 
     QString langPath = getUserScriptPath("lang");
@@ -1578,6 +1608,11 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
     }
 
     generator->clearPersistentSnippets();
+    if ( applyLS ) {
+
+        generator->lsCloseDocument(currentFile, suffix);
+
+    }
     this->setCursor(Qt::ArrowCursor);
 }
 
@@ -1588,11 +1623,13 @@ void MainWindow::plausibility()
     ui->pbBrowseOutDir->setEnabled(!ui->cbWrite2Src->isChecked());
 
     ui->cbPadZeroes->setEnabled(ui->cbIncLineNo->isChecked());
-    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked());
-    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked());
-    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked());
+    ui->cbWrapping->setEnabled( !ui->cbLSSemantic->isChecked());
+    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
+    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
+    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
     ui->comboEncoding->setEnabled(ui->cbEncoding->isChecked());
-    ui->comboReformat->setEnabled(ui->cbReformat->isChecked());
+    ui->cbReformat->setEnabled( !ui->cbLSSemantic->isChecked());
+    ui->comboReformat->setEnabled(ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked());
     ui->comboKwCase->setEnabled(ui->cbKwCase->isChecked());
     ui->comboTheme->setEnabled(getUserScriptPath("theme").isEmpty());
     ui->comboSelectSyntax->setEnabled(getUserScriptPath("lang").isEmpty());
@@ -1674,11 +1711,11 @@ void MainWindow::updatePreview()
 #ifdef Q_OS_WIN
     previewInputPath = getWindowsShortPath(previewInputPath);
 #endif
-
+     string currentFile;
     if (getDataFromCP) {
         suffix= getFileType((ui->comboSelectSyntax->itemData(ui->comboSelectSyntax->currentIndex())).toString().toStdString(),"");
     } else {
-        string currentFile = previewInputPath.toStdString();
+        currentFile = previewInputPath.toStdString();
         suffix = getFileType(getFileSuffix(currentFile), currentFile);
     }
 
@@ -1696,6 +1733,7 @@ void MainWindow::updatePreview()
     QString themePath = getUserScriptPath("theme");
     QString themeInfo=tr("(user script)");
     QString previewData;
+    bool applyLS=false;
 
     if (themePath.isEmpty()) {
         themeInfo="";
@@ -1719,6 +1757,17 @@ void MainWindow::updatePreview()
                 QString contrastDesc = tr("Contrast: %1 %2").arg(contrast, 1, 'f', 2).arg(contrastLowHint);
 
                 statusBar()->showMessage(QString("%1 | %2 | %3").arg(syntaxDesc, themeDesc, contrastDesc));
+            }
+
+            applyLS = !currentFile.empty() && lsSyntax==suffix && initializeLS(&pwgenerator, false );
+            if ( applyLS ) {
+
+                pwgenerator.lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
+                pwgenerator.lsOpenDocument(currentFile, suffix);
+
+                if (ui->cbLSSemantic->isChecked())
+                    pwgenerator.lsAddSemanticInfo(currentFile, suffix);
             }
 
             // fix utf-8 data preview - to be improved (other encodings??)
@@ -1759,6 +1808,10 @@ void MainWindow::updatePreview()
     }
 
     pwgenerator.clearPersistentSnippets();
+
+    if ( applyLS ) {
+        pwgenerator.lsCloseDocument(currentFile, suffix);
+    }
 
     ui->browserPreview->verticalScrollBar()->setValue(vScroll);
     ui->browserPreview->horizontalScrollBar()->setValue(hScroll);
@@ -2134,8 +2187,6 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
         QMessageBox::critical(this, "LSP Error",  "Language server connection failed");
     } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
         QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
-    } else if ( lsInitRes==highlight::INIT_BAD_VERSION ) {
-        QMessageBox::critical(this,"LSP Error", "Language server version too old");
     }
     return false;
 }
