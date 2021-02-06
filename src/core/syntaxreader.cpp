@@ -542,7 +542,7 @@ bool SyntaxReader::allowsInnerSection(const string& langPath)
 unsigned int SyntaxReader::generateNewKWClass ( int classID, const char *prefix )
 {
     char className[5]= {0};
-    snprintf(className, sizeof(className), "%s%c", prefix, 'a'+classID);
+    snprintf(className, sizeof(className), "%s%c", prefix, 'a'+classID-1);
 
     unsigned int newClassID=0;
     bool found=false;
