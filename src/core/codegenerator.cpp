@@ -211,7 +211,6 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.setOptions(options);
     LSPClient.setSyntax(syntax);
     LSPClient.setInitializeDelay(delay);
-
     LSPClient.connect();
 
     if (!LSPClient.runInitialize()){
@@ -223,9 +222,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     }
 
     LSPClient.runInitialized();
-
     updateKeywordClasses();
-
     return LSResult::INIT_OK;
 }
 
@@ -826,6 +823,7 @@ unsigned int CodeGenerator::getCurrentKeywordClassId(){
 
     // this vector contains the defined keyword classes, and currentKeywordClass is its index:
     vector<string> kwClasses=currentSyntax->getKeywordClasses();
+
     if (currentKeywordClass && currentKeywordClass<=kwClasses.size()) {
         string kwClassName=kwClasses[currentKeywordClass-1];
         if (kwClassName.size()==3)
@@ -2354,22 +2352,23 @@ void CodeGenerator::clearPersistentSnippets(){
 }
 
 void CodeGenerator::updateKeywordClasses(){
+    if (openTags.size()) {
+        if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
+            // remove dynamic keyword tag delimiters of the old language definition
+            vector<string>::iterator keyStyleOpenBegin =
+            openTags.begin() + NUMBER_BUILTIN_STATES;
+            vector<string>::iterator keyStyleCloseBegin =
+            closeTags.begin() + NUMBER_BUILTIN_STATES;
+            openTags.erase ( keyStyleOpenBegin, openTags.end() );
+            closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
+        }
+        // add new keyword tag delimiters
 
-    if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
-        // remove dynamic keyword tag delimiters of the old language definition
-        vector<string>::iterator keyStyleOpenBegin =
-        openTags.begin() + NUMBER_BUILTIN_STATES;
-        vector<string>::iterator keyStyleCloseBegin =
-        closeTags.begin() + NUMBER_BUILTIN_STATES;
-        openTags.erase ( keyStyleOpenBegin, openTags.end() );
-        closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
+        for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
+            openTags.push_back ( getKeywordOpenTag ( i ) );
+            closeTags.push_back ( getKeywordCloseTag ( i ) );
+        }
     }
-    // add new keyword tag delimiters
-    for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
-        openTags.push_back ( getKeywordOpenTag ( i ) );
-        closeTags.push_back ( getKeywordCloseTag ( i ) );
-    }
-
 }
 
 

@@ -7,6 +7,15 @@
 :toclevels: 1
 
 
+== highlight 4.0 beta 2
+
+06.02.2021
+
+  - improved LSP message handling
+  - added delay LSP parameter
+  - added LSP semantic token styles to several themes
+  - CLI: enabled `--ls-semantic` option
+
 == highlight 4.0 beta 1
 
 30.01.2021

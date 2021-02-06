@@ -1489,8 +1489,6 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         QString inFileName = QFileInfo(previewFilePath).fileName();
         generator->setTitle(inFileName.toStdString());
 
-
-        // FIXME
         //applyLS = getOutputType()==highlight::HTML && !currentFile.empty() && lsSyntax==suffix;
 
         if ( applyLS ) {
@@ -1763,7 +1761,6 @@ void MainWindow::updatePreview()
             if ( applyLS ) {
 
                 pwgenerator.lsAddHoverInfo( ui->cbLSHover->isChecked() );
-
                 pwgenerator.lsOpenDocument(currentFile, suffix);
 
                 if (ui->cbLSSemantic->isChecked())
@@ -2171,11 +2168,11 @@ void MainWindow::loadLSProfile() {
 
 bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
 {
-
     highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
                                                                   ui->leLSWorkspace->text().toStdString(), lsSyntax,
                                                                   lsDelay,
                                                                   ui->cbLSDebug->isChecked() ? 2 : 0 );
+
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {
             generator->exitLanguageServer();

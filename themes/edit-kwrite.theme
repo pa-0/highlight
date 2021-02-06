@@ -25,11 +25,6 @@ Keywords = {
 
 -- new LSP based elements:
 
-SyntaxError = { Colour="#ff0000" }
-
--- LSP reports back a number for each type -> use an index as is done for default
--- keyword groups. Rearrange order as reported by LSP
-
 SemanticTokenTypes  = {
   { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style sma
   { Type = 'type', Style = Keywords[2] },                 --style smb ...
@@ -51,6 +46,10 @@ SemanticTokenTypes  = {
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },
 }
+
+-- not used yet:
+
+SyntaxError = { Colour="#ff0000" }
 
 SemanticTokenModifiers  = {
   { Type = 'declaration', Style = { Colour= "#ff9421" } },

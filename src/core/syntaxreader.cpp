@@ -546,11 +546,14 @@ unsigned int SyntaxReader::generateNewKWClass ( int classID, const char *prefix 
 
     unsigned int newClassID=0;
     bool found=false;
+
     while (!keywordClasses.empty() && newClassID<keywordClasses.size() && !found ) {
+
         found = ( className==keywordClasses.at(newClassID++) );
     }
     if ( !found ) {
         newClassID++;
+
         keywordClasses.push_back ( className );
     }
     return newClassID;
