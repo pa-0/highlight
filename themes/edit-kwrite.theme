@@ -29,14 +29,13 @@ SemanticTokenTypes  = {
   { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style sma
   { Type = 'type', Style = Keywords[2] },                 --style smb ...
   { Type = 'class', Style =  Keywords[1] },
-  { Type = 'enum', Style = { Colour= "#ff3db3" } },
   { Type = 'interface', Style = { Colour= "#ff3db3" } },
   { Type = 'struct', Style = { Colour= "#3d40ff" } },
   { Type = 'typeParameter', Style = { Colour= "#ff3db3" } },
   { Type = 'parameter', Style = { Colour= "#2591f0" } },
   { Type = 'variable', Style = { Colour= "#ff3d3d" } },
   { Type = 'property', Style = { Colour= "#ff3db3" } },
-  { Type = 'enumMember', Style = { Colour= "#ff3db3" } },
+  { Type = 'enumMember', Style = { Colour= "#ff0000" } },
   { Type = 'event', Style = { Colour= "#ff3db3" } },
   { Type = 'function', Style = Keywords[3] },
   { Type = 'method', Style = Keywords[3] },

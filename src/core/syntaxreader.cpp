@@ -153,7 +153,7 @@ void  SyntaxReader::initLuaState(Diluculum::LuaState& ls, const string& langDefP
     ls["DisableHighlighting"]=false;
 }
 
-LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginReadFilePath, OutputType outputType )
+LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginReadFilePath, OutputType outputType, int minKwGroupCnt )
 {
     currentPath=langDefPath;
     disableHighlighting=false;
@@ -249,6 +249,11 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
                 regex.push_back ( new RegexElement ( KEYWORD, KEYWORD_END, reString, kwId, captGroup, "", priority, constraintLineNum,  constraintFilename ) );
             }
             idx++;
+        }
+
+        // make sure we have as many default kw groups as the used theme (important for semtanic token styles)
+        while (kwId<minKwGroupCnt) {
+            kwId= generateNewKWClass ( ++kwId );
         }
 
         if (globals.count("KeywordFormatHints")) {

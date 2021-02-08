@@ -92,6 +92,39 @@ Language Server options (*tbd):
     --ls-workspace=<dir>       set workspace directory to init. the server
 ..........................................................................
 
+
+== THEMES
+
+All base16 themes have a new section to define semantic token styles. The
+types use the same identifiers which are reported by the language server.
+If the server reports a token type not listed here, it will be ignored.
+
+The other themes will be enhanced later.
+
+Additional elements to describe syntax errors and modifiers will be added
+in a later release.
++
+..........................................................................
+-- new LSP based elements:
+
+SemanticTokenTypes  = {
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'struct', Style =  Keywords[4] },
+  { Type = 'interface', Style = Keywords[1] },
+  { Type = 'parameter', Style = Keywords[5] },
+  { Type = 'variable', Style = Keywords[6] },
+  { Type = 'enumMember', Style = Keywords[6] },
+  { Type = 'function', Style = Keywords[3] },
+  { Type = 'method', Style = Keywords[3] },
+  { Type = 'keyword', Style =  Keywords[1]},
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
+}
+..........................................................................
+
+
 === Example invocation:
 +
 ..........................................................................

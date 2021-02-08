@@ -83,7 +83,7 @@ public:
         \param pluginReadFilePath path to file which is read by plugin
         \param outputType output format
         \return LoadResult  */
-    LoadResult load( const string& langDefPath, const string& pluginReadFilePath,  OutputType outputType );
+    LoadResult load( const string& langDefPath, const string& pluginReadFilePath,  OutputType outputType, int minKwGroupCnt );
 
     /** \return True if the next load() call would load a new language definition
         \param  langDefPath Path to language definition  */

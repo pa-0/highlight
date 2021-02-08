@@ -218,7 +218,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     }
 
     for (int i=0; i<docStyle.getSemanticTokenStyleCount();i++) {
-        currentSyntax->generateNewKWClass(i, "sm");
+        currentSyntax->generateNewKWClass(i+1, "sm");
     }
 
     LSPClient.runInitialized();
@@ -725,6 +725,7 @@ SKIP_EMBEDDED:
             token = line.substr ( lineIndex-1, semToken.length);
             lineIndex += semToken.length-1;
             currentKeywordClass = semStyleKwId;
+            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId<<" -> "  << semToken.id <<"\n";
             return KEYWORD;
         }
     }
@@ -992,7 +993,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
             result=LOAD_OK;
         } else {
             currentSyntax=new SyntaxReader();
-            result=currentSyntax->load(langDefPath, pluginParameter, outputType);
+            result=currentSyntax->load(langDefPath, pluginParameter, outputType, docStyle.getKeywordStyleCount());
             syntaxReaders[langDefPath]=currentSyntax;
         }
 

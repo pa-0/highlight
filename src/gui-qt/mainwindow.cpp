@@ -1288,7 +1288,7 @@ void MainWindow::on_pbStartConversion_clicked()
 
             string syntaxName = QFileInfo(langDefPath).baseName().toStdString();
 
-            if (usesLSClient==false && lsSyntax==syntaxName) {
+            if ((ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && usesLSClient==false && lsSyntax==syntaxName) {
 
                 if (initializeLS(generator.get(), false )) {
                         usesLSClient=true;
@@ -1489,7 +1489,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         QString inFileName = QFileInfo(previewFilePath).fileName();
         generator->setTitle(inFileName.toStdString());
 
-        //applyLS = getOutputType()==highlight::HTML && !currentFile.empty() && lsSyntax==suffix;
+        //applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && getOutputType()==highlight::HTML && !currentFile.empty() && lsSyntax==suffix;
 
         if ( applyLS ) {
 
@@ -1757,7 +1757,7 @@ void MainWindow::updatePreview()
                 statusBar()->showMessage(QString("%1 | %2 | %3").arg(syntaxDesc, themeDesc, contrastDesc));
             }
 
-            applyLS = !currentFile.empty() && lsSyntax==suffix && initializeLS(&pwgenerator, false );
+            applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && !currentFile.empty() && lsSyntax==suffix && initializeLS(&pwgenerator, false );
             if ( applyLS ) {
 
                 pwgenerator.lsAddHoverInfo( ui->cbLSHover->isChecked() );

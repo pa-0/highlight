@@ -71,6 +71,8 @@ private:
 
     bool fileOK, restoreStyles, dirtyAttributes;
 
+    int semanticStartIdx;
+
     KeywordStyles keywordStyles, originalStyles;
 
     void initStyle(ElementStyle& style, const Diluculum::LuaVariable& var);
@@ -167,6 +169,8 @@ public:
     int getSemanticStyle(const string &type);
 
     int getSemanticTokenStyleCount();
+
+    int getKeywordStyleCount();
 
     void overrideAttributes( vector<int>& attributes);
 

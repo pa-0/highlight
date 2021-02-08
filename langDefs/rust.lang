@@ -29,8 +29,9 @@ Keywords={
   },
   { Id=4,
     Regex=[[(\w+)\s*\(]]
+  },
+
   }
-}
 
 Strings = {
   Delimiter=[["]],

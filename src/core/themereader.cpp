@@ -34,7 +34,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false)
+    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), semanticStartIdx(0)
 {}
 
 ThemeReader::~ThemeReader()
@@ -137,8 +137,9 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             idx++;
         }
 
+        semanticStartIdx = keywordStyles.size();
+
         if (loadSemanticStyles && ls["SemanticTokenTypes"].value() !=Diluculum::Nil) {
-            int semanticStartIdx = keywordStyles.size();
 
             idx=1;
             while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil && idx < 27) {
@@ -146,11 +147,10 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
                 initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
                 snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
                 keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
-                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx;
+                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx  ;
                 idx++;
             }
         }
-
 
         originalStyles=keywordStyles;
 
@@ -175,11 +175,16 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
 }
 
 int ThemeReader::getSemanticStyle(const string &type) {
+
     return semanticStyleMap.count(type) ? semanticStyleMap[type] : 0;
 }
 
 int ThemeReader::getSemanticTokenStyleCount() {
     return semanticStyleMap.size();
+}
+
+int ThemeReader::getKeywordStyleCount() {
+    return semanticStartIdx;
 }
 
 string ThemeReader::getErrorMessage() const
