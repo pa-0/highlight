@@ -456,6 +456,19 @@ namespace highlight
         return true;
     }
 
+    //{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":"file:///home/andre/Projekte/rust/hello_world/src/main.rs","diagnostics":[],"version":0}}
+    void LSPClient::readNotification(const picojson::value &json) {
+
+        if (json.contains("method") && json.get("method").get<std::string>()=="textDocument/publishDiagnostics") {
+            picojson::array diagnostics = json.get("params").get("diagnostics").get<picojson::array>();
+            int cnt=0;
+            for (picojson::array::iterator iter = diagnostics.begin(); iter != diagnostics.end(); ++iter) {
+
+                //std::cerr<<"diag "<<cnt++ << " range l "<< iter->get("range").get("start").get("line").get<double>()  <<  " - " <<iter->get("message").get<std::string>() << "\n";
+            }
+        }
+    }
+
     std::string LSPClient::runHover(const std::string &document, int character, int line){
 
         if (document.empty())
@@ -466,7 +479,7 @@ namespace highlight
         picojson::object position;
         picojson::object textDocument;
 
-        float myId = msgId++;
+        float myId = ++msgId;
 
         request["jsonrpc"] = picojson::value("2.0");
         request["id"] = picojson::value(myId);
@@ -505,6 +518,9 @@ namespace highlight
             }
 
             if ( !jsonResponse.contains("id") ) {
+
+                readNotification(jsonResponse);
+
                 continue;
             }
 
@@ -561,8 +577,9 @@ namespace highlight
         picojson::object params;
         picojson::object textDocument;
 
+        float myId = ++msgId;
         request["jsonrpc"] = picojson::value("2.0");
-        request["id"] = picojson::value(++msgId);
+        request["id"] = picojson::value(myId);
         request["method"] = picojson::value("textDocument/semanticTokens/full");
 
         std::string uri("file://");
@@ -575,20 +592,42 @@ namespace highlight
 
         std::string serialized = picojson::value(request).serialize();
 
-        pipe_write_jsonrpc(serialized);
+        bool writeRes = pipe_write_jsonrpc(serialized);
 
-        std::string response = pipe_read_jsonrpc();
+        if (!writeRes) {
 
+            return false;
+        }
+
+        std::string response;
         picojson::value jsonResponse;
-        std::string err = picojson::parse(jsonResponse, response);
 
-        if (!checkErrorResponse(jsonResponse, err)) {
-            return false;
+        while (true) {
+            response = pipe_read_jsonrpc();
+
+            std::string err = picojson::parse(jsonResponse, response);
+
+            if (!checkErrorResponse(jsonResponse, err)) {
+                return false;
+            }
+
+            if ( !jsonResponse.contains("id") ) {
+
+                readNotification(jsonResponse);
+
+                continue;
+            }
+
+            if ( myId != jsonResponse.get("id").get<double>()) {
+                continue;
+            }
+
+
+            if ( jsonResponse.get("result").is<picojson::object>() ) {
+                break;
+            }
         }
 
-        if ( !jsonResponse.get("result").is<picojson::object>() ) {
-            return false;
-        }
 
         vector<unsigned int> semAttributes;
         picojson::array list = jsonResponse.get("result").get("data").get<picojson::array>();
@@ -661,7 +700,7 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
-        waitForNotifications();
+        //waitForNotifications();
 
         return true;
     }
@@ -803,43 +842,6 @@ namespace highlight
         return tokenTypes.size();
     }
 
-    // TODO durch id check erseten wie beim hover
-    //      in methode daten wie syntaxfehler auswerten
-    bool LSPClient::waitForNotifications(){
-
-        #ifndef WIN32
-        fd_set rfds;
-        struct timeval tv;
-        int retval;
-        #endif
-
-        int cnt=10;
-
-        while (--cnt) {
-
-            #ifndef WIN32
-            FD_ZERO(&rfds);
-            FD_SET(inpipefd[0], &rfds);
-
-            tv.tv_sec = 0;
-            tv.tv_usec = 500000;
-
-            retval = select(inpipefd[0]+1, &rfds, NULL, NULL, &tv);
-            /* Don't rely on the value of tv now! */
-            if (retval>0) {
-                pipe_read_jsonrpc();
-                ++cnt; // one fly does not come alone
-            }
-            #else
-            //if (retval>0) {
-            pipe_read_jsonrpc();
-            ++cnt; // one fly does not come alone
-            //}
-            #endif
-
-        }
-        return true;
-    }
 }
 
 /*

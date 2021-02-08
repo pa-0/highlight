@@ -992,6 +992,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
             currentSyntax=syntaxReaders[langDefPath];
             result=LOAD_OK;
         } else {
+
             currentSyntax=new SyntaxReader();
             result=currentSyntax->load(langDefPath, pluginParameter, outputType, docStyle.getKeywordStyleCount());
             syntaxReaders[langDefPath]=currentSyntax;
@@ -999,7 +1000,6 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
 
         if ( result==LOAD_OK ) {
             formattingPossible=currentSyntax->enableReformatting();
-
             updateKeywordClasses();
         }
     }
@@ -2353,6 +2353,7 @@ void CodeGenerator::clearPersistentSnippets(){
 }
 
 void CodeGenerator::updateKeywordClasses(){
+
     if (openTags.size()) {
         if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
             // remove dynamic keyword tag delimiters of the old language definition

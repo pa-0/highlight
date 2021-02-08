@@ -252,8 +252,12 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
         }
 
         // make sure we have as many default kw groups as the used theme (important for semtanic token styles)
+
+        //std::cerr << "minKwGroupCnt "<<minKwGroupCnt<< " kwId "<< kwId<<"\n";
+        //FIXME
         while (kwId<minKwGroupCnt) {
-            kwId= generateNewKWClass ( ++kwId );
+            kwId= 1+generateNewKWClass ( kwId );
+            //std::cerr << "minKwGroupCnt "<<minKwGroupCnt<< " kwId "<< kwId<<"\n";
         }
 
         if (globals.count("KeywordFormatHints")) {

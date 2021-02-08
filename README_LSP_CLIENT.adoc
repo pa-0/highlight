@@ -38,7 +38,7 @@ the code''s meaning this will improve the highlighting quality.
 Several beta releases are planned to introduce these features:
 
 * add enhanced tooltips using hover requests (implemented)
-* add semantic highlighting (tbd)
+* add semantic highlighting (some parts are implemented)
 * add rainbow highlighting (tbd)
 * add syntax error highlighting (tbd)
 

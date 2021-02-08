@@ -102,6 +102,8 @@ private:
 
     bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
 
+    void readNotification(const picojson::value &json);
+
     void static signal_callback_handler(int signum);
 
 public:
@@ -122,8 +124,6 @@ public:
     bool runInitialize();
 
     bool runInitialized();
-
-    bool waitForNotifications();
 
     bool runDidOpen(const std::string &document, const std::string &syntax);
 
