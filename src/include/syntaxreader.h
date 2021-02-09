@@ -83,7 +83,7 @@ public:
         \param pluginReadFilePath path to file which is read by plugin
         \param outputType output format
         \return LoadResult  */
-    LoadResult load( const string& langDefPath, const string& pluginReadFilePath,  OutputType outputType, int minKwGroupCnt );
+    LoadResult load( const string& langDefPath, const string& pluginReadFilePath,  OutputType outputType );
 
     /** \return True if the next load() call would load a new language definition
         \param  langDefPath Path to language definition  */
@@ -381,6 +381,8 @@ public:
     // generate a keyword class
     unsigned int generateNewKWClass ( int classID, const char *prefix="kw" );
 
+    int getKeywordCount() const;
+
 private:
 
     static const string REGEX_IDENTIFIER;
@@ -446,6 +448,8 @@ private:
 
     //character which continues current style on next line
     unsigned char continuationChar;
+
+    int keywordCount;
 
     bool readFlag(const Diluculum::LuaVariable& var) ;
 

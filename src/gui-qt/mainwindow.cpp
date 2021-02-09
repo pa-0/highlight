@@ -234,6 +234,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     QObject::connect(ui->cbTEXEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbSVGEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbFragment, SIGNAL(clicked()), this, SLOT(plausibility()));
+    QObject::connect(ui->cbLSHover, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbLSSemantic, SIGNAL(clicked()), this, SLOT(plausibility()));
 
     QObject::connect(ui->tabIOSelection, SIGNAL(currentChanged(int)), this, SLOT(plausibility()));
@@ -1053,7 +1054,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         if(fntSize.size()) generator->setBaseFontSize(fntSize);
     }
 
-    if ( !ui->cbLSSemantic->isChecked()) {
+    if ( !ui->cbLSSemantic->isChecked() && !ui->cbLSHover->isChecked()) {
         int lineLength = 0;
         if (ui->cbWrapping->isChecked()) {
             lineLength = (   ui->cbIncLineNo->isChecked()
@@ -1080,7 +1081,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         generator->setKeyWordCase(kwCase);
     }
 
-    if (ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked()) {
+    if (ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked() && !ui->cbLSHover->isChecked()) {
         generator->initIndentationScheme(ui->comboReformat->currentText().toLower().toStdString());
     }
 }
@@ -1616,18 +1617,19 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
 void MainWindow::plausibility()
 {
+    bool semanticOptionIsChecked = ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked() ||  ui->cbLSRainbow->isChecked();
     ui->leOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbBrowseOutDir->setEnabled(!ui->cbWrite2Src->isChecked());
 
     ui->cbPadZeroes->setEnabled(ui->cbIncLineNo->isChecked());
-    ui->cbWrapping->setEnabled( !ui->cbLSSemantic->isChecked());
-    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
-    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
-    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked() && !ui->cbLSSemantic->isChecked());
+    ui->cbWrapping->setEnabled( !semanticOptionIsChecked);
+    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
+    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
+    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
     ui->comboEncoding->setEnabled(ui->cbEncoding->isChecked());
-    ui->cbReformat->setEnabled( !ui->cbLSSemantic->isChecked());
-    ui->comboReformat->setEnabled(ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked());
+    ui->cbReformat->setEnabled( !semanticOptionIsChecked);
+    ui->comboReformat->setEnabled(ui->cbReformat->isChecked() && !semanticOptionIsChecked);
     ui->comboKwCase->setEnabled(ui->cbKwCase->isChecked());
     ui->comboTheme->setEnabled(getUserScriptPath("theme").isEmpty());
     ui->comboSelectSyntax->setEnabled(getUserScriptPath("lang").isEmpty());
@@ -2175,6 +2177,28 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
 
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {
+
+            if (generator->isHoverProvider()) {
+                ui->cbLSHover->setIcon(QIcon(":/ls_supported.png"));
+                ui->cbLSHover->setChecked(true);
+                ui->cbLSHover->setEnabled(true);
+            } else {
+                ui->cbLSHover->setIcon(QIcon(":/ls_not_supported.png"));;
+                ui->cbLSHover->setChecked(false);
+                ui->cbLSHover->setEnabled(false);
+            }
+
+
+            if (generator->isSemanticTokensProvider()) {
+                ui->cbLSSemantic->setIcon(QIcon(":/ls_supported.png"));
+                ui->cbLSSemantic->setChecked(true);
+                ui->cbLSSemantic->setEnabled(true);
+            } else {
+                ui->cbLSSemantic->setIcon(QIcon(":/ls_not_supported.png"));;
+                ui->cbLSSemantic->setChecked(false);
+                ui->cbLSSemantic->setEnabled(false);
+            }
+
             generator->exitLanguageServer();
             QMessageBox::information(this, "LSP Init. OK",  "Language server initialization successful");
         }

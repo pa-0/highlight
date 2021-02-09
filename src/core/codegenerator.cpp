@@ -150,6 +150,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      maxLineCnt ( UINT_MAX ),
      inputFilesCnt (0),
      processedFilesCnt (0),
+     kwOffset(0),
      noTrailingNewLine(0),
 
      terminatingChar ( '\0' ),
@@ -228,9 +229,6 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
 
 bool CodeGenerator::lsOpenDocument(const string& fileName, const string & suffix){
     lsDocumentPath = fileName;
-
-    //LSPClient.waitForNotifications();
-
     return LSPClient.runDidOpen(fileName, suffix);
 }
 
@@ -241,6 +239,10 @@ bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffi
 
 bool CodeGenerator::lsAddSemanticInfo(const string& fileName, const string & suffix){
     return LSPClient.runSemanticTokensFull(fileName);
+}
+
+bool CodeGenerator::isHoverProvider(){
+    return LSPClient.isHoverProvider();
 }
 
 bool CodeGenerator::isSemanticTokensProvider(){
@@ -724,8 +726,9 @@ SKIP_EMBEDDED:
         if (semStyleKwId) {
             token = line.substr ( lineIndex-1, semToken.length);
             lineIndex += semToken.length-1;
-            currentKeywordClass = semStyleKwId;
-            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId<<" -> "  << semToken.id <<"\n";
+
+            currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
+            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
             return KEYWORD;
         }
     }
@@ -994,7 +997,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
         } else {
 
             currentSyntax=new SyntaxReader();
-            result=currentSyntax->load(langDefPath, pluginParameter, outputType, docStyle.getKeywordStyleCount());
+            result=currentSyntax->load(langDefPath, pluginParameter, outputType);
             syntaxReaders[langDefPath]=currentSyntax;
         }
 
@@ -1003,6 +1006,9 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
             updateKeywordClasses();
         }
     }
+
+    kwOffset=currentSyntax->getKeywordCount() - docStyle.getKeywordStyleCount();
+
     return result;
 }
 

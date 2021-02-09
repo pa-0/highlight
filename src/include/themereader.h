@@ -71,7 +71,7 @@ private:
 
     bool fileOK, restoreStyles, dirtyAttributes;
 
-    int semanticStartIdx;
+    int keywordStyleCnt;
 
     KeywordStyles keywordStyles, originalStyles;
 

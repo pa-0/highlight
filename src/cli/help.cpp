@@ -120,7 +120,6 @@ void printHelp(const std::string &topic)
         cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
         cout <<"Language servers are be configured in the lsp.conf file. Each parameter of this file\n";
         cout <<"can also be set using --ls-exec, --ls-option, --ls-delay and --ls-syntax.\n";
-        cout <<"Currently only --ls-hover is implemented as LSP action to add tooltips to HTML output.\n";
         cout <<"Important: LSP requires absolute input paths.\n";
     } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";

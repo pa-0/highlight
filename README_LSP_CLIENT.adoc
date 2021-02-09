@@ -99,10 +99,6 @@ All base16 themes have a new section to define semantic token styles. The
 types use the same identifiers which are reported by the language server.
 If the server reports a token type not listed here, it will be ignored.
 
-The other themes will be enhanced later.
-
-Additional elements to describe syntax errors and modifiers will be added
-in a later release.
 +
 ..........................................................................
 -- new LSP based elements:
@@ -124,6 +120,12 @@ SemanticTokenTypes  = {
 }
 ..........................................................................
 
+Find all lsp enabled themes with `highlight --list-scripts=themes --list-cat=lsp`
+
+The default themes will be enhanced later.
+
+Additional elements to describe syntax errors and modifiers will be added
+in a later release.
 
 === Example invocation:
 +

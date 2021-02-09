@@ -443,6 +443,8 @@ public:
 
     void lsAddHoverInfo(bool hover);
 
+    bool isHoverProvider();
+
     bool isSemanticTokensProvider();
 
     /** set HTML output anchor flag
@@ -781,6 +783,8 @@ private:
     /**number of files to be processed and counter*/
     unsigned int inputFilesCnt;
     unsigned int processedFilesCnt;
+
+    int kwOffset;
 
     /** Flag to test if trailing newline should be printed */
     int noTrailingNewLine;

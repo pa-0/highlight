@@ -706,8 +706,17 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
 
         if (usesLSClient && lsSyntax==suffix) {
-            generator->lsAddHoverInfo(options.isLsHover() );
+
             generator->lsOpenDocument(inFileList[i], suffix);
+
+            if (options.isLsHover()) {
+                if (!generator->isHoverProvider()) {
+                    cerr << "highlight: language server is no hover provider\n";
+                    initError = true;
+                    break;
+                }
+                generator->lsAddHoverInfo( true );
+            }
 
             if (options.isLsSemantic()) {
                 if (!generator->isSemanticTokensProvider()) {

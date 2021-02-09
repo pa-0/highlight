@@ -19,27 +19,27 @@ LineComment = BlockComment
 Keywords = {
   { Colour= "#000000", Bold=true },
   { Colour= "#0057AE" },
-  { Colour= "#000000", Bold=true },
+  { Colour= "#000000" },
   { Colour= "#010181" },
 }
 
 -- new LSP based elements:
 
 SemanticTokenTypes  = {
-  { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style sma
-  { Type = 'type', Style = Keywords[2] },                 --style smb ...
+  { Type = 'keyword', Style = Keywords[1] },             --style sma
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'function', Style = Keywords[3] },
+  { Type = 'method', Style = Keywords[3] },               -- smd
   { Type = 'class', Style =  Keywords[1] },
   { Type = 'interface', Style = { Colour= "#ff3db3" } },
   { Type = 'struct', Style = { Colour= "#3d40ff" } },
+  { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style smh
   { Type = 'typeParameter', Style = { Colour= "#ff3db3" } },
   { Type = 'parameter', Style = { Colour= "#2591f0" } },
   { Type = 'variable', Style = { Colour= "#ff3d3d" } },
   { Type = 'property', Style = { Colour= "#ff3db3" } },
   { Type = 'enumMember', Style = { Colour= "#ff0000" } },
   { Type = 'event', Style = { Colour= "#ff3db3" } },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
-  { Type = 'keyword', Style = Keywords[1] },
   { Type = 'modifier', Style = { Colour= "#ff3db3" } },
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },

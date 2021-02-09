@@ -68,6 +68,7 @@ SyntaxReader::SyntaxReader() :
     paramsNeedUpdate(false),
     rawStringPrefix(0),
     continuationChar(0),
+    keywordCount(0),
     validateStateChangeFct(NULL),
     decorateFct(NULL),
     decorateLineBeginFct(NULL),
@@ -153,7 +154,7 @@ void  SyntaxReader::initLuaState(Diluculum::LuaState& ls, const string& langDefP
     ls["DisableHighlighting"]=false;
 }
 
-LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginReadFilePath, OutputType outputType, int minKwGroupCnt )
+LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginReadFilePath, OutputType outputType )
 {
     currentPath=langDefPath;
     disableHighlighting=false;
@@ -251,14 +252,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
             idx++;
         }
 
-        // make sure we have as many default kw groups as the used theme (important for semtanic token styles)
-
-        //std::cerr << "minKwGroupCnt "<<minKwGroupCnt<< " kwId "<< kwId<<"\n";
-        //FIXME
-        while (kwId<minKwGroupCnt) {
-            kwId= 1+generateNewKWClass ( kwId );
-            //std::cerr << "minKwGroupCnt "<<minKwGroupCnt<< " kwId "<< kwId<<"\n";
-        }
+        keywordCount = kwId;
 
         if (globals.count("KeywordFormatHints")) {
             idx=1;
@@ -700,5 +694,8 @@ void SyntaxReader::clearPersistentSnippets() {
     persistentSnippets.clear();
 }
 
+int SyntaxReader::getKeywordCount() const {
+    return keywordCount;
+}
 
 }

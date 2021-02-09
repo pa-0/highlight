@@ -293,13 +293,13 @@ Terminal escape output options (xterm256 or truecolor):
 Language Server options (*tbd):
 
      --ls-profile=<server>      read LSP configuration from lsp.conf
+     --ls-delay=<ms>            set server initialization delay
      --ls-exec=<bin>            set server executable name
      --ls-option=<option>       set server CLI option (can be repeated)
      --ls-hover                 execute hover requests (HTML output only)
-     --ls-semantic *
+     --ls-semantic              retrieve semantic token types (requires LSP 3.16)
      --ls-syntax=<lang>         set syntax which is understood by the server
      --ls-rainbow *
-
      --ls-workspace=<dir>       set workspace directory to init. the server
 ................................................................................
 
@@ -787,10 +787,20 @@ Keywords= {
   Attributes4,
 }
 
+SemanticTokenTypes  = {
+  SemanticAttributes1,
+  SemanticAttributes2
+}
+
 AttributesN: Liste, Formatierung von Schluesselwoertgruppen. Es sollten
              mindestens vier Elemente angegeben werden, um mit der Anzahl
              von Schluesselwortgruppen in den Sprachdefinitionen
              uebereinzustimmen.
+
+SemanticAttributesN: Ein Array bestehend aus diesen Elementen:
+                     `Type`: Der Token Identifier des LS-Protokolls (V 3.16)
+                     `Style`: Die Formatierung des Tokens
+
 ................................................................................
 
 .Example
@@ -818,6 +828,16 @@ Keywords = {
   { Colour="#b06c58" },
   { Colour="#30a188" },
   { Colour="#990000" },
+}
+
+SemanticTokenTypes  = {
+  { Type = 'keyword', Style = Keywords[1] },
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'function', Style = Keywords[3] },
+  { Type = 'method', Style = Keywords[3] },
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'interface', Style = { Colour= "#ff3db3" } },
+  { Type = 'struct', Style = { Colour= "#3d40ff" } },
 }
 
 --------------------------------------------------------------------------------

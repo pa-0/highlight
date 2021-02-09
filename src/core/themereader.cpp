@@ -34,7 +34,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), semanticStartIdx(0)
+    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), keywordStyleCnt(0)
 {}
 
 ThemeReader::~ThemeReader()
@@ -130,14 +130,14 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         int idx=1;
         ElementStyle kwStyle;
         char kwName[5];
-        while (ls["Keywords"][idx].value() !=Diluculum::Nil) {
+        while (ls["Keywords"][idx].value() !=Diluculum::Nil && idx < 27) {
             initStyle(kwStyle, ls["Keywords"][idx]);
             snprintf(kwName, sizeof(kwName), "kw%c", ('a'+idx-1));
             keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
             idx++;
         }
 
-        semanticStartIdx = keywordStyles.size();
+        keywordStyleCnt = idx - 1;
 
         if (loadSemanticStyles && ls["SemanticTokenTypes"].value() !=Diluculum::Nil) {
 
@@ -147,7 +147,9 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
                 initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
                 snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
                 keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
-                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = semanticStartIdx + idx  ;
+                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = keywordStyleCnt + idx;
+                //std::cerr<<"semanticStyleMap "<< (ls["SemanticTokenTypes"][idx]["Type"].value().asString()) << " -> "<< keywordStyleCnt + idx<<"\n";
+
                 idx++;
             }
         }
@@ -184,7 +186,7 @@ int ThemeReader::getSemanticTokenStyleCount() {
 }
 
 int ThemeReader::getKeywordStyleCount() {
-    return semanticStartIdx;
+    return keywordStyleCnt;
 }
 
 string ThemeReader::getErrorMessage() const
