@@ -158,6 +158,8 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( docStyle.getLineStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
+        openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
+        openTags.push_back ( getOpenTag ( docStyle.getWarningStyle() ) );
     } else {
         openTags.push_back ( getOpenTag ( STY_NAME_STR ) );
         openTags.push_back ( getOpenTag ( STY_NAME_NUM ) );
@@ -169,6 +171,8 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( STY_NAME_LIN ) );
         openTags.push_back ( getOpenTag ( STY_NAME_SYM ) );
         openTags.push_back ( getOpenTag ( STY_NAME_IPL ) );
+        openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
+        openTags.push_back ( getOpenTag ( STY_NAME_WRN ) );
     }
 
     closeTags.push_back ( "" );
@@ -186,13 +190,21 @@ string  HtmlGenerator::getAttributes ( const string & elemName, const ElementSty
             s << "."<<cssClassName;
         s <<"."<<elemName<<" { ";
     }
-    s << "color:#"
-      << ( elem.getColour().getRed ( HTML ) )
-      << ( elem.getColour().getGreen ( HTML ) )
-      << ( elem.getColour().getBlue ( HTML ) )
-      << ( elem.isBold() ?     "; font-weight:bold" :"" )
-      << ( elem.isItalic() ?   "; font-style:italic" :"" )
-      << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+
+    string customStyle(elem.getCustomStyle());
+
+    if (customStyle.empty()) {
+        s << "color:#"
+        << ( elem.getColour().getRed ( HTML ) )
+        << ( elem.getColour().getGreen ( HTML ) )
+        << ( elem.getColour().getBlue ( HTML ) )
+        << ( elem.isBold() ?     "; font-weight:bold" :"" )
+        << ( elem.isItalic() ?   "; font-style:italic" :"" )
+        << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+    } else {
+        s << customStyle;
+    }
+
     if ( !elemName.empty() ) {
         s << "; }\n" ;
     }
@@ -206,7 +218,7 @@ string  HtmlGenerator::getOpenTag ( const string& styleName )
 
 string  HtmlGenerator::getOpenTag ( const ElementStyle & elem )
 {
-    return "<span style=\""+getAttributes ( "",elem ) + "\">";
+    return "<span style=\""+getAttributes ( "", elem ) + "\">";
 }
 
 string HtmlGenerator::getGeneratorComment()
@@ -257,8 +269,6 @@ string HtmlGenerator::getStyleDefinition()
         os << "pt; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
            << "; white-space: pre-wrap; }\n";
 
-        os << classNameSuffix<<".hvr {cursor:help;}\n"; // TODO inline CSS
-
         os  << getAttributes ( STY_NAME_NUM, docStyle.getNumberStyle() )
             << getAttributes ( STY_NAME_ESC, docStyle.getEscapeCharStyle() )
             << getAttributes ( STY_NAME_STR, docStyle.getStringStyle() )
@@ -268,7 +278,10 @@ string HtmlGenerator::getStyleDefinition()
             << getAttributes ( STY_NAME_DIR, docStyle.getPreProcessorStyle() )
             << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() )
             << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() )
-            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() ); //TODO user-select: none;
+            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() ) //TODO user-select: none;
+            << getAttributes ( STY_NAME_HVR, docStyle.getHoverStyle() )
+            << getAttributes ( STY_NAME_WRN, docStyle.getWarningStyle() )
+            << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
@@ -487,7 +500,11 @@ void HtmlGenerator::setHTMLOrderedList ( bool b )
 string HtmlGenerator::getHoverTagOpen(const string & hoverText)
 {
     ostringstream os;
-    os << "<span class=\""<<cssClassName<< " hvr\" title=\""<<hoverText<<"\">";
+    if ( useInlineCSS ) {
+        os << "<span style=\""<<getAttributes ( "", docStyle.getHoverStyle() ) << "\" title=\""<<hoverText<<"\">";
+    } else {
+        os << "<span class=\""<< (cssClassName.empty() ? "":cssClassName+ " ")  << STY_NAME_HVR << "\" title=\""<<hoverText<<"\">";
+    }
     return os.str();
 }
 

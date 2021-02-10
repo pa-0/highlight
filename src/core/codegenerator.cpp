@@ -68,6 +68,10 @@ const string CodeGenerator::STY_NAME_LIN="lin";
 const string CodeGenerator::STY_NAME_SYM="opt"; //operator
 const string CodeGenerator::STY_NAME_IPL="ipl"; //interpolation
 
+const string CodeGenerator::STY_NAME_HVR="hvr";
+const string CodeGenerator::STY_NAME_ERR="err";
+const string CodeGenerator::STY_NAME_WRN="wrn";
+
 vector<Diluculum::LuaFunction*> CodeGenerator::pluginChunks;
 
 
@@ -844,11 +848,11 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
 {
     string escHoverText;
 
-    if (lsEnableHoverRequests && lsDocumentPath.size() && (currentState==STANDARD || currentState==NUMBER || currentState==KEYWORD)) {
+    if (lsEnableHoverRequests && (currentState==STANDARD || currentState==NUMBER || currentState==KEYWORD)) {
 
         string hoverText = LSPClient.runHover(lsDocumentPath, lineIndex - s.size(), lineNumber-1);
 
-        for(auto c : hoverText)
+        for(const auto &c : hoverText)
         {
             if (isascii(c))
                 escHoverText.append(maskCharacter(c));
@@ -859,7 +863,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
         ss << getHoverTagOpen(escHoverText);
     }
 
-    for(auto c : s)
+    for(const auto &c : s)
     {
         ss << maskCharacter ( c );
     }

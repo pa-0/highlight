@@ -6,6 +6,12 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.0 beta 3
+
+09.02.2021
+
+  - added Custom theme attribute
+  - enabled inline stylesheets with `--ls-hover`
 
 == highlight 4.0 beta 2
 

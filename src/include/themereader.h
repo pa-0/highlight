@@ -57,7 +57,8 @@ class ThemeReader
 {
 private:
     ElementStyle comment, slcomment, str, dstr,
-                 escapeChar, number, directive, line, operators, interpolation;
+                 escapeChar, number, directive, line, operators,
+                 interpolation, hover, warnings, errors;
     ElementStyle defaultElem;
     ElementStyle canvas;
 
@@ -73,6 +74,8 @@ private:
 
     int keywordStyleCnt;
 
+    OutputType outputType;
+
     KeywordStyles keywordStyles, originalStyles;
 
     void initStyle(ElementStyle& style, const Diluculum::LuaVariable& var);
@@ -80,6 +83,8 @@ private:
     float getsRGB(int rgbValue);
 
     float getBrightness(const Colour& colour);
+
+    OutputType getOutputType(const string &typeDesc);
 
 public:
     /** Constructor */
@@ -157,6 +162,12 @@ public:
 
     /** \return Operator style*/
     ElementStyle getOperatorStyle() const;
+
+    ElementStyle getHoverStyle() const;
+
+    ElementStyle getErrorStyle() const;
+
+    ElementStyle getWarningStyle() const;
 
     /** \param className Name of keyword class (eg kwa, kwb, .., kwd)
         \return keyword style of the given className

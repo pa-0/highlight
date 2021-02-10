@@ -529,6 +529,10 @@ protected:
     static const string STY_NAME_SYM;
     static const string STY_NAME_IPL;
 
+    static const string STY_NAME_HVR;
+    static const string STY_NAME_ERR;
+    static const string STY_NAME_WRN;
+
     /** \param type Output type */
     CodeGenerator ( highlight::OutputType type );
     CodeGenerator() {};

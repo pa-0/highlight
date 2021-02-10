@@ -184,6 +184,9 @@ void LatexGenerator::initOutputTags()
     openTags.push_back ( "\\hl"+STY_NAME_SYM+"{" );
     openTags.push_back ( "\\hl"+STY_NAME_IPL+"{" );
 
+    openTags.push_back ( "\\hl"+STY_NAME_ERR+"{" );
+    openTags.push_back ( "\\hl"+STY_NAME_WRN+"{" );
+
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "}" );
     }
@@ -322,6 +325,9 @@ string LatexGenerator::getStyleDefinition()
         os << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() );
         os << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() );
         os << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
+
+        os << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
+        os << getAttributes ( STY_NAME_WRN, docStyle.getWarningStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {

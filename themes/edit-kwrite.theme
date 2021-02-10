@@ -26,14 +26,14 @@ Keywords = {
 -- new LSP based elements:
 
 SemanticTokenTypes  = {
-  { Type = 'keyword', Style = Keywords[1] },             --style sma
+  { Type = 'keyword', Style = Keywords[1] },
   { Type = 'type', Style = Keywords[2] },
   { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },               -- smd
+  { Type = 'method', Style = Keywords[3] },
   { Type = 'class', Style =  Keywords[1] },
   { Type = 'interface', Style = { Colour= "#ff3db3" } },
   { Type = 'struct', Style = { Colour= "#3d40ff" } },
-  { Type = 'namespace', Style = { Colour= "#ff3db3" } },  --style smh
+  { Type = 'namespace', Style = { Colour= "#ff3db3" } },
   { Type = 'typeParameter', Style = { Colour= "#ff3db3" } },
   { Type = 'parameter', Style = { Colour= "#2591f0" } },
   { Type = 'variable', Style = { Colour= "#ff3d3d" } },
@@ -46,9 +46,13 @@ SemanticTokenTypes  = {
   { Type = 'operator', Style = Operator },
 }
 
--- not used yet:
+Hover = { Custom = { { Format = "html", Content = "cursor:help" } } }
 
-SyntaxError = { Colour="#ff0000" }
+Error = { Colour="#ff0000" }
+
+Warning = { Colour="#ff0000" }
+
+-- not used yet:
 
 SemanticTokenModifiers  = {
   { Type = 'declaration', Style = { Colour= "#ff9421" } },

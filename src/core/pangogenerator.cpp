@@ -74,6 +74,9 @@ void PangoGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
 
+    openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
+    openTags.push_back ( getOpenTag ( docStyle.getWarningStyle() ) );
+
     closeTags.push_back ( "" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "</span>" );

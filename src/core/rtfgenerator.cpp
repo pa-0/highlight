@@ -2,7 +2,7 @@
                           rtfcode.cpp  -  description
                              -------------------
     begin                : Die Jul 9 2002
-    copyright            : (C) 2002-2016 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -152,6 +152,9 @@ void RtfGenerator::printBody()
     *out << getAttributes ( docStyle.getOperatorStyle() );
     *out << getAttributes ( docStyle.getInterpolationStyle() );
 
+    *out << getAttributes ( docStyle.getErrorStyle() );
+    *out << getAttributes ( docStyle.getWarningStyle() );
+
     /* For output formats which can refer to external styles it is more safe
        to use the colour theme's keyword class names, since the language
        definitions (which may change during a batch conversion) do not have to define
@@ -188,6 +191,10 @@ void RtfGenerator::printBody()
         *out << getCharStyle ( LINENUMBER, docStyle.getLineStyle(), "HL Line" );
         *out << getCharStyle ( SYMBOL, docStyle.getOperatorStyle(), "HL Operator" );
         *out << getCharStyle ( STRING_INTERPOLATION, docStyle.getInterpolationStyle(), "HL Interpolation" );
+
+        *out << getCharStyle ( ERROR, docStyle.getErrorStyle(), "HL Error" );
+        *out << getCharStyle ( WARNING, docStyle.getWarningStyle(), "HL Warning" );
+
         char styleName[20];
         for ( unsigned int i=0; i<keywordClasses.size(); i++ ) {
             sprintf ( styleName, "HL Keyword %c", 'A'+i ); //maybe better simple numbering
@@ -235,6 +242,9 @@ void RtfGenerator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( SYMBOL, docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( STRING_INTERPOLATION, docStyle.getInterpolationStyle()) );
 
+    openTags.push_back ( getOpenTag ( ERROR, docStyle.getErrorStyle() ) );
+    openTags.push_back ( getOpenTag ( WARNING, docStyle.getWarningStyle()) );
+
     closeTags.push_back ( getCloseTag ( docStyle.getDefaultStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getStringStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getNumberStyle() ) );
@@ -246,6 +256,9 @@ void RtfGenerator::initOutputTags ( )
     closeTags.push_back ( getCloseTag ( docStyle.getLineStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getOperatorStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getInterpolationStyle() ) );
+
+    closeTags.push_back ( getCloseTag ( docStyle.getErrorStyle()) );
+    closeTags.push_back ( getCloseTag ( docStyle.getWarningStyle()) );
 }
 
 string RtfGenerator::maskCharacter ( unsigned char c )

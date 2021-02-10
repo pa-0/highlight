@@ -34,7 +34,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), keywordStyleCnt(0)
+    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), keywordStyleCnt(0), outputType(HTML)
 {}
 
 ThemeReader::~ThemeReader()
@@ -44,8 +44,42 @@ ThemeReader::~ThemeReader()
     }
 }
 
+OutputType ThemeReader::getOutputType(const string &typeDesc) {
+
+    if (typeDesc=="html" || typeDesc=="xhtml") return HTML;
+
+    if (typeDesc=="rtf") return RTF;
+    if (typeDesc=="latex") return LATEX;
+    if (typeDesc=="tex") return TEX;
+    if (typeDesc=="rtf") return RTF;
+    if (typeDesc=="ansi") return ESC_ANSI;
+    if (typeDesc=="xterm256") return ESC_XTERM256;
+    if (typeDesc=="truecolor") return ESC_TRUECOLOR;
+
+    if (typeDesc=="svg") return SVG;
+    if (typeDesc=="bbcode") return BBCODE;
+    if (typeDesc=="pango") return PANGO;
+    if (typeDesc=="odt") return ODTFLAT;
+    return HTML;
+}
+
 void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& var)
 {
+
+    if (var["Custom"].value()!=Diluculum::Nil) {
+
+        int idx=1;
+
+        while (var["Custom"][idx].value() !=Diluculum::Nil) {
+
+            if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
+                style.setCustomStyle (var["Custom"][idx]["Content"].value().asString() );
+            }
+            idx++;
+        }
+        return;
+    }
+
     string styleColor="#000000";
     bool styleBold=false, styleItalic=false, styleUnderline=false;
 
@@ -62,11 +96,18 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
     style.setBold(styleBold);
     style.setItalic(styleItalic);
     style.setUnderline(styleUnderline);
+
+    if (var["Underline"].value()!=Diluculum::Nil)
+        styleUnderline= var["Underline"].value().asBoolean();
+
 }
 
 bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bool loadSemanticStyles)
 {
     try {
+
+        outputType = type;
+
         fileOK=true;
 
         Diluculum::LuaState ls;
@@ -83,7 +124,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         ls["HL_FORMAT_BBCODE"]=BBCODE;
         ls["HL_FORMAT_PANGO"]=PANGO;
         ls["HL_FORMAT_ODT"]=ODTFLAT;
-        ls["HL_OUTPUT"] = type;
+        ls["HL_OUTPUT"] = outputType;
         ls.doString("Injections={}");
 
         lua_register (ls.getState(), "StoreValue", KeyStore::luaStore);
@@ -126,6 +167,11 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         initStyle(dstr, ls["StringPreProc"]);
         initStyle(line, ls["LineNum"]);
         initStyle(operators, ls["Operator"]);
+
+        initStyle(hover, ls["Hover"]);
+        initStyle(warnings, ls["Warning"]);
+        initStyle(errors, ls["Error"]);
+
 
         int idx=1;
         ElementStyle kwStyle;
@@ -252,6 +298,21 @@ ElementStyle ThemeReader::getLineStyle() const
 ElementStyle ThemeReader::getOperatorStyle() const
 {
     return operators;
+}
+
+ElementStyle ThemeReader::getHoverStyle() const
+{
+    return hover;
+}
+
+ElementStyle ThemeReader::getErrorStyle() const
+{
+    return errors;
+}
+
+ElementStyle ThemeReader::getWarningStyle() const
+{
+    return warnings;
 }
 
 bool ThemeReader::found () const

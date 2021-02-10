@@ -48,7 +48,6 @@ string  AnsiGenerator::getOpenTag ( const string&font,
 
 AnsiGenerator::AnsiGenerator() : CodeGenerator ( ESC_ANSI )
 {
-
     newLineTag = "\n";
     spacer = initialSpacer = " ";
 }
@@ -69,6 +68,9 @@ void AnsiGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( "00", defaultColor ) );//linenum
     openTags.push_back ( getOpenTag ( "00", "00" ) );//symbol
     openTags.push_back ( getOpenTag ( "00", "35" ) );//interpolation
+
+    openTags.push_back ( getOpenTag ( "01", "31" ) );//error
+    openTags.push_back ( getOpenTag ( "01", "31" ) );//warning
 
     closeTags.push_back ( "" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {

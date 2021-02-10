@@ -2,7 +2,7 @@
                           TexGenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -42,7 +42,7 @@ TexGenerator::TexGenerator()
     mode, it switches it to horizontal mode).*/
     newLineTag="\\leavevmode\\par\n";
 
-    spacer = "\\ ";
+    spacer = initialSpacer = "\\ ";
     maskWs=true;
     excludeWs=true;
     maskWsBegin = "{\\hlstd";
@@ -66,6 +66,9 @@ void TexGenerator::initOutputTags()
     openTags.push_back ( "{\\hl"+STY_NAME_LIN+" " );
     openTags.push_back ( "{\\hl"+STY_NAME_SYM+" " );
     openTags.push_back ( "{\\hl"+STY_NAME_IPL+" " );
+
+    openTags.push_back ( "{\\hl"+STY_NAME_ERR+" " );
+    openTags.push_back ( "{\\hl"+STY_NAME_WRN+" " );
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "}" );
@@ -275,6 +278,9 @@ string TexGenerator::getStyleDefinition()
         os << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
         os << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() );
         os << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() );
+
+        os << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
+        os << getAttributes ( STY_NAME_WRN, docStyle.getWarningStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
