@@ -42,7 +42,7 @@ TexGenerator::TexGenerator()
     mode, it switches it to horizontal mode).*/
     newLineTag="\\leavevmode\\par\n";
 
-    spacer = "\\ ";
+    spacer = initialSpacer = "\\ ";
     maskWs=true;
     excludeWs=true;
     maskWsBegin = "{\\hlstd";

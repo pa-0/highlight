@@ -9,9 +9,10 @@
 
 == highlight 3.61
 
-09.01.2021
+11.02.2021
 
   - added `--syntax-supported` option
+  - fixed indentation of Plain TeX output
 
 == highlight 3.60
 
