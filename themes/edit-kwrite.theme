@@ -48,10 +48,6 @@ SemanticTokenTypes  = {
 
 Hover = { Custom = { { Format = "html", Content = "cursor:help" } } }
 
-Error = { Colour="#ff0000" }
-
-Warning = { Colour="#ff0000" }
-
 -- not used yet:
 
 SemanticTokenModifiers  = {

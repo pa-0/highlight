@@ -68,6 +68,10 @@ Keywords = {
 
 -- new LSP based elements:
 
+Error = { Colour = "#ff19a5", Bold = true, Custom = { { Format = "html", Content = "color: #ff0000; font-weight: bold;padding: 2px; background-color: rgba(220,0,0,0.3);" } } }
+
+Hover = { Custom = { { Format = "html", Content = "cursor:help" } } }
+
 SemanticTokenTypes  = {
   { Type = 'type', Style = Keywords[2] },
   { Type = 'class', Style =  Keywords[1] },
@@ -83,6 +87,20 @@ SemanticTokenTypes  = {
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },
 }
+
+SemanticTokenModifiers  = {
+  { Type = 'declaration', Style = { Colour= "#ff9421" } },
+  { Type = 'definition', Style = { Colour= "#ff9421" } },
+  { Type = 'readonly', Style = { Colour= "#ff9421" } },
+  { Type = 'static', Style = { Colour= "#ff9421" } },
+  { Type = 'deprecated', Style = { Colour= "#ff9421" } },
+  { Type = 'abstract', Style = { Colour= "#ff9421" } },
+  { Type = 'async', Style = { Colour= "#ff9421" } },
+  { Type = 'modification', Style = { Colour= "#ff9421" } },
+  { Type = 'documentation', Style = { Colour= "#ff9421" } },
+  { Type = 'defaultLibrary', Style = { Colour= "#ff9421" } }
+}
+
 
 --[[----------------------------------------------------------------------------
 The MIT License

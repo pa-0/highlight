@@ -8,10 +8,12 @@
 
 == highlight 4.0 beta 3
 
-09.02.2021
+11.02.2021
 
   - added Custom theme attribute
   - enabled inline stylesheets with `--ls-hover`
+  - added Error and Hover theme properties
+  - enabled syntax error highlighting with `ls-semantic`
 
 == highlight 4.0 beta 2
 

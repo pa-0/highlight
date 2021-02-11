@@ -35,7 +35,7 @@ enum State {
     LINENUMBER,
     SYMBOL,
     STRING_INTERPOLATION,
-    ERROR,
+    SYNTAX_ERROR,
     WARNING,
 
     // don't use constants > KEYWORD as array indices!

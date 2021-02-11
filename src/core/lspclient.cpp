@@ -461,10 +461,23 @@ namespace highlight
 
         if (json.contains("method") && json.get("method").get<std::string>()=="textDocument/publishDiagnostics") {
             picojson::array diagnostics = json.get("params").get("diagnostics").get<picojson::array>();
-            int cnt=0;
+
             for (picojson::array::iterator iter = diagnostics.begin(); iter != diagnostics.end(); ++iter) {
 
-                //std::cerr<<"diag "<<cnt++ << " range l "<< iter->get("range").get("start").get("line").get<double>()  <<  " - " <<iter->get("message").get<std::string>() << "\n";
+                if ((int)iter->get("severity").get<double>() != 1){
+                    continue;
+                }
+
+                picojson::value range = iter->get("range");
+                int startLine = (int) range.get("start").get("line").get<double>();
+                int startCharacter = (int) range.get("start").get("character").get<double>();
+                int endLine = (int) range.get("end").get("line").get<double>();
+                int endCharacter = (int) range.get("end").get("character").get<double>();
+
+                if (startLine == endLine && startCharacter<endCharacter) {
+            //        std::cerr<<"diag "<< startLine << " : "<<startCharacter << " - " << endCharacter<<"\n";
+                    errorMap[{ startLine+1, startCharacter+1 }] = highlight::SemanticToken(endCharacter-startCharacter, 1, iter->get("message").get<std::string>());
+                }
             }
         }
     }
@@ -669,6 +682,14 @@ namespace highlight
         return tokenMap.find(make_tuple(line,col))->second;
     }
 
+    bool LSPClient::errorExists(unsigned int line, unsigned int col) {
+        return  errorMap.count(make_tuple(line,col));
+    }
+
+    highlight::SemanticToken LSPClient::getError(unsigned int line, unsigned int col) {
+        return errorMap.find(make_tuple(line,col))->second;
+    }
+
     bool LSPClient::runDidOpen(const std::string &document, const string& syntax){
 
         if (document.empty() || syntax != triggerSyntax)
@@ -708,6 +729,7 @@ namespace highlight
     bool LSPClient::runDidClose(const std::string &document, const string& syntax){
 
         tokenMap.clear();
+        errorMap.clear();
 
         if (document.empty() || syntax !=triggerSyntax)
             return false;

@@ -75,6 +75,9 @@ private:
 
     std::map< std::tuple<int, int>, highlight::SemanticToken > tokenMap;
 
+    std::map< std::tuple<int, int>, highlight::SemanticToken > errorMap;
+
+
     int initDelay;
 
 #ifdef WIN32
@@ -155,9 +158,13 @@ public:
 
     bool tokenExists(unsigned int line, unsigned int col);
 
+    bool errorExists(unsigned int line, unsigned int col);
+
     int getSemanticTokenCount() const;
 
     highlight::SemanticToken getToken(unsigned int line, unsigned int col);
+
+    highlight::SemanticToken getError(unsigned int line, unsigned int col);
 
     int getErrorCode() const;
 };

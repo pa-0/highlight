@@ -819,8 +819,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 badFormattedFiles.clear();
             }
         }
-
-
     }
 
     if ( i  && !options.includeStyleDef()

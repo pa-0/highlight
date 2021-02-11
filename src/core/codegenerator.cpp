@@ -170,6 +170,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      applySyntaxTestCase(false),
      toggleDynRawString(false),
      lsEnableHoverRequests(false),
+     lsCheckSemanticTokens(false),
 
      keywordCase ( StringTools::CASE_UNCHANGED ),
      eolDelimiter ('\n'),
@@ -245,7 +246,8 @@ bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffi
 }
 
 bool CodeGenerator::lsAddSemanticInfo(const string& fileName, const string & suffix){
-    return LSPClient.runSemanticTokensFull(fileName);
+    lsCheckSemanticTokens = LSPClient.runSemanticTokensFull(fileName);
+    return lsCheckSemanticTokens;
 }
 
 bool CodeGenerator::isHoverProvider(){
@@ -727,16 +729,28 @@ State CodeGenerator::getCurrentState (State oldState)
 
 SKIP_EMBEDDED:
 
-    if (LSPClient.tokenExists(lineNumber, lineIndex)) {
-        highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
-        int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
-        if (semStyleKwId) {
-            token = line.substr ( lineIndex-1, semToken.length);
-            lineIndex += semToken.length-1;
+    if (lsCheckSemanticTokens) {
 
-            currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
-            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
-            return KEYWORD;
+        if (LSPClient.errorExists(lineNumber, lineIndex)) {
+            highlight::SemanticToken errorToken = LSPClient.getError(lineNumber, lineIndex);
+            token = line.substr ( lineIndex-1, errorToken.length);
+            lineIndex += errorToken.length-1;
+
+            //std::cerr <<"error "<<lineNumber<< " idx"<<lineIndex<< " error "<<errorToken.id<< "\n";
+            return SYNTAX_ERROR;
+        }
+
+        if (LSPClient.tokenExists(lineNumber, lineIndex)) {
+            highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
+            int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
+            if (semStyleKwId) {
+                token = line.substr ( lineIndex-1, semToken.length);
+                lineIndex += semToken.length-1;
+
+                currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
+                //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
+                return KEYWORD;
+            }
         }
     }
 
@@ -1303,7 +1317,6 @@ void CodeGenerator::openTag ( State s )
 {
     *out << openTags[ ( unsigned int ) s];
     currentState=s;
-
 }
 
 void CodeGenerator::closeTag ( State s )
@@ -1412,12 +1425,17 @@ void CodeGenerator::processRootState()
             eof=processSymbolState();
             openTag ( STANDARD );
             break;
-
         case EMBEDDED_CODE_END:
             closeTag ( STANDARD );
             eof=processSyntaxChangeState(state);
             openTag ( STANDARD );
             break;
+        case SYNTAX_ERROR:
+            closeTag ( STANDARD );
+            eof=processSyntaxErrorState();
+            openTag ( STANDARD );
+            break;
+
         case _EOL:
             // XTERM256 fix (issue with less cmd)
             if  (!firstLine || showLineNumbers) {
@@ -1842,7 +1860,6 @@ bool CodeGenerator::processStringState ( State oldState )
 
 bool CodeGenerator::processSymbolState()
 {
-
     State newState=STANDARD;
     bool eof=false,
          exitState=false;
@@ -1870,6 +1887,44 @@ bool CodeGenerator::processSymbolState()
     } while ( !exitState && !eof );
 
     closeTag ( SYMBOL );
+    return eof;
+}
+
+bool CodeGenerator::processSyntaxErrorState()
+{
+    State newState=STANDARD;
+    bool eof=false,
+    exitState=false;
+    //std::string hoverText;
+
+    //std::cerr << "call "<<lineNumber<< lineIndex<<"\n";
+
+    //if (LSPClient.errorExists(lineNumber, lineIndex))
+    //    hoverText = LSPClient.getError(lineNumber, lineIndex).id;
+
+    openTag ( SYNTAX_ERROR );
+    do {
+        printMaskedToken ( newState!=_WS );
+        newState= getCurrentState(SYNTAX_ERROR);
+        switch ( newState ) {
+            case _WS:
+                processWsState();
+                exitState=isolateTags;
+                break;
+            case _EOL:
+                insertLineNumber();
+                exitState=true;
+                break;
+            case _EOF:
+                eof = true;
+                break;
+            default:
+                exitState=newState!=SYMBOL;
+                break;
+        }
+    } while ( !exitState && !eof );
+
+    closeTag ( SYNTAX_ERROR );
     return eof;
 }
 
@@ -2025,6 +2080,8 @@ string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
             return STY_NAME_SYM;
         case STRING_INTERPOLATION:
             return STY_NAME_IPL;
+        case SYNTAX_ERROR:
+            return STY_NAME_ERR;
         case _WS:
             return "ws";
         case KEYWORD: {

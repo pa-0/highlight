@@ -825,6 +825,7 @@ private:
 
     bool lsEnableHoverRequests;
 
+    bool lsCheckSemanticTokens;
 
     /** flag which determines keyword output (unchangeed, uppercase, lowercase)*/
     StringTools::KeywordCase keywordCase;
@@ -872,6 +873,7 @@ private:
     bool processSymbolState();                ///< process symbols
     void processWsState();                    ///< process whitespace
     bool processSyntaxChangeState(State myState ); ///< process syntax change of embedded languages
+    bool processSyntaxErrorState();           ///< process syntax errors
 
     /* checks whether the given state was defined in the same column of the last parsed input line */
     void runSyntaxTestcases(unsigned int column);

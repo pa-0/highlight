@@ -29,17 +29,8 @@ Keywords={
   },
   { Id=4,
     Regex=[[(\w+)\s*\(]]
-  },
-
-
-    { Id=5,
-    List= { "default", "dyn", "union"
-          }
-  },
-
-
-
   }
+}
 
 Strings = {
   Delimiter=[["]],

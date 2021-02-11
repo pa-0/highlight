@@ -192,7 +192,7 @@ void RtfGenerator::printBody()
         *out << getCharStyle ( SYMBOL, docStyle.getOperatorStyle(), "HL Operator" );
         *out << getCharStyle ( STRING_INTERPOLATION, docStyle.getInterpolationStyle(), "HL Interpolation" );
 
-        *out << getCharStyle ( ERROR, docStyle.getErrorStyle(), "HL Error" );
+        *out << getCharStyle ( SYNTAX_ERROR, docStyle.getErrorStyle(), "HL Error" );
         *out << getCharStyle ( WARNING, docStyle.getWarningStyle(), "HL Warning" );
 
         char styleName[20];
@@ -242,7 +242,7 @@ void RtfGenerator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( SYMBOL, docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( STRING_INTERPOLATION, docStyle.getInterpolationStyle()) );
 
-    openTags.push_back ( getOpenTag ( ERROR, docStyle.getErrorStyle() ) );
+    openTags.push_back ( getOpenTag ( SYNTAX_ERROR, docStyle.getErrorStyle() ) );
     openTags.push_back ( getOpenTag ( WARNING, docStyle.getWarningStyle()) );
 
     closeTags.push_back ( getCloseTag ( docStyle.getDefaultStyle() ) );

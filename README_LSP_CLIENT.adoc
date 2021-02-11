@@ -40,7 +40,7 @@ Several beta releases are planned to introduce these features:
 * add enhanced tooltips using hover requests (implemented)
 * add semantic highlighting (some parts are implemented)
 * add rainbow highlighting (tbd)
-* add syntax error highlighting (tbd)
+* add syntax error highlighting (some parts are implemented)
 
 
 == PROFILES
@@ -122,10 +122,17 @@ SemanticTokenTypes  = {
 
 Find all lsp enabled themes with `highlight --list-scripts=themes --list-cat=lsp`
 
-The default themes will be enhanced later.
+Default themes will be enhanced later.
 
-Additional elements to describe syntax errors and modifiers will be added
-in a later release.
+These themes are currently adapted for semantic tokens:
+
+edit-kwrite
+greenlcd
+base16/3024
+
+Others might looks poor.
+
+Additional elements to describe token modifiers will be added in a later release.
 
 === Example invocation:
 +

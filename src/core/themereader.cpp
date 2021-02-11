@@ -74,10 +74,10 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
 
             if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
                 style.setCustomStyle (var["Custom"][idx]["Content"].value().asString() );
+                return;
             }
             idx++;
         }
-        return;
     }
 
     string styleColor="#000000";
@@ -99,7 +99,6 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
 
     if (var["Underline"].value()!=Diluculum::Nil)
         styleUnderline= var["Underline"].value().asBoolean();
-
 }
 
 bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bool loadSemanticStyles)
@@ -168,10 +167,15 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         initStyle(line, ls["LineNum"]);
         initStyle(operators, ls["Operator"]);
 
-        initStyle(hover, ls["Hover"]);
-        initStyle(warnings, ls["Warning"]);
-        initStyle(errors, ls["Error"]);
+        if (ls["Hover"].value() !=Diluculum::Nil){
+            initStyle(hover, ls["Hover"]);
+        }
 
+        errors.setBold(true);
+        errors.setColour(Colour("#ff0000"));
+        if (ls["Error"].value() !=Diluculum::Nil){
+            initStyle(errors, ls["Error"]);
+        }
 
         int idx=1;
         ElementStyle kwStyle;
