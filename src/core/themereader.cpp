@@ -167,6 +167,9 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         initStyle(line, ls["LineNum"]);
         initStyle(operators, ls["Operator"]);
 
+        if (outputType==HTML) {
+            hover.setCustomStyle ("cursor:help");
+        }
         if (ls["Hover"].value() !=Diluculum::Nil){
             initStyle(hover, ls["Hover"]);
         }
