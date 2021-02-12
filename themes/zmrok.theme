@@ -22,4 +22,21 @@ Keywords = {
   { Colour="#C7CA87" },
   { Colour="#30a630" },
   { Colour="#3b84cc" },
+  { Colour= "#d484aa" },
+  { Colour= "#ae84d4" },
+}
+
+-- new LSP based elements:
+
+SemanticTokenTypes  = {
+  { Type = 'keyword', Style = Keywords[1] },
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'function', Style = Keywords[3] },
+  { Type = 'method', Style = Keywords[3] },
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'struct', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
 }

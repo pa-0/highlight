@@ -1,7 +1,7 @@
 
 Description="Kwrite Editor"
 
-Categories = {"light", "lsp"}
+Categories = {"light"}
 
 Default        = { Colour="#000000" }
 Canvas         = { Colour="#E0EAEE" }
@@ -21,6 +21,8 @@ Keywords = {
   { Colour= "#0057AE" },
   { Colour= "#000000" },
   { Colour= "#010181" },
+  { Colour= "#0d5bc3" },
+  { Colour= "#750dc3" },
 }
 
 -- new LSP based elements:
@@ -31,16 +33,16 @@ SemanticTokenTypes  = {
   { Type = 'function', Style = Keywords[3] },
   { Type = 'method', Style = Keywords[3] },
   { Type = 'class', Style =  Keywords[1] },
-  { Type = 'interface', Style = { Colour= "#ff3db3" } },
+  { Type = 'interface', Style = { Colour= "750dc3" } },
   { Type = 'struct', Style = { Colour= "#3d40ff" } },
-  { Type = 'namespace', Style = { Colour= "#ff3db3" } },
+  { Type = 'namespace', Style = { Colour= "#750dc3" } },
   { Type = 'typeParameter', Style = { Colour= "#ff3db3" } },
   { Type = 'parameter', Style = { Colour= "#2591f0" } },
   { Type = 'variable', Style = { Colour= "#ff3d3d" } },
   { Type = 'property', Style = { Colour= "#ff3db3" } },
   { Type = 'enumMember', Style = { Colour= "#ff0000" } },
-  { Type = 'event', Style = { Colour= "#ff3db3" } },
-  { Type = 'modifier', Style = { Colour= "#ff3db3" } },
+  { Type = 'event', Style = { Colour= "#0d5bc3" } },
+  { Type = 'modifier', Style = { Colour= "#0d5bc3" } },
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },

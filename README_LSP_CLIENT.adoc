@@ -1,6 +1,6 @@
 = HIGHLIGHT LANGUAGE SERVER PROTOCOL CLIENT
 André Simon
-:revdate: January 2021
+:revdate: February 2021
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -119,18 +119,6 @@ SemanticTokenTypes  = {
   { Type = 'operator', Style = Operator },
 }
 ..........................................................................
-
-Find all lsp enabled themes with `highlight --list-scripts=themes --list-cat=lsp`
-
-Default themes will be enhanced later.
-
-These themes are currently adapted for semantic tokens:
-
-edit-kwrite
-greenlcd
-base16/3024
-
-Others might looks poor.
 
 Additional elements to describe token modifiers will be added in a later release.
 
