@@ -72,14 +72,14 @@ Error = { Colour = "#ff19a5", Bold = true, Custom = { { Format = "html", Content
 
 Hover = { Custom = { { Format = "html", Content = "cursor:help" } } }
 
-SemanticTokenTypes  = {
+SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
-  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'class', Style =  { Colour = base0A } },
   { Type = 'struct', Style =  Keywords[4] },
-  { Type = 'interface', Style = Keywords[1] },
-  { Type = 'parameter', Style = Keywords[5] },
-  { Type = 'variable', Style = Keywords[6] },
-  { Type = 'enumMember', Style = Keywords[6] },
+  { Type = 'interface', Style = { Colour = base06 } },
+  { Type = 'parameter', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'enumMember', Style = Keywords[5] },
   { Type = 'function', Style = Keywords[3] },
   { Type = 'method', Style = Keywords[3] },
   { Type = 'keyword', Style =  Keywords[1]},
