@@ -149,7 +149,10 @@ string Xterm256Generator::getKeywordCloseTag ( unsigned int styleID )
 
 string Xterm256Generator::getNewLine()
 {
-    string nlStr;
+
+    ostringstream ss;
+
+    printSyntaxError(ss);
 
     if (canvasPadding>0) {
         unsigned int lastLineLength=getLastLineLength();
@@ -158,13 +161,16 @@ string Xterm256Generator::getNewLine()
         if (lastLineLength<512 && lastLineLength > canvasPadding && lastLineLength)
             canvasPadding = lastLineLength;
 
-        nlStr += canvasColSeq;
+        ss << canvasColSeq;
         if (canvasPadding > lastLineLength)
-            nlStr += string(canvasPadding - lastLineLength, ' ');
-        nlStr += "\033[m";
+            ss << string(canvasPadding - lastLineLength, ' ');
+        ss << "\033[m";
     }
-    nlStr += (printNewLines) ? newLineTag : "";
-    return nlStr;
+
+    if (printNewLines)
+        ss << newLineTag;
+
+    return ss.str();
 }
 
  void Xterm256Generator::setESCTrueColor(bool b) {

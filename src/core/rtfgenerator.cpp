@@ -153,7 +153,7 @@ void RtfGenerator::printBody()
     *out << getAttributes ( docStyle.getInterpolationStyle() );
 
     *out << getAttributes ( docStyle.getErrorStyle() );
-    *out << getAttributes ( docStyle.getWarningStyle() );
+    *out << getAttributes ( docStyle.getErrorMessageStyle() );
 
     /* For output formats which can refer to external styles it is more safe
        to use the colour theme's keyword class names, since the language
@@ -193,7 +193,7 @@ void RtfGenerator::printBody()
         *out << getCharStyle ( STRING_INTERPOLATION, docStyle.getInterpolationStyle(), "HL Interpolation" );
 
         *out << getCharStyle ( SYNTAX_ERROR, docStyle.getErrorStyle(), "HL Error" );
-        *out << getCharStyle ( WARNING, docStyle.getWarningStyle(), "HL Warning" );
+        *out << getCharStyle ( SYNTAX_ERROR_MSG, docStyle.getErrorMessageStyle(), "HL Warning" );
 
         char styleName[20];
         for ( unsigned int i=0; i<keywordClasses.size(); i++ ) {
@@ -243,7 +243,7 @@ void RtfGenerator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( STRING_INTERPOLATION, docStyle.getInterpolationStyle()) );
 
     openTags.push_back ( getOpenTag ( SYNTAX_ERROR, docStyle.getErrorStyle() ) );
-    openTags.push_back ( getOpenTag ( WARNING, docStyle.getWarningStyle()) );
+    openTags.push_back ( getOpenTag ( SYNTAX_ERROR_MSG, docStyle.getErrorMessageStyle()) );
 
     closeTags.push_back ( getCloseTag ( docStyle.getDefaultStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getStringStyle() ) );
@@ -258,7 +258,7 @@ void RtfGenerator::initOutputTags ( )
     closeTags.push_back ( getCloseTag ( docStyle.getInterpolationStyle() ) );
 
     closeTags.push_back ( getCloseTag ( docStyle.getErrorStyle()) );
-    closeTags.push_back ( getCloseTag ( docStyle.getWarningStyle()) );
+    closeTags.push_back ( getCloseTag ( docStyle.getErrorMessageStyle()) );
 }
 
 string RtfGenerator::maskCharacter ( unsigned char c )

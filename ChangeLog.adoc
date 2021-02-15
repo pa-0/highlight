@@ -6,6 +6,13 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.0 beta 4
+
+15.02.2021
+
+  - added Custom theme attributes for Plain TeX, LaTeX, SVG and Pango
+  - enabled syntax message output with `--ls-syntax-error`
+
 == highlight 4.0 beta 3
 
 11.02.2021

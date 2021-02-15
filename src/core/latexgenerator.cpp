@@ -185,7 +185,7 @@ void LatexGenerator::initOutputTags()
     openTags.push_back ( "\\hl"+STY_NAME_IPL+"{" );
 
     openTags.push_back ( "\\hl"+STY_NAME_ERR+"{" );
-    openTags.push_back ( "\\hl"+STY_NAME_WRN+"{" );
+    openTags.push_back ( "\\hl"+STY_NAME_ERM+"{" );
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "}" );
@@ -196,42 +196,56 @@ string LatexGenerator::getAttributes ( const string & elemName,
                                        const ElementStyle &elem )
 {
     ostringstream s;
+
+    string customStyle(elem.getCustomStyle());
+
     s  << "\\newcommand{\\hl"
-       << elemName
-       << "}[1]{\\textcolor[rgb]{"
-       << elem.getColour().getRed ( LATEX ) << ","
-       << elem.getColour().getGreen ( LATEX ) << ","
-       << elem.getColour().getBlue ( LATEX )
-       << "}{";
+    << elemName
+    << "}[1]{";
 
-    if ( elem.isBold() )
-        s << "\\bf{";
-    if ( elem.isItalic() )
-        s << "\\it{";
+    if (customStyle.empty()) {
 
-    s  <<"#1";
+        s   <<"\\textcolor[rgb]{"
+            << elem.getColour().getRed ( LATEX ) << ","
+            << elem.getColour().getGreen ( LATEX ) << ","
+            << elem.getColour().getBlue ( LATEX )
+            << "}{";
 
-    if ( elem.isBold() )
-        s << "}";
-    if ( elem.isItalic() )
-        s << "}";
+        if ( elem.isBold() )
+            s << "\\bf{";
+        if ( elem.isItalic() )
+            s << "\\it{";
 
-    s  <<"}}\n";
+        s  <<"#1";
+
+        if ( elem.isBold() )
+            s << "}";
+        if ( elem.isItalic() )
+            s << "}";
+
+        s  <<"}";
+    } else {
+        s << customStyle;
+    }
+    s  <<"}\n";
     return s.str();
 }
 
 
 string LatexGenerator::getNewLine()
 {
-    string nl;
+    ostringstream ss;
+
+    printSyntaxError(ss);
 
     // set wrapping arrow if previous line was wrapped
     if ( preFormatter.isWrappedLine ( lineNumber-1 ) ) {
-        nl = "\\Righttorque";
+        ss << "\\Righttorque";
     }
-    nl += ( showLineNumbers ) ? newLineTag:longLineTag;
-    return nl;
+    ss << (( showLineNumbers ) ? newLineTag:longLineTag);
+    return ss.str();
 }
+
 
 string LatexGenerator::maskCharacter ( unsigned char c )
 {
@@ -327,7 +341,7 @@ string LatexGenerator::getStyleDefinition()
         os << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
 
         os << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
-        os << getAttributes ( STY_NAME_WRN, docStyle.getWarningStyle() );
+        os << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {

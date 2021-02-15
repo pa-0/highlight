@@ -252,7 +252,10 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
         cout<<"     --ls-semantic              retrieve semantic token types (requires LSP 3.16)\n";
         cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
-        cout<<"     --ls-rainbow *\n";
+        cout<<"     --ls-syntax-error          retrieve syntax error information\n";
+        cout<<"                                  (assumes --ls-hover or --ls-semantic)\n";
+
+        //cout<<"     --ls-rainbow *\n";
         cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
         cout<<"\n\n";
 

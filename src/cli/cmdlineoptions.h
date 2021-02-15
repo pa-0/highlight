@@ -138,6 +138,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_LS_RAINBOW       "ls-rainbow"
 #define OPT_LS_SYNTAX        "ls-syntax"
 #define OPT_LS_DELAY         "ls-delay"
+#define OPT_LS_SYNTAX_ERROR  "ls-syntax-error"
 
 /// handle command line options
 
@@ -359,6 +360,9 @@ public:
     /** \return false  */
     bool isLsHover () const;
 
+    /** \return false  */
+    bool isLsSyntaxError () const;
+
     /** \return max. input file size (default 256 MB) */
     off_t getMaxFileSize() const;
 
@@ -538,6 +542,7 @@ private:
     bool opt_ls_hover;
     bool opt_ls_semantic;
     bool opt_ls_rainbow;
+    bool opt_ls_syntax_error;
 
     off_t maxFileSize;
 

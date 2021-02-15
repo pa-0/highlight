@@ -443,6 +443,8 @@ public:
 
     void lsAddHoverInfo(bool hover);
 
+    void lsAddSyntaxErrorInfo(bool error);
+
     bool isHoverProvider();
 
     bool isSemanticTokensProvider();
@@ -531,7 +533,7 @@ protected:
 
     static const string STY_NAME_HVR;
     static const string STY_NAME_ERR;
-    static const string STY_NAME_WRN;
+    static const string STY_NAME_ERM;
 
     /** \param type Output type */
     CodeGenerator ( highlight::OutputType type );
@@ -544,6 +546,8 @@ protected:
     /** \param ss destination stream
         \param s string */
     void maskString ( ostream& ss, const string &s ) ;
+
+    void printSyntaxError ( ostream& ss ) ;
 
     /** Get current line number
       \return line number  */
@@ -587,6 +591,9 @@ protected:
 
     string inFile,   ///< input file name
            outFile;  ///< output file name
+
+    /// LSP syntax error description
+    string lsSyntaxErrorDesc;
 
     /** Test if maskWsBegin and maskWsEnd should be applied */
     bool maskWs;
@@ -826,6 +833,8 @@ private:
     bool lsEnableHoverRequests;
 
     bool lsCheckSemanticTokens;
+
+    bool lsCheckSyntaxErrors;
 
     /** flag which determines keyword output (unchangeed, uppercase, lowercase)*/
     StringTools::KeywordCase keywordCase;

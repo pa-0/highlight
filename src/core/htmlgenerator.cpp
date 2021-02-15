@@ -159,7 +159,7 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
-        openTags.push_back ( getOpenTag ( docStyle.getWarningStyle() ) );
+        openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle() ) );
     } else {
         openTags.push_back ( getOpenTag ( STY_NAME_STR ) );
         openTags.push_back ( getOpenTag ( STY_NAME_NUM ) );
@@ -172,7 +172,7 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( STY_NAME_SYM ) );
         openTags.push_back ( getOpenTag ( STY_NAME_IPL ) );
         openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
-        openTags.push_back ( getOpenTag ( STY_NAME_WRN ) );
+        openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
     }
 
     closeTags.push_back ( "" );
@@ -278,9 +278,9 @@ string HtmlGenerator::getStyleDefinition()
             << getAttributes ( STY_NAME_DIR, docStyle.getPreProcessorStyle() )
             << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() )
             << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() )
-            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() ) //TODO user-select: none;
+            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() )
             << getAttributes ( STY_NAME_HVR, docStyle.getHoverStyle() )
-            << getAttributes ( STY_NAME_WRN, docStyle.getWarningStyle() )
+            << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() )
             << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
@@ -322,10 +322,13 @@ string HtmlGenerator::maskCharacter ( unsigned char c )
 
 string HtmlGenerator::getNewLine()
 {
-    string nlStr;
-    if ( showLineNumbers && orderedList ) nlStr +="</li>";
-    if (printNewLines) nlStr+="\n";
-    return nlStr;
+    ostringstream ss;
+
+    printSyntaxError(ss);
+
+    if ( showLineNumbers && orderedList ) ss << "</li>";
+    if ( printNewLines ) ss << "\n";
+    return ss.str();
 }
 
 void HtmlGenerator::insertLineNumber ( bool insertNewLine )

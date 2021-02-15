@@ -36,7 +36,7 @@ enum State {
     SYMBOL,
     STRING_INTERPOLATION,
     SYNTAX_ERROR,
-    WARNING,
+    SYNTAX_ERROR_MSG,
 
     // don't use constants > KEYWORD as array indices!
     KEYWORD,

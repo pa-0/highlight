@@ -702,6 +702,26 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     break;
                 }
                 usesLSClient=true;
+
+                generator->lsAddSyntaxErrorInfo( (options.isLsHover() || options.isLsSemantic()) && options.isLsSyntaxError() );
+
+                if (options.isLsHover()) {
+                    if (!generator->isHoverProvider()) {
+                        cerr << "highlight: language server is no hover provider\n";
+                        initError = true;
+                        break;
+                    }
+                    generator->lsAddHoverInfo( true );
+                }
+
+                if (options.isLsSemantic()) {
+                    if (!generator->isSemanticTokensProvider()) {
+                        cerr << "highlight: language server is no semantic token provider\n";
+                        initError = true;
+                        break;
+                    }
+                    generator->lsAddSemanticInfo(inFileList[i], suffix);
+                }
             }
         }
 
@@ -709,23 +729,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
             generator->lsOpenDocument(inFileList[i], suffix);
 
-            if (options.isLsHover()) {
-                if (!generator->isHoverProvider()) {
-                    cerr << "highlight: language server is no hover provider\n";
-                    initError = true;
-                    break;
-                }
-                generator->lsAddHoverInfo( true );
-            }
 
-            if (options.isLsSemantic()) {
-                if (!generator->isSemanticTokensProvider()) {
-                    cerr << "highlight: language server is no semantic token provider\n";
-                    initError = true;
-                    break;
-                }
-                generator->lsAddSemanticInfo(inFileList[i], suffix);
-            }
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {

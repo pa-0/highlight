@@ -97,7 +97,7 @@ void BBCodeGenerator::initOutputTags ()
     openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
-    openTags.push_back ( getOpenTag ( docStyle.getWarningStyle() ) );
+    openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle() ) );
 
     closeTags.push_back ( getCloseTag ( docStyle.getDefaultStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getStringStyle() ) );
@@ -111,7 +111,7 @@ void BBCodeGenerator::initOutputTags ()
     closeTags.push_back ( getCloseTag ( docStyle.getOperatorStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getInterpolationStyle() ) );
     closeTags.push_back ( getCloseTag ( docStyle.getErrorStyle() ) );
-    closeTags.push_back ( getCloseTag ( docStyle.getWarningStyle() ) );
+    closeTags.push_back ( getCloseTag ( docStyle.getErrorMessageStyle() ) );
 }
 
 string BBCodeGenerator::maskCharacter ( unsigned char c )

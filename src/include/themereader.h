@@ -58,7 +58,7 @@ class ThemeReader
 private:
     ElementStyle comment, slcomment, str, dstr,
                  escapeChar, number, directive, line, operators,
-                 interpolation, hover, warnings, errors;
+                 interpolation, hover, errorMessages, errors;
     ElementStyle defaultElem;
     ElementStyle canvas;
 
@@ -167,7 +167,7 @@ public:
 
     ElementStyle getErrorStyle() const;
 
-    ElementStyle getWarningStyle() const;
+    ElementStyle getErrorMessageStyle() const;
 
     /** \param className Name of keyword class (eg kwa, kwb, .., kwd)
         \return keyword style of the given className

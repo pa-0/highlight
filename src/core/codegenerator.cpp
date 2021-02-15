@@ -70,7 +70,7 @@ const string CodeGenerator::STY_NAME_IPL="ipl"; //interpolation
 
 const string CodeGenerator::STY_NAME_HVR="hvr";
 const string CodeGenerator::STY_NAME_ERR="err";
-const string CodeGenerator::STY_NAME_WRN="wrn";
+const string CodeGenerator::STY_NAME_ERM="erm";
 
 vector<Diluculum::LuaFunction*> CodeGenerator::pluginChunks;
 
@@ -171,6 +171,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      toggleDynRawString(false),
      lsEnableHoverRequests(false),
      lsCheckSemanticTokens(false),
+     lsCheckSyntaxErrors(false),
 
      keywordCase ( StringTools::CASE_UNCHANGED ),
      eolDelimiter ('\n'),
@@ -227,7 +228,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     }
 
     for (int i=0; i<docStyle.getSemanticTokenStyleCount();i++) {
-        currentSyntax->generateNewKWClass(i+1, "sm");
+        currentSyntax->generateNewKWClass(i+1, "st");
     }
 
     LSPClient.runInitialized();
@@ -261,6 +262,11 @@ bool CodeGenerator::isSemanticTokensProvider(){
 void CodeGenerator::lsAddHoverInfo(bool hover){
     lsEnableHoverRequests = hover;
 }
+
+void CodeGenerator::lsAddSyntaxErrorInfo(bool error) {
+    lsCheckSyntaxErrors = error;;
+}
+
 
 void CodeGenerator::exitLanguageServer () {
     LSPClient.runShutdown();
@@ -729,28 +735,26 @@ State CodeGenerator::getCurrentState (State oldState)
 
 SKIP_EMBEDDED:
 
-    if (lsCheckSemanticTokens) {
+    if (lsCheckSyntaxErrors && LSPClient.errorExists(lineNumber, lineIndex)) {
+        highlight::SemanticToken errorToken = LSPClient.getError(lineNumber, lineIndex);
+        token = line.substr ( lineIndex-1, errorToken.length);
+        lineIndex += errorToken.length-1;
+        lsSyntaxErrorDesc = errorToken.id;
 
-        if (LSPClient.errorExists(lineNumber, lineIndex)) {
-            highlight::SemanticToken errorToken = LSPClient.getError(lineNumber, lineIndex);
-            token = line.substr ( lineIndex-1, errorToken.length);
-            lineIndex += errorToken.length-1;
+        //std::cerr <<"error num "<<lineNumber<< " idx "<<lineIndex<< " error "<<errorToken.id<< "\n";
+        return SYNTAX_ERROR;
+    }
 
-            //std::cerr <<"error "<<lineNumber<< " idx"<<lineIndex<< " error "<<errorToken.id<< "\n";
-            return SYNTAX_ERROR;
-        }
+    if (lsCheckSemanticTokens && LSPClient.tokenExists(lineNumber, lineIndex)) {
+        highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
+        int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
+        if (semStyleKwId) {
+            token = line.substr ( lineIndex-1, semToken.length);
+            lineIndex += semToken.length-1;
 
-        if (LSPClient.tokenExists(lineNumber, lineIndex)) {
-            highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
-            int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
-            if (semStyleKwId) {
-                token = line.substr ( lineIndex-1, semToken.length);
-                lineIndex += semToken.length-1;
-
-                currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
-                //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
-                return KEYWORD;
-            }
+            currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
+            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
+            return KEYWORD;
         }
     }
 
@@ -877,7 +881,7 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
         ss << getHoverTagOpen(escHoverText);
     }
 
-    for(const auto &c : s)
+    for (const auto &c : s)
     {
         ss << maskCharacter ( c );
     }
@@ -898,6 +902,20 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
         }
         if (stateTraceCurrent.size()>200)
             stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 );
+    }
+}
+
+void CodeGenerator::printSyntaxError ( ostream& ss ) {
+    if ( !lsSyntaxErrorDesc.empty()) {
+        ss << openTags[ highlight::SYNTAX_ERROR_MSG ];
+
+        for(const auto &c : lsSyntaxErrorDesc)
+        {
+            ss << maskCharacter ( c );
+        }
+
+        ss << closeTags[ highlight::SYNTAX_ERROR_MSG ];
+        lsSyntaxErrorDesc.clear();
     }
 }
 
@@ -1895,12 +1913,6 @@ bool CodeGenerator::processSyntaxErrorState()
     State newState=STANDARD;
     bool eof=false,
     exitState=false;
-    //std::string hoverText;
-
-    //std::cerr << "call "<<lineNumber<< lineIndex<<"\n";
-
-    //if (LSPClient.errorExists(lineNumber, lineIndex))
-    //    hoverText = LSPClient.getError(lineNumber, lineIndex).id;
 
     openTag ( SYNTAX_ERROR );
     do {
@@ -2192,7 +2204,11 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
 
 string CodeGenerator::getNewLine()
 {
-    return (printNewLines) ? newLineTag : "";
+    ostringstream ss;
+    printSyntaxError(ss);
+    if (printNewLines)
+        ss << newLineTag;
+    return ss.str();
 }
 
 Diluculum::LuaValueList CodeGenerator::callDecorateLineFct(bool isLineStart)

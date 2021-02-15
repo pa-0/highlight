@@ -167,9 +167,18 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         initStyle(line, ls["LineNum"]);
         initStyle(operators, ls["Operator"]);
 
-        if (outputType==HTML) {
+        errorMessages.setBold(true);
+        errorMessages.setColour(Colour("#ff0000"));
+
+        if (outputType==HTML || outputType==XHTML) {
             hover.setCustomStyle ("cursor:help");
+            errorMessages.setCustomStyle ("color:red; border:solid 1px red; margin-left: 3em");
         }
+
+        if (outputType==LATEX) {
+            errorMessages.setCustomStyle ("\\marginpar{\\small\\itshape\\color{red}#1}");
+        }
+
         if (ls["Hover"].value() !=Diluculum::Nil){
             initStyle(hover, ls["Hover"]);
         }
@@ -317,9 +326,9 @@ ElementStyle ThemeReader::getErrorStyle() const
     return errors;
 }
 
-ElementStyle ThemeReader::getWarningStyle() const
+ElementStyle ThemeReader::getErrorMessageStyle() const
 {
-    return warnings;
+    return errorMessages;
 }
 
 bool ThemeReader::found () const

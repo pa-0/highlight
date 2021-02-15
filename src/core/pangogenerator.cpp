@@ -40,14 +40,22 @@ string PangoGenerator::getOpenTag ( const ElementStyle & elem )
 string PangoGenerator::getAttributes ( const ElementStyle & elem )
 {
     ostringstream s;
-    s << "foreground=\"#"
-      << ( elem.getColour().getRed ( HTML ) )
-      << ( elem.getColour().getGreen ( HTML ) )
-      << ( elem.getColour().getBlue ( HTML ) )
-      << "\""
-      << ( elem.isBold() ?     " weight=\"bold\"" :"" )
-      << ( elem.isItalic() ?   " style=\"italic\"" :"" )
-      << ( elem.isUnderline() ? " underline=\"single\"" :"" );
+
+    string customStyle(elem.getCustomStyle());
+
+    if (customStyle.empty()) {
+        s << "foreground=\"#"
+        << ( elem.getColour().getRed ( HTML ) )
+        << ( elem.getColour().getGreen ( HTML ) )
+        << ( elem.getColour().getBlue ( HTML ) )
+        << "\""
+        << ( elem.isBold() ?     " weight=\"bold\"" :"" )
+        << ( elem.isItalic() ?   " style=\"italic\"" :"" )
+        << ( elem.isUnderline() ? " underline=\"single\"" :"" );
+    } else {
+        s << customStyle;
+    }
+
     return s.str();
 }
 
@@ -75,7 +83,7 @@ void PangoGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
 
     openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
-    openTags.push_back ( getOpenTag ( docStyle.getWarningStyle() ) );
+    openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle() ) );
 
     closeTags.push_back ( "" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {

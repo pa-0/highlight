@@ -476,7 +476,9 @@ namespace highlight
 
                 if (startLine == endLine && startCharacter<endCharacter) {
             //        std::cerr<<"diag "<< startLine << " : "<<startCharacter << " - " << endCharacter<<"\n";
-                    errorMap[{ startLine+1, startCharacter+1 }] = highlight::SemanticToken(endCharacter-startCharacter, 1, iter->get("message").get<std::string>());
+                    std::string msg=iter->get("message").get<std::string>();
+                    std::replace(msg.begin(), msg.end(), '\n', ' ');
+                    errorMap[{ startLine+1, startCharacter+1 }] = highlight::SemanticToken(endCharacter-startCharacter, 1, msg);
                 }
             }
         }
