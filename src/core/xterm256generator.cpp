@@ -2,7 +2,7 @@
                    xterm256generator.cpp  -  description
                              -------------------
     begin                : Oct 13 2006
-    copyright            : (C) 2006-2020 by Andre Simon
+    copyright            : (C) 2006-202 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -102,6 +102,9 @@ void Xterm256Generator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( docStyle.getLineStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle()) );
+
+    openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
+    openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle()) );
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "\033[m" );

@@ -2150,7 +2150,8 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
 
         if (line.find(STY_NAME_NUM, typeDescPos)==typeDescPos)
             assertState=NUMBER;
-        else if (line.find(STY_NAME_STR, typeDescPos)==typeDescPos)
+        //TODO temp. fix to allow old and new string classes
+        else if (line.find(STY_NAME_STR, typeDescPos)==typeDescPos || line.find("str", typeDescPos)==typeDescPos)
             assertState=STRING;
         else if (line.find(STY_NAME_ESC, typeDescPos)==typeDescPos)
             assertState=ESC_CHAR;
