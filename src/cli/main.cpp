@@ -713,23 +713,20 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     }
                     generator->lsAddHoverInfo( true );
                 }
-
-                if (options.isLsSemantic()) {
-                    if (!generator->isSemanticTokensProvider()) {
-                        cerr << "highlight: language server is no semantic token provider\n";
-                        initError = true;
-                        break;
-                    }
-                    generator->lsAddSemanticInfo(inFileList[i], suffix);
-                }
             }
         }
 
         if (usesLSClient && lsSyntax==suffix) {
-
             generator->lsOpenDocument(inFileList[i], suffix);
 
-
+            if (options.isLsSemantic()) {
+                if (!generator->isSemanticTokensProvider()) {
+                    cerr << "highlight: language server is no semantic token provider\n";
+                    initError = true;
+                    break;
+                }
+                generator->lsAddSemanticInfo(inFileList[i], suffix);
+            }
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {

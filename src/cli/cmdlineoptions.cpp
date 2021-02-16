@@ -652,14 +652,12 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             break;
 
         case  S_OPT_LS_PROFILE:
-            maxFileSize = 10 * 1024;
             lsProfile = arg;
             break;
         case S_OPT_LS_WORKSPACE:
             lsWorkspace = arg;
             break;
         case S_OPT_LS_EXEC:
-            maxFileSize = 10 * 1024;
             lsExecutable = arg;
             break;
         case S_OPT_LS_HOVER:

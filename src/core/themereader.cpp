@@ -73,7 +73,7 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
         while (var["Custom"][idx].value() !=Diluculum::Nil) {
 
             if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
-                style.setCustomStyle (var["Custom"][idx]["Content"].value().asString() );
+                style.setCustomStyle (var["Custom"][idx]["Style"].value().asString() );
                 return;
             }
             idx++;
@@ -179,6 +179,10 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             errorMessages.setCustomStyle ("\\marginpar{\\small\\itshape\\color{red}#1}");
         }
 
+        if (ls["ErrorMessage"].value() !=Diluculum::Nil){
+            initStyle(errorMessages, ls["ErrorMessage"]);
+        }
+
         if (ls["Hover"].value() !=Diluculum::Nil){
             initStyle(hover, ls["Hover"]);
         }
@@ -207,7 +211,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil && idx < 27) {
 
                 initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
-                snprintf(kwName, sizeof(kwName), "sm%c", ('a'+idx+-1));
+                snprintf(kwName, sizeof(kwName), "st%c", ('a'+idx+-1));
                 keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
                 semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = keywordStyleCnt + idx;
                 //std::cerr<<"semanticStyleMap "<< (ls["SemanticTokenTypes"][idx]["Type"].value().asString()) << " -> "<< keywordStyleCnt + idx<<"\n";
@@ -243,11 +247,11 @@ int ThemeReader::getSemanticStyle(const string &type) {
     return semanticStyleMap.count(type) ? semanticStyleMap[type] : 0;
 }
 
-int ThemeReader::getSemanticTokenStyleCount() {
+int ThemeReader::getSemanticTokenStyleCount() const {
     return semanticStyleMap.size();
 }
 
-int ThemeReader::getKeywordStyleCount() {
+int ThemeReader::getKeywordStyleCount() const {
     return keywordStyleCnt;
 }
 
@@ -387,18 +391,18 @@ void ThemeReader::overrideAttributes(vector<int>& attributes) {
     }
 }
 
-float ThemeReader::getsRGB(int rgbValue) {
+float ThemeReader::getsRGB(int rgbValue) const {
 	float s = (float)rgbValue / 255;
 	s = (s <= 0.03928) ? s / 12.92 : std::pow(((s + 0.055) / 1.055), 2.4);
 	return s;
 }
 
-float ThemeReader::getBrightness(const Colour& colour) {
+float ThemeReader::getBrightness(const Colour& colour) const {
     return  0.2126*getsRGB(colour.getRed()) +
             0.7152*getsRGB(colour.getGreen()) +
             0.0722*getsRGB(colour.getBlue());
 }
-float ThemeReader::getContrast() {
+float ThemeReader::getContrast() const {
     float canvasBrightness = getBrightness(canvas.getColour());
     float defaultBrightness = getBrightness(defaultElem.getColour());
     return  (std::max(canvasBrightness, defaultBrightness) + 0.05) /

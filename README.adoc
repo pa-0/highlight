@@ -733,7 +733,7 @@ Base16 themes (located in {themes_base16}).
 ==== Format attributes
 
 ................................................................................
-Attributes = {Colour, Bold?, Italic?, Underline? }
+Attributes = {Colour, Bold?, Italic?, Underline?, Custom? }
 ................................................................................
 
 [horizontal]
@@ -741,8 +741,7 @@ Colour::    String, defines colour in HTML hex notation (`#rrggbb`)
 Bold::      Boolean, true if font should be bold (optional)
 Italic::    Boolean, true if font should be italic (optional)
 Underline:: Boolean, true if font should be underlined (optional)
-
-
+Custom::    Array, contains `Format` and `Style` elements to define custom styling
 
 ==== Theme elements
 
@@ -755,25 +754,31 @@ Default        = Attributes (Colour of unspecified text)
 
 Canvas         = Attributes (Background colour )
 
-Number         = Attributes (Formatting of numbers)
+Number         = Attributes (numbers)
 
-Escape         = Attributes (Formatting of escape sequences)
+Escape         = Attributes (escape sequences)
 
-String         = Attributes (Formatting of strings)
+String         = Attributes (strings)
 
-Interpolation  = Attributes (Formatting of interpolation sequences)
+Interpolation  = Attributes (interpolation sequences)
 
-PreProcessor   = Attributes (Formatting of preprocessor directives)
+PreProcessor   = Attributes (preprocessor directives)
 
-StringPreProc  = Attributes (Formatting of strings within preprocessor directives)
+StringPreProc  = Attributes (strings within preprocessor directives)
 
-BlockComment   = Attributes (Formatting of block comments)
+BlockComment   = Attributes (block comments)
 
-LineComment    = Attributes (Formatting of line comments)
+LineComment    = Attributes (line comments)
 
-LineNum        = Attributes (Formatting of line numbers)
+LineNum        = Attributes (line numbers)
 
-Operator       = Attributes (Formatting of operators)
+Operator       = Attributes (operators)
+
+Hover          = Attibutes (LSP Hover elements)
+
+Error          = Attibutes (LSP syntax errors)
+
+ErrorMessage   = Attibutes (LSP error descriptions)
 
 Keywords= {
   Attributes1,
@@ -782,13 +787,11 @@ Keywords= {
   Attributes4,
 }
 
-AttributesN: Formatting of keyword group N. There should be at least four items
-             to match the number of keyword groups defined in the language
-             definitions
+AttributesN: Formatting of keyword group N.
 
 SemanticAttributesN: An array consisting of:
-                     `Type`: Token Identifier of the LS protokol (V 3.16)
-                     `Style`: formatierung of the token
+                     `Type`: Token Identifier of the LS protocol (V 3.16)
+                     `Style`: formatting of the token
 ................................................................................
 
 .Example

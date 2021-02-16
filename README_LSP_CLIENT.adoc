@@ -38,9 +38,8 @@ the code''s meaning this will improve the highlighting quality.
 Several beta releases are planned to introduce these features:
 
 * add enhanced tooltips using hover requests (implemented)
-* add semantic highlighting (some parts are implemented)
-* add rainbow highlighting (tbd)
-* add syntax error highlighting (some parts are implemented)
+* add semantic highlighting (implemented)
+* add syntax error highlighting (implemented)
 
 
 == PROFILES
@@ -95,7 +94,7 @@ Language Server options (*tbd):
 
 == THEMES
 
-All base16 themes have a new section to define semantic token styles. The
+Colour themes have a new section to define semantic token styles. The
 types use the same identifiers which are reported by the language server.
 If the server reports a token type not listed here, it will be ignored.
 
@@ -132,13 +131,5 @@ highlight --ls-profile rls --ls-workspace '/home/andre/Projekte/rust/hello_world
 ..........................................................................
 
 The GUI offers an LSP tab to enable these options.
-
-=== Example invocation:
-
-Run this command to find themes with semantic style attributes:
-+
-..........................................................................
-highlight --list-scripts=themes --list-cat=lsp
-..........................................................................
 
 // EOF //

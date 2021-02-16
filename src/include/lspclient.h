@@ -101,7 +101,7 @@ private:
 
     std::string pipe_read_jsonrpc();
 
-    bool runSimpleAction(const std::string action, bool awaitAnswer = true, int delay = 0);
+    void runSimpleAction(const std::string action, int delay = 0);
 
     bool checkErrorResponse(const picojson::value &json, const std::string& picoError);
 
@@ -126,7 +126,7 @@ public:
 
     bool runInitialize();
 
-    bool runInitialized();
+    void runInitialized();
 
     bool runDidOpen(const std::string &document, const std::string &syntax);
 
@@ -136,9 +136,9 @@ public:
 
     bool runSemanticTokensFull(const std::string &document);
 
-    bool runShutdown();
+    void runShutdown();
 
-    bool runExit();
+    void runExit();
 
     bool isInitialized() const;
 

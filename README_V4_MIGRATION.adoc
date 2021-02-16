@@ -86,4 +86,9 @@ CodeGenerator::setIndentationOptions
 
 lsp.conf
 
+== CSS STYLE NAMES
++
+
+The `str` class was renamed to `sng` (conflicts with new st* names).
+
 // EOF //

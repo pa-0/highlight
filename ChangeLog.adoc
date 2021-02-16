@@ -8,10 +8,12 @@
 
 == highlight 4.0 beta 4
 
-15.02.2021
+16.02.2021
 
+  - added two more keyword styles for default themes
   - added Custom theme attributes for Plain TeX, LaTeX, SVG and Pango
   - enabled syntax message output with `--ls-syntax-error`
+  - GUI: enabled syntax error checkbox
 
 == highlight 4.0 beta 3
 

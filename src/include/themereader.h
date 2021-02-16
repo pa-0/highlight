@@ -80,9 +80,9 @@ private:
 
     void initStyle(ElementStyle& style, const Diluculum::LuaVariable& var);
 
-    float getsRGB(int rgbValue);
+    float getsRGB(int rgbValue) const;
 
-    float getBrightness(const Colour& colour);
+    float getBrightness(const Colour& colour) const;
 
     OutputType getOutputType(const string &typeDesc);
 
@@ -179,13 +179,13 @@ public:
 
     int getSemanticStyle(const string &type);
 
-    int getSemanticTokenStyleCount();
+    int getSemanticTokenStyleCount() const;
 
-    int getKeywordStyleCount();
+    int getKeywordStyleCount() const;
 
     void overrideAttributes( vector<int>& attributes);
 
-    float getContrast();
+    float getContrast() const;
 };
 
 }

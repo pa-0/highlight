@@ -745,8 +745,7 @@ Colour::    String, Farbe in Hex-Notation (`#rrggbb`)
 Bold::      Boolean, True wenn Font bold sein soll (optional)
 Italic::    Boolean, True wenn Font kursiv sein soll (optional)
 Underline:: Boolean, True wenn Font unterstrichen sein soll (optional)
-
-
+Custom::    Array, enthaelt `Format` und `Style` Attribute fuer spezielle Formatierungen
 
 ==== Theme-Elemente
 
@@ -759,26 +758,31 @@ Default        = Attributes (Farbe des nicht hervorgehobenen Texts)
 
 Canvas         = Attributes (Hintergrundfarbe)
 
-Number         = Attributes (Formatierung von Zahlen)
+Number         = Attributes (Zahlen)
 
-Escape         = Attributes (Formatierung von Escape-Sequenzen)
+Escape         = Attributes (Escape-Sequenzen)
 
-String         = Attributes (Formatierung von Strings)
+String         = Attributes (Strings)
 
-Interpolation  = Attributes (Formatierung von Interpolationen)
+Interpolation  = Attributes (Interpolationen)
 
-PreProcessor   = Attributes (Formatierung von Praeprozessor-Direktiven)
+PreProcessor   = Attributes (Praeprozessor-Direktiven)
 
-StringPreProc  = Attributes (Formatierung von Strings in
-                             Praeprozessor-Direktiven)
+StringPreProc  = Attributes (Strings in Praeprozessor-Direktiven)
 
-BlockComment   = Attributes (Formatierung von Blockkommentaren)
+BlockComment   = Attributes (Blockkommentaren)
 
-LineComment    = Attributes (Formatierung von Zeilenkommentaren)
+LineComment    = Attributes (Zeilenkommentaren)
 
-LineNum        = Attributes (Formatierung von Zeilennummern)
+LineNum        = Attributes (Zeilennummern)
 
-Operator       = Attributes (Formatierung von Operatoren)
+Operator       = Attributes (Operatoren)
+
+Hover          = Attibutes (LSP Hover Elementen)
+
+Error          = Attibutes (LSP Syntaxfehler)
+
+ErrorMessage   = Attibutes (LSP Fehlerbeschreibungen)
 
 Keywords= {
   Attributes1,

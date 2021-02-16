@@ -48,7 +48,7 @@ SemanticTokenTypes  = {
   { Type = 'operator', Style = Operator },
 }
 
-Hover = { Custom = { { Format = "html", Content = "cursor:help" } } }
+Hover = { Custom = { { Format = "html", Style = "cursor:help" } } }
 
 -- not used yet:
 

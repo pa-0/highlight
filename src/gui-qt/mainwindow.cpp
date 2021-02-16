@@ -536,6 +536,8 @@ void MainWindow::writeSettings()
                       ui->cbLSHover->isChecked());
     settings.setValue(ui->cbLSSemantic->property(name).toString(),
                       ui->cbLSSemantic->isChecked());
+    settings.setValue(ui->cbLSSyntaxErrors->property(name).toString(),
+                      ui->cbLSSyntaxErrors->isChecked());
 
     settings.setValue(ui->leSVGHeight->property(name).toString(),
                       ui->leSVGHeight->text());
@@ -631,6 +633,7 @@ void MainWindow::readSettings()
     ui->cbValidateInput->setChecked(settings.value(ui->cbValidateInput->property(name).toString()).toBool());
     ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
     ui->cbLSSemantic->setChecked(settings.value(ui->cbLSSemantic->property(name).toString()).toBool());
+    ui->cbLSSyntaxErrors->setChecked(settings.value(ui->cbLSSyntaxErrors->property(name).toString()).toBool());
 
     ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
     ui->comboEncoding->setCurrentIndex(0);
@@ -1300,6 +1303,8 @@ void MainWindow::on_pbStartConversion_clicked()
 
             if ( useLSForInput ) {
 
+                generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
+
                 generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
 
                 generator->lsOpenDocument(currentFile, syntaxName);
@@ -1496,6 +1501,8 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
             if (initializeLS(generator.get(), false )) {
 
+                generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
+
                 generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
 
                 generator->lsOpenDocument(currentFile, suffix);
@@ -1617,7 +1624,8 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
 void MainWindow::plausibility()
 {
-    bool semanticOptionIsChecked = ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked() ||  ui->cbLSRainbow->isChecked();
+    bool semanticOptionIsChecked = ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked();
+    ui->cbLSSyntaxErrors->setEnabled(semanticOptionIsChecked);
     ui->leOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbBrowseOutDir->setEnabled(!ui->cbWrite2Src->isChecked());
@@ -1761,6 +1769,8 @@ void MainWindow::updatePreview()
 
             applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && !currentFile.empty() && lsSyntax==suffix && initializeLS(&pwgenerator, false );
             if ( applyLS ) {
+
+                pwgenerator.lsAddSyntaxErrorInfo( ui->cbLSSyntaxErrors->isChecked() );
 
                 pwgenerator.lsAddHoverInfo( ui->cbLSHover->isChecked() );
                 pwgenerator.lsOpenDocument(currentFile, suffix);

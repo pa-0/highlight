@@ -914,15 +914,15 @@
           </widget>
          </item>
          <item row="7" column="0">
-          <widget class="QCheckBox" name="cbLSRainbow">
+          <widget class="QCheckBox" name="cbLSSyntaxErrors">
            <property name="toolTip">
-            <string>Use more colours for variables and function names.</string>
+            <string>Show syntax errors and messages (depends on output format).</string>
            </property>
            <property name="text">
-            <string>Rainbow Highlighting</string>
+            <string>Show Syntax Errors</string>
            </property>
            <property name="checkable">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
           </widget>
          </item>

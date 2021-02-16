@@ -456,7 +456,6 @@ namespace highlight
         return true;
     }
 
-    //{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":"file:///home/andre/Projekte/rust/hello_world/src/main.rs","diagnostics":[],"version":0}}
     void LSPClient::readNotification(const picojson::value &json) {
 
         if (json.contains("method") && json.get("method").get<std::string>()=="textDocument/publishDiagnostics") {
@@ -517,7 +516,6 @@ namespace highlight
         bool writeRes=pipe_write_jsonrpc(serialized);
 
         if (!writeRes) {
-
             return "";
         }
 
@@ -535,7 +533,6 @@ namespace highlight
             if ( !jsonResponse.contains("id") ) {
 
                 readNotification(jsonResponse);
-
                 continue;
             }
 
@@ -629,7 +626,6 @@ namespace highlight
             if ( !jsonResponse.contains("id") ) {
 
                 readNotification(jsonResponse);
-
                 continue;
             }
 
@@ -637,12 +633,10 @@ namespace highlight
                 continue;
             }
 
-
             if ( jsonResponse.get("result").is<picojson::object>() ) {
                 break;
             }
         }
-
 
         vector<unsigned int> semAttributes;
         picojson::array list = jsonResponse.get("result").get("data").get<picojson::array>();
@@ -666,6 +660,10 @@ namespace highlight
 
             col +=semAttributes[i+1];
             id = tokenTypes[semAttributes[i+3]];
+
+            //if (semAttributes[i+4]) {
+            //    std::cerr << "Mod! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+4]<<"\n";
+            //}
 
             // for now disable multiline elements
             if (id != "comment" && id != "string" && id != "macro") {
@@ -723,8 +721,6 @@ namespace highlight
 
         pipe_write_jsonrpc(serialized);
 
-        //waitForNotifications();
-
         return true;
     }
 
@@ -781,7 +777,7 @@ namespace highlight
         return true;
     }
 
-    bool LSPClient::runSimpleAction(const std::string action, bool awaitAnswer, int delay) {
+    void LSPClient::runSimpleAction(const std::string action, int delay) {
         picojson::object request;
         //picojson::value nullValue;
         picojson::object emptyObject;
@@ -801,30 +797,18 @@ namespace highlight
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(delay));
         }
-
-        if (!awaitAnswer) return true;
-
-        std::string response = pipe_read_jsonrpc();
-
-        if (response.empty()) return true;
-
-        picojson::value jsonResponse;
-        std::string err = picojson::parse(jsonResponse, response);
-
-        return checkErrorResponse(jsonResponse, err);
     }
 
-
-    bool LSPClient::runInitialized(){
-        return runSimpleAction("initialized", false, initDelay);
+    void LSPClient::runInitialized(){
+         runSimpleAction("initialized", initDelay);
     }
 
-    bool LSPClient::runShutdown() {
-        return runSimpleAction("shutdown", false);
+    void LSPClient::runShutdown() {
+        runSimpleAction("shutdown");
     }
 
-    bool LSPClient::runExit()  {
-        return runSimpleAction("exit", false);
+    void LSPClient::runExit()  {
+        runSimpleAction("exit");
     }
 
     bool LSPClient::isInitialized() const {
