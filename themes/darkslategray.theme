@@ -4,7 +4,7 @@ Description = "vim darkslategray"
 Categories = {"dark", "vim"}
 
 Default	= { Colour="#f5deb3" }
-Canvas	= { Colour="#2f4f4f" }
+Canvas	= { Colour="#1d3e3e" }
 Number	= { Colour="#ff6347" }
 Escape	= { Colour="#ff6347" }
 String	= { Colour="#7fffd4" }
@@ -17,11 +17,11 @@ PreProcessor      = { Colour="#f5b3eb" }
 Interpolation  = { Colour="#ffffff" }
 
 Keywords = {
-  { Colour="#4682b4" , Bold=true},
+  { Colour="#a28ffb" , Bold=true},
   { Colour="#98fb98" , Bold=true},
   { Colour="#b57847" },
   { Colour="#b3caf5" },
-  { Colour="#e9ffbd" },
+  { Colour="#93ebff" },
   { Colour="#ffffff" },
 }
 
@@ -35,8 +35,8 @@ SemanticTokenTypes = {
   { Type = 'parameter', Style = Keywords[6] },
   { Type = 'variable', Style = Keywords[5] },
   { Type = 'enumMember', Style = Keywords[5] },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
   { Type = 'keyword', Style =  Keywords[1]},
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },

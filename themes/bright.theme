@@ -21,8 +21,8 @@ Keywords = {
   { Colour= "#F48C23" },
   { Colour= "#0000ff" },
   { Colour= "#d11ced" },
-  { Colour="#776ab8" },
-  { Colour="#776ab8" },
+  { Colour= "#dd820d" },
+  { Colour= "#776ab8" },
 }
 
 -- new LSP based elements:
@@ -35,8 +35,8 @@ SemanticTokenTypes = {
   { Type = 'parameter', Style = Keywords[6] },
   { Type = 'variable', Style = Keywords[5] },
   { Type = 'enumMember', Style = Keywords[5] },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
   { Type = 'keyword', Style =  Keywords[1]},
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },

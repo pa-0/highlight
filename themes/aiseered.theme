@@ -21,7 +21,7 @@ Keywords = {
   { Colour="#88ffaa" },
   { Colour="#aa99ff" },
   { Colour="#f0b77f" },
-  { Colour="#3bc30d" },
+  { Colour="#ff731f" },
   { Colour="#96c30d" },
 }
 
@@ -35,8 +35,8 @@ SemanticTokenTypes = {
   { Type = 'parameter', Style = Keywords[6] },
   { Type = 'variable', Style = Keywords[5] },
   { Type = 'enumMember', Style = Keywords[5] },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
   { Type = 'keyword', Style =  Keywords[1]},
   { Type = 'number', Style = Number },
   { Type = 'regexp', Style = String },
