@@ -163,7 +163,7 @@ bool getDirectoryEntries ( vector<string> &fileList,
         if ( Pos == string::npos ) {
             directory_path = ".";
         } else {
-            directory_path = wildcard.substr ( 0, Pos );
+            directory_path = wildcard.substr ( 0, Pos + 1);
             wildcard = wildcard.substr ( Pos + 1 );
         }
 
