@@ -173,6 +173,11 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         if (outputType==HTML || outputType==XHTML) {
             hover.setCustomStyle ("cursor:help");
             errorMessages.setCustomStyle ("color:red; border:solid 1px red; margin-left: 3em");
+
+            ostringstream lineColourFmt;
+            Colour lineColour = line.getColour();
+            lineColourFmt << "#"<<lineColour.getRed(HTML)<<lineColour.getGreen(HTML)<<lineColour.getBlue(HTML);
+            line.setCustomStyle("user-select: none; color: " + lineColourFmt.str());
         }
 
         if (outputType==LATEX) {
