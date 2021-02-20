@@ -22,7 +22,7 @@ Keywords = {
   { Colour= "#a52a2a", Bold=true },
   { Colour= "#dda0dd", Bold=true },
   { Colour= "#000000" },
-  { Colour= "#a1a1a1" },
+  { Colour= "#000000" },
   { Colour= "#7e7e7e" },
 }
 

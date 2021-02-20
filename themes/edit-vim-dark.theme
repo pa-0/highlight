@@ -9,8 +9,8 @@ Number         = { Colour="#e64ce6" }
 Escape         = { Colour="#f8d1d1" }
 String         = { Colour="#c641c6" }
 StringPreProc  = { Colour="#c641c6" }
-BlockComment   = { Colour="#53fcfc" }
-PreProcessor   = { Colour="#53fcfc" }
+BlockComment   = { Colour="#53bdfc" }
+PreProcessor   = { Colour="#53bdfc" }
 LineNum        = { Colour="#ffff54" }
 Operator       = { Colour="#ffffff" }
 LineComment = BlockComment
@@ -21,7 +21,7 @@ Keywords = {
   { Colour= "#69c789" },
   { Colour= "#d0d045" },
   { Colour= "#ffffff" },
-  { Colour="#6d8ecf" },
+  { Colour="#ffffff" },
   { Colour="#7d6dcf" },
 }
 

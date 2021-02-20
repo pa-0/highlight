@@ -21,7 +21,7 @@ Keywords = {
   { Colour= "#d45999" },
   { Colour= "#da392e" }, --sgml tags
   { Colour= "#407caa" }, --sgml ent
-  { Colour= "#a1a1a1" },
+  { Colour= "#449516" },
   { Colour= "#7e7e7e" },
 }
 

@@ -46,7 +46,7 @@ Keywords = {
                 { Colour="#A3FFD4" }, -- ("Aquamarine" Green)
                 { Colour="#66A1CD" }, -- ("Danube" Blue)
                 { Colour="#E64D59" }, -- ("Mandy" Red)
-                { Colour= "#acaead" },
+                { Colour= "#FFFFB3" },
                 { Colour= "#7e7e7e" },
 }
 

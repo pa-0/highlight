@@ -19,11 +19,11 @@ Interpolation  = Escape
 
 Keywords = {
   { Colour= "#B26818" },
-  { Colour= "#00ff00" },
+  { Colour= "#00dd00" },
   { Colour= "#B26818" },
   { Colour= "#000000" },
-  { Colour= "#a1a1a1" },
-  { Colour= "#7e7e7e" },
+  { Colour= "#000000" },
+  { Colour= "#000000" },
 }
 
 -- new LSP based elements:

@@ -79,6 +79,8 @@ CodeGenerator::setIndentationOptions
     langDefs/rs.lang -> langDefs/rust.lang
     langDefs/sh.lang -> langDefs/shellscript.lang
     langDefs/ts.lang -> langDefs/typescript.lang
+
+    themes/fine_blue.theme -> themes/fineblue.theme
 ..........................................................................
 
 == NEW CONFIG FILES

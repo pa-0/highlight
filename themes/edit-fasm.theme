@@ -49,8 +49,8 @@ Keywords =  {
                 Default, -- INSTRUCTIONS
                 Default, -- LABELS
                 Default, -- DIRECTIVES
-                { Colour="#000000" },
-                { Colour="#000000" },
+                Default,
+                Default,
 }
 
 -- new LSP based elements:
