@@ -1293,7 +1293,6 @@ void MainWindow::on_pbStartConversion_clicked()
             string syntaxName = QFileInfo(langDefPath).baseName().toStdString();
 
             if ((ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && usesLSClient==false && lsSyntax==syntaxName) {
-
                 if (initializeLS(generator.get(), false )) {
                         usesLSClient=true;
                 }
@@ -1495,22 +1494,8 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         QString inFileName = QFileInfo(previewFilePath).fileName();
         generator->setTitle(inFileName.toStdString());
 
-        //applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && getOutputType()==highlight::HTML && !currentFile.empty() && lsSyntax==suffix;
-
-        if ( applyLS ) {
-
-            if (initializeLS(generator.get(), false )) {
-
-                generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
-
-                generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
-
-                generator->lsOpenDocument(currentFile, suffix);
-
-                if (ui->cbLSSemantic->isChecked())
-                    generator->lsAddSemanticInfo(currentFile, suffix);
-                }
-           }
+        applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked())
+                && !currentFile.empty() && lsSyntax==suffix;
     }
 
     QString langPath = getUserScriptPath("lang");
@@ -1522,7 +1507,6 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         langPath = getWindowsShortPath(langPath);
 #endif
 
-
     QString clipBoardData;
 
     for (int twoPass=0; twoPass<2; twoPass++) {
@@ -1530,6 +1514,21 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         if ( generator->loadLanguage(langPath.toStdString()) != highlight::LOAD_FAILED) {
 
             applyEncoding(generator.get(), langPath);
+
+            if ( applyLS ) {
+
+                if (initializeLS(generator.get(), false )) {
+
+                    generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
+
+                    generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
+                    generator->lsOpenDocument(currentFile, suffix);
+
+                    if (ui->cbLSSemantic->isChecked())
+                        generator->lsAddSemanticInfo(currentFile, suffix);
+                }
+            }
 
             if (getDataFromCP) {
                 clipBoardData= QString::fromStdString( generator->generateString(savedClipboardContent.toStdString()));
@@ -2178,13 +2177,19 @@ void MainWindow::loadLSProfile() {
     }
 }
 
-bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
+
+bool MainWindow::initializeLS(highlight::CodeGenerator* generator, bool tellMe)
 {
+    if (!generator) {
+        return false;
+    }
+
+    std::string lsWorkSpace(ui->leLSWorkspace->text().toStdString());
+
     highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
-                                                                  ui->leLSWorkspace->text().toStdString(), lsSyntax,
+                                                                  lsWorkSpace, lsSyntax,
                                                                   lsDelay,
                                                                   ui->cbLSDebug->isChecked() ? 2 : 0 );
-
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {
 
@@ -2198,7 +2203,6 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
                 ui->cbLSHover->setEnabled(false);
             }
 
-
             if (generator->isSemanticTokensProvider()) {
                 ui->cbLSSemantic->setIcon(QIcon(":/ls_supported.png"));
                 ui->cbLSSemantic->setChecked(true);
@@ -2208,7 +2212,6 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
                 ui->cbLSSemantic->setChecked(false);
                 ui->cbLSSemantic->setEnabled(false);
             }
-
             generator->exitLanguageServer();
             QMessageBox::information(this, "LSP Init. OK",  "Language server initialization successful");
         }
@@ -2219,6 +2222,7 @@ bool MainWindow::initializeLS(highlight::CodeGenerator *generator, bool tellMe)
     } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
         QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
     }
+
     return false;
 }
 
@@ -2235,6 +2239,7 @@ void MainWindow::on_pbLSInitialize_clicked(){
     }
 
     highlight::HtmlGenerator lspgenerator;
+
     initializeLS(&lspgenerator, true);
 }
 

@@ -5,9 +5,9 @@
     copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
 
-   Highlight is a universal source code to HTML converter. Syntax highlighting
-   is formatted by Cascading Style Sheets. It's possible to easily enhance
-   highlight's parsing database.
+   Highlight is a universal source code to formatted text converter.
+   Syntax highlighting is formatted by Cascading Style Sheets.
+   It's possible to easily enhance highlight's parsing database.
 
  ***************************************************************************/
 

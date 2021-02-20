@@ -207,7 +207,6 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
                                              const string& workspace, const string& syntax,
                                              int delay, int logLevel )
 {
-
     if (LSPClient.isInitialized()) {
         return LSResult::INIT_OK;
     }
@@ -219,7 +218,6 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.setOptions(options);
     LSPClient.setSyntax(syntax);
     LSPClient.setInitializeDelay(delay);
-
     if (!LSPClient.connect()){
         return LSResult::INIT_BAD_PIPE;
     }
@@ -227,11 +225,9 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     if (!LSPClient.runInitialize()){
         return LSResult::INIT_BAD_REQUEST;
     }
-
     for (int i=0; i<docStyle.getSemanticTokenStyleCount();i++) {
         currentSyntax->generateNewKWClass(i+1, "st");
     }
-
     LSPClient.runInitialized();
     updateKeywordClasses();
     return LSResult::INIT_OK;
@@ -656,7 +652,7 @@ unsigned char CodeGenerator::getInputChar()
 
         //more testing required:
         if (outputType==ESC_TRUECOLOR || outputType==ESC_XTERM256)
-            lastLineLength=StringTools::utf8_strlen(line);
+            lastLineLength=StringTools::utf8_strlen(line + lsSyntaxErrorDesc);
 
         bool eof=false;
         if ( preFormatter.isEnabled() ) {

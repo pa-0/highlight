@@ -120,7 +120,7 @@ void printHelp(const std::string &topic)
         cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
         cout <<"Language servers are be configured in the lsp.conf file. Each parameter of this file\n";
         cout <<"can also be set using --ls-exec, --ls-option, --ls-delay and --ls-syntax.\n";
-        cout <<"Important: LSP requires absolute input paths.\n";
+        cout <<"Important: LSP requires absolute input file paths.\n";
     } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";
@@ -254,8 +254,6 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
         cout<<"     --ls-syntax-error          retrieve syntax error information\n";
         cout<<"                                  (assumes --ls-hover or --ls-semantic)\n";
-
-        //cout<<"     --ls-rainbow *\n";
         cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
         cout<<"\n\n";
 
