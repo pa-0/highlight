@@ -23,7 +23,7 @@ Keywords = {
   { Colour= "#7f0055", Bold=true },
   { Colour= "#000000" },
   { Colour= "#7f0055" },
-  { Colour= "#7e7e7e" },
+  { Colour= "#7e7e7e", Bold=true },
 }
 
 -- new LSP based elements:

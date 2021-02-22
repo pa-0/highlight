@@ -27,6 +27,7 @@ v4.0-beta, January 2021
 :INSTALL: pass:q[link:INSTALL[`INSTALL`]]
 // Source files:
 :cpp_qt_lua: pass:q[link:plugins/cpp_qt.lua[`cpp_qt.lua`^]]
+:lsp_conf: pass:q[link:lsp.conf[`lsp.conf`^]]
 :filetypes_conf: pass:q[link:filetypes.conf[`filetypes.conf`^]]
 :fileopenfilter_conf: pass:q[link:gui_files/ext/fileopenfilter.conf[`gui_files/ext/fileopenfilter.conf`^]]
 :makefile: pass:q[link:makefile[`makefile`^]]
@@ -44,7 +45,6 @@ v4.0-beta, January 2021
 :README_TCL: pass:q[link:extras/tcl/README_TCL[`README_TCL`]]
 :extras_web_plugins: pass:q[link:extras/web_plugins/[`extras/web_plugins/`]]
 // External Links:
-:source-highlight: pass:[http://www.gnu.org/software/src-highlite/[source-highlight^]]
 :andre-simon_de: pass:[http://www.andre-simon.de[www.andre-simon.de^]]
 
 
@@ -290,7 +290,7 @@ Terminal escape output options (xterm256 or truecolor):
      --canvas[=width]           set background colour padding (default: 80)
 
 
-Language Server options (*tbd):
+Language Server options:
 
      --ls-profile=<server>      read LSP configuration from lsp.conf
      --ls-delay=<ms>            set server initialization delay
@@ -299,7 +299,8 @@ Language Server options (*tbd):
      --ls-hover                 execute hover requests (HTML output only)
      --ls-semantic              retrieve semantic token types (requires LSP 3.16)
      --ls-syntax=<lang>         set syntax which is understood by the server
-     --ls-rainbow *
+     --ls-syntax-error          retrieve syntax error information
+                                  (assumes --ls-hover or --ls-semantic)
      --ls-workspace=<dir>       set workspace directory to init. the server
 ................................................................................
 
@@ -338,7 +339,7 @@ cat test.py | highlight --syntax py
 
 Sollte es mehrere Dateierweiterungen fuer Dateien einer Programmiersprache
 geben (wie z.B. `C`, `cc`, `cpp`, `h` bei C++), werden diese in der Datei
-`$CONF_DIR/filetypes.conf` einer Sprachdefinition zugewiesen.
+{filetypes_conf} einer Sprachdefinition zugewiesen.
 
 Wenn mehrere Eingabedateien an Highlight uebergeben werden oder `--batch-recursive`
 gesetzt ist, wechselt das Tool in den Batch-Modus. In diesem Modus werden die
@@ -730,8 +731,8 @@ Farbdefinitionen legen die Formatierung der Sprachelemente fest, die in den
 Sprachdefinitionen beschrieben wurden.
 
 Die Dateien muessen mit der Endung `.theme` in {themes} gespeichert werden.
-Mit der `--style` (`-s`) Option wird das Farbschema angewandt. Mit `--base16` wird
-eins der mitgelieferten Base16 Themes gelesen (gespeichert in {themes_base16}).
+Mit der `--style` (`-s`) Option wird das Farbschema angewandt. Setze `base16/` vor
+den Namen, um eines der Base16 Themes zu benutzen (gespeichert in {themes_base16}).
 
 
 ==== Formatattribute
@@ -770,15 +771,15 @@ PreProcessor   = Attributes (Praeprozessor-Direktiven)
 
 StringPreProc  = Attributes (Strings in Praeprozessor-Direktiven)
 
-BlockComment   = Attributes (Blockkommentaren)
+BlockComment   = Attributes (Blockkommentare)
 
-LineComment    = Attributes (Zeilenkommentaren)
+LineComment    = Attributes (Zeilenkommentare)
 
 LineNum        = Attributes (Zeilennummern)
 
 Operator       = Attributes (Operatoren)
 
-Hover          = Attibutes (LSP Hover Elementen)
+Hover          = Attibutes (LSP Hover Elemente)
 
 Error          = Attibutes (LSP Syntaxfehler)
 
@@ -789,6 +790,8 @@ Keywords= {
   Attributes2,
   Attributes3,
   Attributes4,
+  Attributes5,
+  Attributes6,
 }
 
 SemanticTokenTypes  = {
@@ -832,18 +835,25 @@ Keywords = {
   { Colour="#b06c58" },
   { Colour="#30a188" },
   { Colour="#990000" },
+  { Colour="#9a85ff" },
+  { Colour="#85adff" },
 }
 
-SemanticTokenTypes  = {
-  { Type = 'keyword', Style = Keywords[1] },
+SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
   { Type = 'class', Style =  Keywords[1] },
-  { Type = 'interface', Style = { Colour= "#ff3db3" } },
-  { Type = 'struct', Style = { Colour= "#3d40ff" } },
+  { Type = 'struct', Style =  Keywords[4] },
+  { Type = 'interface', Style = Keywords[1] },
+  { Type = 'parameter', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'enumMember', Style = Keywords[5] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
+  { Type = 'keyword', Style =  Keywords[1]},
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
 }
-
 --------------------------------------------------------------------------------
 
 
@@ -932,7 +942,7 @@ Konfigurationsskripte werden in folgenden Verzeichnissen gesucht:
 2. benutzerdefiniertes Verz., definiert mit `--data-dir`
 3. Wert der Umgebungsvariablen `HIGHLIGHT_DATADIR`
 4. `/usr/share/highlight/`
-5. `/etc/highlight/` (Pfad von `filetypes.conf`)
+5. `/etc/highlight/` (Pfad von `filetypes.conf` und `lsp.conf`)
 6. aktuelles Arbeitsverzeichnis (Fallback)
 
 Es wird erwartet, dass folgende Unterverzeichnisse die entsprechenden Skripte

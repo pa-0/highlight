@@ -27,6 +27,7 @@ v4.0-beta, January 2021
 :INSTALL: pass:q[link:INSTALL[`INSTALL`]]
 // Source files:
 :cpp_qt_lua: pass:q[link:plugins/cpp_qt.lua[`cpp_qt.lua`^]]
+:lsp_conf: pass:q[link:lsp.conf[`lsp.conf`^]]
 :filetypes_conf: pass:q[link:filetypes.conf[`filetypes.conf`^]]
 :fileopenfilter_conf: pass:q[link:gui_files/ext/fileopenfilter.conf[`gui_files/ext/fileopenfilter.conf`^]]
 :makefile: pass:q[link:makefile[`makefile`^]]
@@ -344,7 +345,7 @@ cat test.py | highlight --syntax py
 ................................................................................
 
 If there exist multiple suffixes (like `C`, `cc`, `cpp` and `h` for C++ files),
-they are mapped to a language definition in `$CONF_DIR/filetypes.conf`.
+they are mapped to a language definition in {filetypes_conf}.
 
 Highlight enters the batch processing mode if multiple input files are given
 or if `--batch-recursive` is set.
@@ -726,8 +727,8 @@ Colour themes contain the formatting information of the syntax elements which
 are described in language definitions.
 
 The files have to be stored as `.theme` in {themes}.
-Apply a theme with the `--style` option. Use `--base16` to use one of the included
-Base16 themes (located in {themes_base16}).
+Apply a theme with the `--style` option. Prepend `base16/` to the name in order
+to use one of the included Base16 themes (located in {themes_base16}).
 
 
 ==== Format attributes
@@ -752,7 +753,7 @@ Categories     = Table, List of categories (dark, light, etc)
 
 Default        = Attributes (Colour of unspecified text)
 
-Canvas         = Attributes (Background colour )
+Canvas         = Attributes (Background colour)
 
 Number         = Attributes (numbers)
 
@@ -785,6 +786,8 @@ Keywords= {
   Attributes2,
   Attributes3,
   Attributes4,
+  Attributes5,
+  Attributes6,
 }
 
 AttributesN: Formatting of keyword group N.
@@ -819,16 +822,24 @@ Keywords = {
   { Colour="#b06c58" },
   { Colour="#30a188" },
   { Colour="#990000" },
+  { Colour="#9a85ff" },
+  { Colour="#85adff" },
 }
 
-SemanticTokenTypes  = {
-  { Type = 'keyword', Style = Keywords[1] },
+SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
-  { Type = 'function', Style = Keywords[3] },
-  { Type = 'method', Style = Keywords[3] },
   { Type = 'class', Style =  Keywords[1] },
-  { Type = 'interface', Style = { Colour= "#ff3db3" } },
-  { Type = 'struct', Style = { Colour= "#3d40ff" } },
+  { Type = 'struct', Style =  Keywords[4] },
+  { Type = 'interface', Style = Keywords[1] },
+  { Type = 'parameter', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'enumMember', Style = Keywords[5] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
+  { Type = 'keyword', Style =  Keywords[1]},
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
 }
 --------------------------------------------------------------------------------
 
@@ -912,7 +923,7 @@ Configuration scripts are searched in the following directories:
 2. user defined directory set with `--data-dir`
 3. value of the environment variable `HIGHLIGHT_DATADIR`
 4. `/usr/share/highlight/`
-5. `/etc/highlight/` (default location of `filetypes.conf`)
+5. `/etc/highlight/` (default location of `filetypes.conf` and `lsp.conf`)
 6. current working directory (fallback)
 
 These subdirectories are expected to contain the corresponding scripts:

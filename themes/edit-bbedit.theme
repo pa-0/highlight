@@ -21,8 +21,8 @@ Keywords = {
   { Colour= "#d45999" },
   { Colour= "#da392e" }, --sgml tags
   { Colour= "#407caa" }, --sgml ent
-  { Colour= "#449516" },
-  { Colour= "#7e7e7e" },
+  { Colour= "#449516", Bold=true },
+  { Colour= "#7e7e7e", Bold=true },
 }
 
 -- new LSP based elements:

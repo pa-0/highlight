@@ -10,64 +10,75 @@ Check installation.</source>
 Revise su instalación.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
-        <location filename="mainwindow.cpp" line="158"/>
+        <location filename="mainwindow.cpp" line="140"/>
+        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="171"/>
         <source>Initialization error</source>
         <translation>Error de inicialización</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="139"/>
+        <location filename="mainwindow.cpp" line="141"/>
         <source>Could not read a colour theme: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="143"/>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="144"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>dark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>B16 light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="146"/>
+        <location filename="mainwindow.cpp" line="148"/>
         <source>B16 dark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="159"/>
+        <location filename="mainwindow.cpp" line="151"/>
+        <source>Please select a Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="156"/>
+        <source>Could not find LSP profiles. Check installation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="172"/>
         <source>Could not find syntax definitions. Check installation.</source>
         <translation>Definiciones de sintaxis no encontradas.
 Revise su instalacion.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="275"/>
+        <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS Short Names</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="275"/>
+        <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS short names may be disabled on your volumes. Highlight can not read input with multibyte file names if no short name is available. This information will no longer bother you.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="278"/>
+        <location filename="mainwindow.cpp" line="299"/>
         <source>Always at your service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="325"/>
+        <location filename="mainwindow.cpp" line="343"/>
         <source>Select one or more files to open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="362"/>
+        <location filename="mainwindow.cpp" line="380"/>
         <source>Select destination directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -80,105 +91,115 @@ Revise su instalacion.</translation>
         <translation type="obsolete">No se pudieron leer las etiquetas de &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1039"/>
-        <location filename="mainwindow.cpp" line="1070"/>
+        <location filename="mainwindow.cpp" line="1130"/>
+        <location filename="mainwindow.cpp" line="1161"/>
         <source>Output error</source>
         <translation>Error de salida</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1039"/>
+        <location filename="mainwindow.cpp" line="1130"/>
         <source>Output directory does not exist!</source>
         <translation>¡Directorio de salida no existe!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1070"/>
+        <location filename="mainwindow.cpp" line="1161"/>
         <source>You must define a style output file!</source>
         <translation>¡Debe especificar un archivo de estilo de salida!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1119"/>
+        <location filename="mainwindow.cpp" line="1213"/>
         <source>Processing %1 (%2/%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1129"/>
+        <location filename="mainwindow.cpp" line="1223"/>
         <source>Language definition error</source>
         <translation>Error de definición de lenguaje</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1130"/>
+        <location filename="mainwindow.cpp" line="1224"/>
         <source>Invalid regular expression in %1:
 %2</source>
         <translation>Expresión regular inválida en %1:
 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1134"/>
+        <location filename="mainwindow.cpp" line="1228"/>
         <source>Unknown syntax</source>
         <translation>Sintaxis desconocida</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1134"/>
+        <location filename="mainwindow.cpp" line="1228"/>
         <source>Could not convert %1</source>
         <translation>No se pudo convertir %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1137"/>
+        <location filename="mainwindow.cpp" line="1231"/>
         <source>Lua error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1137"/>
+        <location filename="mainwindow.cpp" line="1231"/>
         <source>Could not convert %1:
 Lua Syntax error: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1284"/>
+        <location filename="mainwindow.cpp" line="1406"/>
         <source>Converted %1 files in %2 ms</source>
         <translation>Se convirtieron%1 archivos en %2 ms</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1473"/>
+        <location filename="mainwindow.cpp" line="1610"/>
         <source>Conversion of &quot;%1&quot; not possible.</source>
         <translation>No es posible la conversión de &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1473"/>
-        <location filename="mainwindow.cpp" line="1614"/>
-        <location filename="mainwindow.cpp" line="1660"/>
+        <location filename="mainwindow.cpp" line="1610"/>
+        <location filename="mainwindow.cpp" line="1758"/>
+        <location filename="mainwindow.cpp" line="1813"/>
         <source>clipboard data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1544"/>
+        <location filename="mainwindow.cpp" line="1689"/>
         <source>%1 options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1587"/>
-        <location filename="mainwindow.cpp" line="1598"/>
+        <location filename="mainwindow.cpp" line="1730"/>
+        <location filename="mainwindow.cpp" line="1741"/>
         <source>(user script)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1613"/>
+        <location filename="mainwindow.cpp" line="1757"/>
         <source>Preview (%1):</source>
         <translation>Previsualización (%1):</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1616"/>
+        <location filename="mainwindow.cpp" line="1760"/>
         <source>Current syntax: %1 %2</source>
         <translation>Sintaxis actual: %1 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1617"/>
+        <location filename="mainwindow.cpp" line="1761"/>
         <source>Current theme: %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1620"/>
+        <location filename="mainwindow.cpp" line="1764"/>
         <source>Contrast: %1 %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2251"/>
+        <source>Select workspace directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2255"/>
+        <source>Choose the Language Server executable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -186,12 +207,12 @@ Lua Syntax error: %2</source>
         <translation type="vanished">Sintaxis actual: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1660"/>
+        <location filename="mainwindow.cpp" line="1813"/>
         <source>Preview of &quot;%1&quot; not possible.</source>
         <translation>No es posible previsualizar &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1906"/>
+        <location filename="mainwindow.cpp" line="2063"/>
         <source>Some plug-in effects may not be visible in the preview.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -200,20 +221,20 @@ Lua Syntax error: %2</source>
         <translation type="obsolete">Elija un archivo de ctags</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1700"/>
-        <location filename="mainwindow.cpp" line="1704"/>
-        <location filename="mainwindow.cpp" line="1708"/>
-        <location filename="mainwindow.cpp" line="1713"/>
+        <location filename="mainwindow.cpp" line="1857"/>
+        <location filename="mainwindow.cpp" line="1861"/>
+        <location filename="mainwindow.cpp" line="1865"/>
+        <location filename="mainwindow.cpp" line="1870"/>
         <source>Choose a style include file</source>
         <translation>Elija un archivo de inclusión de estilo</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1718"/>
+        <location filename="mainwindow.cpp" line="1875"/>
         <source>About providing translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1719"/>
+        <location filename="mainwindow.cpp" line="1876"/>
         <source>The GUI was developed using the Qt toolkit, and translations may be provided using the tools Qt Linguist and lrelease.
 The highlight.ts file for Linguist resides in the src/gui-qt subdirectory.
 The qm file generated by lrelease has to be saved in gui-files/l10n.
@@ -222,17 +243,17 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1777"/>
+        <location filename="mainwindow.cpp" line="1934"/>
         <source>Select one or more plug-ins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1788"/>
+        <location filename="mainwindow.cpp" line="1945"/>
         <source>Select one or more syntax or theme scripts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1848"/>
+        <location filename="mainwindow.cpp" line="2005"/>
         <source>Choose a plug-in input file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -295,10 +316,12 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
     <message>
         <location filename="mainwindow.ui" line="310"/>
         <location filename="mainwindow.ui" line="669"/>
-        <location filename="mainwindow.ui" line="1333"/>
-        <location filename="mainwindow.ui" line="1602"/>
-        <location filename="mainwindow.ui" line="1710"/>
-        <location filename="mainwindow.ui" line="2005"/>
+        <location filename="mainwindow.ui" line="819"/>
+        <location filename="mainwindow.ui" line="884"/>
+        <location filename="mainwindow.ui" line="1509"/>
+        <location filename="mainwindow.ui" line="1778"/>
+        <location filename="mainwindow.ui" line="1886"/>
+        <location filename="mainwindow.ui" line="2181"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -317,100 +340,100 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
         <translation type="obsolete">Opciones de salida</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="788"/>
+        <location filename="mainwindow.ui" line="964"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="808"/>
+        <location filename="mainwindow.ui" line="984"/>
         <source>Output for&amp;mat:</source>
         <oldsource>Output format:</oldsource>
         <translation type="unfinished">Formato de salida:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="830"/>
+        <location filename="mainwindow.ui" line="1006"/>
         <source>Choose an output format.</source>
         <translation>Elija un formato de salida.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="834"/>
+        <location filename="mainwindow.ui" line="1010"/>
         <source>HTML</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="839"/>
+        <location filename="mainwindow.ui" line="1015"/>
         <source>XHTML</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="844"/>
+        <location filename="mainwindow.ui" line="1020"/>
         <source>LaTeX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="849"/>
+        <location filename="mainwindow.ui" line="1025"/>
         <source>TeX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="854"/>
+        <location filename="mainwindow.ui" line="1030"/>
         <source>RTF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="859"/>
+        <location filename="mainwindow.ui" line="1035"/>
         <source>ODT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="864"/>
+        <location filename="mainwindow.ui" line="1040"/>
         <source>SVG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="903"/>
+        <location filename="mainwindow.ui" line="1079"/>
         <source>Add line numbers to the output.</source>
         <translation>Agregar números de linea a la salida.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="906"/>
+        <location filename="mainwindow.ui" line="1082"/>
         <source>Add line numbers</source>
         <translation>Agregar números de linea</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="945"/>
+        <location filename="mainwindow.ui" line="1121"/>
         <source>Select the line number width.</source>
         <translation>Seleccione el ancho de número de linea.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="966"/>
+        <location filename="mainwindow.ui" line="1142"/>
         <source>Fill leading space of line numbers with zeroes.</source>
         <translation>Llenar espacio antes de los números de lineas con ceros.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="969"/>
+        <location filename="mainwindow.ui" line="1145"/>
         <source>Pad with zeroes</source>
         <translation>Rellenar con ceros</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="982"/>
+        <location filename="mainwindow.ui" line="1158"/>
         <source>Generate output without document header and footer.</source>
         <translation>Generar documento de salida con cabecera y pie de página.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="985"/>
+        <location filename="mainwindow.ui" line="1161"/>
         <source>Omit header and footer</source>
         <translation>Omitir cabecera y pie de página</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1002"/>
+        <location filename="mainwindow.ui" line="1178"/>
         <source>Test if input data is not binary.
 Removes Unicode BOM mark.</source>
         <translation>Probar si los datos de entrada no son binarios.
 Remueve marca BOM de Unicode.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1006"/>
+        <location filename="mainwindow.ui" line="1182"/>
         <source>Validate input data</source>
         <translation>Validar datos de entrada</translation>
     </message>
@@ -423,94 +446,94 @@ Remueve marca BOM de Unicode.</translation>
         <translation type="obsolete">Codificación:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1035"/>
+        <location filename="mainwindow.ui" line="1211"/>
         <source>Select or define the encoding.
 The result has to match the input file encoding.</source>
         <translation>Elija o defina la codificación.
 El resultado tiene que corresponder a la codificación del archivo de entrada.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1046"/>
+        <location filename="mainwindow.ui" line="1222"/>
         <source>ISO-8859-1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1051"/>
+        <location filename="mainwindow.ui" line="1227"/>
         <source>ISO-8859-2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1056"/>
+        <location filename="mainwindow.ui" line="1232"/>
         <source>ISO-8859-3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1061"/>
+        <location filename="mainwindow.ui" line="1237"/>
         <source>ISO-8859-4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1066"/>
+        <location filename="mainwindow.ui" line="1242"/>
         <source>ISO-8859-5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1071"/>
+        <location filename="mainwindow.ui" line="1247"/>
         <source>ISO-8859-6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1076"/>
+        <location filename="mainwindow.ui" line="1252"/>
         <source>ISO-8859-7</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1081"/>
+        <location filename="mainwindow.ui" line="1257"/>
         <source>ISO-8859-8</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1086"/>
+        <location filename="mainwindow.ui" line="1262"/>
         <source>ISO-8859-9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1091"/>
+        <location filename="mainwindow.ui" line="1267"/>
         <source>ISO-8859-10</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1096"/>
+        <location filename="mainwindow.ui" line="1272"/>
         <source>ISO-8859-11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1101"/>
+        <location filename="mainwindow.ui" line="1277"/>
         <source>ISO-8859-12</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1106"/>
+        <location filename="mainwindow.ui" line="1282"/>
         <source>ISO-8859-13</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1111"/>
+        <location filename="mainwindow.ui" line="1287"/>
         <source>ISO-8859-14</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1116"/>
+        <location filename="mainwindow.ui" line="1292"/>
         <source>ISO-8859-15</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1121"/>
+        <location filename="mainwindow.ui" line="1297"/>
         <source>UTF-8</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1145"/>
+        <location filename="mainwindow.ui" line="1321"/>
         <source>Output specific</source>
         <translation>Esoecificas de salida</translation>
     </message>
@@ -523,26 +546,26 @@ El resultado tiene que corresponder a la codificación del archivo de entrada.</
         <translation type="obsolete">Hoja de estilo</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1194"/>
-        <location filename="mainwindow.ui" line="1520"/>
-        <location filename="mainwindow.ui" line="1628"/>
-        <location filename="mainwindow.ui" line="1923"/>
+        <location filename="mainwindow.ui" line="1370"/>
+        <location filename="mainwindow.ui" line="1696"/>
+        <location filename="mainwindow.ui" line="1804"/>
+        <location filename="mainwindow.ui" line="2099"/>
         <source>Include the style information in each output file.</source>
         <translation>Incluir la información de estilo en cada archivo de salida.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1197"/>
-        <location filename="mainwindow.ui" line="1926"/>
+        <location filename="mainwindow.ui" line="1373"/>
+        <location filename="mainwindow.ui" line="2102"/>
         <source>Embed style (CSS)</source>
         <translation>Incrustar estilo (CSS)</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1210"/>
+        <location filename="mainwindow.ui" line="1386"/>
         <source>Add CSS information to each tag (do not use CSS class definitions).</source>
         <translation>Agregar información de CSS a cada etiqueta (no utilizar definiciones de clase de CSS).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1213"/>
+        <location filename="mainwindow.ui" line="1389"/>
         <source>Inline CSS</source>
         <translation></translation>
     </message>
@@ -551,15 +574,15 @@ El resultado tiene que corresponder a la codificación del archivo de entrada.</
         <translation type="obsolete">Archivo de estilo:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1273"/>
-        <location filename="mainwindow.ui" line="1656"/>
-        <location filename="mainwindow.ui" line="1951"/>
+        <location filename="mainwindow.ui" line="1449"/>
+        <location filename="mainwindow.ui" line="1832"/>
+        <location filename="mainwindow.ui" line="2127"/>
         <source>Name of the referenced style file.</source>
         <translation>Nombre del archivo de estilo citado.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1276"/>
-        <location filename="mainwindow.ui" line="1954"/>
+        <location filename="mainwindow.ui" line="1452"/>
+        <location filename="mainwindow.ui" line="2130"/>
         <source>highlight.css</source>
         <translation></translation>
     </message>
@@ -568,23 +591,23 @@ El resultado tiene que corresponder a la codificación del archivo de entrada.</
         <translation type="obsolete">Archivo de estilo a incluir:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1317"/>
-        <location filename="mainwindow.ui" line="1989"/>
+        <location filename="mainwindow.ui" line="1493"/>
+        <location filename="mainwindow.ui" line="2165"/>
         <source>Path of the CSS include file.</source>
         <translation>Ruta del archivo CSS a incluir.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1330"/>
+        <location filename="mainwindow.ui" line="1506"/>
         <source>Select a CSS include file.</source>
         <translation>Seleccionar un archivo CSS a incluir.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1227"/>
+        <location filename="mainwindow.ui" line="1403"/>
         <source>CSS class prefix:</source>
         <translation>Prefijo de clase de CSS:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1240"/>
+        <location filename="mainwindow.ui" line="1416"/>
         <source>Add a CSS class name prefix to avoid namespace clashes.</source>
         <translation>Agregue un prefijo de nombre de clase de CSS para evitar conflictos.</translation>
     </message>
@@ -593,12 +616,12 @@ El resultado tiene que corresponder a la codificación del archivo de entrada.</
         <translation type="obsolete">Archivos de etiquetas e índice</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1415"/>
+        <location filename="mainwindow.ui" line="1591"/>
         <source>Generate an index file with hyperlinks to all outputted files.</source>
         <translation>Generar un archivo de indice con enlaces a todos los archivos de salida.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1418"/>
+        <location filename="mainwindow.ui" line="1594"/>
         <source>Generate index file</source>
         <translation>Generar archivo de índice</translation>
     </message>
@@ -621,7 +644,7 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Elijir un archivo de ctags.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1359"/>
+        <location filename="mainwindow.ui" line="1535"/>
         <source>Misc</source>
         <translation>Miscelaneo</translation>
     </message>
@@ -630,22 +653,22 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="vanished">Agregar una ancla a cada linea.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1381"/>
+        <location filename="mainwindow.ui" line="1557"/>
         <source>Add line anchors</source>
         <translation>Agregar ancla por linea</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1388"/>
+        <location filename="mainwindow.ui" line="1564"/>
         <source>Add the filename as prefix to the anchors.</source>
         <translation>Agregar el nombre de archivo como prefijo a las anclas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1391"/>
+        <location filename="mainwindow.ui" line="1567"/>
         <source>Include file name in anchor</source>
         <translation>Incluir el nombre de archivo en el ancla</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1398"/>
+        <location filename="mainwindow.ui" line="1574"/>
         <source>Output the lines within an ordered list.</source>
         <translation>Producir las lineas de salida dentro de una lista ordenada.</translation>
     </message>
@@ -654,7 +677,7 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Lista ordenada</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1425"/>
+        <location filename="mainwindow.ui" line="1601"/>
         <source>Add &amp;lt;pre&amp;gt; tags to the output, if the flag &quot;No document header and footer&quot; is selected.</source>
         <translation>Agregar etiquetas &amp;lt;pre&amp;gt; a la salida, si la opción &quot;Sin cabecera ni pie de página&quot; está seleccionada.</translation>
     </message>
@@ -667,12 +690,12 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Opciones de LaTeX</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1473"/>
+        <location filename="mainwindow.ui" line="1649"/>
         <source>Replace quotes by dq sequences.</source>
         <translation>Reemplazar comillas por sucesiones de dobles comillas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1476"/>
+        <location filename="mainwindow.ui" line="1652"/>
         <source>Escape quotes</source>
         <translation>Sobrepasar comillas</translation>
     </message>
@@ -685,7 +708,7 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Compatibilidad con Babel</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1503"/>
+        <location filename="mainwindow.ui" line="1679"/>
         <source>Replace default symbols (brackets, tilde) by nice redefinitions.</source>
         <translation>Reemplazar símbolos por defecto (llaves, corchetes, tildes) por redefiniciones apropiadas.</translation>
     </message>
@@ -694,18 +717,18 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Símbolos lindos</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1523"/>
+        <location filename="mainwindow.ui" line="1699"/>
         <source>Embed style (defs)</source>
         <translation>Incrustar estilo</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1548"/>
+        <location filename="mainwindow.ui" line="1724"/>
         <source>Name of the referenced  style file.</source>
         <translation>Nombre del archivo de estilo citado.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1551"/>
-        <location filename="mainwindow.ui" line="1659"/>
+        <location filename="mainwindow.ui" line="1727"/>
+        <location filename="mainwindow.ui" line="1835"/>
         <source>highlight.sty</source>
         <translation></translation>
     </message>
@@ -714,7 +737,7 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="obsolete">Incluir estilo:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1028"/>
+        <location filename="mainwindow.ui" line="1204"/>
         <source>Set encoding:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -724,18 +747,18 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation>Destino de salida</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1254"/>
-        <location filename="mainwindow.ui" line="1532"/>
-        <location filename="mainwindow.ui" line="1640"/>
-        <location filename="mainwindow.ui" line="1935"/>
+        <location filename="mainwindow.ui" line="1430"/>
+        <location filename="mainwindow.ui" line="1708"/>
+        <location filename="mainwindow.ui" line="1816"/>
+        <location filename="mainwindow.ui" line="2111"/>
         <source>Stylesheet file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1287"/>
-        <location filename="mainwindow.ui" line="1562"/>
-        <location filename="mainwindow.ui" line="1670"/>
-        <location filename="mainwindow.ui" line="1965"/>
+        <location filename="mainwindow.ui" line="1463"/>
+        <location filename="mainwindow.ui" line="1738"/>
+        <location filename="mainwindow.ui" line="1846"/>
+        <location filename="mainwindow.ui" line="2141"/>
         <source>Stylesheet include file:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -893,151 +916,256 @@ Vea ctags.sf.net para más detalles.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="869"/>
+        <location filename="mainwindow.ui" line="757"/>
+        <source>Configure the LSP Client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="764"/>
+        <source>LSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="772"/>
+        <source>Language Server:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="779"/>
+        <source>Select a Language Server profile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="796"/>
+        <source>Executable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="803"/>
+        <source>Path of the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="816"/>
+        <source>Select the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="830"/>
+        <source>Print LSP messages to standard error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="833"/>
+        <source>Output Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="840"/>
+        <source>Start an initialization request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="843"/>
+        <source>Check Capabilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="861"/>
+        <source>Workspace:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="868"/>
+        <source>The workspace directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="881"/>
+        <source>Select the workspace directory of your project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="893"/>
+        <source>Run hover requests to add tooltips to your output (HTML only).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="896"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="906"/>
+        <source>Improve token recognition with semantic highlighting.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="909"/>
+        <source>Semantic Highlighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="919"/>
+        <source>Show syntax errors and messages (depends on output format).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="922"/>
+        <source>Show Syntax Errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="1045"/>
         <source>BBCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="874"/>
+        <location filename="mainwindow.ui" line="1050"/>
         <source>ANSI ESC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="879"/>
+        <location filename="mainwindow.ui" line="1055"/>
         <source>XTerm256 ESC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="884"/>
+        <location filename="mainwindow.ui" line="1060"/>
         <source>Truecolor ESC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="926"/>
+        <location filename="mainwindow.ui" line="1102"/>
         <source>Set line numbering start.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="992"/>
+        <location filename="mainwindow.ui" line="1168"/>
         <source>Output any plug-in text injections even if document header and footer is omitted.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="995"/>
+        <location filename="mainwindow.ui" line="1171"/>
         <source>Keep Plug-In injections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1013"/>
+        <location filename="mainwindow.ui" line="1189"/>
         <source>Generate output without version information comment.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1016"/>
+        <location filename="mainwindow.ui" line="1192"/>
         <source>Omit version info comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1025"/>
+        <location filename="mainwindow.ui" line="1201"/>
         <source>Set the output file encoding.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1186"/>
+        <location filename="mainwindow.ui" line="1362"/>
         <source>Stylesheets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1371"/>
+        <location filename="mainwindow.ui" line="1547"/>
         <source>Line numbering options:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1378"/>
+        <location filename="mainwindow.ui" line="1554"/>
         <source>Add an anchor to each line.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1401"/>
+        <location filename="mainwindow.ui" line="1577"/>
         <source>Output as ordered list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1428"/>
+        <location filename="mainwindow.ui" line="1604"/>
         <source>Enclose in pre tags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1442"/>
+        <location filename="mainwindow.ui" line="1618"/>
         <source>Add HTML MIME Type when copying code to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1445"/>
+        <location filename="mainwindow.ui" line="1621"/>
         <source>Copy with MIME type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1483"/>
+        <location filename="mainwindow.ui" line="1659"/>
         <source>Adapt output for the Babel package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1486"/>
+        <location filename="mainwindow.ui" line="1662"/>
         <source>Add Babel compatibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1493"/>
+        <location filename="mainwindow.ui" line="1669"/>
         <source>Adapt output for the Beamer package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1496"/>
+        <location filename="mainwindow.ui" line="1672"/>
         <source>Add Beamer compatibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1506"/>
+        <location filename="mainwindow.ui" line="1682"/>
         <source>Add pretty symbols</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1586"/>
-        <location filename="mainwindow.ui" line="1694"/>
+        <location filename="mainwindow.ui" line="1762"/>
+        <location filename="mainwindow.ui" line="1870"/>
         <source>Path of the style include file.</source>
         <translation>Ruta del archivo de estilo a incluir.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1599"/>
-        <location filename="mainwindow.ui" line="1707"/>
-        <location filename="mainwindow.ui" line="2002"/>
+        <location filename="mainwindow.ui" line="1775"/>
+        <location filename="mainwindow.ui" line="1883"/>
+        <location filename="mainwindow.ui" line="2178"/>
         <source>Select a style include file.</source>
         <translation>Seleccione un archivo de estilo a incluir.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1747"/>
+        <location filename="mainwindow.ui" line="1923"/>
         <source>Set page color attribute to background color.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2149"/>
+        <location filename="mainwindow.ui" line="2328"/>
         <source>Reformat and indent your code.
 This feature is enabled for C, C++, C# and Java code.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2369"/>
+        <location filename="mainwindow.ui" line="2536"/>
+        <source>DejaVu Sans Mono</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="2551"/>
         <source>Font si&amp;ze:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2480"/>
+        <location filename="mainwindow.ui" line="2662"/>
         <source>&amp;Plug-Ins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2485"/>
+        <location filename="mainwindow.ui" line="2667"/>
         <source>&amp;File access trace (W32)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1046,7 +1174,7 @@ This feature is enabled for C, C++, C# and Java code.</source>
         <translation type="obsolete">Opciones de TeX</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1631"/>
+        <location filename="mainwindow.ui" line="1807"/>
         <source>Embed style (macros)</source>
         <translation>Estilo de incrustación (macros)</translation>
     </message>
@@ -1055,64 +1183,64 @@ This feature is enabled for C, C++, C# and Java code.</source>
         <translation type="obsolete">Opciones de RTF</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1736"/>
+        <location filename="mainwindow.ui" line="1912"/>
         <source>Add character stylesheets with formatting information.
 You can select the stylesheets in your word processor to reformat additional text.</source>
         <translation>Agregar hojas de estilo de caracteres con informacion de formato.
 Puede selecionar la hoja de estilo en su procesador de textos para dar formato nuevamente a texto adicional.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1740"/>
+        <location filename="mainwindow.ui" line="1916"/>
         <source>Add character styles</source>
         <translation>Agregar estilos de caracteres</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1759"/>
+        <location filename="mainwindow.ui" line="1935"/>
         <source>Page size:</source>
         <translation>Tamaño de paǵina:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1772"/>
+        <location filename="mainwindow.ui" line="1948"/>
         <source>Select a page size.</source>
         <translation>Seleccionar un tamaño de página.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1779"/>
+        <location filename="mainwindow.ui" line="1955"/>
         <source>A3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1784"/>
+        <location filename="mainwindow.ui" line="1960"/>
         <source>A4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1789"/>
+        <location filename="mainwindow.ui" line="1965"/>
         <source>A5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1794"/>
+        <location filename="mainwindow.ui" line="1970"/>
         <source>B4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1799"/>
+        <location filename="mainwindow.ui" line="1975"/>
         <source>B5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1804"/>
+        <location filename="mainwindow.ui" line="1980"/>
         <source>B6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1809"/>
+        <location filename="mainwindow.ui" line="1985"/>
         <source>Letter</source>
         <translation>Carta</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1814"/>
+        <location filename="mainwindow.ui" line="1990"/>
         <source>Legal</source>
         <translation>Oficio</translation>
     </message>
@@ -1129,37 +1257,37 @@ Puede selecionar la hoja de estilo en su procesador de textos para dar formato n
         <translation type="vanished">Ancho:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1871"/>
+        <location filename="mainwindow.ui" line="2047"/>
         <source>Enter the SVG width (may contain units).</source>
         <translation>Introducir el ancho de SVG (puede incluir unidades).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1891"/>
+        <location filename="mainwindow.ui" line="2067"/>
         <source>Height:</source>
         <translation>Alto:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1907"/>
+        <location filename="mainwindow.ui" line="2083"/>
         <source>Enter the SVG height (may contain units).</source>
         <translation>Introducir el alto de SVG (puede incluir unidades).</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2031"/>
+        <location filename="mainwindow.ui" line="2207"/>
         <source>No options defined.</source>
         <translation>No hay opciones definidas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2056"/>
+        <location filename="mainwindow.ui" line="2232"/>
         <source>Formatting</source>
         <translation>Formato</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2085"/>
+        <location filename="mainwindow.ui" line="2261"/>
         <source>Color theme:</source>
         <translation>Tema de color:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2132"/>
+        <location filename="mainwindow.ui" line="2308"/>
         <source>Select a colour theme.</source>
         <translation>Seleccionar un tema de color.</translation>
     </message>
@@ -1170,84 +1298,84 @@ This feature is enabled tor C, C++, C# and Java code.</source>
 Esta propiedad esta habilitada para código en C, C++, C# y Java.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2153"/>
+        <location filename="mainwindow.ui" line="2332"/>
         <source>Reformat:</source>
         <translation>Dar formato nuevamente:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2172"/>
+        <location filename="mainwindow.ui" line="2351"/>
         <source>Choose a formatting scheme.</source>
         <translation>Elija un esquema de formato.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2186"/>
+        <location filename="mainwindow.ui" line="2365"/>
         <source>Change the keyword case.</source>
         <translation>Cambiar mayúsculas/minúsculas en palabras reservadas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2189"/>
+        <location filename="mainwindow.ui" line="2368"/>
         <source>Keyword case:</source>
         <translation>Mayúsculas/minúsculas de palabras reservadas:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2208"/>
+        <location filename="mainwindow.ui" line="2387"/>
         <source>Select a keyword case.</source>
         <translation>Seleccione un estilo de mayúsculas/minúsculas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2215"/>
+        <location filename="mainwindow.ui" line="2394"/>
         <source>UPPER</source>
         <translation>MAYÚSCULAS</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2220"/>
+        <location filename="mainwindow.ui" line="2399"/>
         <source>lower</source>
         <translation>minúsculas</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2225"/>
+        <location filename="mainwindow.ui" line="2404"/>
         <source>Capitalize</source>
         <translation>Primera Letra Mayúscula</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2243"/>
+        <location filename="mainwindow.ui" line="2422"/>
         <source>Tab width:</source>
         <translation>Ancho de tabulador:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2259"/>
+        <location filename="mainwindow.ui" line="2438"/>
         <source>Enter the number of spaces which replace a tab.
 Set the width to 0 to keep tabs.</source>
         <translation>Introducir el número de espacios que reemplazaran un tabulador.
 En caso de ser 0 se mantendrán los tabuladores.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2274"/>
+        <location filename="mainwindow.ui" line="2453"/>
         <source>Enable line wrapping.</source>
         <translation>Habilitar romper lineas.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2277"/>
+        <location filename="mainwindow.ui" line="2456"/>
         <source>Line wrapping</source>
         <translation>Romper lineas</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2290"/>
+        <location filename="mainwindow.ui" line="2469"/>
         <source>Enter the maximum line length.</source>
         <translation>Introducir longitud máxima de linea.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2309"/>
+        <location filename="mainwindow.ui" line="2488"/>
         <source>Indent statements and function parameters after wrapping.</source>
         <translation>Indentar instrucciones y parámetros de funciones después de romper la linea.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2312"/>
+        <location filename="mainwindow.ui" line="2491"/>
         <source>Intelligent wrapping</source>
         <translation>Rompido inteligente</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2333"/>
+        <location filename="mainwindow.ui" line="2512"/>
         <source>Font na&amp;me:</source>
         <oldsource>Font name:</oldsource>
         <translation type="unfinished">Nombre de la fuente:</translation>
@@ -1261,18 +1389,18 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <translation type="vanished">Tamaño de la fuente:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2391"/>
+        <location filename="mainwindow.ui" line="2573"/>
         <source>Enter the font size.</source>
         <translation>Introducir el tamaño de la fuente.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2464"/>
+        <location filename="mainwindow.ui" line="2646"/>
         <source>&amp;Visit andre-simon.de</source>
         <oldsource>Visit andre-simon.de</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2475"/>
+        <location filename="mainwindow.ui" line="2657"/>
         <source>&amp;Dock floating panels</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1357,83 +1485,83 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1750"/>
+        <location filename="mainwindow.ui" line="1926"/>
         <source>Set page color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1843"/>
+        <location filename="mainwindow.ui" line="2019"/>
         <source>I&amp;mage width:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2319"/>
+        <location filename="mainwindow.ui" line="2498"/>
         <source>Do not add line numbering to lines which were automatically wrapped.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2322"/>
+        <location filename="mainwindow.ui" line="2501"/>
         <source>Omit line numbers of wrapped lines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2354"/>
+        <location filename="mainwindow.ui" line="2533"/>
         <source>Select or enter the font name. HTML supports a list of fonts, separated with comma.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2406"/>
+        <location filename="mainwindow.ui" line="2588"/>
         <source>&amp;Open files</source>
         <translation>Ab&amp;rir archivos</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2411"/>
+        <location filename="mainwindow.ui" line="2593"/>
         <source>&amp;Exit</source>
         <translation>&amp;Salir</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2416"/>
+        <location filename="mainwindow.ui" line="2598"/>
         <source>&amp;Load</source>
         <translation>&amp;Cargar</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2421"/>
+        <location filename="mainwindow.ui" line="2603"/>
         <source>&amp;Save</source>
         <translation>&amp;Guardar</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2426"/>
+        <location filename="mainwindow.ui" line="2608"/>
         <source>Load &amp;default project</source>
         <translation>Cargar proyecto por &amp;defecto</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2431"/>
+        <location filename="mainwindow.ui" line="2613"/>
         <source>&amp;Readme</source>
         <oldsource>Readme</oldsource>
         <translation type="unfinished">Leeme</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2436"/>
+        <location filename="mainwindow.ui" line="2618"/>
         <source>&amp;Tips</source>
         <translation>A&amp;visos</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2444"/>
+        <location filename="mainwindow.ui" line="2626"/>
         <source>&amp;Changelog</source>
         <translation>&amp;Bitácora de cambios</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2449"/>
+        <location filename="mainwindow.ui" line="2631"/>
         <source>&amp;License</source>
         <translation>&amp;Licencia</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2454"/>
+        <location filename="mainwindow.ui" line="2636"/>
         <source>&amp;About Highlight</source>
         <translation>&amp;Acerca de Highlight</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="2459"/>
+        <location filename="mainwindow.ui" line="2641"/>
         <source>A&amp;bout translations</source>
         <oldsource>About &amp;translations</oldsource>
         <translation type="unfinished"></translation>

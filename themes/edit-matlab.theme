@@ -8,8 +8,8 @@ Categories = {"light"}
 Default        = { Colour="#000000" }
 Canvas         = { Colour="#ffffff" }
 Number         = { Colour="#000000" }
-Escape         = { Colour="#000000" }
-String         = { Colour="#800000" }
+Escape         = { Colour="#a31593" }
+String         = { Colour="#a31593" }
 StringPreProc  = { Colour="#800000" }
 Operator       = { Colour="#000000" }
 BlockComment   = { Colour="#228B22" }
@@ -24,7 +24,7 @@ Keywords = {
   { Colour= "#0000ff" },
   { Colour= "#000000" },
   { Colour= "#0000ff" },
-  { Colour= "#7e7e7e" },
+  { Colour= "#6f2452" },
 }
 
 -- new LSP based elements:

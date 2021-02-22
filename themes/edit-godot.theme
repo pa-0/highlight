@@ -47,7 +47,7 @@ Keywords = {
                 { Colour="#66A1CD" }, -- ("Danube" Blue)
                 { Colour="#E64D59" }, -- ("Mandy" Red)
                 { Colour= "#FFFFB3" },
-                { Colour= "#7e7e7e" },
+                { Colour= "#4dc2e6" },
 }
 
 -- new LSP based elements:

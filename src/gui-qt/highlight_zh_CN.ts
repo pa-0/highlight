@@ -127,13 +127,14 @@ Check installation.</source>
 Revise su instalación.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="+138"/>
-        <location line="+20"/>
+        <location filename="mainwindow.cpp" line="+140"/>
+        <location line="+15"/>
+        <location line="+16"/>
         <source>Initialization error</source>
         <translation type="unfinished">初始化错误</translation>
     </message>
     <message>
-        <location line="-19"/>
+        <location line="-30"/>
         <source>Could not read a colour theme: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -158,12 +159,22 @@ Revise su instalación.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+3"/>
+        <source>Please select a Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Could not find LSP profiles. Check installation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
         <source>Could not find syntax definitions. Check installation.</source>
         <translation type="unfinished">找不到语法定义文件.请检查安装.</translation>
     </message>
     <message>
-        <location line="+116"/>
+        <location line="+124"/>
         <source>NTFS Short Names</source>
         <translation type="unfinished"></translation>
     </message>
@@ -178,7 +189,7 @@ Revise su instalación.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+47"/>
+        <location line="+44"/>
         <source>Select one or more files to open</source>
         <translation type="unfinished">选择一个或多个文件打开</translation>
     </message>
@@ -196,7 +207,7 @@ Revise su instalación.</translation>
         <translation type="obsolete">无法读取 &quot;%1&quot; 的Tag信息</translation>
     </message>
     <message>
-        <location line="+677"/>
+        <location line="+750"/>
         <location line="+31"/>
         <source>Output error</source>
         <translation type="unfinished">输出错误</translation>
@@ -212,7 +223,7 @@ Revise su instalación.</translation>
         <translation type="unfinished">你必须等译一个style输出文件！</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+52"/>
         <source>Processing %1 (%2/%3)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -250,35 +261,35 @@ Lua Syntax error: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+147"/>
+        <location line="+175"/>
         <source>Converted %1 files in %2 ms</source>
         <translation type="unfinished">文件%1 转换完毕，用时 %2 ms</translation>
     </message>
     <message>
-        <location line="+189"/>
+        <location line="+204"/>
         <source>Conversion of &quot;%1&quot; not possible.</source>
         <translation type="unfinished">No es posible la conversión de &quot;%1&quot;.</translation>
     </message>
     <message>
         <location line="+0"/>
-        <location line="+141"/>
-        <location line="+46"/>
+        <location line="+148"/>
+        <location line="+55"/>
         <source>clipboard data</source>
         <translation type="unfinished">剪贴板数据</translation>
     </message>
     <message>
-        <location line="-116"/>
+        <location line="-124"/>
         <source>%1 options</source>
         <translation type="unfinished">%1 选项</translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+41"/>
         <location line="+11"/>
         <source>(user script)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>Preview (%1):</source>
         <translation type="unfinished">预览 (%1):</translation>
     </message>
@@ -298,16 +309,26 @@ Lua Syntax error: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="+487"/>
+        <source>Select workspace directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Choose the Language Server executable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Current syntax: %1</source>
         <translation type="obsolete">当前语言: %1</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="-442"/>
         <source>Preview of &quot;%1&quot; not possible.</source>
         <translation type="unfinished">&quot;%1&quot;.的预览不可用.</translation>
     </message>
     <message>
-        <location line="+246"/>
+        <location line="+250"/>
         <source>Some plug-in effects may not be visible in the preview.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -415,7 +436,9 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
     <message>
         <location line="+3"/>
         <location line="+359"/>
-        <location line="+664"/>
+        <location line="+150"/>
+        <location line="+65"/>
+        <location line="+625"/>
         <location line="+269"/>
         <location line="+108"/>
         <location line="+295"/>
@@ -423,7 +446,7 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
         <translation>...</translation>
     </message>
     <message>
-        <location line="-1660"/>
+        <location line="-1836"/>
         <source>Save output in the input file directories.</source>
         <translation>将输出保存在输入路径中.</translation>
     </message>
@@ -437,7 +460,7 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
         <translation type="obsolete">Opciones de salida</translation>
     </message>
     <message>
-        <location line="+440"/>
+        <location line="+616"/>
         <source>General</source>
         <translation>通用</translation>
     </message>
@@ -549,7 +572,7 @@ Removes Unicode BOM mark.</source>
         <translation type="vanished">设置输出文件的编码格式.</translation>
     </message>
     <message>
-        <location line="+1474"/>
+        <location line="+1480"/>
         <source>&amp;Plug-Ins</source>
         <translation type="unfinished"></translation>
     </message>
@@ -558,7 +581,7 @@ Removes Unicode BOM mark.</source>
         <translation type="obsolete">Codificación:</translation>
     </message>
     <message>
-        <location line="-1445"/>
+        <location line="-1451"/>
         <source>Select or define the encoding.
 The result has to match the input file encoding.</source>
         <translation>选择或者定义编码格式.
@@ -861,12 +884,12 @@ See ctags.sf.net for details.</source>
         <translation>编码设置：</translation>
     </message>
     <message>
-        <location line="-755"/>
+        <location line="-931"/>
         <source>Output destination:</source>
         <translation>输出路径：</translation>
     </message>
     <message>
-        <location line="+981"/>
+        <location line="+1157"/>
         <location line="+278"/>
         <location line="+108"/>
         <location line="+295"/>
@@ -886,7 +909,7 @@ See ctags.sf.net for details.</source>
         <translation type="obsolete">读取ctags文件：</translation>
     </message>
     <message>
-        <location line="-1948"/>
+        <location line="-2124"/>
         <source>Highlight</source>
         <translation>Highlight</translation>
     </message>
@@ -987,7 +1010,7 @@ See ctags.sf.net for details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+126"/>
+        <location line="+302"/>
         <source>BBCode</source>
         <translation>BBCode</translation>
     </message>
@@ -1186,7 +1209,7 @@ This feature is enabled tor C, C++, C# and Java code.</source>
 这项功能仅支持 C, C++, C# 和 Java.</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+24"/>
         <source>Reformat:</source>
         <translation>格式化代码:</translation>
     </message>
@@ -1281,7 +1304,7 @@ Set the width to 0 to keep tabs.</source>
         <translation type="vanished">字体大小：</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+61"/>
         <source>Enter the font size.</source>
         <translation>输入字体大小.</translation>
     </message>
@@ -1297,7 +1320,7 @@ Set the width to 0 to keep tabs.</source>
         <translation>停靠浮动面板(&amp;D)</translation>
     </message>
     <message>
-        <location line="-2445"/>
+        <location line="-2627"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
@@ -1433,6 +1456,106 @@ Set the width to 0 to keep tabs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location line="+11"/>
+        <source>Configure the LSP Client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>LSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Language Server:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Select a Language Server profile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Executable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Path of the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Select the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Print LSP messages to standard error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Output Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Start an initialization request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Check Capabilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>Workspace:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>The workspace directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Select the workspace directory of your project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Run hover requests to add tooltips to your output (HTML only).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Improve token recognition with semantic highlighting.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Semantic Highlighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Show syntax errors and messages (depends on output format).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Show Syntax Errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+128"/>
         <source>ANSI ESC</source>
         <translation type="unfinished"></translation>
@@ -1503,7 +1626,7 @@ Set the width to 0 to keep tabs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+306"/>
+        <location line="+309"/>
         <source>Reformat and indent your code.
 This feature is enabled for C, C++, C# and Java code.</source>
         <translation type="unfinished"></translation>
@@ -1522,6 +1645,11 @@ This feature is enabled for C, C++, C# and Java code.</source>
         <location line="+32"/>
         <source>Select or enter the font name. HTML supports a list of fonts, separated with comma.</source>
         <translation>选择或者输入字体名. HTML支持用逗号分隔的字体列表.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>DejaVu Sans Mono</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+15"/>
