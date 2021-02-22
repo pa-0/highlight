@@ -14,7 +14,7 @@ Based on the DuoTone Themes project by simurai:
 ------------------------------------------------------------------------------]]
 Description = "DuoTone Dark Space"
 Categories  = {"dark", "duotone"}
---------------------------------------------------------------------------------
+
 Canvas         = { Colour = "#24242e" }
 Default        = { Colour = "#8686cb" }
 LineNum        = { Colour = "#49495a" }
@@ -35,7 +35,7 @@ BlockComment   = LineComment
 Keywords = {
   { Colour = "#bebeef" }, --> kwd 1
   { Colour = "#fe7734" }, --> kwd 2
-  { Colour = "#8686cb" }, --> kwd 3
+  { Colour = "#ae7241" }, --> kwd 3
   { Colour = "#b06845" }, --> kwd 4
   { Colour = "#7272a1" }, --> kwd 5
   { Colour = "#644c40" }, --> kwd 6
@@ -44,9 +44,9 @@ Keywords = {
 
 SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
-  { Type = 'class', Style =  { Colour = base0A } },
+  { Type = 'class', Style =  Keywords[3] },
   { Type = 'struct', Style =  Keywords[4] },
-  { Type = 'interface', Style = { Colour = base06 } },
+  { Type = 'interface', Style = Keywords[3] },
   { Type = 'parameter', Style = Keywords[6] },
   { Type = 'variable', Style = Keywords[5] },
   { Type = 'enumMember', Style = Keywords[5] },
@@ -57,6 +57,7 @@ SemanticTokenTypes = {
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },
 }
+
 --[[----------------------------------------------------------------------------
 The MIT License
 

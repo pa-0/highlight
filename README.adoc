@@ -44,7 +44,6 @@ v4.0-beta, January 2021
 :README_TCL: pass:q[link:extras/tcl/README_TCL[`README_TCL`]]
 :extras_web_plugins: pass:q[link:extras/web_plugins/[`extras/web_plugins/`]]
 // External Links:
-:source-highlight: pass:[http://www.gnu.org/software/src-highlite/[source-highlight^]]
 :andre-simon_de: pass:[http://www.andre-simon.de[www.andre-simon.de^]]
 
 
@@ -300,7 +299,7 @@ Terminal escape output options (xterm256 or truecolor):
      --canvas[=width]           set background colour padding (default: 80)
 
 
-Language Server options (*tbd):
+Language Server options:
 
      --ls-profile=<server>      read LSP configuration from lsp.conf
      --ls-delay=<ms>            set server initialization delay
@@ -309,7 +308,8 @@ Language Server options (*tbd):
      --ls-hover                 execute hover requests (HTML output only)
      --ls-semantic              retrieve semantic token types (requires LSP 3.16)
      --ls-syntax=<lang>         set syntax which is understood by the server
-     --ls-rainbow *
+     --ls-syntax-error          retrieve syntax error information
+                                  (assumes --ls-hover or --ls-semantic)
      --ls-workspace=<dir>       set workspace directory to init. the server
 ................................................................................
 

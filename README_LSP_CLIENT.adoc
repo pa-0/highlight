@@ -31,15 +31,11 @@ editors with LSP support are Kate, vim, Emacs and Eclipse.
 More information about LSP and editor support:
 https://langserver.org/
 
-Highlight will also make use of the LSP interface to access syntax specific
-information. Since a general highlighter cannot have a deep understanding of
-the code''s meaning this will improve the highlighting quality.
-
 Several beta releases are planned to introduce these features:
 
-* add enhanced tooltips using hover requests (implemented)
-* add semantic highlighting (implemented)
-* add syntax error highlighting (implemented)
+* add enhanced tooltips using hover requests
+* add semantic highlighting
+* add syntax error highlighting
 
 
 == PROFILES
@@ -77,18 +73,18 @@ The profile settings here may be set with the corresponding --ls-* options
 Command line options:
 +
 ..........................................................................
-Language Server options (*tbd):
+Language Server options:
 
-    --ls-profile=<server>      read LSP configuration from lsp.conf
-    --ls-delay=<ms>            set server initialization delay
-
-    --ls-exec=<bin>            set server executable name
-    --ls-option=<option>       set server CLI option (can be repeated)
-    --ls-hover                 execute hover requests (HTML output only)
-    --ls-semantic              retrieve semantic token types (requires LSP 3.16)
-    --ls-syntax=<lang>         set syntax which is understood by the server
-    --ls-rainbow *
-    --ls-workspace=<dir>       set workspace directory to init. the server
+     --ls-profile=<server>      read LSP configuration from lsp.conf
+     --ls-delay=<ms>            set server initialization delay
+     --ls-exec=<bin>            set server executable name
+     --ls-option=<option>       set server CLI option (can be repeated)
+     --ls-hover                 execute hover requests (HTML output only)
+     --ls-semantic              retrieve semantic token types (requires LSP 3.16)
+     --ls-syntax=<lang>         set syntax which is understood by the server
+     --ls-syntax-error          retrieve syntax error information
+                                  (assumes --ls-hover or --ls-semantic)
+     --ls-workspace=<dir>       set workspace directory to init. the server
 ..........................................................................
 
 
@@ -117,6 +113,16 @@ SemanticTokenTypes  = {
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },
 }
+
+-- Error token (default: red color)
+Error = { Custom = { { Format = "html", Style = "color: green" } } }
+
+-- Error message (default: color:red; border:solid 1px red;)
+ErrorMessage = { Custom = { { Format = "html", Style = "color: green" } } }
+
+-- Hover tooltip span (dafault: cursor:help )
+Hover = { Custom = { { Format = "html", Style = "cursor:help" } } }
+
 ..........................................................................
 
 Additional elements to describe token modifiers will be added in a later release.
@@ -127,7 +133,7 @@ Additional elements to describe token modifiers will be added in a later release
 
 highlight  -I --ls-profile ccls --ls-workspace '/home/andre/Projekte/c' /home/andre/Projekte/c/re.cpp --out-format html  --ls-hover > /home/andre/Projekte/c/re.cpp.ccls.html
 
-highlight --ls-profile rls --ls-workspace '/home/andre/Projekte/rust/hello_world' /home/andre/Projekte/rust/hello_world/src/main.rs --outdir ~/test_out
+highlight  -I  --ls-profile rust-analyzer --ls-workspace '/home/andre/Projekte/rust/fibo'  /home/andre/Projekte/rust/fibo/src/main.rs  --out-format html --ls-semantic > fibo.html
 ..........................................................................
 
 The GUI offers an LSP tab to enable these options.

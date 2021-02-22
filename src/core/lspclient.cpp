@@ -665,6 +665,8 @@ namespace highlight
             //    std::cerr << "Mod! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+4]<<"\n";
             //}
 
+            std::cerr << "ST! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+3]  <<"\n";
+
             // for now disable multiline elements
             if (id != "comment" && id != "string" && id != "macro") {
                 tokenMap[{ line+1, col+1 }] = highlight::SemanticToken(semAttributes[i+2], semAttributes[i+3], id);

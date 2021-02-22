@@ -45,9 +45,9 @@ Keywords = {
 
 SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
-  { Type = 'class', Style =  { Colour = base0A } },
+  { Type = 'class', Style = Keywords[3] },
   { Type = 'struct', Style =  Keywords[4] },
-  { Type = 'interface', Style = { Colour = base06 } },
+  { Type = 'interface', Style = Keywords[2] },
   { Type = 'parameter', Style = Keywords[6] },
   { Type = 'variable', Style = Keywords[5] },
   { Type = 'enumMember', Style = Keywords[5] },
