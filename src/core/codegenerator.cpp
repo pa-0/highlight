@@ -2098,8 +2098,9 @@ string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
             if (!kwClass)
                 return "ws";
 
-            char kwName[5] = {0};
-            snprintf(kwName, sizeof(kwName), "kw%c", ('a'+kwClass-1));
+            char kwName[20] = {0};
+            snprintf(kwName, sizeof(kwName), "keyword %c", ('a'+kwClass-1));
+
             return string(kwName);
         }
         default:
@@ -2168,7 +2169,7 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
         else if (line.find(STY_NAME_DST, typeDescPos)==typeDescPos)
             assertState=DIRECTIVE_STRING;
 
-        else if (line.find("kw", typeDescPos)==typeDescPos) {
+        else if (line.find("kw", typeDescPos)==typeDescPos || line.find("st", typeDescPos)==typeDescPos) {
             assertState=KEYWORD;
             if (isalpha(line[typeDescPos+2]))
                 assertGroup=line[typeDescPos+2] - 'a' +1;

@@ -423,7 +423,7 @@ highlight --config-file xxx.lang --config-file yyy.theme -I
 
 ==== Debug language definitions
 
-Use `--verbose` to display Lua and syntax data.
+Use `--verbose` to display Lua and syntax data. Apply twice to print more information.
 
 ==== Remove an UTF8 BOM:
 

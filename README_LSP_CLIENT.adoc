@@ -65,8 +65,8 @@ Servers = {
 }
 ..........................................................................
 
-The profile settings here may be set with the corresponding --ls-* options
-(see highlight -h for details).
+The profile settings here may be set with the corresponding --ls-* options.
+
 
 == OPTIONS
 
@@ -120,14 +120,14 @@ Error = { Custom = { { Format = "html", Style = "color: green" } } }
 -- Error message (default: color:red; border:solid 1px red;)
 ErrorMessage = { Custom = { { Format = "html", Style = "color: green" } } }
 
--- Hover tooltip span (dafault: cursor:help )
+-- Hover tooltip span (default: cursor:help )
 Hover = { Custom = { { Format = "html", Style = "cursor:help" } } }
 
 ..........................................................................
 
 Additional elements to describe token modifiers will be added in a later release.
 
-=== Example invocation:
+=== EXAMPLE INVOCATION
 +
 ..........................................................................
 
@@ -137,5 +137,11 @@ highlight  -I  --ls-profile rust-analyzer --ls-workspace '/home/andre/Projekte/r
 ..........................................................................
 
 The GUI offers an LSP tab to enable these options.
+
+
+=== DEBUGGING
+
+Apply `-v -v` to print LSP messages.
+
 
 // EOF //

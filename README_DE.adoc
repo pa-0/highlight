@@ -421,7 +421,8 @@ highlight --config-file xxx.lang --config-file yyy.theme -I
 
 ==== Sprachdefinitionen debuggen:
 
-Benutzen Sie `--verbose`, um Lua- und Syntax-Daten anzuzeigen.
+Benutzen Sie `--verbose`, um Lua- und Syntax-Daten anzuzeigen. Zweifach angeben
+um mehr Informationen zu erhalten.
 
 ==== UTF8 BOM entfernen:
 

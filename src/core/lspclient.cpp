@@ -382,7 +382,6 @@ namespace highlight
             myTokenTypes.push_back(picojson::value(type));
         }
 
-
         vector<std::string> supportedModifiers {"documentation","declaration","definition","static","abstract","deprecated",
                                                 "readonly", "async","modification","defaultLibrary"};
 
@@ -406,6 +405,11 @@ namespace highlight
         textDocument["semanticTokens"] = picojson::value(semanticTokensClientCapabilities);
 
         capabilities["textDocument"] = picojson::value(textDocument);
+
+        //https://clangd.llvm.org/extensions.html#utf-8-offsets
+        picojson::array offsetEncodings;
+        offsetEncodings.push_back(picojson::value("utf-8"));
+        capabilities["offsetEncoding"] = picojson::value(offsetEncodings);
 
         params["capabilities"] = picojson::value(capabilities);
         request["params"] =  picojson::value(params);
@@ -664,8 +668,7 @@ namespace highlight
             //if (semAttributes[i+4]) {
             //    std::cerr << "Mod! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+4]<<"\n";
             //}
-
-            std::cerr << "ST! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+3]  <<"\n";
+            //std::cerr << "ST! line "<<line<<" col "<< col << " id  "<< id << " val "<<semAttributes[i+3]  <<"\n";
 
             // for now disable multiline elements
             if (id != "comment" && id != "string" && id != "macro") {

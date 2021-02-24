@@ -67,7 +67,7 @@ void printHelp(const std::string &topic)
         cout <<"\n";
         cout <<"Print all installed themes with --list-scripts=themes.\n";
         cout <<"\n";
-        cout <<"Use --base16 to read a theme of the Base16 set or add 'base16/' as prefix.\n";
+        cout <<"Add 'base16/' as prefix to read a theme of the Base16 set.\n";
         cout <<"\n";
         cout <<"Exemplary config files:\n";
         cout <<"darkspectrum.theme: dark canvas (vim) \n";
