@@ -2213,14 +2213,14 @@ bool MainWindow::initializeLS(highlight::CodeGenerator* generator, bool tellMe)
                 ui->cbLSSemantic->setEnabled(false);
             }
             generator->exitLanguageServer();
-            QMessageBox::information(this, "LSP Init. OK",  "Language server initialization successful");
+            QMessageBox::information(this, "LSP Init. OK", tr("Language server initialization successful"));
         }
         return true;
     }
     else if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
-        QMessageBox::critical(this, "LSP Error",  "Language server connection failed");
+        QMessageBox::critical(this, "LSP Error", tr("Language server connection failed"));
     } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
-        QMessageBox::critical(this,"LSP Error", "Language server initialization failed");
+        QMessageBox::critical(this,"LSP Error", tr("Language server initialization failed"));
     }
 
     return false;

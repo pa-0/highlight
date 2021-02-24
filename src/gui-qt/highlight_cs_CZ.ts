@@ -202,6 +202,18 @@ Lua Syntax error: %2</source>
         <source>Choose the Language Server executable</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Language server initialization successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language server connection failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language server initialization failed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowClass</name>

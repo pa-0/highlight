@@ -192,6 +192,21 @@ Lua Syntax error: %2</source>
         <translation>Kontrast: %1 %2</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2216"/>
+        <source>Language server initialization successful</source>
+        <translation>Language Server - Initialisierung erfolgreich</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2221"/>
+        <source>Language server connection failed</source>
+        <translation>Language Server - Verbindung fehlgeschlagen</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2223"/>
+        <source>Language server initialization failed</source>
+        <translation>Language Server - Initialisierung fehlgeschlagen</translation>
+    </message>
+    <message>
         <location filename="mainwindow.cpp" line="2251"/>
         <source>Select workspace directory</source>
         <translation>Projektverzeichnis wählen</translation>

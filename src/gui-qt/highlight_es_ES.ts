@@ -193,6 +193,21 @@ Lua Syntax error: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="2216"/>
+        <source>Language server initialization successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2221"/>
+        <source>Language server connection failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="2223"/>
+        <source>Language server initialization failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="mainwindow.cpp" line="2251"/>
         <source>Select workspace directory</source>
         <translation type="unfinished"></translation>
