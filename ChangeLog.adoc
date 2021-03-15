@@ -6,6 +6,11 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.0 beta 7
+
+15.03.2021
+
+  - removed `extras/web_plugins`
 
 == highlight 4.0 beta 6
 

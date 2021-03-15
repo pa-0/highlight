@@ -1,6 +1,6 @@
 = HIGHLIGHT VERSION 4.0 MIGRATION
 André Simon
-:revdate: January 2021
+:revdate: March 2021
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -14,7 +14,8 @@ André Simon
 :linkattrs: true
 
 
-The major version bump will be used to enforce the following interface changes:
+The major version bump will be used to enforce the following interface
+and file changes:
 
 
 == REMOVED CLI OPTIONS
@@ -67,6 +68,13 @@ CodeGenerator::setIndentationOptions
 ..........................................................................
 
 
+=== REMOVED FILES
++
+..........................................................................
+    extras/web_plugins/*
+..........................................................................
+
+
 === RENAMED FILES
 +
 ..........................................................................
@@ -83,10 +91,12 @@ CodeGenerator::setIndentationOptions
     themes/fine_blue.theme -> themes/fineblue.theme
 ..........................................................................
 
+
 == NEW CONFIG FILES
 +
 
 lsp.conf
+
 
 == CSS STYLE NAMES
 +

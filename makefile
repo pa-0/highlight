@@ -67,10 +67,6 @@ install:
 	${MKDIR} ${DESTDIR}${doc_dir}
 	${MKDIR} ${DESTDIR}${conf_dir}
 	${MKDIR} ${DESTDIR}${examples_dir} \
-		${DESTDIR}${examples_dir}web_plugins \
-		${DESTDIR}${examples_dir}web_plugins/dokuwiki \
-		${DESTDIR}${examples_dir}web_plugins/movabletype \
-		${DESTDIR}${examples_dir}web_plugins/wordpress \
 		${DESTDIR}${examples_dir}swig \
 		${DESTDIR}${examples_dir}tcl \
 		${DESTDIR}${examples_dir}pandoc \
@@ -105,9 +101,6 @@ install:
 	${INSTALL_DATA} ./ChangeLog.adoc ${DESTDIR}${doc_dir}
 	${INSTALL_DATA} ./COPYING ${DESTDIR}${doc_dir}
 	${INSTALL_DATA} ./INSTALL ${DESTDIR}${doc_dir}
-	${INSTALL_DATA} ./extras/web_plugins/dokuwiki/* ${DESTDIR}${examples_dir}web_plugins/dokuwiki/
-	${INSTALL_DATA} ./extras/web_plugins/movabletype/* ${DESTDIR}${examples_dir}web_plugins/movabletype/
-	${INSTALL_DATA} ./extras/web_plugins/wordpress/* ${DESTDIR}${examples_dir}web_plugins/wordpress/
 	${INSTALL_DATA} ./extras/swig/* ${DESTDIR}${examples_dir}swig
 	${INSTALL_DATA} ./extras/tcl/* ${DESTDIR}${examples_dir}tcl
 	${INSTALL_DATA} ./extras/pandoc/* ${DESTDIR}${examples_dir}pandoc
@@ -123,7 +116,7 @@ install:
 	@echo
 	@echo "Done."
 	@echo "Type highlight --help or man highlight for instructions."
-	@echo "Take a look at ${DESTDIR}${examples_dir} for web plugins, SWIG and TCL bindings."
+	@echo "Take a look at ${DESTDIR}${examples_dir} for scripts, SWIG and TCL bindings."
 	@echo "Execute 'make install-gui' to install the highlight GUI ('make gui')."
 	@echo "Do not hesitate to report problems. Unknown bugs are hard to fix."
 

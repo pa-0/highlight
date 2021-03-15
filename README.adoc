@@ -43,7 +43,6 @@ v4.0-beta, January 2021
 :README_pandoc: pass:q[link:extras/pandoc/README.html[`README.html`]]
 :extras_tcl: pass:q[link:extras/tcl/[`extras/tcl/`]]
 :README_TCL: pass:q[link:extras/tcl/README_TCL[`README_TCL`]]
-:extras_web_plugins: pass:q[link:extras/web_plugins/[`extras/web_plugins/`]]
 // External Links:
 :andre-simon_de: pass:[http://www.andre-simon.de[www.andre-simon.de^]]
 
@@ -462,8 +461,6 @@ See {README_LSP_CLIENT} for details.
 === FILE FORMAT
 
 Configuration files are Lua scripts.
-Please refer to http://www.lua.org/manual/5.1/manual.html for more details
-about the Lua syntax.
 
 For more details about the Lua syntax, please refer to:
 
@@ -802,20 +799,20 @@ SemanticAttributesN: An array consisting of:
 --------------------------------------------------------------------------------
 Description = "vim autumn"
 
-Categories = {"light"}
+Categories = {"light", "vim"}
 
-Default = { Colour="#404040" }
-Canvas  = { Colour="#fff4e8" }
-Number  = { Colour="#00884c" }
-Escape  = { Colour="#8040f0" }
-String  = { Colour="#00884c" }
-BlockComment  = { Colour="#ff5050" }
+Default	= { Colour="#404040" }
+Canvas	= { Colour="#fff4e8" }
+Number	= { Colour="#00884c" }
+Escape	= { Colour="#8040f0" }
+String	= { Colour="#00884c" }
+BlockComment	= { Colour="#ff5050" }
 StringPreProc = String
 LineComment   = BlockComment
 Operator      = { Colour="#513d2b" }
-LineNum       = { Colour="#555555" }
-PreProcessor  = {  Colour="#660000" }
-Interpolation = { Colour="#CA6DE1" }
+LineNum      = { Colour="#555555" }
+PreProcessor      = {  Colour="#660000" }
+Interpolation  = { Colour="#CA6DE1" }
 
 Keywords = {
   { Colour="#80a030" },
@@ -825,6 +822,8 @@ Keywords = {
   { Colour="#9a85ff" },
   { Colour="#85adff" },
 }
+
+-- new LSP based elements:
 
 SemanticTokenTypes = {
   { Type = 'type', Style = Keywords[2] },
@@ -966,21 +965,6 @@ PHP and Python as programming reference.
 
 A TCL extension is located in {extras_tcl}.
 See {README_TCL} for installation instructions.
-
-
-=== THIRD PARTY SCRIPTS AND PLUG-INS
-
-See the {extras_web_plugins} subdirectory in the highlight package for
-some plugins which integrate highlight in Wiki and Blogging software:
-
-* DokuWiki
-* MovableType
-* Wordpress
-* Serendipity
-
-Other uses of highlight can be found on {andre-simon_de}
-This site shows several use cases of highlight in projects like Webgit,
-Evolution, Inkscape, Ranger and more.
 
 
 == BUILDING AND INSTALLING
