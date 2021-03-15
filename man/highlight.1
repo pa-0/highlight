@@ -1,4 +1,4 @@
-.TH highlight 1 "2021-02-20" "Andre Simon" "user documentation"
+.TH highlight 1 "2021-03-15" "Andre Simon" "user documentation"
 
 .SH NAME
 Highlight - a universal sourcecode to formatted text converter
@@ -192,7 +192,7 @@ set syntax which is understood by the server
 .IP "--ls-syntax-error"
 retrieve syntax error information (assumes --ls-hover or --ls-semantic)
 .IP "--ls-workspace=<dir>"
-set workspace directory to init. the server
+set workspace directory to initialize the server
 
 .SH ENV VARIABLES
 Highlight recognizes these variables:
@@ -203,7 +203,7 @@ may contain command line options, but no input file paths.
 
 .SH HINTS
 If no in- or output files are specified, stdin and stdout will be used for in- or output.
-Since version 3.44, reading from stdin can also be triggered by the '-' option.
+Reading from stdin can also be triggered by the '-' option.
 
 Default output format: xterm256 or truecolor if appropriate, HTML otherwise.
 
@@ -213,6 +213,8 @@ are stored in the output document header with -I, if -f is also given there
 will be no style definitions.
 
 Reformatting code (-F) will only work with C, C++, C# and Java input files.
+
+LSP options require absolute input file paths.
 .SH BUGS
 Wrapping lines with -V or -W will cause faulty highlighting of long single line comments and directives.
 Using line-range might interfere with multi line syntax elements. Use with caution.

@@ -244,7 +244,7 @@ void printHelp(const std::string &topic)
         cout<<"     --canvas[=width]           set background colour padding (default: 80)\n";
         cout<<"\n\n";
 
-        cout<<"Language Server options (*tbd):\n\n";
+        cout<<"Language Server options:\n\n";
         cout<<"     --ls-profile=<server>      read LSP configuration from lsp.conf\n";
         cout<<"     --ls-delay=<ms>            set server initialization delay\n";
         cout<<"     --ls-exec=<bin>            set server executable name\n";
