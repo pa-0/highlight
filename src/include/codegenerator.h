@@ -360,12 +360,6 @@ public:
     */
     void setEOLDelimiter(char delim);
 
-    /** Define the name of a nested language which is located at the beginning of input.
-        The opening embedded delimiter is missing, but the closing delimiter must exist.
-    	\param langName name of nested language
-    */
-    void setStartingNestedLang(const string &langName);
-
     /** \param param path of plugin input file
     */
     void setPluginParameter ( const string& param );

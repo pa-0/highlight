@@ -39,8 +39,6 @@ class HighlightPipe {
   function getInfo(){
         return array(
             'author' => 'Andre Simon',
-            'email'  => 'andre.simon1@gmx.de',
-            'date'   => '2015-10-13',
             'url'    => 'http://www.andre-simon.de/',
             'version'    => '1.2',
         );
@@ -62,7 +60,7 @@ class HighlightPipe {
 
 	if ($this->hl_option['line-numbers']){
 		$this->hl_cmd_str .= " -l -m 1";
-		/*$this->hl_cmd_str .= $this->get_config('hl_linenumbersberstart');*/
+
 		if ($this->hl_option['zeroes']){
 			$this->hl_cmd_str .= " -z ";
 		}

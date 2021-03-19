@@ -65,6 +65,7 @@ A deprecation notice is outputted during the beta release cycle.
 
 DataDir::searchDataDir -> DataDir::initSearchDirectories
 CodeGenerator::setIndentationOptions
+CodeGenerator::setStartingNestedLang
 ..........................................................................
 
 
