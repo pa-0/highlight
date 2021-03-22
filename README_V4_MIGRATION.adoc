@@ -56,7 +56,7 @@ These options will no longer be documented but continue to work:
                                   input, it is simply copied to the output
 ..........................................................................
 
-A deprecation notice is outputted during the beta release cycle.
+A deprecation notice is shown during the beta release cycle.
 
 
 == REMOVED LIBRARY FUNCTIONS

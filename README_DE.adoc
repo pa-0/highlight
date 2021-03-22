@@ -1,6 +1,6 @@
 = HIGHLIGHT HANDBUCH
 André Simon
-v4.0-beta, January 2021
+v4.0, March 2021
 :lang: de
 :toc: left
 :toc-title: Contents

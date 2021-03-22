@@ -31,11 +31,11 @@ editors with LSP support are Kate, vim, Emacs and Eclipse.
 More information about LSP and editor support:
 https://langserver.org/
 
-Several beta releases are planned to introduce these features:
+LSP features:
 
-* add enhanced tooltips using hover requests
-* add semantic highlighting
-* add syntax error highlighting
+* enhanced tooltips using hover requests
+* semantic highlighting
+* syntax error highlighting
 
 
 == PROFILES
