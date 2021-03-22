@@ -5,9 +5,9 @@
     copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
 
-   Highlight is a universal source code to HTML converter. Syntax highlighting
-   is formatted by Cascading Style Sheets. It's possible to easily enhance
-   highlight's parsing database.
+   Highlight is a universal source code to formatted text converter.
+   Syntax highlighting is formatted by Cascading Style Sheets.
+   It's possible to easily enhance highlight's parsing database.
 
  ***************************************************************************/
 
@@ -34,8 +34,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <Diluculum/LuaState.hpp>
 
 #include "main.h"
-#include "../include/datadir.h"
+#include "datadir.h"
 #include "syntaxreader.h"
+#include "lspprofile.h"
 
 #define MAX_LINE__WIDTH       80
 
@@ -58,7 +59,9 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n Copyright (C) 2005-2013 by Leandro Motta Barros"
             << "\n\n xterm 256 color matching functions"
             << "\n Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>"
-
+            << "\n\n PicoJSON library"
+            << "\n Copyright (C) 2009-2010 Cybozu Labs, Inc."
+            << "\n Copyright (C) 2011-2014 Kazuho Oku"
             << "\n\n This software is released under the terms of the GNU General "
             << "Public License."
             << "\n For more information about these matters, see the file named "
@@ -108,15 +111,15 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
         categoryFilters.insert ( catFilter );
     }
 
-    for ( unsigned int i=0; i< filePaths.size(); i++ ) {
+    for (const auto &path : filePaths ) {
         try {
             Diluculum::LuaState ls;
-            highlight::SyntaxReader::initLuaState(ls, filePaths[i],"");
-            ls.doFile(filePaths[i]);
+            highlight::SyntaxReader::initLuaState(ls, path,"");
+            ls.doFile(path);
             desc = ls["Description"].value().asString();
 
-            suffix = ( filePaths[i] ).substr ( where.length() ) ;
-            suffix = suffix.substr ( 1, suffix.length()- wildcard.length() );
+            suffix = ( path ).substr ( where.length() ) ;
+            suffix = suffix.substr ( 0, suffix.length()- wildcard.length()+1 );
 
             unsigned int filterOKCnt=categoryFilters.size();
             if (ls["Categories"].value() !=Diluculum::Nil){
@@ -124,7 +127,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+                for (Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
                     categoryNames.insert(it->second.asString());
                     if (categoryFilters.size() && categoryFilters.count(it->second.asString())) {
@@ -152,7 +155,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
             }
             cout << endl;
         } catch (std::runtime_error &error) {
-            cout << "Failed to read '" << filePaths[i] << "': " << error.what() << endl;
+            cout << "Failed to read '" << path<< "': " << error.what() << endl;
         }
     }
 
@@ -181,7 +184,7 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 }
 
 void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
-                                    const string & langDefPath )
+                                    const string & langDefPath, int level )
 {
     if (!lang) return;
 
@@ -189,54 +192,56 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
 
     cerr << "\nLoading language definition:\n" << langDefPath;
     cerr << "\n\nDescription: " << lang->getDescription();
-    Diluculum::LuaState* luaState=lang->getLuaState();
-    if (luaState) {
-        cerr << "\n\nLUA GLOBALS:\n" ;
-        Diluculum::LuaValueMap::iterator it;
-        Diluculum::LuaValueMap glob =luaState->globals();
-        string elemName;
-        for(it = glob.begin(); it != glob.end(); it++) {
-            Diluculum::LuaValue first = it->first;
-            Diluculum::LuaValue second = it->second;
-            elemName = first.asString();
-            std::cerr << elemName<<": ";
-            switch (second.type()) {
-            case  LUA_TSTRING:
-                cerr << "string [ "<<second.asString()<<" ]";
-                break;
-            case  LUA_TNUMBER:
-                cerr << "number [ "<<second.asNumber()<<" ]";
-                if (elemName.find("HL_")==0 && elemName.find("HL_FORMAT")==string::npos)
-                    HLStateMap[second.asNumber()] = elemName;
-                break;
-            case  LUA_TBOOLEAN:
-                cerr << "boolean [ "<<second.asBoolean()<<" ]";
-                break;
-            default:
-                cerr << second.typeName();
+    if (level>1) {
+        Diluculum::LuaState* luaState=lang->getLuaState();
+        if (luaState) {
+            cerr << "\n\nLUA GLOBALS:\n" ;
+            Diluculum::LuaValueMap::iterator it;
+            Diluculum::LuaValueMap glob =luaState->globals();
+            string elemName;
+            for(it = glob.begin(); it != glob.end(); it++) {
+                Diluculum::LuaValue first = it->first;
+                Diluculum::LuaValue second = it->second;
+                elemName = first.asString();
+                std::cerr << elemName<<": ";
+                switch (second.type()) {
+                    case  LUA_TSTRING:
+                        cerr << "string [ "<<second.asString()<<" ]";
+                        break;
+                    case  LUA_TNUMBER:
+                        cerr << "number [ "<<second.asNumber()<<" ]";
+                        if (elemName.find("HL_")==0 && elemName.find("HL_FORMAT")==string::npos)
+                            HLStateMap[second.asNumber()] = elemName;
+                        break;
+                    case  LUA_TBOOLEAN:
+                        cerr << "boolean [ "<<second.asBoolean()<<" ]";
+                        break;
+                    default:
+                        cerr << second.typeName();
+                }
+                cerr << endl;
             }
-            cerr << endl;
+
         }
 
-    }
+        highlight::RegexElement *re=NULL;
+        for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
+        {
+            if (i==0)
+                cerr << "\nREGEX:\n";
 
-    highlight::RegexElement *re=NULL;
-    for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
-    {
-        if (i==0)
-             cerr << "\nREGEX:\n";
+            re = lang->getRegexElements() [i];
+            cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
+        }
 
-        re = lang->getRegexElements() [i];
-        cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
-    }
+        highlight::KeywordMap::iterator it;
+        highlight::KeywordMap keys=lang->getKeywords();
+        for ( it=keys.begin(); it!=keys.end(); it++ ) {
+            if (it==keys.begin())
+                cerr << "\nKEYWORDS:\n";
 
-    highlight::KeywordMap::iterator it;
-    highlight::KeywordMap keys=lang->getKeywords();
-    for ( it=keys.begin(); it!=keys.end(); it++ ) {
-        if (it==keys.begin())
-            cerr << "\nKEYWORDS:\n";
-
-        cerr << " "<< it->first << "("<< it->second << ")";
+            cerr << " "<< it->first << "("<< it->second << ")";
+        }
     }
     cerr <<"\n\n";
 }
@@ -297,8 +302,6 @@ void HLCmdLineApp::printIOErrorReport ( unsigned int numberErrorFiles,
                                         vector<string> & fileList,
                                         const string &action, const string &streamName  )
 {
-
-
     cerr << "highlight: Could not "
          << action
          << " file"
@@ -361,6 +364,31 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     //call before printInstalledLanguages!
     dataDir.loadFileTypeConfig ( "filetypes" );
+
+    // set CLI options; if profle is defined read from lsp.conf
+    std::string lsProfile(options.getLsProfile());
+    std::string lsExecutable(options.getLsExecutable());         ///< server executable path
+    std::string lsSyntax(options.getLsSyntax());                   ///< language definition which can be enhanced using the LS
+    int lsDelay=options.getLsDelay();
+    std::vector<std::string> lsOptions = options.getLSOptions(); ///< server executable start options
+
+    if (lsProfile.size()) {
+        dataDir.loadLSPConfig("lsp");
+        if (dataDir.profileExists(lsProfile)) {
+            highlight::LSPProfile profile = dataDir.getProfile(lsProfile);
+            if (lsExecutable.empty())
+                lsExecutable = profile.executable;
+            if (lsSyntax.empty())
+                lsSyntax = profile.syntax;
+            if (lsOptions.empty())
+                lsOptions = profile.options;
+            if (lsDelay==0)
+                lsDelay = profile.delay;
+        } else {
+            cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
+            return EXIT_FAILURE;
+        }
+    }
 
     string scriptKind=options.getListScriptKind();
     if (scriptKind.length()) {
@@ -453,7 +481,6 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     generator->setBaseFont ( options.getBaseFont() ) ;
     generator->setBaseFontSize ( options.getBaseFontSize() ) ;
     generator->setLineNumberWidth ( options.getNumberWidth() );
-    generator->setStartingNestedLang( options.getStartNestedLang());
     generator->disableTrailingNL(options.disableTrailingNL());
     generator->setPluginParameter(options.getPluginParameter());
 
@@ -476,7 +503,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         }
     }
 
-    if ( !generator->initTheme ( themePath ) ) {
+    if ( !generator->initTheme ( themePath, options.isLsSemantic() ) ) {
         cerr << "highlight: "
              << generator->getThemeInitError()
              << "\n";
@@ -507,7 +534,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         return EXIT_FAILURE;
     }
 
-    generator->setIndentationOptions(options.getAStyleOptions());
+    //generator->setIndentationOptions(options.getAStyleOptions());
 
     string outDirectory = options.getOutDirectory();
 #ifndef WIN32
@@ -534,10 +561,11 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     string inFileName, outFilePath;
     string suffix, lastSuffix;
     string twoPassOutFile=Platform::getTempFilePath();
+    bool usesLSClient=false;
+
     if ( options.syntaxGiven() ) { // user defined language definition, valid for all files
         string syntaxByFile=options.getSyntaxByFilename();
         string testSuffix = syntaxByFile.empty() ? options.getSyntax() : dataDir.getFileSuffix(syntaxByFile);
-        //FIXME
         suffix = dataDir.guessFileType (testSuffix, syntaxByFile, syntaxByFile.empty(), options.getSingleOutFilename().length()==0 );
     }
 
@@ -547,7 +575,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {
 
-            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badInputFiles.push_back ( inFileList[i] + " (size)" );
             }
             ++i;
@@ -618,8 +646,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     break;
                 }
             }
-            if ( options.printDebugInfo() && loadRes==highlight::LOAD_OK ) {
-                printDebugInfo ( generator->getSyntaxReader(), langDefPath );
+            if ( options.verbosityLevel() && loadRes==highlight::LOAD_OK ) {
+                printDebugInfo ( generator->getSyntaxReader(), langDefPath, options.verbosityLevel() );
             }
             lastSuffix = suffix;
 
@@ -638,6 +666,67 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                     encoding=encodingHint;
             }
             generator->setEncoding (encoding);
+
+            if (lsSyntax==suffix) {
+
+                if (options.getWrappingStyle()!=highlight::WRAP_DISABLED || options.getIndentScheme().size()) {
+                    cerr << "highlight: no reformatting allowed with LSP options.\n";
+                    initError = true;
+                    break;
+                }
+
+                //LSP requires absolute paths
+                if (inFileList[i].empty()) {
+                    cerr << "highlight: no input file path defined.\n";
+                    initError = true;
+                    break;
+                }
+
+                if ( lsExecutable.empty() ) {
+                    cerr << "highlight: no LS executable defined. Consider the --ls-exec or --ls-profile options.\n";
+                    initError = true;
+                    break;
+                }
+
+                highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
+                                                                              options.getLsWorkspace(), lsSyntax,
+                                                                              lsDelay,
+                                                                              options.verbosityLevel() );
+                if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
+                    cerr << "highlight: language server connection failed\n";
+                    initError = true;
+                    break;
+                } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
+                    cerr << "highlight: language server initialization failed\n";
+                    initError = true;
+                    break;
+                }
+                usesLSClient=true;
+
+                generator->lsAddSyntaxErrorInfo( (options.isLsHover() || options.isLsSemantic()) && options.isLsSyntaxError() );
+
+                if (options.isLsHover()) {
+                    if (!generator->isHoverProvider()) {
+                        cerr << "highlight: language server is no hover provider\n";
+                        initError = true;
+                        break;
+                    }
+                    generator->lsAddHoverInfo( true );
+                }
+            }
+        }
+
+        if (usesLSClient && lsSyntax==suffix) {
+            generator->lsOpenDocument(inFileList[i], suffix);
+
+            if (options.isLsSemantic()) {
+                if (!generator->isSemanticTokensProvider()) {
+                    cerr << "highlight: language server is no semantic token provider\n";
+                    initError = true;
+                    break;
+                }
+                generator->lsAddSemanticInfo(inFileList[i], suffix);
+            }
         }
 
         if (twoPassMode && !generator->syntaxRequiresTwoPassRun()) {
@@ -689,18 +778,23 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         highlight::ParseError error = generator->generateFile ( inFileList[i], outFilePath );
 
         if ( error==highlight::BAD_INPUT ) {
-            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadInput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badInputFiles.push_back ( inFileList[i] );
             }
         } else if ( error==highlight::BAD_OUTPUT ) {
-            if ( numBadOutput++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadOutput++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badOutputFiles.push_back ( outFilePath );
             }
         }
         if ( formattingEnabled && !generator->formattingIsPossible() ) {
-            if ( numBadFormatting++ < IO_ERROR_REPORT_LENGTH || options.printDebugInfo() ) {
+            if ( numBadFormatting++ < IO_ERROR_REPORT_LENGTH || options.verbosityLevel() ) {
                 badFormattedFiles.push_back ( outFilePath );
             }
+        }
+
+        if (usesLSClient && lsSyntax==suffix) {
+            //pyls hangs
+            generator->lsCloseDocument(inFileList[i], suffix);
         }
 
         ++i;
@@ -768,6 +862,10 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     if (twoPassMode) {
         unlink(twoPassOutFile.c_str());
+    }
+
+    if (usesLSClient) {
+        generator->exitLanguageServer();
     }
 
     return ( initError || IOError ) ? EXIT_FAILURE : EXIT_SUCCESS;

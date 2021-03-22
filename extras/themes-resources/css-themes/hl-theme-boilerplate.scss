@@ -11,14 +11,14 @@
 // This template covers all of Highlight syntax elements.
 
 // ==============================================================================
-//                            Colors Scheme Definition                            
+//                            Colors Scheme Definition
 // ==============================================================================
 // Define here the colors you'd like to assign to the Syntax Elements.
-// 
+//
 // Example color scheme based on Wimer Hazenberg's "Base16 Monokai":
 // -- https://github.com/chriskempson/base16-builder/blob/master/schemes/monokai.yml
 
-$HL-CanvasBG: 		#49483e; // base02 -- Fuscous Gray 
+$HL-CanvasBG: 		#49483e; // base02 -- Fuscous Gray
 $HL-Default:  		#f8f8f2; // base05 -- Pearl white
 
 $HL-Border: 		#a59f85; // base04 -- Tallow
@@ -45,17 +45,17 @@ $HL-Keywords4: 		#ae81ff; // base0E -- Lavender
 */
 
 // ==============================================================================
-//                                Theme Definition                               
+//                                Theme Definition
 // ==============================================================================
 pre.hl {
 	background-color: $HL-CanvasBG;
 	color: $HL-Default;
-	
+
 	// Border and padding
 	border-radius: 4px;
 	border: 1px solid $HL-Border;
 	padding: 1em;
-	
+
 	// Some basic styling, just in case you need it...
 	overflow: auto;
 	font-size: 16px;
@@ -68,14 +68,14 @@ pre.hl {
 		color: $HL-Number;
 	}
 	&.esc {
-		// Escape sequences 
+		// Escape sequences
 		color: $HL-Escape;
 	}
 	&.ipl {
-		// Interpolation sequences 
+		// Interpolation sequences
 		color: $HL-Interpolation;
 	}
-	&.str {
+	&.sng {
 		// Strings
 		color: $HL-String;
 	}
@@ -98,7 +98,7 @@ pre.hl {
 		font-style: italic;
 	}
 	&.lin {
-		// Line numbers 
+		// Line numbers
 		color: $HL-LineNum;
 	}
 	&.opt {

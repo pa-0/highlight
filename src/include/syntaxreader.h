@@ -36,12 +36,11 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <iterator>
 #include <sstream>
 
-#include <boost/xpressive/xpressive_dynamic.hpp>
-
 #include <Diluculum/LuaState.hpp>
 #include <Diluculum/LuaVariable.hpp>
 #include <Diluculum/LuaFunction.hpp>
 
+#include "regexelement.h"
 #include "platform_fs.h"
 #include "enums.h"
 
@@ -75,8 +74,8 @@ public:
     SyntaxReader();
 
     ~SyntaxReader();
-    
-    
+
+
     /** Load new language definition
         Will only read a new language definition if the given
           file path is not equal to the path of the current language definition.
@@ -92,7 +91,7 @@ public:
     {
         return currentPath!=langDefPath;
     }
-    
+
     /** \return Failed regular expression */
     string getFailedRegex() const
     {
@@ -132,11 +131,11 @@ public:
     /** \param s String
          \return true if s is not a known keyword */
     bool isKeyword ( const string &s ) ;
-    
+
     /** \param s String
          \return keyword list group id */
     int getKeywordListGroup ( const string &s );
-    
+
     /** \return True if multi line comments may be nested */
     bool allowNestedMLComments() const
     {
@@ -155,7 +154,7 @@ public:
     {
         return reformatCode;
     }
-    
+
     bool assertDelimEqualLength() const
     {
       return assertEqualLength;
@@ -190,19 +189,19 @@ public:
     {
         return persistentSnippets.size();
     }
-    
+
     /** \return list of format override flags defined in syntax definitions */
     vector<int>& getOverrideStyleAttributes()
     {
         return overrideStyles;
     }
-    
+
     /** \return description of the programming language */
     const string & getDescription () const
     {
         return langDesc;
     }
-    
+
     const string & getCategoryDescription() const
     {
         return categories;
@@ -256,18 +255,18 @@ public:
     	\param langPath path of embedded language definition
     */
     void restoreLangEndDelim(const string&langPath);
-    
+
     bool allowsInnerSection(const string& langPath);
 
     bool requiresTwoPassRun();
 
     bool requiresParamUpdate();
 
-    
+
     string getPersistentHookConditions();
 
     void clearPersistentSnippets();
-    
+
     /**
     	\param lang language definition name  (no path, no ".lang" extension)
     	\return absolute path based on the previously loaded definition
@@ -297,7 +296,7 @@ public:
     {
         return pluginConfigOverride.count(name) ? pluginConfigOverride[name] : "";
     }
-    
+
     /**
     	\return pointer to state validation function
     */
@@ -320,7 +319,7 @@ public:
     {
         return decorateLineBeginFct;
     }
-    
+
     /**
     	\return pointer to line end decorate function
     */
@@ -328,7 +327,7 @@ public:
     {
         return decorateLineEndFct;
     }
-    
+
     /**
     	\return pointer to Lua state
     */
@@ -349,20 +348,20 @@ public:
     	\param fn name of the processed input file
     */
     void setInputFileName(const string& fn) { currentInputFile=fn; }
-    
+
     /**
     	\return name of the processed input file
     */
-    
+
     string getInputFileName() const { return currentInputFile; }
-    
+
     /**
     	\param groupID keyword group to be stored on disk
     	\param kw keyword token to be stored on disk
     */
-    
+
     void addPersistentKeyword(unsigned int groupID, const string& kw);
-    
+
     /**
     	\param groupID keyword group to be stored on disk
     	\param column start of range within line
@@ -371,14 +370,19 @@ public:
     	\param fileName file name of processed file containing the line
     	*/
     void addPersistentStateRange(unsigned int groupID, unsigned int column,unsigned int length, unsigned int lineNumber, const string& fileName);
-    
+
     /**
         \param ls Lua state to be initialized with constants
         \param langDefPath absolute path of language definition
         \param pluginReadFilePath absolute path of plugin input file
     */
     static void initLuaState(Diluculum::LuaState& ls, const string& langDefPath, const string& pluginReadFilePath, OutputType outputType=HTML );
-       
+
+    // generate a keyword class
+    unsigned int generateNewKWClass ( int classID, const char *prefix="kw" );
+
+    int getKeywordCount() const;
+
 private:
 
     static const string REGEX_IDENTIFIER;
@@ -390,7 +394,7 @@ private:
 
     // name of file being processed
     string currentInputFile;
-    
+
     // Language description
     string langDesc, categories, encodingHint;
 
@@ -405,16 +409,16 @@ private:
     static set <string> persistentSyntaxDescriptions;
 
     vector <RegexElement*> regex;
-    
+
     vector <int>overrideStyles;
 
     // collect delimiters or get current delimiter in CodeGenerator::loadEmbeddedLang
     static DelimiterMap nestedStateEndDelimiters;
-    
+
     static DelimiterMap pluginConfigOverride;
 
     static AllowInnerSectionsMap allowInnerSections;
-    
+
     // saves if delimiter pair consists of the same delimiter symbol
     map <int, bool> delimiterDistinct;
 
@@ -433,17 +437,19 @@ private:
 
          // code formatting is enabled if set
          reformatCode,
-         
+
          // string open and close delimiters must have the same length
          assertEqualLength,
-         
+
          paramsNeedUpdate;
 
     // character which is prefix of raw string (c#)
     unsigned char rawStringPrefix;
 
-    //character which continues curreent style on next line
+    //character which continues current style on next line
     unsigned char continuationChar;
+
+    int keywordCount;
 
     bool readFlag(const Diluculum::LuaVariable& var) ;
 
@@ -452,18 +458,17 @@ private:
 
     // interface for plug-ins: remove keywords dynamically
     static int luaRemoveKeyword (lua_State *L);
-    
+
     static int luaAddPersistentState (lua_State *L);
-    
+
     static int luaOverrideParam (lua_State *L);
-    
-    // generate a keyword class 
-    unsigned int generateNewKWClass ( int classID );
-    
+
+
+
     void addKeyword(unsigned int groupID, const string& kw);
 
     void removeKeyword(const string& kw);
-    
+
     void overrideParam(const string& name, const string& val);
 
 
@@ -474,52 +479,6 @@ private:
     Diluculum::LuaState* luaState; // make member to allow interaction with codeparser instance
 
     static vector<Diluculum::LuaFunction*> pluginChunks;
-};
-
-
-/**\brief Association of a regex with a state description
-
-  A RegexElement associates a regular expression with the state information
-  (opening and closing state, pattern, keyword class, keyword group id, language name)
-*/
-class RegexElement
-{
-public:
-    RegexElement()
-        :open ( STANDARD ), end ( STANDARD ), kwClass ( 0 ), capturingGroup ( -1 ), 
-        langName(), instanceId(instanceCnt++),
-        priority(0), constraintLineNum (0) 
-    {
-    }
-
-    RegexElement ( State oState, State eState, const string&rePattern, unsigned int cID=0, int group=-1, const string& name="", 
-                   unsigned int prio=0, unsigned int cLineNum=0,  const string &cFilename="" /*, const string &sDesc=""*/) :
-        open ( oState ), end ( eState ), kwClass ( cID ), capturingGroup ( group ), langName(name),instanceId(instanceCnt++),
-        priority(prio), constraintLineNum (cLineNum), constraintFilename (cFilename) //, semantics(sDesc)
-    {
-        pattern=rePattern;
-        rex=boost::xpressive::sregex::compile(rePattern);
-    }
-
-    ~RegexElement()
-    {
-        instanceCnt--;
-    }
-
-    State open, ///< opening state
-    end;  ///< closing state
-    boost::xpressive::sregex rex;
-    unsigned int kwClass;        ///< keyword class
-    int capturingGroup;          ///< capturing group ID
-    string langName;             ///< language name
-    string pattern;              ///< RE pattern
-    static int instanceCnt;
-    int instanceId;
-    unsigned int priority;          ///< if set and matched, no other other regular expression will be evaluated 
-    unsigned int constraintLineNum; ///< restrict this regex to this source line number
-    //int constraintColumn;         ///< restrict this regex to this source column
-    string constraintFilename;      ///< restrict this regex to this source filename
-    //string semantics;
 };
 
 }

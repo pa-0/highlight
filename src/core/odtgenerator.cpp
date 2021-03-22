@@ -64,7 +64,9 @@ string ODTGenerator::getStyleDefinition()
            << getAttributes ( STY_NAME_DIR, docStyle.getPreProcessorStyle() )
            << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() )
            << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() )
-           << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
+           << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() )
+           << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() )
+           << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
@@ -178,6 +180,8 @@ void ODTGenerator::initOutputTags ()
     openTags.push_back ( getOpenTag ( STY_NAME_SYM ) );
     openTags.push_back ( getOpenTag ( STY_NAME_IPL ) );
 
+    openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
+    openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
     closeTags.push_back ( "" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "</text:span>" );

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from subprocess import *
 
 class HighlightPipe:
@@ -13,14 +15,14 @@ class HighlightPipe:
 
 	def getResult(self):
 		cmd = self.cmd
-		for k, v in self.options.iteritems():
+		for k, v in self.options.items():
 			option=" --%s" % k
 			if ( v != '1'): option += "=%s" % v
 			if (len(option)<50): cmd += option
 		p = Popen(cmd, shell=True, bufsize=512, stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
 		(child_stdin, child_stdout, child_stderr) = (p.stdin, p.stdout, p.stderr)
 
-		child_stdin.write(self.src)
+		child_stdin.write(self.src.encode())
 		child_stdin.close()
 		err_msg = child_stderr.readlines()
 		if (len(err_msg)>0): return err_msg
@@ -39,8 +41,8 @@ def main():
 	gen.options['inline-css'] = '1'
 	gen.src = 'int main ()\n{ return 0; }'
 
-	print gen.getResult()
-	if not gen.success: print "Execution failed."
+	print (gen.getResult())
+	if not gen.success: print ("Execution failed.")
 
 if __name__=="__main__":
 	main()

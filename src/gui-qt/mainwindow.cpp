@@ -36,13 +36,15 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "io_report.h"
 #include "syntax_chooser.h"
 
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 //#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindowClass), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
+: QMainWindow(parent), ui(new Ui::MainWindowClass),
+lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 {
 
     ui->setupUi(this);
@@ -146,7 +148,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboThemeFilter->addItem(tr("B16 dark"), "dark");
     ui->comboThemeFilter->setCurrentIndex(0);
 
-    //does not work in GUI editor when adding > 10 items ?!?
+    ui->comboLSProfiles->addItem(tr("Please select a Server"));
+
+    // load LSP profiles
+    if (!loadLSProfiles()) {
+        QMessageBox::warning(this, tr("Initialization error"),
+                             tr("Could not find LSP profiles. Check installation."));
+    }
+
+    for (const auto& kv : lspProfiles) {
+         ui->comboLSProfiles->addItem(QString::fromStdString( kv.first ));
+    }
+
     QStringList fmts;
     fmts << "Allman" << "GNU" <<"Google"<< "Horstmann"<<"Lisp"<<"Java"<<"K&R"<<"Linux"
          <<"Mozilla"<<"OTBS"<<"Pico"<<"Ratliff"<<"Stroustrup"<<"VTK"<<"Webkit"<<"Whitesmith";
@@ -221,12 +234,17 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(ui->cbTEXEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbSVGEmbedStyle, SIGNAL(clicked()), this, SLOT(plausibility()));
     QObject::connect(ui->cbFragment, SIGNAL(clicked()), this, SLOT(plausibility()));
+    QObject::connect(ui->cbLSHover, SIGNAL(clicked()), this, SLOT(plausibility()));
+    QObject::connect(ui->cbLSSemantic, SIGNAL(clicked()), this, SLOT(plausibility()));
+
     QObject::connect(ui->tabIOSelection, SIGNAL(currentChanged(int)), this, SLOT(plausibility()));
 
     QObject::connect(ui->lvInputFiles, SIGNAL(itemSelectionChanged()), this, SLOT(updatePreview()));
     QObject::connect(ui->lvPluginScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(updatePreview()));
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(updatePreview()));
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(plausibility()));
+
+
 
     QObject::connect(ui->cbIncLineNo, SIGNAL(clicked()), this, SLOT(updatePreview()));
     QObject::connect(ui->cbKwCase, SIGNAL(clicked()), this, SLOT(updatePreview()));
@@ -244,6 +262,9 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(ui->comboTheme, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->comboSelectSyntax, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->comboThemeFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
+
+    QObject::connect(ui->comboLSProfiles, SIGNAL(currentIndexChanged(int)), this, SLOT(loadLSProfile()));
+
 
     QObject::connect(ui->sbLineNoWidth, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->sbLineNoStart, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
@@ -469,6 +490,8 @@ void MainWindow::writeSettings()
                       ui->comboReformat->currentIndex());
     settings.setValue(ui->comboRTFPageSize->property(name).toString(),
                       ui->comboRTFPageSize->currentIndex());
+    settings.setValue(ui->comboLSProfiles->property(name).toString(),
+                      ui->comboLSProfiles->currentIndex());
 
     settings.setValue(ui->comboTheme->property(name).toString(),
                       ui->comboTheme->currentIndex());
@@ -509,6 +532,12 @@ void MainWindow::writeSettings()
                       ui->cbTEXEmbedStyle->isChecked());
     settings.setValue(ui->cbHTMLPasteMIME->property(name).toString(),
                       ui->cbHTMLPasteMIME->isChecked());
+    settings.setValue(ui->cbLSHover->property(name).toString(),
+                      ui->cbLSHover->isChecked());
+    settings.setValue(ui->cbLSSemantic->property(name).toString(),
+                      ui->cbLSSemantic->isChecked());
+    settings.setValue(ui->cbLSSyntaxErrors->property(name).toString(),
+                      ui->cbLSSyntaxErrors->isChecked());
 
     settings.setValue(ui->leSVGHeight->property(name).toString(),
                       ui->leSVGHeight->text());
@@ -516,6 +545,9 @@ void MainWindow::writeSettings()
                       ui->leSVGWidth->text());
     settings.setValue(ui->leFontSize->property(name).toString(),
                       ui->leFontSize->text());
+    settings.setValue(ui->leLSWorkspace->property(name).toString(),
+                      ui->leLSWorkspace->text());
+
     settings.setValue(ui->sbLineLength->property(name).toString(),
                       ui->sbLineLength->value());
     settings.setValue(ui->sbTabWidth->property(name).toString(),
@@ -599,6 +631,9 @@ void MainWindow::readSettings()
     ui->cbRTFPageColor->setChecked(settings.value(ui->cbRTFPageColor->property(name).toString()).toBool());
     ui->cbWrapping->setChecked(settings.value(ui->cbWrapping->property(name).toString()).toBool());
     ui->cbValidateInput->setChecked(settings.value(ui->cbValidateInput->property(name).toString()).toBool());
+    ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
+    ui->cbLSSemantic->setChecked(settings.value(ui->cbLSSemantic->property(name).toString()).toBool());
+    ui->cbLSSyntaxErrors->setChecked(settings.value(ui->cbLSSyntaxErrors->property(name).toString()).toBool());
 
     ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
     ui->comboEncoding->setCurrentIndex(0);
@@ -609,6 +644,7 @@ void MainWindow::readSettings()
     ui->comboReformat->setCurrentIndex(settings.value(ui->comboReformat->property(name).toString()).toInt());
     ui->comboRTFPageSize->setCurrentIndex(settings.value(ui->comboRTFPageSize->property(name).toString()).toInt());
     ui->comboSelectSyntax->setCurrentIndex(settings.value(ui->comboSelectSyntax->property(name).toString()).toInt());
+    ui->comboLSProfiles->setCurrentIndex(settings.value(ui->comboLSProfiles->property(name).toString()).toInt());
 
     oldThemeIndex=settings.value(ui->comboTheme->property(name).toString()).toInt();
     ui->comboThemeFilter->setCurrentIndex(settings.value(ui->comboThemeFilter->property(name).toString()).toInt());
@@ -624,6 +660,7 @@ void MainWindow::readSettings()
     ui->leFontSize->setText(settings.value(ui->leFontSize->property(name).toString()).toString());
     ui->leHTMLCssPrefix->setText(settings.value(ui->leHTMLCssPrefix->property(name).toString()).toString());
     ui->lePluginReadFilePath->setText(settings.value(ui->lePluginReadFilePath->property(name).toString()).toString());
+    ui->leLSWorkspace->setText(settings.value(ui->leLSWorkspace->property(name).toString()).toString());
 
     ui->sbLineLength->setValue(settings.value(ui->sbLineLength->property(name).toString()).toInt());
     ui->sbTabWidth->setValue(settings.value(ui->sbTabWidth->property(name).toString()).toInt());
@@ -654,9 +691,69 @@ void MainWindow::readLuaList(const string& paramName, const string& langName,Dil
     }
 }
 
+
+bool MainWindow::loadLSProfiles()
+{
+    QString confPath=getDistFileConfigPath(QString("lsp.conf"));
+#ifdef Q_OS_WIN
+   confPath = getWindowsShortPath(confPath);
+#endif
+
+   try {
+       Diluculum::LuaState ls;
+       Diluculum::LuaValueList ret= ls.doFile (confPath.toStdString());
+
+       int idx=1;
+       std::string serverName;              ///< server name
+       std::string executable;              ///< server executable path
+       std::string syntax;                  ///< language definition which can be enhanced using the LS
+       int delay=0;
+       std::vector<std::string> options;    ///< server executable start options
+       Diluculum::LuaValue mapEntry;
+
+       //{ Server="clangd", Exec="clangd", Syntax="c", Options={"--log=error"} },
+       while ((mapEntry = ls["Servers"][idx].value()) !=Diluculum::Nil) {
+           options.clear();
+           serverName = mapEntry["Server"].asString();
+           executable = mapEntry["Exec"].asString();
+           syntax = mapEntry["Syntax"].asString();
+
+           if (mapEntry["Options"] !=Diluculum::Nil) {
+               int extIdx=1;
+               while (mapEntry["Options"][extIdx] !=Diluculum::Nil) {
+                   options.push_back(mapEntry["Options"][extIdx].asString());
+                   extIdx++;
+               }
+           }
+
+           delay = 0;
+           if (mapEntry["Delay"] !=Diluculum::Nil) {
+               delay = mapEntry["Delay"].asNumber();
+           }
+
+           highlight::LSPProfile profile;
+           profile.executable = executable;
+           profile.serverName = serverName;
+           profile.syntax = syntax;
+           profile.options = options;
+           profile.delay = delay;
+
+           lspProfiles[serverName]=profile;
+
+           idx++;
+       }
+
+   } catch (Diluculum::LuaError &err) {
+
+       QMessageBox::warning(this, "Configuration error", QString::fromStdString( err.what()));
+       return false;
+   }
+    return true;
+}
+
 bool MainWindow::loadFileTypeConfig()
 {
-    QString filetypesPath=getDistFileConfigPath();
+    QString filetypesPath=getDistFileConfigPath(QString("filetypes.conf"));
 #ifdef Q_OS_WIN
    filetypesPath = getWindowsShortPath(filetypesPath);
 #endif
@@ -776,16 +873,21 @@ void MainWindow::on_action_About_Highlight_triggered()
     QMessageBox::about( this, "About Highlight",
                         QString("Highlight is a code to formatted text converter.\n\n"
                                 "Highlight GUI %1\n"
-                                "(C) 2002-2021 Andre Simon <a.simon at mailbox.org>\n\n"
+                                "Copyright (C) 2002-2021 Andre Simon <a.simon at mailbox.org>\n\n"
                                 "Artistic Style Classes\n(C) 1998-2002 Tal Davidson\n"
-                                "(C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
+                                "Copyright (C) 2006-2018 Jim Pattee <jimp03 at email.com>\n\n"
                                 "Diluculum Lua wrapper\n"
-                                "(C) 2005-2013 by Leandro Motta Barros\n\n"
+                                "Copyright (C) 2005-2013 by Leandro Motta Barros\n\n"
+                                "xterm 256 color matching functions\n"
+                                "Copyright (C) 2006 Wolfgang Frisch <wf at frexx.de>\n\n"
+                                "PicoJSON library\n"
+                                "Copyright (C) 2009-2010 Cybozu Labs, Inc.\n"
+                                "Copyright (C) 2011-2014 Kazuho Oku\n\n"
                                 "Built with Qt version %2\n\n"
                                 "Released under the terms of the GNU GPL license.\n\n"
                                 "The highlight logo is based on the image \"Alcedo Atthis\" by Lukasz Lukasik.\n"
                                 "The original was published under the terms of the GNU FDL in the Wikimedia Commons database.\n\n"
-                               ).arg(HIGHLIGHT_VERSION).arg(QString(qVersion ())) );
+                        ).arg(QString::fromStdString(highlight::Info::getVersion())).arg(QString(qVersion ())) );
 }
 
 highlight::OutputType MainWindow::getOutputType()
@@ -940,7 +1042,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         }
     }
 
-    if (!generator->initTheme(themePath.toStdString())) {
+    if (!generator->initTheme(themePath.toStdString(), ui->cbLSSemantic->isChecked() )) {
         QMessageBox::critical(this,"Theme init error", QString::fromStdString(generator->getThemeInitError()));
     }
 
@@ -955,14 +1057,16 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         if(fntSize.size()) generator->setBaseFontSize(fntSize);
     }
 
-    int lineLength = 0;
-    if (ui->cbWrapping->isChecked()) {
-        lineLength = (   ui->cbIncLineNo->isChecked()
-                         && ui->sbLineNoWidth->value() >  ui->sbLineLength->value())?
-                     ui->sbLineLength->value() - ui->sbLineNoWidth->value()
-                     :  ui->sbLineLength->value();
+    if ( !ui->cbLSSemantic->isChecked() && !ui->cbLSHover->isChecked()) {
+        int lineLength = 0;
+        if (ui->cbWrapping->isChecked()) {
+            lineLength = (   ui->cbIncLineNo->isChecked()
+                             && ui->sbLineNoWidth->value() >  ui->sbLineLength->value())?
+                         ui->sbLineLength->value() - ui->sbLineNoWidth->value()
+                         :  ui->sbLineLength->value();
+        }
+        generator->setPreformatting(getWrappingStyle(), lineLength, ui->sbTabWidth->value());
     }
-    generator->setPreformatting(getWrappingStyle(), lineLength, ui->sbTabWidth->value());
 
     if(ui->cbKwCase->isChecked()) {
         StringTools::KeywordCase kwCase=StringTools::CASE_UNCHANGED;
@@ -980,7 +1084,7 @@ void MainWindow::applyCtrlValues(highlight::CodeGenerator* generator, bool previ
         generator->setKeyWordCase(kwCase);
     }
 
-    if (ui->cbReformat->isChecked()) {
+    if (ui->cbReformat->isChecked() && !ui->cbLSSemantic->isChecked() && !ui->cbLSHover->isChecked()) {
         generator->initIndentationScheme(ui->comboReformat->currentText().toLower().toStdString());
     }
 }
@@ -1083,6 +1187,9 @@ void MainWindow::on_pbStartConversion_clicked()
 
     QStringList inputErrors, outputErrors, reformatErrors, syntaxTestErrors;
 
+    bool usesLSClient=false;
+    bool useLSForInput=false;
+
     int i=-1;
     while ( ++i<ui->lvInputFiles->count()) {
 
@@ -1117,7 +1224,7 @@ void MainWindow::on_pbStartConversion_clicked()
                                  tr("Invalid regular expression in %1:\n%2").arg(langDefPath).arg(
                                      QString::fromStdString( generator->getSyntaxRegexError())));
             break;
-        } else  if (loadRes==highlight::LOAD_FAILED) {
+        } else if (loadRes==highlight::LOAD_FAILED) {
             QMessageBox::warning(this, tr("Unknown syntax"), tr("Could not convert %1").arg(origFilePath));
             inputErrors.append(origFilePath);
         } else  if (loadRes==highlight::LOAD_FAILED_LUA) {
@@ -1183,6 +1290,28 @@ void MainWindow::on_pbStartConversion_clicked()
 
             applyEncoding(generator.get(), langDefPath);
 
+            string syntaxName = QFileInfo(langDefPath).baseName().toStdString();
+
+            if ((ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && usesLSClient==false && lsSyntax==syntaxName) {
+                if (initializeLS(generator.get(), false )) {
+                        usesLSClient=true;
+                }
+            }
+
+            useLSForInput = usesLSClient && lsSyntax==syntaxName;
+
+            if ( useLSForInput ) {
+
+                generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
+
+                generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
+                generator->lsOpenDocument(currentFile, syntaxName);
+
+                if (ui->cbLSSemantic->isChecked())
+                    generator->lsAddSemanticInfo(currentFile, syntaxName);
+            }
+
             error = generator->generateFile(currentFile, outfileName );
             if (error != highlight::PARSE_OK) {
                 if (error == highlight::BAD_INPUT) {
@@ -1190,6 +1319,9 @@ void MainWindow::on_pbStartConversion_clicked()
                 } else {
                     outputErrors.append(origFilePath);
                 }
+            }
+            if (useLSForInput) {
+                generator->lsCloseDocument(currentFile, generator->getSyntaxDescription());
             }
             ui->progressBar->setValue(100*i / ui->lvInputFiles->count());
         }
@@ -1213,6 +1345,10 @@ void MainWindow::on_pbStartConversion_clicked()
     }
 
     generator->clearPersistentSnippets();
+
+    if (usesLSClient) {
+        generator->exitLanguageServer();
+    }
 
     // write external Stylesheet
     if ( cbEmbed && leStyleFile && !cbEmbed->isChecked()) {
@@ -1319,7 +1455,9 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
     applyCtrlValues(generator.get(), false);
 
+    bool applyLS=false;
     string suffix;
+    string currentFile;
     QString previewFilePath = (getDataFromCP) ? "": ui->lvInputFiles->currentItem()->data(Qt::UserRole).toString();
 
     if (getDataFromCP) {
@@ -1350,11 +1488,14 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
 
 #endif
 
-        string currentFile = previewFilePath.toStdString();
+        currentFile = previewFilePath.toStdString();
         suffix = getFileType(getFileSuffix(currentFile), currentFile);
 
         QString inFileName = QFileInfo(previewFilePath).fileName();
         generator->setTitle(inFileName.toStdString());
+
+        applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked())
+                && !currentFile.empty() && lsSyntax==suffix;
     }
 
     QString langPath = getUserScriptPath("lang");
@@ -1366,7 +1507,6 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         langPath = getWindowsShortPath(langPath);
 #endif
 
-
     QString clipBoardData;
 
     for (int twoPass=0; twoPass<2; twoPass++) {
@@ -1374,6 +1514,21 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
         if ( generator->loadLanguage(langPath.toStdString()) != highlight::LOAD_FAILED) {
 
             applyEncoding(generator.get(), langPath);
+
+            if ( applyLS ) {
+
+                if (initializeLS(generator.get(), false )) {
+
+                    generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
+
+                    generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
+
+                    generator->lsOpenDocument(currentFile, suffix);
+
+                    if (ui->cbLSSemantic->isChecked())
+                        generator->lsAddSemanticInfo(currentFile, suffix);
+                }
+            }
 
             if (getDataFromCP) {
                 clipBoardData= QString::fromStdString( generator->generateString(savedClipboardContent.toStdString()));
@@ -1458,21 +1613,30 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
     }
 
     generator->clearPersistentSnippets();
+    if ( applyLS ) {
+
+        generator->lsCloseDocument(currentFile, suffix);
+
+    }
     this->setCursor(Qt::ArrowCursor);
 }
 
 void MainWindow::plausibility()
 {
+    bool semanticOptionIsChecked = ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked();
+    ui->cbLSSyntaxErrors->setEnabled(semanticOptionIsChecked);
     ui->leOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbOutputDest->setEnabled(!ui->cbWrite2Src->isChecked());
     ui->pbBrowseOutDir->setEnabled(!ui->cbWrite2Src->isChecked());
 
     ui->cbPadZeroes->setEnabled(ui->cbIncLineNo->isChecked());
-    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked());
-    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked());
-    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked());
+    ui->cbWrapping->setEnabled( !semanticOptionIsChecked);
+    ui->cbAdvWrapping->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
+    ui->sbLineLength->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
+    ui->cbOmitWrappedLineNumbers->setEnabled(ui->cbWrapping->isChecked() && !semanticOptionIsChecked);
     ui->comboEncoding->setEnabled(ui->cbEncoding->isChecked());
-    ui->comboReformat->setEnabled(ui->cbReformat->isChecked());
+    ui->cbReformat->setEnabled( !semanticOptionIsChecked);
+    ui->comboReformat->setEnabled(ui->cbReformat->isChecked() && !semanticOptionIsChecked);
     ui->comboKwCase->setEnabled(ui->cbKwCase->isChecked());
     ui->comboTheme->setEnabled(getUserScriptPath("theme").isEmpty());
     ui->comboSelectSyntax->setEnabled(getUserScriptPath("lang").isEmpty());
@@ -1554,11 +1718,11 @@ void MainWindow::updatePreview()
 #ifdef Q_OS_WIN
     previewInputPath = getWindowsShortPath(previewInputPath);
 #endif
-
+     string currentFile;
     if (getDataFromCP) {
         suffix= getFileType((ui->comboSelectSyntax->itemData(ui->comboSelectSyntax->currentIndex())).toString().toStdString(),"");
     } else {
-        string currentFile = previewInputPath.toStdString();
+        currentFile = previewInputPath.toStdString();
         suffix = getFileType(getFileSuffix(currentFile), currentFile);
     }
 
@@ -1576,6 +1740,7 @@ void MainWindow::updatePreview()
     QString themePath = getUserScriptPath("theme");
     QString themeInfo=tr("(user script)");
     QString previewData;
+    bool applyLS=false;
 
     if (themePath.isEmpty()) {
         themeInfo="";
@@ -1599,6 +1764,18 @@ void MainWindow::updatePreview()
                 QString contrastDesc = tr("Contrast: %1 %2").arg(contrast, 1, 'f', 2).arg(contrastLowHint);
 
                 statusBar()->showMessage(QString("%1 | %2 | %3").arg(syntaxDesc, themeDesc, contrastDesc));
+            }
+
+            applyLS = (ui->cbLSSemantic->isChecked() || ui->cbLSHover->isChecked()) && !currentFile.empty() && lsSyntax==suffix && initializeLS(&pwgenerator, false );
+            if ( applyLS ) {
+
+                pwgenerator.lsAddSyntaxErrorInfo( ui->cbLSSyntaxErrors->isChecked() );
+
+                pwgenerator.lsAddHoverInfo( ui->cbLSHover->isChecked() );
+                pwgenerator.lsOpenDocument(currentFile, suffix);
+
+                if (ui->cbLSSemantic->isChecked())
+                    pwgenerator.lsAddSemanticInfo(currentFile, suffix);
             }
 
             // fix utf-8 data preview - to be improved (other encodings??)
@@ -1639,6 +1816,10 @@ void MainWindow::updatePreview()
     }
 
     pwgenerator.clearPersistentSnippets();
+
+    if ( applyLS ) {
+        pwgenerator.lsCloseDocument(currentFile, suffix);
+    }
 
     ui->browserPreview->verticalScrollBar()->setValue(vScroll);
     ui->browserPreview->horizontalScrollBar()->setValue(hScroll);
@@ -1930,17 +2111,18 @@ QString MainWindow::getDistPluginPath(){
 #endif
 }
 
-QString MainWindow::getDistFileConfigPath(){
+QString MainWindow::getDistFileConfigPath(QString name){
 #ifdef Q_OS_OSX
     return QDir::toNativeSeparators(QString("%1/../Resources/filetypes.conf").arg(QCoreApplication::applicationDirPath()));
 #else
     #ifdef CONFIG_DIR
-    return QDir::toNativeSeparators(QString("%1/filetypes.conf").arg(CONFIG_DIR));
+    return QDir::toNativeSeparators(QString("%1/%2").arg(CONFIG_DIR).arg(name));
     #else
-    return QDir::toNativeSeparators(QString("%1/filetypes.conf").arg(QDir::currentPath()));
+    return QDir::toNativeSeparators(QString("%1/%2").arg(QDir::currentPath()).arg(name));
     #endif
 #endif
 }
+
 
 QString MainWindow::getDistFileFilterPath(){
 #ifdef Q_OS_OSX
@@ -1975,3 +2157,100 @@ QString MainWindow::getWindowsShortPath(const QString & path){
     return shortPath;
 }
 
+void MainWindow::loadLSProfile() {
+
+    if (ui->comboLSProfiles->currentIndex()==0)
+        return;
+
+    lsProfile=ui->comboLSProfiles->currentText().toStdString();
+
+    if (lsProfile.size()) {
+        if (lspProfiles.count(lsProfile)) {
+            highlight::LSPProfile profile = lspProfiles[lsProfile];
+            lsExecutable = profile.executable;
+            lsSyntax = profile.syntax;
+            lsOptions = profile.options;
+            lsDelay = profile.delay;
+
+            ui->leLSExec->setText(QString::fromStdString(lsExecutable));
+        }
+    }
+}
+
+
+bool MainWindow::initializeLS(highlight::CodeGenerator* generator, bool tellMe)
+{
+    if (!generator) {
+        return false;
+    }
+
+    std::string lsWorkSpace(ui->leLSWorkspace->text().toStdString());
+
+    highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
+                                                                  lsWorkSpace, lsSyntax,
+                                                                  lsDelay,
+                                                                  ui->cbLSDebug->isChecked() ? 2 : 0 );
+    if ( lsInitRes==highlight::INIT_OK ) {
+        if (tellMe) {
+
+            if (generator->isHoverProvider()) {
+                ui->cbLSHover->setIcon(QIcon(":/ls_supported.png"));
+                ui->cbLSHover->setChecked(true);
+                ui->cbLSHover->setEnabled(true);
+            } else {
+                ui->cbLSHover->setIcon(QIcon(":/ls_not_supported.png"));;
+                ui->cbLSHover->setChecked(false);
+                ui->cbLSHover->setEnabled(false);
+            }
+
+            if (generator->isSemanticTokensProvider()) {
+                ui->cbLSSemantic->setIcon(QIcon(":/ls_supported.png"));
+                ui->cbLSSemantic->setChecked(true);
+                ui->cbLSSemantic->setEnabled(true);
+            } else {
+                ui->cbLSSemantic->setIcon(QIcon(":/ls_not_supported.png"));;
+                ui->cbLSSemantic->setChecked(false);
+                ui->cbLSSemantic->setEnabled(false);
+            }
+            generator->exitLanguageServer();
+            QMessageBox::information(this, "LSP Init. OK", tr("Language server initialization successful"));
+        }
+        return true;
+    }
+    else if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
+        QMessageBox::critical(this, "LSP Error", tr("Language server connection failed"));
+    } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
+        QMessageBox::critical(this,"LSP Error", tr("Language server initialization failed"));
+    }
+
+    return false;
+}
+
+void MainWindow::on_pbLSInitialize_clicked(){
+
+    if (ui->leLSWorkspace->text().isEmpty()) {
+        ui->leLSWorkspace->setFocus();
+        return;
+    }
+
+    if (lsExecutable.empty()) {
+        ui->leLSExec->setFocus();
+        return;
+    }
+
+    highlight::HtmlGenerator lspgenerator;
+
+    initializeLS(&lspgenerator, true);
+}
+
+void MainWindow::on_leLSExec_textChanged(){
+    lsExecutable = ui->leLSExec->text().toStdString();
+}
+
+void MainWindow::on_pbSelWorkspace_clicked(){
+    ui->leLSWorkspace->setText(QFileDialog::getExistingDirectory(this, tr("Select workspace directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
+}
+
+void MainWindow::on_pbSelExecutable_clicked(){
+    selectSingleFile(ui->leLSExec, tr("Choose the Language Server executable"), "*");
+}

@@ -2,7 +2,7 @@
                           cmdlineoptions.h  -  description
                              -------------------
     begin                : Sun Nov 25 2001
-    copyright            : (C) 2001-2017 by Andre Simon
+    copyright            : (C) 2001-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -118,7 +118,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_MAX_FILE_SIZE    "max-size"
 #define OPT_SYNTAX_SUPPORTED "syntax-supported"
 
-
 // Improve CLI option compatibility with GNU source-highlight
 #define OPT_COMPAT_DOC       "doc"
 #define OPT_COMPAT_NODOC     "no-doc"
@@ -130,6 +129,16 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_COMPAT_LINENUM   "line-number"
 #define OPT_COMPAT_LINEREF   "line-number-ref"
 
+#define OPT_LS_PROFILE       "ls-profile"
+#define OPT_LS_WORKSPACE     "ls-workspace"
+#define OPT_LS_EXEC          "ls-exec"
+#define OPT_LS_OPTION        "ls-option"
+#define OPT_LS_HOVER         "ls-hover"
+#define OPT_LS_SEMANTIC      "ls-semantic"
+#define OPT_LS_RAINBOW       "ls-rainbow"
+#define OPT_LS_SYNTAX        "ls-syntax"
+#define OPT_LS_DELAY         "ls-delay"
+#define OPT_LS_SYNTAX_ERROR  "ls-syntax-error"
 
 /// handle command line options
 
@@ -177,8 +186,8 @@ public:
     /** \return True if help information should be printed*/
     bool printHelp() const;
 
-    /** \return True if debug information should be printed*/
-    bool printDebugInfo() const;
+    /** \return verbosity level */
+    int verbosityLevel() const;
 
     /** \return True if configuration information should be printed*/
     bool printConfigInfo() const;
@@ -342,6 +351,18 @@ public:
     /** \return true if syntax load result should be reported */
     bool checkSyntaxSupport () const;
 
+    /** \return false  */
+    bool isLsRainbow () const;
+
+    /** \return false  */
+    bool isLsSemantic () const;
+
+    /** \return false  */
+    bool isLsHover () const;
+
+    /** \return false  */
+    bool isLsSyntaxError () const;
+
     /** \return max. input file size (default 256 MB) */
     off_t getMaxFileSize() const;
 
@@ -362,6 +383,9 @@ public:
 
     /** \return list of astyle options */
     const std::vector <std::string> &getAStyleOptions() const;
+
+    /** \return list of langiage server options */
+    const std::vector <std::string> &getLSOptions() const;
 
     /** \return 1 if trailing nl should be omitted,
      *          2 if it should only be omitted for empty input */
@@ -397,6 +421,21 @@ public:
         /** \return fallback syntax if not defined or found by filename or shebang */
     const std::string& getFallbackSyntax() const;
 
+    /** \return language server executable */
+    const std::string& getLsExecutable() const;
+
+    /** \return language server workspace directory */
+    const std::string& getLsWorkspace() const;
+
+    /** \return language server profile name */
+    const std::string& getLsProfile() const;
+
+    /** \return syntax which triggers language server requests */
+    const std::string& getLsSyntax() const;
+
+    /** \return server delay time in ms */
+    const int getLsDelay() const;
+
     /** \return line number width */
     int getNumberWidth();
 
@@ -427,6 +466,8 @@ private:
     int lineRangeStart;    // line range start
     int lineRangeEnd;    // line range end
     int opt_no_trailing_nl;
+    int verbosity;
+    int lsDelay;
 
     unsigned int canvasPaddingWidth;    // line number start count
 
@@ -464,7 +505,6 @@ private:
     bool opt_include_style;
     bool opt_help;
     bool opt_version ;
-    bool opt_verbose;
     bool opt_print_config;
     bool opt_linenumbers;
     bool opt_batch_mode;
@@ -499,6 +539,11 @@ private:
     bool opt_encoding_explicit;
     bool opt_syntax_supported_check;
 
+    bool opt_ls_hover;
+    bool opt_ls_semantic;
+    bool opt_ls_rainbow;
+    bool opt_ls_syntax_error;
+
     off_t maxFileSize;
 
     std::string fallbackSyntax, anchorPrefix;
@@ -506,6 +551,8 @@ private:
 
     std::string pluginPath, pluginParameter,
            listScriptCategory, helpTopic, redirectedFilename, listScriptType;
+
+    std::string lsProfile, lsExecutable, lsWorkspace, lsSyntax;
 
     /** list of all input file names */
     std::vector <std::string> inputFileNames;
@@ -515,6 +562,9 @@ private:
 
     /** list of additional Artistic Style options */
     std::vector <std::string> astyleOptions;
+
+    /** list of Language Server options */
+    std::vector <std::string> lsOptions;
 
     /** list of file types which should be ignored */
     set <std::string> ignoredFileTypes;
@@ -532,6 +582,8 @@ private:
     std::string validateDirPath ( const std::string & path );
 
     void parseRuntimeOptions( const int argc, const char *argv[], bool readInputFilenames=true);
+
+    void showDeprecationHint ( const std::string & option, const std::string & alt ) const;
 };
 
 #endif

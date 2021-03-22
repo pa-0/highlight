@@ -2,7 +2,7 @@
                           cmdlineoptions.cpp  -  description
                              -------------------
     begin                : Sun Nov 25 2001
-    copyright            : (C) 2001-2017 by Andre Simon
+    copyright            : (C) 2001-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -49,7 +49,9 @@ enum Optcode {
         S_OPT_PLUGIN_READFILE, S_OPT_PLUGIN_PARAMETER, S_OPT_LIST_SCRIPTS, S_OPT_CANVAS,
         S_OPT_KEEP_INJECTIONS, S_OPT_FORCE_STDOUT, S_OPT_LATEX_BEAMER, S_OPT_NO_VERSION_INFO,
         S_OPT_REFORMAT_OPT, S_OPT_RANGE_OPT, S_OPT_BASE16, S_OPT_CATEGORIES, S_OPT_PIPED_FNAME,
-        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED
+        S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED,
+        S_OPT_LS_PROFILE, S_OPT_LS_WORKSPACE, S_OPT_LS_EXEC, S_OPT_LS_OPTION, S_OPT_LS_HOVER,
+        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX, S_OPT_LS_SYNTAX_ERROR, S_OPT_LS_DELAY
     };
 
 const Arg_parser::Option options[] = {
@@ -140,6 +142,18 @@ const Arg_parser::Option options[] = {
         { S_OPT_MAX_FILE_SIZE,    OPT_MAX_FILE_SIZE,   Arg_parser::yes },
         { S_OPT_SYNTAX_SUPPORTED, OPT_SYNTAX_SUPPORTED, Arg_parser::no },
 
+        { S_OPT_LS_PROFILE, OPT_LS_PROFILE, Arg_parser::yes },
+        { S_OPT_LS_WORKSPACE, OPT_LS_WORKSPACE, Arg_parser::yes },
+        { S_OPT_LS_EXEC, OPT_LS_EXEC, Arg_parser::yes },
+        { S_OPT_LS_OPTION, OPT_LS_OPTION, Arg_parser::yes },
+        { S_OPT_LS_HOVER, OPT_LS_HOVER, Arg_parser::no },
+        { S_OPT_LS_SEMANTIC, OPT_LS_SEMANTIC, Arg_parser::no },
+        { S_OPT_LS_RAINBOW, OPT_LS_RAINBOW, Arg_parser::no },
+        { S_OPT_LS_SYNTAX_ERROR, OPT_LS_SYNTAX_ERROR, Arg_parser::no },
+
+        { S_OPT_LS_SYNTAX, OPT_LS_SYNTAX, Arg_parser::yes },
+        { S_OPT_LS_DELAY, OPT_LS_DELAY, Arg_parser::yes },
+
         { 0, 0, Arg_parser::no }
     };
 
@@ -153,6 +167,8 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     lineRangeStart( 0 ),
     lineRangeEnd( 0 ),
     opt_no_trailing_nl(0),
+    verbosity(0),
+    lsDelay(0),
     canvasPaddingWidth(0),
     wrappingStyle ( highlight::WRAP_DISABLED ),
     outputType ( highlight::HTML ),
@@ -163,7 +179,6 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_include_style ( false ),
     opt_help ( false ),
     opt_version ( false ),
-    opt_verbose ( false ),
     opt_print_config ( false ),
     opt_linenumbers ( false ),
     opt_batch_mode ( false ),
@@ -197,6 +212,10 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_isolate(false),
     opt_encoding_explicit(false),
     opt_syntax_supported_check(false),
+    opt_ls_hover(false),
+    opt_ls_semantic(false),
+    opt_ls_rainbow(false),
+    opt_ls_syntax_error(false),
     maxFileSize(268435456),
     fallbackSyntax("txt"),
     anchorPrefix ( "l" ),
@@ -312,8 +331,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_batch_mode = true;
             readDirectory ( arg );
             break;
-        case 'c':
+
         case S_OPT_COMPAT_CSS:
+            showDeprecationHint(OPT_COMPAT_CSS, "style-outfile");
+        case 'c':
             styleOutFilename = arg;
             opt_stylepath_explicit=true;
             break;
@@ -329,8 +350,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case 'e':
             styleInFilename = arg;
             break;
-        case 'f':
         case S_OPT_COMPAT_NODOC:
+            showDeprecationHint(OPT_COMPAT_NODOC, "fragment");
+        case 'f':
             opt_fragment = true;
             break;
         case 'F':
@@ -364,6 +386,8 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_COMPAT_LINENUM:
             if ( arg=="0" ) opt_fill_zeroes=true;
             /* Falls through */
+            showDeprecationHint(OPT_COMPAT_LINENUM, "line-numbers, zeroes");
+
         case 'l':
             opt_linenumbers = true;
             break;
@@ -384,8 +408,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             explicit_output_format=true;
             outFilename = arg;
             break;
-        case 'd':
         case S_OPT_COMPAT_OUTDIR:
+            showDeprecationHint(OPT_COMPAT_OUTDIR, "outdir");
+        case 'd':
             explicit_output_format=true;
             outDirectory = validateDirPath ( arg );
             break;
@@ -407,8 +432,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 absThemePath = styleName;
             }
             break;
-        case 'S':
         case S_OPT_COMPAT_SRCLANG:
+            showDeprecationHint(OPT_COMPAT_SRCLANG, "syntax");
+
+        case 'S':
             syntax = arg;
             opt_syntax = true;
 
@@ -417,8 +444,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 syntax = arg.substr(0, arg.find_last_of('.'));
             }
             break;
-        case 't':
         case S_OPT_COMPAT_TAB:
+            showDeprecationHint(OPT_COMPAT_TAB, "replace-tabs");
+
+        case 't':
             StringTools::str2num<int> ( numberSpaces, arg, std::dec );
             break;
         case 'u':
@@ -426,7 +455,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_encoding_explicit=true;
             break;
         case 'v':
-            opt_verbose = true;
+            ++verbosity;
             break;
         case 'V':
             wrappingStyle = highlight::WRAP_SIMPLE;
@@ -452,8 +481,10 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_ENCLOSE_PRE:
             opt_enclose_pre=true;
             break;
-        case S_OPT_FORCE_OUTPUT:
         case S_OPT_COMPAT_FAILSAFE:
+            showDeprecationHint(OPT_COMPAT_FAILSAFE, OPT_FORCE_OUTPUT);
+
+        case S_OPT_FORCE_OUTPUT:
             opt_force_output = true;
             if  ( !arg.empty() ) {
                 fallbackSyntax=arg;
@@ -498,8 +529,13 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_REFORMAT_OPT:
             astyleOptions.push_back(arg);
             break;
-        case S_OPT_PLUGIN_PARAMETER:
+        case S_OPT_LS_OPTION:
+            lsOptions.push_back(arg);
+            break;
         case S_OPT_PLUGIN_READFILE:
+            showDeprecationHint(OPT_PLUGIN_READFILE, OPT_PLUGIN_PARAMETER);
+
+        case S_OPT_PLUGIN_PARAMETER:
             pluginParameter=arg;
             break;
 
@@ -513,23 +549,33 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_no_version_info = true;
             break;
         case S_OPT_COMPAT_DOC:
+            showDeprecationHint(OPT_COMPAT_DOC, "NONE");
+
             opt_fragment = false;
             break;
         case S_OPT_COMPAT_LINEREF:
+            showDeprecationHint(OPT_COMPAT_LINEREF, "line-numbers, anchors, anchor-prefix");
+
             opt_linenumbers = true;
             opt_attach_line_anchors = true;
             anchorPrefix = ( arg.empty() ) ? "line" : arg;
             break;
         case S_OPT_EOL_DELIM_CR:
+            showDeprecationHint(OPT_EOL_DELIM_CR, "NONE");
+
             opt_delim_CR = true;
             break;
         case S_OPT_START_NESTED:
+            showDeprecationHint(OPT_START_NESTED, "NONE");
+
             startNestedLang=arg;
             break;
         case S_OPT_PRINT_STYLE:
             opt_print_style = true;
             break;
         case S_OPT_BASE16:
+            showDeprecationHint(OPT_BASE16, "theme with base16/ prefix");
+
             opt_base16_theme = true;
             if (!arg.empty())
                 styleName = arg;
@@ -605,6 +651,33 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             opt_syntax_supported_check = true;
             break;
 
+        case  S_OPT_LS_PROFILE:
+            lsProfile = arg;
+            break;
+        case S_OPT_LS_WORKSPACE:
+            lsWorkspace = arg;
+            break;
+        case S_OPT_LS_EXEC:
+            lsExecutable = arg;
+            break;
+        case S_OPT_LS_HOVER:
+            opt_ls_hover = true;
+            break;
+        case S_OPT_LS_SEMANTIC:
+            opt_ls_semantic = true;
+            break;
+        case S_OPT_LS_RAINBOW:
+            opt_ls_rainbow = true;
+            break;
+        case S_OPT_LS_SYNTAX:
+            lsSyntax = arg;
+            break;
+        case S_OPT_LS_SYNTAX_ERROR:
+            opt_ls_syntax_error = true;
+            break;
+        case S_OPT_LS_DELAY:
+             StringTools::str2num<int> ( lsDelay, arg, std::dec );
+            break;
         default:
             cerr << "highlight: option parsing failed" << endl;
         }
@@ -686,9 +759,9 @@ bool CmdLineOptions::printHelp() const
 {
     return opt_help;
 }
-bool CmdLineOptions::printDebugInfo() const
+int CmdLineOptions::verbosityLevel() const
 {
-    return opt_verbose;
+    return verbosity;
 }
 bool CmdLineOptions::printConfigInfo() const
 {
@@ -826,6 +899,23 @@ bool CmdLineOptions::useCRDelimiter() const
 {
     return opt_delim_CR;
 }
+
+bool CmdLineOptions::isLsRainbow () const
+{
+    return opt_ls_rainbow;
+}
+bool CmdLineOptions::isLsHover () const
+{
+    return opt_ls_hover;
+}
+bool CmdLineOptions::isLsSemantic() const
+{
+    return opt_ls_semantic;
+}
+bool CmdLineOptions::isLsSyntaxError() const
+{
+    return opt_ls_syntax_error;
+}
 const string &CmdLineOptions::getDataDir() const
 {
     return dataDir;
@@ -837,6 +927,10 @@ const vector<string> &CmdLineOptions::getPluginPaths() const
 const vector<string> &CmdLineOptions::getAStyleOptions() const
 {
     return astyleOptions;
+}
+const vector<string> &CmdLineOptions::getLSOptions() const
+{
+    return lsOptions;
 }
 bool CmdLineOptions::printOnlyStyle() const
 {
@@ -873,6 +967,29 @@ const string& CmdLineOptions::getAnchorPrefix() const
 const string &CmdLineOptions::getPageSize() const
 {
     return pageSize;
+}
+
+const std::string& CmdLineOptions::getLsExecutable() const
+{
+    return lsExecutable;
+}
+
+const std::string& CmdLineOptions::getLsWorkspace() const
+{
+    return lsWorkspace;
+}
+
+const std::string& CmdLineOptions::getLsProfile() const
+{
+    return lsProfile;
+}
+const std::string& CmdLineOptions::getLsSyntax() const
+{
+    return lsSyntax;
+}
+const int CmdLineOptions::getLsDelay() const
+{
+    return lsDelay;
 }
 
 bool CmdLineOptions::printIndexFile() const
@@ -1061,4 +1178,9 @@ const string& CmdLineOptions::getListScriptKind() const{
 const string& CmdLineOptions::getFallbackSyntax() const {
     return fallbackSyntax;
 }
+
+void CmdLineOptions::showDeprecationHint ( const std::string & option, const std::string & alt ) const {
+    cerr << "highlight: deprecated option '"<<option<<"' will be removed in v4.0 stable; valid alternatives: '"<<alt<<"'\n";
+}
+
 

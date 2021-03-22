@@ -2,7 +2,7 @@
                           TexGenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -42,7 +42,7 @@ TexGenerator::TexGenerator()
     mode, it switches it to horizontal mode).*/
     newLineTag="\\leavevmode\\par\n";
 
-    spacer = "\\ ";
+    spacer = initialSpacer = "\\ ";
     maskWs=true;
     excludeWs=true;
     maskWsBegin = "{\\hlstd";
@@ -67,6 +67,9 @@ void TexGenerator::initOutputTags()
     openTags.push_back ( "{\\hl"+STY_NAME_SYM+" " );
     openTags.push_back ( "{\\hl"+STY_NAME_IPL+" " );
 
+    openTags.push_back ( "{\\hl"+STY_NAME_ERR+" " );
+    openTags.push_back ( "{\\hl"+STY_NAME_ERM+" " );
+
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "}" );
     }
@@ -75,15 +78,27 @@ void TexGenerator::initOutputTags()
 string TexGenerator::getAttributes ( const string & elemName,const ElementStyle & elem )
 {
     ostringstream s;
-    s << "\\def\\hl"
-      << elemName
-      << "{";
-    if ( elem.isBold() )  s << "\\bf";
-    if ( elem.isItalic() )  s << "\\it";
-    s  <<  "\\textColor{"
-       << ( elem.getColour().getRed ( TEX ) ) <<" "
-       << ( elem.getColour().getGreen ( TEX ) ) <<" "
-       << ( elem.getColour().getBlue ( TEX ) ) <<" 0.0}}\n";
+
+    string customStyle(elem.getCustomStyle());
+
+    s   << "\\def\\hl"
+        << elemName
+        << "{";
+
+    if (customStyle.empty()) {
+
+        if ( elem.isBold() )  s << "\\bf";
+        if ( elem.isItalic() )  s << "\\it";
+        s   <<  "\\textColor{"
+            << ( elem.getColour().getRed ( TEX ) ) <<" "
+            << ( elem.getColour().getGreen ( TEX ) ) <<" "
+            << ( elem.getColour().getBlue ( TEX ) ) <<" 0.0}";
+    } else {
+        s << customStyle;
+    }
+
+    s << "}\n";
+
     return  s.str();
 }
 
@@ -275,6 +290,9 @@ string TexGenerator::getStyleDefinition()
         os << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
         os << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() );
         os << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() );
+
+        os << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
+        os << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {

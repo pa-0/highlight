@@ -34,6 +34,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <stack>
 #include <vector>
 
+#include "regextoken.h"
+
 #include "syntaxreader.h"
 #include "themereader.h"
 
@@ -41,62 +43,15 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "astyle/ASStreamIterator.h"
 
 #include "preformatter.h"
-#include "enums.h"
+
 #include "stringtools.h"
+
+#include "lspclient.h"
 
 /// The highlight namespace contains all classes and data structures needed for parsing input data.
 
 namespace highlight
 {
-/** \brief Regular Expression Information
-
-    This class associates a processing state with a keyword class and the length of the matched token.
-
-* @author Andre Simon
-*/
-class ReGroup
-{
-public:
-
-    /// Constructor
-    ReGroup() : length ( 0 ), state ( STANDARD ), kwClass ( 0 ), name()
-    {
-    }
-
-    /// Constructor
-    ReGroup ( State s, unsigned int l , unsigned int c, const string&n ) :
-        length ( l ), state ( s ), kwClass ( c ), name(n)
-    {
-    }
-
-    /// Copy Constructor
-    ReGroup ( const ReGroup& other )
-    {
-        length = other.length;
-        state = other.state;
-        kwClass = other.kwClass;
-        name=other.name;
-    }
-
-    /// Operator overloading
-    ReGroup& operator= ( const ReGroup & other )
-    {
-        length = other.length;
-        state = other.state;
-        kwClass = other.kwClass;
-        name=other.name;
-        return *this;
-    }
-
-    ~ReGroup()
-    {
-    }
-
-    unsigned int length;    ///< length of the token
-    State state;            ///< state of the matched token (keyword, string, etc)
-    unsigned int kwClass;   ///< keyword class if state is keyword
-    string name;           ///< language name needed to handle embedded languages
-};
 
 
 /** \brief Base class for parsing. Works like a finite state machine.
@@ -168,9 +123,16 @@ public:
      Define colour theme information; needs to be called before using a generate* method.
      Call this method before loadLanguage().
      \param themePath Path of style description file
+     \param loadSemanticStyles set true if semantic styles should be read
      \return true if successful
     */
-    bool initTheme ( const string& themePath );
+    bool initTheme ( const string& themePath, bool loadSemanticStyles=false );
+
+    LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace,
+                                  const string& syntax, int delay, int logLevel );
+
+    void exitLanguageServer ();
+
 
     /**
      \return description of the theme init error
@@ -188,8 +150,6 @@ public:
         \return true if successful
      */
     bool initIndentationScheme ( const string& indentScheme );
-
-    void setIndentationOptions (const vector<string>& options);
 
     /** \param langDefPath Absolute path to language definition, may be used multiple times for a generator instance
      *  \param embedded set True if method is called to load an embedded language
@@ -400,12 +360,6 @@ public:
     */
     void setEOLDelimiter(char delim);
 
-    /** Define the name of a nested language which is located at the beginning of input.
-        The opening embedded delimiter is missing, but the closing delimiter must exist.
-    	\param langName name of nested language
-    */
-    void setStartingNestedLang(const string &langName);
-
     /** \param param path of plugin input file
     */
     void setPluginParameter ( const string& param );
@@ -460,10 +414,34 @@ public:
     string readUserStyleDef();
 
     /** \return Style definition of the chosen output format */
-    virtual string  getStyleDefinition()
+    virtual string getStyleDefinition()
     {
         return "";
     }
+
+    virtual string getHoverTagOpen(const string & hoverText)
+    {
+        return "";
+    }
+
+    virtual string getHoverTagClose()
+    {
+        return "";
+    }
+
+    bool lsOpenDocument(const string& fileName, const string & suffix);
+
+    bool lsCloseDocument(const string& fileName, const string & suffix);
+
+    bool lsAddSemanticInfo(const string& fileName, const string & suffix);
+
+    void lsAddHoverInfo(bool hover);
+
+    void lsAddSyntaxErrorInfo(bool error);
+
+    bool isHoverProvider();
+
+    bool isSemanticTokensProvider();
 
     /** set HTML output anchor flag
      */
@@ -547,6 +525,10 @@ protected:
     static const string STY_NAME_SYM;
     static const string STY_NAME_IPL;
 
+    static const string STY_NAME_HVR;
+    static const string STY_NAME_ERR;
+    static const string STY_NAME_ERM;
+
     /** \param type Output type */
     CodeGenerator ( highlight::OutputType type );
     CodeGenerator() {};
@@ -558,6 +540,8 @@ protected:
     /** \param ss destination stream
         \param s string */
     void maskString ( ostream& ss, const string &s ) ;
+
+    void printSyntaxError ( ostream& ss ) ;
 
     /** Get current line number
       \return line number  */
@@ -601,6 +585,9 @@ protected:
 
     string inFile,   ///< input file name
            outFile;  ///< output file name
+
+    /// LSP syntax error description
+    string lsSyntaxErrorDesc;
 
     /** Test if maskWsBegin and maskWsEnd should be applied */
     bool maskWs;
@@ -775,9 +762,6 @@ private:
     /// path to plugin input file
     string pluginParameter;
 
-    /// name of nested language which starts the input (ie opening delim missing, but closing delim exists)
-    string embedLangStart;
-
     /// contains current position in line
     unsigned int lineIndex;
 
@@ -804,6 +788,8 @@ private:
     /**number of files to be processed and counter*/
     unsigned int inputFilesCnt;
     unsigned int processedFilesCnt;
+
+    int kwOffset;
 
     /** Flag to test if trailing newline should be printed */
     int noTrailingNewLine;
@@ -838,6 +824,12 @@ private:
 
     bool toggleDynRawString;
 
+    bool lsEnableHoverRequests;
+
+    bool lsCheckSemanticTokens;
+
+    bool lsCheckSyntaxErrors;
+
     /** flag which determines keyword output (unchangeed, uppercase, lowercase)*/
     StringTools::KeywordCase keywordCase;
 
@@ -848,6 +840,8 @@ private:
            styleOutputPath;  ///< style output file path
 
     string userScriptError;  ///< Plug-In script error message
+
+    string lsDocumentPath;   ///< Language Server input file name
 
     /** end-of-line delimiter*/
     char eolDelimiter;
@@ -882,6 +876,7 @@ private:
     bool processSymbolState();                ///< process symbols
     void processWsState();                    ///< process whitespace
     bool processSyntaxChangeState(State myState ); ///< process syntax change of embedded languages
+    bool processSyntaxErrorState();           ///< process syntax errors
 
     /* checks whether the given state was defined in the same column of the last parsed input line */
     void runSyntaxTestcases(unsigned int column);
@@ -896,8 +891,10 @@ private:
     void printMaskedToken ( bool flushWhiteSpace = true,
             StringTools::KeywordCase tcase = StringTools::CASE_UNCHANGED );
 
+    void updateKeywordClasses();
+
     /** association of matched regexes and the corresponding keyword class ids*/
-    map <int, ReGroup> regexGroups;
+    map <int, RegexToken> regexGroups;
 
     /** history of states per line position in the current line of input code (max 200 entries) */
 
@@ -938,13 +935,6 @@ private:
 
     unsigned int getCurrentKeywordClassId();
 
-    string getParam(const string& arg, const char* op);
-    string getParam(const string& arg, const char* op1, const char* op2);
-    bool isOption(const string& arg, const char* op);
-    bool isOption(const string& arg, const char* op1, const char* op2);
-    bool isParamOption(const string& arg, const char* option);
-    bool isParamOption(const string& arg, const char* option1, const char* option2);
-
     /**
     	\param chunk Lua function to be added to the function list
     */
@@ -960,6 +950,8 @@ private:
     void setOverrideParams();
 
     static vector<Diluculum::LuaFunction*> pluginChunks;
+
+    highlight::LSPClient LSPClient;
 };
 
 }
