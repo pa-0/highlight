@@ -2,7 +2,7 @@
                           elementstyle.h  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2007 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -65,6 +65,7 @@ public:
         bold = other.isBold();
         italic = other.isItalic();
         underline = other.isUnderline();
+        customStyle = other.getCustomStyle();
     }
 
     /** operator overloading */
@@ -74,6 +75,8 @@ public:
         bold = other.isBold();
         italic = other.isItalic();
         underline = other.isUnderline();
+        customStyle = other.getCustomStyle();
+
         return *this;
     }
 
@@ -123,9 +126,18 @@ public:
         colour = col;
     }
 
+    std::string getCustomStyle() const {
+        return customStyle;
+    }
+
+    void setCustomStyle(const string & style) {
+        customStyle = style;
+    }
+
 private:
     Colour colour;
     bool bold, italic, underline;
+    std::string customStyle;
 };
 
 }

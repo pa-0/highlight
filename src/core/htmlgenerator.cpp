@@ -158,6 +158,8 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( docStyle.getLineStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle() ) );
+        openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
+        openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle() ) );
     } else {
         openTags.push_back ( getOpenTag ( STY_NAME_STR ) );
         openTags.push_back ( getOpenTag ( STY_NAME_NUM ) );
@@ -169,6 +171,8 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( STY_NAME_LIN ) );
         openTags.push_back ( getOpenTag ( STY_NAME_SYM ) );
         openTags.push_back ( getOpenTag ( STY_NAME_IPL ) );
+        openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
+        openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
     }
 
     closeTags.push_back ( "" );
@@ -186,13 +190,21 @@ string  HtmlGenerator::getAttributes ( const string & elemName, const ElementSty
             s << "."<<cssClassName;
         s <<"."<<elemName<<" { ";
     }
-    s << "color:#"
-      << ( elem.getColour().getRed ( HTML ) )
-      << ( elem.getColour().getGreen ( HTML ) )
-      << ( elem.getColour().getBlue ( HTML ) )
-      << ( elem.isBold() ?     "; font-weight:bold" :"" )
-      << ( elem.isItalic() ?   "; font-style:italic" :"" )
-      << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+
+    string customStyle(elem.getCustomStyle());
+
+    if (customStyle.empty()) {
+        s << "color:#"
+        << ( elem.getColour().getRed ( HTML ) )
+        << ( elem.getColour().getGreen ( HTML ) )
+        << ( elem.getColour().getBlue ( HTML ) )
+        << ( elem.isBold() ?     "; font-weight:bold" :"" )
+        << ( elem.isItalic() ?   "; font-style:italic" :"" )
+        << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+    } else {
+        s << customStyle;
+    }
+
     if ( !elemName.empty() ) {
         s << "; }\n" ;
     }
@@ -206,7 +218,7 @@ string  HtmlGenerator::getOpenTag ( const string& styleName )
 
 string  HtmlGenerator::getOpenTag ( const ElementStyle & elem )
 {
-    return "<span style=\""+getAttributes ( "",elem ) + "\">";
+    return "<span style=\""+getAttributes ( "", elem ) + "\">";
 }
 
 string HtmlGenerator::getGeneratorComment()
@@ -266,7 +278,10 @@ string HtmlGenerator::getStyleDefinition()
             << getAttributes ( STY_NAME_DIR, docStyle.getPreProcessorStyle() )
             << getAttributes ( STY_NAME_SYM, docStyle.getOperatorStyle() )
             << getAttributes ( STY_NAME_IPL, docStyle.getInterpolationStyle() )
-            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() );
+            << getAttributes ( STY_NAME_LIN, docStyle.getLineStyle() )
+            << getAttributes ( STY_NAME_HVR, docStyle.getHoverStyle() )
+            << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() )
+            << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
@@ -307,10 +322,13 @@ string HtmlGenerator::maskCharacter ( unsigned char c )
 
 string HtmlGenerator::getNewLine()
 {
-    string nlStr;
-    if ( showLineNumbers && orderedList ) nlStr +="</li>";
-    if (printNewLines) nlStr+="\n";
-    return nlStr;
+    ostringstream ss;
+
+    printSyntaxError(ss);
+
+    if ( showLineNumbers && orderedList ) ss << "</li>";
+    if ( printNewLines ) ss << "\n";
+    return ss.str();
 }
 
 void HtmlGenerator::insertLineNumber ( bool insertNewLine )
@@ -367,8 +385,6 @@ void HtmlGenerator::insertLineNumber ( bool insertNewLine )
                                 << lineID
                                 << ">";
             }
-            // Opera 8 ignores empty list items -> add &nbsp;
-            //if ( line.empty() ) numberPrefix<<"&nbsp;";
         }
 
         if ( !orderedList ) {
@@ -394,7 +410,6 @@ void HtmlGenerator::insertLineNumber ( bool insertNewLine )
         }
         wsBuffer += numberPrefix.str();
     }
-
 }
 
 bool HtmlGenerator::printIndexFile ( const vector<string> &fileList,
@@ -476,13 +491,29 @@ string HtmlGenerator::getKeywordCloseTag ( unsigned int styleID )
 void HtmlGenerator::setHTMLOrderedList ( bool b )
 {
     orderedList = b;
-    if( b ) spacer = "&nbsp;";
+    if ( b ) spacer = "&nbsp;";
     maskWs = b;
 
     if (b && !preFormatter.getReplaceTabs()) {
         preFormatter.setReplaceTabs ( true );
         preFormatter.setNumberSpaces ( 4 );
     }
+}
+
+string HtmlGenerator::getHoverTagOpen(const string & hoverText)
+{
+    ostringstream os;
+    if ( useInlineCSS ) {
+        os << "<span style=\""<<getAttributes ( "", docStyle.getHoverStyle() ) << "\" title=\""<<hoverText<<"\">";
+    } else {
+        os << "<span class=\""<< (cssClassName.empty() ? "":cssClassName+ " ")  << STY_NAME_HVR << "\" title=\""<<hoverText<<"\">";
+    }
+    return os.str();
+}
+
+string HtmlGenerator::getHoverTagClose()
+{
+    return "</span>";
 }
 
 }

@@ -154,7 +154,7 @@ private:
 
     /** add Lua state variables specific to the output format */
    // virtual void addSpecificVars();
-    
+
     /** Print document header
     */
     string getHeader();
@@ -199,6 +199,10 @@ private:
 
     /** @return Newline string */
     string getNewLine();
+
+    virtual string getHoverTagOpen(const string & hoverText);
+
+    virtual string getHoverTagClose();
 };
 
 }

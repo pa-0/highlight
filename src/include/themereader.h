@@ -2,7 +2,7 @@
                           themereader.h  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef THEMEREADER_H
 #define THEMEREADER_H
 
+#include <map>
 #include <string>
 
 #include <Diluculum/LuaState.hpp>
@@ -56,25 +57,34 @@ class ThemeReader
 {
 private:
     ElementStyle comment, slcomment, str, dstr,
-                 escapeChar, number, directive, line, operators, interpolation;
+                 escapeChar, number, directive, line, operators,
+                 interpolation, hover, errorMessages, errors;
     ElementStyle defaultElem;
     ElementStyle canvas;
 
     string errorMsg;
     string desc, categories;
     string themeInjections;
-        
+
     vector<Diluculum::LuaFunction*> pluginChunks;
 
+    map<string, int> semanticStyleMap;
+
     bool fileOK, restoreStyles, dirtyAttributes;
+
+    int keywordStyleCnt;
+
+    OutputType outputType;
 
     KeywordStyles keywordStyles, originalStyles;
 
     void initStyle(ElementStyle& style, const Diluculum::LuaVariable& var);
-    
-    float getsRGB(int rgbValue);
 
-    float getBrightness(const Colour& colour);
+    float getsRGB(int rgbValue) const;
+
+    float getBrightness(const Colour& colour) const;
+
+    OutputType getOutputType(const string &typeDesc);
 
 public:
     /** Constructor */
@@ -83,8 +93,10 @@ public:
 
     /** load style definition
           \param styleDefinitionFile Style definition path
+          \param outputType
+          \param loadSemanticStyles
           \return True if successful */
-    bool load ( const string & styleDefinitionFile, OutputType outputType=HTML );
+    bool load ( const string & styleDefinitionFile, OutputType outputType=HTML, bool loadSemanticStyles = false );
 
     void addUserChunk(const Diluculum::LuaFunction& chunk)
     {
@@ -151,6 +163,12 @@ public:
     /** \return Operator style*/
     ElementStyle getOperatorStyle() const;
 
+    ElementStyle getHoverStyle() const;
+
+    ElementStyle getErrorStyle() const;
+
+    ElementStyle getErrorMessageStyle() const;
+
     /** \param className Name of keyword class (eg kwa, kwb, .., kwd)
         \return keyword style of the given className
     */
@@ -159,9 +177,15 @@ public:
     /** \return True if language definition was found */
     bool found() const ;
 
+    int getSemanticStyle(const string &type);
+
+    int getSemanticTokenStyleCount() const;
+
+    int getKeywordStyleCount() const;
+
     void overrideAttributes( vector<int>& attributes);
 
-    float getContrast();
+    float getContrast() const;
 };
 
 }

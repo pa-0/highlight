@@ -186,6 +186,34 @@ Lua Syntax error: %2</source>
         <source>Contrast: %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Please select a Server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find LSP profiles. Check installation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select workspace directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose the Language Server executable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language server initialization successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language server connection failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language server initialization failed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowClass</name>
@@ -1144,6 +1172,90 @@ This feature is enabled for C, C++, C# and Java code.</source>
     </message>
     <message>
         <source>&amp;File access trace (W32)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure the LSP Client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language Server:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a Language Server profile.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Executable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path of the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the server executable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print LSP messages to standard error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start an initialization request.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check Capabilities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Workspace:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The workspace directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the workspace directory of your project.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run hover requests to add tooltips to your output (HTML only).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Improve token recognition with semantic highlighting.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Semantic Highlighting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show syntax errors and messages (depends on output format).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Syntax Errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DejaVu Sans Mono</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

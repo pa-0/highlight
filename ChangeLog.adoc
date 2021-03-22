@@ -6,6 +6,61 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.0 beta 7
+
+15.03.2021
+
+  - removed `extras/web_plugins`
+
+== highlight 4.0 beta 6
+
+20.02.2021
+
+  - added user-select default property to HTML line number style
+
+== highlight 4.0 beta 5
+
+20.02.2021
+
+  - revised color themes
+
+== highlight 4.0 beta 4
+
+16.02.2021
+
+  - added two more keyword styles for default themes
+  - added Custom theme attributes for Plain TeX, LaTeX, SVG and Pango
+  - enabled syntax message output with `--ls-syntax-error`
+  - GUI: enabled syntax error checkbox
+
+== highlight 4.0 beta 3
+
+11.02.2021
+
+  - added Custom theme attribute
+  - enabled inline stylesheets with `--ls-hover`
+  - added Error and Hover theme properties
+  - enabled syntax error highlighting with `ls-semantic`
+
+== highlight 4.0 beta 2
+
+09.02.2021
+
+  - improved LSP message handling
+  - added delay LSP parameter
+  - added LSP semantic token styles to base16 themes
+  - CLI: enabled `--ls-semantic` option
+  - GUI: enabled semantic checkbox and a server capability test
+
+== highlight 4.0 beta 1
+
+30.01.2021
+
+  - added support for the language server protocol
+  - added new configuration file lsp.conf
+  - CLI: added `ls-profile`, `--ls-workspace`,`--ls-hover`
+  - CLI: deprecated `--start-nested`, `--reformat=user`, `--reformat-option`, `--base16`, `--delim-cr`, `--plug-in-read`
+  - GUI: added LSP configuration tab
 
 == highlight 3.61
 

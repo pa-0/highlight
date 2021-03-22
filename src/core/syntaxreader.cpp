@@ -68,6 +68,7 @@ SyntaxReader::SyntaxReader() :
     paramsNeedUpdate(false),
     rawStringPrefix(0),
     continuationChar(0),
+    keywordCount(0),
     validateStateChangeFct(NULL),
     decorateFct(NULL),
     decorateLineBeginFct(NULL),
@@ -250,6 +251,8 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
             }
             idx++;
         }
+
+        keywordCount = kwId;
 
         if (globals.count("KeywordFormatHints")) {
             idx=1;
@@ -539,18 +542,21 @@ bool SyntaxReader::allowsInnerSection(const string& langPath)
     return allowInnerSections[langPath];
 }
 
-unsigned int SyntaxReader::generateNewKWClass ( int classID )
+unsigned int SyntaxReader::generateNewKWClass ( int classID, const char *prefix )
 {
     char className[5]= {0};
-    snprintf(className, sizeof(className), "kw%c", ('a'+classID-1));
+    snprintf(className, sizeof(className), "%s%c", prefix, 'a'+classID-1);
 
     unsigned int newClassID=0;
     bool found=false;
+
     while (!keywordClasses.empty() && newClassID<keywordClasses.size() && !found ) {
+
         found = ( className==keywordClasses.at(newClassID++) );
     }
     if ( !found ) {
         newClassID++;
+
         keywordClasses.push_back ( className );
     }
     return newClassID;
@@ -688,5 +694,8 @@ void SyntaxReader::clearPersistentSnippets() {
     persistentSnippets.clear();
 }
 
+int SyntaxReader::getKeywordCount() const {
+    return keywordCount;
+}
 
 }

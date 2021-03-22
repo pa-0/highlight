@@ -2,7 +2,7 @@
                    xterm256generator.cpp  -  description
                              -------------------
     begin                : Oct 13 2006
-    copyright            : (C) 2006-2020 by Andre Simon
+    copyright            : (C) 2006-202 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -103,6 +103,9 @@ void Xterm256Generator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( docStyle.getOperatorStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getInterpolationStyle()) );
 
+    openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
+    openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle()) );
+
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
         closeTags.push_back ( "\033[m" );
     }
@@ -149,7 +152,10 @@ string Xterm256Generator::getKeywordCloseTag ( unsigned int styleID )
 
 string Xterm256Generator::getNewLine()
 {
-    string nlStr;
+
+    ostringstream ss;
+
+    printSyntaxError(ss);
 
     if (canvasPadding>0) {
         unsigned int lastLineLength=getLastLineLength();
@@ -158,13 +164,16 @@ string Xterm256Generator::getNewLine()
         if (lastLineLength<512 && lastLineLength > canvasPadding && lastLineLength)
             canvasPadding = lastLineLength;
 
-        nlStr += canvasColSeq;
+        ss << canvasColSeq;
         if (canvasPadding > lastLineLength)
-            nlStr += string(canvasPadding - lastLineLength, ' ');
-        nlStr += "\033[m";
+            ss << string(canvasPadding - lastLineLength, ' ');
+        ss << "\033[m";
     }
-    nlStr += (printNewLines) ? newLineTag : "";
-    return nlStr;
+
+    if (printNewLines)
+        ss << newLineTag;
+
+    return ss.str();
 }
 
  void Xterm256Generator::setESCTrueColor(bool b) {

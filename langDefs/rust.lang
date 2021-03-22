@@ -28,15 +28,15 @@ Keywords={
           }
   },
   { Id=4,
-    Regex=[[(\w+)\s*\(]]
+    Regex=[[(\w+\!?)\s*\(]]
   }
 }
 
 Strings = {
   Delimiter=[["]],
   RawPrefix="r",
-  Escape = [[ \\[\'\\\"aftnrv]|\\U\{[0-9a-fA-F]{8}\}|\\u\{[0-9a-fA-F]{4}\}|\\x?? ]],
-  Interpolation=[[ \{[^}]+\}|\{\} ]]
+  Escape = [[ \\[\'\\\"aftnrv]|\\x[0-9a-fA-F]{2}|\\U\{[0-9a-fA-F]{8}\}|\\u\{[0-9a-fA-F]{4}\}|\\x?? ]],
+  Interpolation=[[ \{\S*?\} ]]
 }
 
 Comments = {

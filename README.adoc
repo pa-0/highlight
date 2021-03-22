@@ -1,6 +1,6 @@
 = HIGHLIGHT MANUAL
 André Simon
-v3.58, August 2020
+v4.0-beta, January 2021
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -22,10 +22,12 @@ v3.58, August 2020
 :README_PLUGINS: pass:q[link:README_PLUGINS.adoc[`README_PLUGINS`]]
 :README_REGEX: pass:q[link:README_REGEX.adoc[`README_REGEX`]]
 :README_TESTCASES: pass:q[link:README_TESTCASES.adoc[`README_TESTCASES`]]
+:README_LSP_CLIENT: pass:q[link:README_LSP_CLIENT.adoc[`README_LSP_CLIENT`]]
 // Highlight Docs (uncovenrted):
 :INSTALL: pass:q[link:INSTALL[`INSTALL`]]
 // Source files:
 :cpp_qt_lua: pass:q[link:plugins/cpp_qt.lua[`cpp_qt.lua`^]]
+:lsp_conf: pass:q[link:lsp.conf[`lsp.conf`^]]
 :filetypes_conf: pass:q[link:filetypes.conf[`filetypes.conf`^]]
 :fileopenfilter_conf: pass:q[link:gui_files/ext/fileopenfilter.conf[`gui_files/ext/fileopenfilter.conf`^]]
 :makefile: pass:q[link:makefile[`makefile`^]]
@@ -41,9 +43,7 @@ v3.58, August 2020
 :README_pandoc: pass:q[link:extras/pandoc/README.html[`README.html`]]
 :extras_tcl: pass:q[link:extras/tcl/[`extras/tcl/`]]
 :README_TCL: pass:q[link:extras/tcl/README_TCL[`README_TCL`]]
-:extras_web_plugins: pass:q[link:extras/web_plugins/[`extras/web_plugins/`]]
 // External Links:
-:source-highlight: pass:[http://www.gnu.org/software/src-highlite/[source-highlight^]]
 :andre-simon_de: pass:[http://www.andre-simon.de[www.andre-simon.de^]]
 
 
@@ -187,7 +187,7 @@ General options:
      --config-file=<file>       set path to a lang or theme file
  -d, --outdir=<directory>       name of output directory
  -h, --help[=topic]             print this help or a topic description
-                                  <topic> = [syntax, theme, plugin, config, test]
+                                  <topic> = [syntax, theme, plugin, config, test, lsp]
  -i, --input=<file>             name of single input file
  -o, --output=<file>            name of single output file
  -P, --progress                 print progress bar in batch mode
@@ -195,7 +195,8 @@ General options:
  -S, --syntax=<type|path>       specify type of source code or syntax file path
      --syntax-by-name=<name>    specify type of source code by given name
                                   will not read a file of this name, useful for stdin
- -v, --verbose                  print debug info
+     --syntax-supported         test if the given syntax can be loaded
+ -v, --verbose                  print debug info; repeat to show more information
      --force[=syntax]           generate output if input syntax is unknown
      --list-scripts=<type>      list installed scripts
                                   <type> = [langs, themes, plugins]
@@ -210,8 +211,6 @@ General options:
      --print-style              print stylesheet only (see --style-outfile)
      --skip=<list>              ignore listed unknown file types
                                   (Example: --skip='bak;c~;h~')
-     --start-nested=<lang>      define nested language which starts input
-                                  without opening delimiter
      --stdout                   output to stdout (batch mode, --print-style)
      --validate-input           test if input is text, remove Unicode BOM
      --version                  print version and copyright information
@@ -230,10 +229,7 @@ Output formatting options:
  -F, --reformat=<style>         reformats and indents output in given style
                                   <style> = [allman, gnu, google, horstmann,
                                   java, kr, linux, lisp, mozilla, otbs, pico,
-                                  vtk, ratliff, stroustrup, webkit, whitesmith, user]
-                                  The user style does not apply a predefined scheme.
-                                  Use --reformat-option to define the reformatting.
-     --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)
+                                  vtk, ratliff, stroustrup, webkit, whitesmith]
  -I, --include-style            include style definition in output file
  -J, --line-length=<num>        line length before wrapping (see -V, -W)
  -j, --line-number-length=<num> line number width incl. left padding (default: 5)
@@ -253,8 +249,6 @@ Output formatting options:
      --wrap-no-numbers          omit line numbers of wrapped lines
                                   (assumes -l)
  -z, --zeroes                   pad line numbers with 0's
-     --base16[=theme]           use a theme of the Base16 collection
-     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)
      --isolate                  output each syntax token separately (verbose output)
      --keep-injections          output plug-in injections in spite of -f
      --kw-case=<case>           change case of case insensitive keywords
@@ -274,7 +268,7 @@ Output formatting options:
      --class-name=<name>        set CSS class name prefix;
                                   omit class name if set to NONE
      --inline-css               output CSS within each tag (verbose output)
-     --enclose-pre              enclose fragmented output with pre tag 
+     --enclose-pre              enclose fragmented output with pre tag
                                   (assumes -f)
 
 
@@ -289,7 +283,7 @@ LaTeX output options:
 RTF output options:
 
      --page-color               include page color attributes
- -x, --page-size=<ps>           set page size 
+ -x, --page-size=<ps>           set page size
                                   <ps> = [a3, a4, a5, b4, b5, b6, letter]
      --char-styles              include character stylesheets
 
@@ -305,20 +299,18 @@ Terminal escape output options (xterm256 or truecolor):
      --canvas[=width]           set background colour padding (default: 80)
 
 
-GNU source-highlight compatibility options:
+Language Server options:
 
-     --doc                      create stand alone document
-     --no-doc                   cancel the --doc option
-     --css=filename             the external style sheet filename
-     --src-lang=STRING          source language
- -t, --tab=INT                  specify tab length
- -n, --line-number[=0]          number all output lines, optional padding
-     --line-number-ref[=p]      number all output lines and generate an anchor,
-                                  made of the specified prefix p + the line
-                                  number  (default='line')
-     --output-dir=path          output directory
-     --failsafe                 if no language definition is found for the
-                                  input, it is simply copied to the output
+     --ls-profile=<server>      read LSP configuration from lsp.conf
+     --ls-delay=<ms>            set server initialization delay
+     --ls-exec=<bin>            set server executable name
+     --ls-option=<option>       set server CLI option (can be repeated)
+     --ls-hover                 execute hover requests (HTML output only)
+     --ls-semantic              retrieve semantic token types (requires LSP 3.16)
+     --ls-syntax=<lang>         set syntax which is understood by the server
+     --ls-syntax-error          retrieve syntax error information
+                                  (assumes --ls-hover or --ls-semantic)
+     --ls-workspace=<dir>       set workspace directory to init. the server
 ................................................................................
 
 === GUI OPTIONS
@@ -352,7 +344,7 @@ cat test.py | highlight --syntax py
 ................................................................................
 
 If there exist multiple suffixes (like `C`, `cc`, `cpp` and `h` for C++ files),
-they are mapped to a language definition in `$CONF_DIR/filetypes.conf`.
+they are mapped to a language definition in {filetypes_conf}.
 
 Highlight enters the batch processing mode if multiple input files are given
 or if `--batch-recursive` is set.
@@ -410,23 +402,6 @@ highlight -S txt --out-format=latex README > README.tex
 .......................................................
 
 
-=== GNU SOURCE-HIGHLIGHT COMPATIBILITY
-
-The command line interface is extensively harmonised with {source-highlight}.
-
-The following highlight options have the same meaning as in source-highlight:
-
-`--input`, `--output`, `--help`, `--version`, `--out-format`, `--title`, `--data-dir`,
-`--verbose`, `--quiet`
-
-These options were added to enhance compatibility:
-
-`--css`, `--doc`, `--failsafe`, `--line-number`, `--line-number-ref`, `--no-doc`, `--tab`,
-`--output-dir`, `--src-lang`
-
-These switches provide a common highlighter interface for scripts, plugins etc.
-
-
 === ADVANCED OPTIONS
 
 ==== Prevent parsing of binary input files
@@ -435,20 +410,6 @@ If highlight might process untrusted input, you can disable parsing of binary
 files using `--validate-input`. This flag causes highlight to match the input file
 header with a list of magic numbers. If a binary file type is detected, highlight
 quits with an error message. This switch also removes an UTF-8 BOM in the output.
-
-==== Highlight nested code without starting delimiter
-
-If a file starts with an embedded code section which misses an appropriate opening
-delimiter, the `--start-nested` option will switch to the nested language mode.
-This can be useful with LuaTeX files:
-
-......................................................
-highlight luatex.tex --latex --start-nested=inc_luatex
-......................................................
-
-`inc_luatex` is a Lua language definition with TeX line comments.
-The nested code section has to end with the ending delimiter defined in the host
-language definition.
 
 ==== Test new configuration scripts
 
@@ -461,7 +422,7 @@ highlight --config-file xxx.lang --config-file yyy.theme -I
 
 ==== Debug language definitions
 
-Use `--verbose` to display Lua and syntax data.
+Use `--verbose` to display Lua and syntax data. Apply twice to print more information.
 
 ==== Remove an UTF8 BOM:
 
@@ -490,14 +451,16 @@ Since version 2.45, highlight supports special notations within comments to
 test its syntax recognition.
 See {README_TESTCASES} for details.
 
+=== LSP CLIENT
+
+Since version 4.0, highlight supports LSP to enhance its output.
+See {README_LSP_CLIENT} for details.
 
 == CONFIGURATION
 
 === FILE FORMAT
 
 Configuration files are Lua scripts.
-Please refer to http://www.lua.org/manual/5.1/manual.html for more details
-about the Lua syntax.
 
 For more details about the Lua syntax, please refer to:
 
@@ -557,16 +520,16 @@ Keywords = { { Id, List|Regex, Group?, Priority?, Constraints? } }
   List:        List, list of keywords
   Regex:       String, regular expression
   Group:       Integer, capturing group id of regular expression, defines part of
-               regex which should be returned as keyword (optional; if not set, 
-               the match with the highest group number is returned (counts from 
+               regex which should be returned as keyword (optional; if not set,
+               the match with the highest group number is returned (counts from
                left to right))
   Priority:    Integer, if not zero no more regexes will be evaluated if this
                regex matches
   Constraints: table consisting of:
-               Line: Integer, limit match to line number, 
+               Line: Integer, limit match to line number,
                Filename: String, limit match to input file name
-               
-Regular expressions are evaluated in the their order within Keywords. If a regex 
+
+Regular expressions are evaluated in the their order within Keywords. If a regex
 does not appear to match, there might be a conflicting expression listed before.
 
 
@@ -602,16 +565,16 @@ NestedSections = {Lang, Delimiter= {} }
   Lang:      String, name of nested language
   Delimiter: List, contains open and close delimiters of the code section
 
-  
+
 KeywordFormatHints={ { Id, Bold?, Italic?, Underline? } }
   Id:         Integer, keyword group id whose attributes should be changed
   Bold:       Boolean, font weight property
   Italic:     Boolean, font style property
   Underline:  Boolean, font decoration property
-  
+
 These hints may have no effect if multiple syntax types are highlighted in batch
 mode without --include-style.
-  
+
 Description:       String, Defines syntax description
 
 Categories:        Table, List of categories (config, source, script, etc)
@@ -761,14 +724,14 @@ Colour themes contain the formatting information of the syntax elements which
 are described in language definitions.
 
 The files have to be stored as `.theme` in {themes}.
-Apply a theme with the `--style` option. Use `--base16` to use one of the included
-Base16 themes (located in {themes_base16}).
+Apply a theme with the `--style` option. Prepend `base16/` to the name in order
+to use one of the included Base16 themes (located in {themes_base16}).
 
 
 ==== Format attributes
 
 ................................................................................
-Attributes = {Colour, Bold?, Italic?, Underline? }
+Attributes = {Colour, Bold?, Italic?, Underline?, Custom? }
 ................................................................................
 
 [horizontal]
@@ -776,8 +739,7 @@ Colour::    String, defines colour in HTML hex notation (`#rrggbb`)
 Bold::      Boolean, true if font should be bold (optional)
 Italic::    Boolean, true if font should be italic (optional)
 Underline:: Boolean, true if font should be underlined (optional)
-
-
+Custom::    Array, contains `Format` and `Style` elements to define custom styling
 
 ==== Theme elements
 
@@ -788,38 +750,48 @@ Categories     = Table, List of categories (dark, light, etc)
 
 Default        = Attributes (Colour of unspecified text)
 
-Canvas         = Attributes (Background colour )
+Canvas         = Attributes (Background colour)
 
-Number         = Attributes (Formatting of numbers)
+Number         = Attributes (numbers)
 
-Escape         = Attributes (Formatting of escape sequences)
+Escape         = Attributes (escape sequences)
 
-String         = Attributes (Formatting of strings)
+String         = Attributes (strings)
 
-Interpolation  = Attributes (Formatting of interpolation sequences)
+Interpolation  = Attributes (interpolation sequences)
 
-PreProcessor   = Attributes (Formatting of preprocessor directives)
+PreProcessor   = Attributes (preprocessor directives)
 
-StringPreProc  = Attributes (Formatting of strings within preprocessor directives)
+StringPreProc  = Attributes (strings within preprocessor directives)
 
-BlockComment   = Attributes (Formatting of block comments)
+BlockComment   = Attributes (block comments)
 
-LineComment    = Attributes (Formatting of line comments)
+LineComment    = Attributes (line comments)
 
-LineNum        = Attributes (Formatting of line numbers)
+LineNum        = Attributes (line numbers)
 
-Operator       = Attributes (Formatting of operators)
+Operator       = Attributes (operators)
+
+Hover          = Attibutes (LSP Hover elements)
+
+Error          = Attibutes (LSP syntax errors)
+
+ErrorMessage   = Attibutes (LSP error descriptions)
 
 Keywords= {
   Attributes1,
   Attributes2,
   Attributes3,
   Attributes4,
+  Attributes5,
+  Attributes6,
 }
 
-AttributesN: Formatting of keyword group N. There should be at least four items
-             to match the number of keyword groups defined in the language
-             definitions
+AttributesN: Formatting of keyword group N.
+
+SemanticAttributesN: An array consisting of:
+                     `Type`: Token Identifier of the LS protocol (V 3.16)
+                     `Style`: formatting of the token
 ................................................................................
 
 .Example
@@ -827,26 +799,46 @@ AttributesN: Formatting of keyword group N. There should be at least four items
 --------------------------------------------------------------------------------
 Description = "vim autumn"
 
-Categories = {"light"}
+Categories = {"light", "vim"}
 
-Default = { Colour="#404040" }
-Canvas  = { Colour="#fff4e8" }
-Number  = { Colour="#00884c" }
-Escape  = { Colour="#8040f0" }
-String  = { Colour="#00884c" }
-BlockComment  = { Colour="#ff5050" }
+Default	= { Colour="#404040" }
+Canvas	= { Colour="#fff4e8" }
+Number	= { Colour="#00884c" }
+Escape	= { Colour="#8040f0" }
+String	= { Colour="#00884c" }
+BlockComment	= { Colour="#ff5050" }
 StringPreProc = String
 LineComment   = BlockComment
-Operator      = { Colour="#513d2b" } 
-LineNum       = { Colour="#555555" } 
-PreProcessor  = {  Colour="#660000" }
-Interpolation = { Colour="#CA6DE1" }
+Operator      = { Colour="#513d2b" }
+LineNum      = { Colour="#555555" }
+PreProcessor      = {  Colour="#660000" }
+Interpolation  = { Colour="#CA6DE1" }
 
 Keywords = {
   { Colour="#80a030" },
   { Colour="#b06c58" },
   { Colour="#30a188" },
   { Colour="#990000" },
+  { Colour="#9a85ff" },
+  { Colour="#85adff" },
+}
+
+-- new LSP based elements:
+
+SemanticTokenTypes = {
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'struct', Style =  Keywords[4] },
+  { Type = 'interface', Style = Keywords[1] },
+  { Type = 'parameter', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'enumMember', Style = Keywords[5] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
+  { Type = 'keyword', Style =  Keywords[1]},
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
 }
 --------------------------------------------------------------------------------
 
@@ -930,7 +922,7 @@ Configuration scripts are searched in the following directories:
 2. user defined directory set with `--data-dir`
 3. value of the environment variable `HIGHLIGHT_DATADIR`
 4. `/usr/share/highlight/`
-5. `/etc/highlight/` (default location of `filetypes.conf`)
+5. `/etc/highlight/` (default location of `filetypes.conf` and `lsp.conf`)
 6. current working directory (fallback)
 
 These subdirectories are expected to contain the corresponding scripts:
@@ -973,21 +965,6 @@ PHP and Python as programming reference.
 
 A TCL extension is located in {extras_tcl}.
 See {README_TCL} for installation instructions.
-
-
-=== THIRD PARTY SCRIPTS AND PLUG-INS
-
-See the {extras_web_plugins} subdirectory in the highlight package for
-some plugins which integrate highlight in Wiki and Blogging software:
-
-* DokuWiki
-* MovableType
-* Wordpress
-* Serendipity
-
-Other uses of highlight can be found on {andre-simon_de}
-This site shows several use cases of highlight in projects like Webgit,
-Evolution, Inkscape, Ranger and more.
 
 
 == BUILDING AND INSTALLING

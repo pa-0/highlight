@@ -44,7 +44,7 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
 #ifndef WIN32
     possibleDirs.push_back ( Platform::getHomePath() + "/.highlight/" );
 #endif
-    
+
     if ( !userDefinedDir.empty() ) possibleDirs.push_back ( userDefinedDir );
 
     char* hlEnvPath=getenv("HIGHLIGHT_DATADIR");
@@ -71,15 +71,10 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
 #endif
 }
 
-void DataDir::searchDataDir( const string &userDefinedDir )
-{
-    initSearchDirectories(userDefinedDir);
-}
-
 const string DataDir::searchFile(const string path)
 {
     for ( unsigned int i=0; i<possibleDirs.size(); i++ ) {
-    
+
         //cerr << "Searching "<<possibleDirs[i]<< path<<"\n";
         if ( Platform::fileExists ( possibleDirs[i] + path ) )
             return possibleDirs[i]+ path;
@@ -103,10 +98,10 @@ const string DataDir::getLangPath ( const string & file )
 const string DataDir::getThemePath ( const string & file, bool base16)
 {
     string themesPath=string("themes")+Platform::pathSeparator;
-    
+
     if (base16)
         themesPath=themesPath + "base16" + Platform::pathSeparator;
-    
+
     return searchFile(themesPath+file);
 }
 
@@ -164,7 +159,7 @@ const string DataDir::getDocDir()
 }
 
 const string DataDir::getEncodingHint (const string &syntax) {
-        
+
     return encodingHint[getFileBaseName(syntax)];
 }
 
@@ -179,10 +174,10 @@ string DataDir::getFileSuffix(const string& fileName)
 }
 
 string DataDir::guessFileType ( const string& suffix, const string &inputFile, bool useUserSuffix, bool forceShebangCheckStdin )
-{   
+{
     string baseName = getFileBaseName(inputFile);
     if (assocByFilename.count(baseName)) return assocByFilename.find(baseName)->second;
-   
+
     string lcSuffix = StringTools::change_case(suffix);
     if (assocByExtension.count(lcSuffix)) {
         return assocByExtension[lcSuffix];
@@ -196,9 +191,9 @@ string DataDir::guessFileType ( const string& suffix, const string &inputFile, b
     return lcSuffix;
 }
 
-bool DataDir::loadFileTypeConfig (const string& path )
+bool DataDir::loadFileTypeConfig (const string& name )
 {
-    string confPath=searchFile(path+".conf");
+    string confPath=searchFile(name+".conf");
     try {
         Diluculum::LuaState ls;
         Diluculum::LuaValueList ret= ls.doFile (confPath);
@@ -216,7 +211,7 @@ bool DataDir::loadFileTypeConfig (const string& path )
                 assocByShebang.insert ( make_pair ( mapEntry["Shebang"].asString(),  langName ) );
             } else if (mapEntry["EncodingHint"] !=Diluculum::Nil) {
                 encodingHint.insert ( make_pair ( langName, mapEntry["EncodingHint"].asString() ) );
-            } 
+            }
             idx++;
         }
 
@@ -226,6 +221,69 @@ bool DataDir::loadFileTypeConfig (const string& path )
     }
     return true;
 }
+
+bool DataDir::loadLSPConfig (const string& path )
+{
+    string confPath=searchFile(path+".conf");
+    try {
+        Diluculum::LuaState ls;
+        Diluculum::LuaValueList ret= ls.doFile (confPath);
+
+        int idx=1;
+        std::string serverName;              ///< server name
+        std::string executable;              ///< server executable path
+        std::string syntax;                  ///< language definition which can be enhanced using the LS
+        int delay;
+        std::vector<std::string> options;    ///< server executable start options
+        Diluculum::LuaValue mapEntry;
+
+        //{ Server="clangd", Exec="clangd", Syntax="c", Options={"--log=error"} },
+        while ((mapEntry = ls["Servers"][idx].value()) !=Diluculum::Nil) {
+            options.clear();
+            serverName = mapEntry["Server"].asString();
+            executable = mapEntry["Exec"].asString();
+            syntax = mapEntry["Syntax"].asString();
+            delay = 0;
+            if (mapEntry["Delay"] !=Diluculum::Nil) {
+                delay = mapEntry["Delay"].asNumber();
+            }
+
+            if (mapEntry["Options"] !=Diluculum::Nil) {
+                int extIdx=1;
+                while (mapEntry["Options"][extIdx] !=Diluculum::Nil) {
+                    options.push_back(mapEntry["Options"][extIdx].asString());
+                    extIdx++;
+                }
+            }
+
+            highlight::LSPProfile profile;
+            profile.executable = executable;
+            profile.serverName = serverName;
+            profile.syntax = syntax;
+            profile.options = options;
+            profile.delay = delay;
+
+            lspProfiles[serverName]=profile;
+
+            idx++;
+        }
+
+    } catch (Diluculum::LuaError &err) {
+        cerr <<err.what()<<"\n";
+        return false;
+    }
+    return true;
+}
+
+bool DataDir::profileExists(const string &profile) {
+    return lspProfiles.count(profile);
+}
+
+
+highlight::LSPProfile &DataDir::getProfile(const string &profile) {
+    return lspProfiles[profile];
+}
+
 
 void DataDir::readLuaList(const string& paramName, const string& langName,Diluculum::LuaValue &luaVal, StringMap* extMap){
     int extIdx=1;
@@ -244,7 +302,7 @@ string DataDir::analyzeFile ( const string& file )
         ifstream inFile ( file.c_str() );
         getline ( inFile, firstLine );
     } else {
-        
+
         //  This copies all the data to a new buffer, uses the data to get the
         //  first line, then makes cin use the new buffer that underlies the
         //  stringstream instance

@@ -59,6 +59,8 @@ void SVGGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( STY_NAME_LIN ) );
     openTags.push_back ( getOpenTag ( STY_NAME_SYM ) );
     openTags.push_back ( getOpenTag ( STY_NAME_IPL ) );
+    openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
+    openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
 
     closeTags.push_back ( "" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
@@ -70,6 +72,7 @@ string SVGGenerator::getStyleDefinition()
 {
     if (disableStyleCache || styleDefinitionCache.empty() ) {
         ostringstream os;
+        string tspan("tspan.");
         if ( includeStyleDef ) {
             os << "<style type=\"text/css\">\n"
                << "<![CDATA[\n";
@@ -82,20 +85,23 @@ string SVGGenerator::getStyleDefinition()
         os << "g { font-size: " << getBaseFontSize();
         os << "; font-family: " << getBaseFont() << "; white-space: pre;}\n";
         os << getAttributes ( "text", docStyle.getDefaultStyle() )
-           << getAttributes ( "tspan."+STY_NAME_NUM, docStyle.getNumberStyle() )
-           << getAttributes ( "tspan."+STY_NAME_ESC, docStyle.getEscapeCharStyle() )
-           << getAttributes ( "tspan."+STY_NAME_STR, docStyle.getStringStyle() )
-           << getAttributes ( "tspan."+STY_NAME_DST, docStyle.getPreProcStringStyle() )
-           << getAttributes ( "tspan."+STY_NAME_SLC, docStyle.getSingleLineCommentStyle() )
-           << getAttributes ( "tspan."+STY_NAME_COM, docStyle.getCommentStyle() )
-           << getAttributes ( "tspan."+STY_NAME_DIR, docStyle.getPreProcessorStyle() )
-           << getAttributes ( "tspan."+STY_NAME_SYM, docStyle.getOperatorStyle() )
-           << getAttributes ( "tspan."+STY_NAME_IPL, docStyle.getInterpolationStyle() )
-           << getAttributes ( "tspan."+STY_NAME_LIN, docStyle.getLineStyle() );
+           << getAttributes ( tspan+STY_NAME_NUM, docStyle.getNumberStyle() )
+           << getAttributes ( tspan+STY_NAME_ESC, docStyle.getEscapeCharStyle() )
+           << getAttributes ( tspan+STY_NAME_STR, docStyle.getStringStyle() )
+           << getAttributes ( tspan+STY_NAME_DST, docStyle.getPreProcStringStyle() )
+           << getAttributes ( tspan+STY_NAME_SLC, docStyle.getSingleLineCommentStyle() )
+           << getAttributes ( tspan+STY_NAME_COM, docStyle.getCommentStyle() )
+           << getAttributes ( tspan+STY_NAME_DIR, docStyle.getPreProcessorStyle() )
+           << getAttributes ( tspan+STY_NAME_SYM, docStyle.getOperatorStyle() )
+           << getAttributes ( tspan+STY_NAME_IPL, docStyle.getInterpolationStyle() )
+           << getAttributes ( tspan+STY_NAME_LIN, docStyle.getLineStyle() );
+
+           os << getAttributes ( tspan+STY_NAME_ERM, docStyle.getErrorMessageStyle() );
+           os << getAttributes ( tspan+STY_NAME_ERR, docStyle.getErrorStyle() );
 
         KeywordStyles styles = docStyle.getKeywordStyles();
         for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
-            os << getAttributes ( "tspan."+it->first, it->second );
+            os << getAttributes ( tspan+it->first, it->second );
         }
         if ( includeStyleDef ) {
             os << "]]>\n"
@@ -111,16 +117,24 @@ string SVGGenerator::getAttributes ( const string & elemName,
                                      const ElementStyle & elem )
 {
     ostringstream s;
+
+    string customStyle(elem.getCustomStyle());
+
     if ( !elemName.empty() ) {
         s << elemName << " { ";
     }
-    s << "fill:#"
-      << ( elem.getColour().getRed ( HTML ) )
-      << ( elem.getColour().getGreen ( HTML ) )
-      << ( elem.getColour().getBlue ( HTML ) )
-      << ( elem.isBold() ?     "; font-weight:bold" :"" )
-      << ( elem.isItalic() ?   "; font-style:italic" :"" )
-      << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+
+    if (customStyle.empty()) {
+        s   << "fill:#"
+            << ( elem.getColour().getRed ( HTML ) )
+            << ( elem.getColour().getGreen ( HTML ) )
+            << ( elem.getColour().getBlue ( HTML ) )
+            << ( elem.isBold() ?     "; font-weight:bold" :"" )
+            << ( elem.isItalic() ?   "; font-style:italic" :"" )
+            << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+    } else {
+        s << customStyle;
+    }
     if ( !elemName.empty() ) {
         s << "; }\n" ;
     }
@@ -222,16 +236,16 @@ string SVGGenerator::getKeywordCloseTag ( unsigned int styleID )
 
 string SVGGenerator::getNewLine()
 {
+    ostringstream ss;
+
+    printSyntaxError(ss);
 
     if ( lineNumber>1 ) {
-        ostringstream os;
         int fontSize=0;
         StringTools::str2num<int> ( fontSize, getBaseFontSize(), std::dec );
-        os<< "</text>\n<text x=\"10\" y=\""<< ( lineNumber*fontSize*2 ) <<"\">";
-        return os.str();
-    } else {
-        return "";
+        ss<< "</text>\n<text x=\"10\" y=\""<< ( lineNumber*fontSize*2 ) <<"\">";
     }
+    return ss.str();
 }
 
 void SVGGenerator::setSVGSize ( const string& w, const string& h )

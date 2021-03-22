@@ -27,6 +27,11 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <climits>
 #include <memory>
+
+#include <chrono>
+#include <thread>
+
+
 #include <boost/xpressive/xpressive_dynamic.hpp>
 
 #include "codegenerator.h"
@@ -51,8 +56,9 @@ namespace highlight
 {
 const unsigned int CodeGenerator::NUMBER_BUILTIN_STATES = highlight::KEYWORD;
 
+// must not start with kw, st, sm prefixes
 const string CodeGenerator::STY_NAME_STD="std";
-const string CodeGenerator::STY_NAME_STR="str";
+const string CodeGenerator::STY_NAME_STR="sng";
 const string CodeGenerator::STY_NAME_NUM="num";
 const string CodeGenerator::STY_NAME_SLC="slc";
 const string CodeGenerator::STY_NAME_COM="com";
@@ -62,6 +68,10 @@ const string CodeGenerator::STY_NAME_DST="pps"; //preprocessor string
 const string CodeGenerator::STY_NAME_LIN="lin";
 const string CodeGenerator::STY_NAME_SYM="opt"; //operator
 const string CodeGenerator::STY_NAME_IPL="ipl"; //interpolation
+
+const string CodeGenerator::STY_NAME_HVR="hvr";
+const string CodeGenerator::STY_NAME_ERR="err";
+const string CodeGenerator::STY_NAME_ERM="erm";
 
 vector<Diluculum::LuaFunction*> CodeGenerator::pluginChunks;
 
@@ -145,6 +155,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      maxLineCnt ( UINT_MAX ),
      inputFilesCnt (0),
      processedFilesCnt (0),
+     kwOffset(0),
      noTrailingNewLine(0),
 
      terminatingChar ( '\0' ),
@@ -159,6 +170,9 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      lineContainedStmt(false),
      applySyntaxTestCase(false),
      toggleDynRawString(false),
+     lsEnableHoverRequests(false),
+     lsCheckSemanticTokens(false),
+     lsCheckSyntaxErrors(false),
 
      keywordCase ( StringTools::CASE_UNCHANGED ),
      eolDelimiter ('\n'),
@@ -181,12 +195,79 @@ CodeGenerator::~CodeGenerator()
 }
 
 
-bool CodeGenerator::initTheme ( const string& themePath )
+bool CodeGenerator::initTheme ( const string& themePath, bool loadSemanticStyles)
 {
     this->themePath=themePath;
-    bool loadOK = docStyle.load ( themePath, outputType );
+    bool loadOK = docStyle.load ( themePath, outputType, loadSemanticStyles );
     initOutputTags();
     return loadOK;
+}
+
+LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options,
+                                             const string& workspace, const string& syntax,
+                                             int delay, int logLevel )
+{
+    if (LSPClient.isInitialized()) {
+        return LSResult::INIT_OK;
+    }
+
+    LSPClient.setLogging(logLevel>1);
+
+    LSPClient.setExecutable(executable);
+    LSPClient.setWorkspace(workspace);
+    LSPClient.setOptions(options);
+    LSPClient.setSyntax(syntax);
+    LSPClient.setInitializeDelay(delay);
+    if (!LSPClient.connect()){
+        return LSResult::INIT_BAD_PIPE;
+    }
+
+    if (!LSPClient.runInitialize()){
+        return LSResult::INIT_BAD_REQUEST;
+    }
+    for (int i=0; i<docStyle.getSemanticTokenStyleCount();i++) {
+        currentSyntax->generateNewKWClass(i+1, "st");
+    }
+    LSPClient.runInitialized();
+    updateKeywordClasses();
+    return LSResult::INIT_OK;
+}
+
+bool CodeGenerator::lsOpenDocument(const string& fileName, const string & suffix){
+    lsDocumentPath = fileName;
+    return LSPClient.runDidOpen(fileName, suffix);
+}
+
+bool CodeGenerator::lsCloseDocument(const string& fileName, const string & suffix){
+    lsDocumentPath.clear();
+    return LSPClient.runDidClose(fileName, suffix);
+}
+
+bool CodeGenerator::lsAddSemanticInfo(const string& fileName, const string & suffix){
+    lsCheckSemanticTokens = LSPClient.runSemanticTokensFull(fileName);
+    return lsCheckSemanticTokens;
+}
+
+bool CodeGenerator::isHoverProvider(){
+    return LSPClient.isHoverProvider();
+}
+
+bool CodeGenerator::isSemanticTokensProvider(){
+    return LSPClient.isSemanticTokensProvider();
+}
+
+void CodeGenerator::lsAddHoverInfo(bool hover){
+    lsEnableHoverRequests = hover;
+}
+
+void CodeGenerator::lsAddSyntaxErrorInfo(bool error) {
+    lsCheckSyntaxErrors = error;;
+}
+
+
+void CodeGenerator::exitLanguageServer () {
+    LSPClient.runShutdown();
+    LSPClient.runExit();
 }
 
 const string& CodeGenerator::getStyleName()
@@ -331,11 +412,6 @@ void CodeGenerator::setBaseFontSize ( const string& fontSize)
 void CodeGenerator::setStyleCaching ( bool flag )
 {
     disableStyleCache=!flag;
-}
-
-void CodeGenerator::setStartingNestedLang(const string &langName)
-{
-    embedLangStart = langName;
 }
 
 const string CodeGenerator::getBaseFont() const
@@ -559,7 +635,7 @@ void CodeGenerator::matchRegex ( const string &line, State skipState)
             matchBegin = cur->position(groupID);
 
             regexGroups.insert (
-                make_pair ( matchBegin + 1, ReGroup ( regexElem->open, cur->length(groupID), regexElem->kwClass, regexElem->langName ) ) );
+                make_pair ( matchBegin + 1, RegexToken ( regexElem->open, cur->length(groupID), regexElem->kwClass, regexElem->langName ) ) );
 
             // priority regex (match required)
             if (regexElem->priority) {
@@ -576,7 +652,7 @@ unsigned char CodeGenerator::getInputChar()
 
         //more testing required:
         if (outputType==ESC_TRUECOLOR || outputType==ESC_XTERM256)
-            lastLineLength=StringTools::utf8_strlen(line);
+            lastLineLength=StringTools::utf8_strlen(line + lsSyntaxErrorDesc);
 
         bool eof=false;
         if ( preFormatter.isEnabled() ) {
@@ -655,6 +731,29 @@ State CodeGenerator::getCurrentState (State oldState)
     }
 
 SKIP_EMBEDDED:
+
+    if (lsCheckSyntaxErrors && LSPClient.errorExists(lineNumber, lineIndex)) {
+        highlight::SemanticToken errorToken = LSPClient.getError(lineNumber, lineIndex);
+        token = line.substr ( lineIndex-1, errorToken.length);
+        lineIndex += errorToken.length-1;
+        lsSyntaxErrorDesc = errorToken.id;
+
+        //std::cerr <<"error num "<<lineNumber<< " idx "<<lineIndex<< " error "<<errorToken.id<< "\n";
+        return SYNTAX_ERROR;
+    }
+
+    if (lsCheckSemanticTokens && LSPClient.tokenExists(lineNumber, lineIndex)) {
+        highlight::SemanticToken semToken = LSPClient.getToken(lineNumber, lineIndex);
+        int semStyleKwId = docStyle.getSemanticStyle(semToken.id);
+        if (semStyleKwId) {
+            token = line.substr ( lineIndex-1, semToken.length);
+            lineIndex += semToken.length-1;
+
+            currentKeywordClass = semStyleKwId + kwOffset;  // +offset of missing kw groups in the theme
+            //std::cerr <<"l "<<lineNumber<<  "t "<<token<< " semStyleKwId "<< semStyleKwId << "  off "<<kwOffset<<" -> "  << semToken.id <<"\n";
+            return KEYWORD;
+        }
+    }
 
     // Test if a regular expression was found at the current position
     if ( !regexGroups.empty() ) {
@@ -750,6 +849,7 @@ unsigned int CodeGenerator::getCurrentKeywordClassId(){
 
     // this vector contains the defined keyword classes, and currentKeywordClass is its index:
     vector<string> kwClasses=currentSyntax->getKeywordClasses();
+
     if (currentKeywordClass && currentKeywordClass<=kwClasses.size()) {
         string kwClassName=kwClasses[currentKeywordClass-1];
         if (kwClassName.size()==3)
@@ -761,8 +861,30 @@ unsigned int CodeGenerator::getCurrentKeywordClassId(){
 //it is faster to pass ostream reference
 void CodeGenerator::maskString ( ostream& ss, const string & s )
 {
-    for ( unsigned int i=0; i< s.length(); i++ ) {
-        ss << maskCharacter ( s[i] );
+    string escHoverText;
+
+    if (lsEnableHoverRequests && (currentState==STANDARD || currentState==NUMBER || currentState==KEYWORD)) {
+
+        string hoverText = LSPClient.runHover(lsDocumentPath, lineIndex - s.size(), lineNumber-1);
+
+        for(const auto &c : hoverText)
+        {
+            if (isascii(c))
+                escHoverText.append(maskCharacter(c));
+        }
+    }
+
+    if (escHoverText.size()) {
+        ss << getHoverTagOpen(escHoverText);
+    }
+
+    for (const auto &c : s)
+    {
+        ss << maskCharacter ( c );
+    }
+
+    if (escHoverText.size()) {
+        ss << getHoverTagClose();
     }
 
     // The test markers position should also be deternmined by calculating the code points
@@ -770,12 +892,27 @@ void CodeGenerator::maskString ( ostream& ss, const string & s )
 
         PositionState ps(currentState, getCurrentKeywordClassId(), false);
 
+        //TODO avoid repeated string comparison:
         int slen = encoding=="utf-8" ? StringTools::utf8_strlen(s) : s.length();
         for (int i=0; i< slen; i++ ) {
             stateTraceCurrent.push_back(ps);
         }
         if (stateTraceCurrent.size()>200)
             stateTraceCurrent.erase(stateTraceCurrent.begin(), stateTraceCurrent.begin() + 100 );
+    }
+}
+
+void CodeGenerator::printSyntaxError ( ostream& ss ) {
+    if ( !lsSyntaxErrorDesc.empty()) {
+        ss << openTags[ highlight::SYNTAX_ERROR_MSG ];
+
+        for(const auto &c : lsSyntaxErrorDesc)
+        {
+            ss << maskCharacter ( c );
+        }
+
+        ss << closeTags[ highlight::SYNTAX_ERROR_MSG ];
+        lsSyntaxErrorDesc.clear();
     }
 }
 
@@ -878,445 +1015,6 @@ bool CodeGenerator::initIndentationScheme ( const string &indentScheme )
     return formattingEnabled=true;
 }
 
-
-/*Helper functions for astyle option parsing*/
-string CodeGenerator::getParam(const string& arg, const char* op)
-{
-	return arg.substr(strlen(op));
-}
-
-string CodeGenerator::getParam(const string& arg, const char* op1, const char* op2)
-{
-	return isParamOption(arg, op1) ? getParam(arg, op1) : getParam(arg, op2);
-}
-
-bool CodeGenerator::isOption(const string& arg, const char* op)
-{
-	return arg.compare(op) == 0;
-}
-
-bool CodeGenerator::isOption(const string& arg, const char* op1, const char* op2)
-{
-	return (isOption(arg, op1) || isOption(arg, op2));
-}
-
-bool CodeGenerator::isParamOption(const string& arg, const char* option)
-{
-	bool retVal = arg.compare(0, strlen(option), option) == 0;
-	// if comparing for short option, 2nd char of arg must be numeric
-	if (retVal && strlen(option) == 1 && arg.length() > 1)
-		if (!isdigit((unsigned char) arg[1]))
-			retVal = false;
-	return retVal;
-}
-
-bool CodeGenerator::isParamOption(const string& arg, const char* option1, const char* option2)
-{
-	return isParamOption(arg, option1) || isParamOption(arg, option2);
-}
-
-//apply the same options as astyle
-void CodeGenerator::setIndentationOptions (const vector<string>& options){
-    if (formatter) {
-        string arg;
-        for (unsigned int i=0; i<options.size(); i++) {
-            arg=options[i];
-
-            if (isOption(arg, "mode=cs"))
-            {
-                formatter->setSharpStyle();
-                formatter->setModeManuallySet(true);
-            }
-            else if (isOption(arg, "mode=c"))
-            {
-                formatter->setCStyle();
-                formatter->setModeManuallySet(true);
-            }
-            else if (isOption(arg, "mode=java"))
-            {
-                formatter->setJavaStyle();
-                formatter->setModeManuallySet(true);
-            }
-            else if (isParamOption(arg, "t", "indent=tab="))
-            {
-                int spaceNum = 4;
-                string spaceNumParam = getParam(arg, "t", "indent=tab=");
-                if (spaceNumParam.length() > 0)
-                    spaceNum = atoi(spaceNumParam.c_str());
-                if (spaceNum >= 2 && spaceNum <= 20)
-                    formatter->setTabIndentation(spaceNum, false);
-            }
-            else if (isOption(arg, "indent=tab"))
-            {
-                formatter->setTabIndentation(4);
-            }
-            else if (isParamOption(arg, "T", "indent=force-tab="))
-            {
-                int spaceNum = 4;
-                string spaceNumParam = getParam(arg, "T", "indent=force-tab=");
-                if (spaceNumParam.length() > 0)
-                    spaceNum = atoi(spaceNumParam.c_str());
-                if (spaceNum >= 2 && spaceNum <= 20)
-                    formatter->setTabIndentation(spaceNum, true);
-            }
-            else if (isOption(arg, "indent=force-tab"))
-            {
-                formatter->setTabIndentation(4, true);
-            }
-            else if (isParamOption(arg, "xT", "indent=force-tab-x="))
-            {
-                int tabNum = 8;
-                string tabNumParam = getParam(arg, "xT", "indent=force-tab-x=");
-                if (tabNumParam.length() > 0)
-                    tabNum = atoi(tabNumParam.c_str());
-                if (tabNum >= 2 && tabNum <= 20)
-                    formatter->setForceTabXIndentation(tabNum);
-            }
-            else if (isOption(arg, "indent=force-tab-x"))
-            {
-                formatter->setForceTabXIndentation(8);
-            }
-            else if (isParamOption(arg, "s", "indent=spaces="))
-            {
-                int spaceNum = 4;
-                string spaceNumParam = getParam(arg, "s", "indent=spaces=");
-                if (spaceNumParam.length() > 0)
-                    spaceNum = atoi(spaceNumParam.c_str());
-                if (spaceNum >= 2 && spaceNum <= 20)
-                    formatter->setSpaceIndentation(spaceNum);
-            }
-            else if (isOption(arg, "indent=spaces"))
-            {
-                formatter->setSpaceIndentation(4);
-            }
-            else if (isParamOption(arg, "xt", "indent-continuation="))
-            {
-                int contIndent = 1;
-                string contIndentParam = getParam(arg, "xt", "indent-continuation=");
-                if (contIndentParam.length() > 0)
-                    contIndent = atoi(contIndentParam.c_str());
-                if (contIndent > 0 && contIndent < 5)
-                    formatter->setContinuationIndentation(contIndent);
-            }
-            else if (isParamOption(arg, "m", "min-conditional-indent="))
-            {
-                int minIndent = astyle::MINCOND_TWO;
-                string minIndentParam = getParam(arg, "m", "min-conditional-indent=");
-                if (minIndentParam.length() > 0)
-                    minIndent = atoi(minIndentParam.c_str());
-                if (minIndent < astyle::MINCOND_END)
-                    formatter->setMinConditionalIndentOption(minIndent);
-            }
-            else if (isParamOption(arg, "M", "max-continuation-indent="))
-            {
-                int maxIndent = 40;
-                string maxIndentParam = getParam(arg, "M", "max-continuation-indent=");
-                if (maxIndentParam.length() > 0)
-                    maxIndent = atoi(maxIndentParam.c_str());
-                if (maxIndent >= 40 && maxIndent <= 120)
-                    formatter->setMaxContinuationIndentLength(maxIndent);
-            }
-            else if (isOption(arg, "N", "indent-namespaces"))
-            {
-                formatter->setNamespaceIndent(true);
-            }
-            else if (isOption(arg, "C", "indent-classes"))
-            {
-                formatter->setClassIndent(true);
-            }
-            else if (isOption(arg, "xG", "indent-modifiers"))
-            {
-                formatter->setModifierIndent(true);
-            }
-            else if (isOption(arg, "S", "indent-switches"))
-            {
-                formatter->setSwitchIndent(true);
-            }
-            else if (isOption(arg, "K", "indent-cases"))
-            {
-                formatter->setCaseIndent(true);
-            }
-            else if (isOption(arg, "xU", "indent-after-parens"))
-            {
-                formatter->setAfterParenIndent(true);
-            }
-            else if (isOption(arg, "L", "indent-labels"))
-            {
-                formatter->setLabelIndent(true);
-            }
-            else if (isOption(arg, "xW", "indent-preproc-block"))
-            {
-                formatter->setPreprocBlockIndent(true);
-            }
-            else if (isOption(arg, "w", "indent-preproc-define"))
-            {
-                formatter->setPreprocDefineIndent(true);
-            }
-            else if (isOption(arg, "xw", "indent-preproc-cond"))
-            {
-                formatter->setPreprocConditionalIndent(true);
-            }
-            else if (isOption(arg, "y", "break-closing-braces"))
-            {
-                formatter->setBreakClosingHeaderBracesMode(true);
-            }
-            else if (isOption(arg, "O", "keep-one-line-blocks"))
-            {
-                formatter->setBreakOneLineBlocksMode(false);
-            }
-            else if (isOption(arg, "o", "keep-one-line-statements"))
-            {
-                formatter->setBreakOneLineStatementsMode(false);
-            }
-            else if (isOption(arg, "P", "pad-paren"))
-            {
-                formatter->setParensOutsidePaddingMode(true);
-                formatter->setParensInsidePaddingMode(true);
-            }
-            else if (isOption(arg, "d", "pad-paren-out"))
-            {
-                formatter->setParensOutsidePaddingMode(true);
-            }
-            else if (isOption(arg, "xd", "pad-first-paren-out"))
-            {
-                formatter->setParensFirstPaddingMode(true);
-            }
-            else if (isOption(arg, "D", "pad-paren-in"))
-            {
-                formatter->setParensInsidePaddingMode(true);
-            }
-            else if (isOption(arg, "H", "pad-header"))
-            {
-                formatter->setParensHeaderPaddingMode(true);
-            }
-            else if (isOption(arg, "U", "unpad-paren"))
-            {
-                formatter->setParensUnPaddingMode(true);
-            }
-            else if (isOption(arg, "p", "pad-oper"))
-            {
-                formatter->setOperatorPaddingMode(true);
-            }
-            else if (isOption(arg, "xg", "pad-comma"))
-            {
-                formatter->setCommaPaddingMode(true);
-            }
-            else if (isOption(arg, "xe", "delete-empty-lines"))
-            {
-                formatter->setDeleteEmptyLinesMode(true);
-            }
-            else if (isOption(arg, "E", "fill-empty-lines"))
-            {
-                formatter->setEmptyLineFill(true);
-            }
-            else if (isOption(arg, "c", "convert-tabs"))
-            {
-                formatter->setTabSpaceConversionMode(true);
-            }
-            else if (isOption(arg, "xy", "close-templates"))
-            {
-                formatter->setCloseTemplatesMode(true);
-            }
-            else if (isOption(arg, "F", "break-blocks=all"))
-            {
-                formatter->setBreakBlocksMode(true);
-                formatter->setBreakClosingHeaderBlocksMode(true);
-            }
-            else if (isOption(arg, "f", "break-blocks"))
-            {
-                formatter->setBreakBlocksMode(true);
-            }
-            else if (isOption(arg, "e", "break-elseifs"))
-            {
-                formatter->setBreakElseIfsMode(true);
-            }
-            else if (isOption(arg, "xb", "break-one-line-headers"))
-            {
-                formatter->setBreakOneLineHeadersMode(true);
-            }
-            else if (isOption(arg, "j", "add-braces"))
-            {
-                formatter->setAddBracesMode(true);
-            }
-            else if (isOption(arg, "J", "add-one-line-braces"))
-            {
-                formatter->setAddOneLineBracesMode(true);
-            }
-            else if (isOption(arg, "xj", "remove-braces"))
-            {
-                formatter->setRemoveBracesMode(true);
-            }
-            else if (isOption(arg, "Y", "indent-col1-comments"))
-            {
-                formatter->setIndentCol1CommentsMode(true);
-            }
-            else if (isOption(arg, "align-pointer=type"))
-            {
-                formatter->setPointerAlignment(astyle::PTR_ALIGN_TYPE);
-            }
-            else if (isOption(arg, "align-pointer=middle"))
-            {
-                formatter->setPointerAlignment(astyle::PTR_ALIGN_MIDDLE);
-            }
-            else if (isOption(arg, "align-pointer=name"))
-            {
-                formatter->setPointerAlignment(astyle::PTR_ALIGN_NAME);
-            }
-            else if (isParamOption(arg, "k"))
-            {
-                int align = 0;
-                string styleParam = getParam(arg, "k");
-                if (styleParam.length() > 0)
-                    align = atoi(styleParam.c_str());
-                if (align == 1)
-                    formatter->setPointerAlignment(astyle::PTR_ALIGN_TYPE);
-                else if (align == 2)
-                    formatter->setPointerAlignment(astyle::PTR_ALIGN_MIDDLE);
-                else if (align == 3)
-                    formatter->setPointerAlignment(astyle::PTR_ALIGN_NAME);
-            }
-            else if (isOption(arg, "align-reference=none"))
-            {
-                formatter->setReferenceAlignment(astyle::REF_ALIGN_NONE);
-            }
-            else if (isOption(arg, "align-reference=type"))
-            {
-                formatter->setReferenceAlignment(astyle::REF_ALIGN_TYPE);
-            }
-            else if (isOption(arg, "align-reference=middle"))
-            {
-                formatter->setReferenceAlignment(astyle::REF_ALIGN_MIDDLE);
-            }
-            else if (isOption(arg, "align-reference=name"))
-            {
-                formatter->setReferenceAlignment(astyle::REF_ALIGN_NAME);
-            }
-            else if (isParamOption(arg, "W"))
-            {
-                int align = 0;
-                string styleParam = getParam(arg, "W");
-                if (styleParam.length() > 0)
-                    align = atoi(styleParam.c_str());
-                if (align == 0)
-                    formatter->setReferenceAlignment(astyle::REF_ALIGN_NONE);
-                else if (align == 1)
-                    formatter->setReferenceAlignment(astyle::REF_ALIGN_TYPE);
-                else if (align == 2)
-                    formatter->setReferenceAlignment(astyle::REF_ALIGN_MIDDLE);
-                else if (align == 3)
-                    formatter->setReferenceAlignment(astyle::REF_ALIGN_NAME);
-            }
-            else if (isParamOption(arg, "max-code-length="))
-            {
-                int maxLength = 50;
-                string maxLengthParam = getParam(arg, "max-code-length=");
-                if (maxLengthParam.length() > 0)
-                    maxLength = atoi(maxLengthParam.c_str());
-                if (maxLength >= 50 && maxLength<= 200)
-                    formatter->setMaxCodeLength(maxLength);
-            }
-            else if (isParamOption(arg, "xC"))
-            {
-                int maxLength = 50;
-                string maxLengthParam = getParam(arg, "xC");
-                if (maxLengthParam.length() > 0)
-                    maxLength = atoi(maxLengthParam.c_str());
-                if (maxLength > 0 && maxLength<= 200)
-                    formatter->setMaxCodeLength(maxLength);
-            }
-            else if (isOption(arg, "xL", "break-after-logical"))
-            {
-                formatter->setBreakAfterMode(true);
-            }
-            else if (isOption(arg, "xc", "attach-classes"))
-            {
-                formatter->setAttachClass(true);
-            }
-            else if (isOption(arg, "xV", "attach-closing-while"))
-            {
-                formatter->setAttachClosingWhile(true);
-            }
-            else if (isOption(arg, "xk", "attach-extern-c"))
-            {
-                formatter->setAttachExternC(true);
-            }
-            else if (isOption(arg, "xn", "attach-namespaces"))
-            {
-                formatter->setAttachNamespace(true);
-            }
-            else if (isOption(arg, "xl", "attach-inlines"))
-            {
-                formatter->setAttachInline(true);
-            }
-            else if (isOption(arg, "xp", "remove-comment-prefix"))
-            {
-                formatter->setStripCommentPrefix(true);
-            }
-            else if (isOption(arg, "xB", "break-return-type"))
-            {
-                formatter->setBreakReturnType(true);
-            }
-            else if (isOption(arg, "xD", "break-return-type-decl"))
-            {
-                formatter->setBreakReturnTypeDecl(true);
-            }
-            else if (isOption(arg, "xf", "attach-return-type"))
-            {
-                formatter->setAttachReturnType(true);
-            }
-            else if (isOption(arg, "xh", "attach-return-type-decl"))
-            {
-                formatter->setAttachReturnTypeDecl(true);
-            }
-            // Objective-C options
-            else if (isOption(arg, "xQ", "pad-method-prefix"))
-            {
-                formatter->setMethodPrefixPaddingMode(true);
-            }
-            else if (isOption(arg, "xR", "unpad-method-prefix"))
-            {
-                formatter->setMethodPrefixUnPaddingMode(true);
-            }
-            else if (isOption(arg, "xq", "pad-return-type"))
-            {
-                formatter->setReturnTypePaddingMode(true);
-            }
-            else if (isOption(arg, "xr", "unpad-return-type"))
-            {
-                formatter->setReturnTypeUnPaddingMode(true);
-            }
-            else if (isOption(arg, "xS", "pad-param-type"))
-            {
-                formatter->setParamTypePaddingMode(true);
-            }
-            else if (isOption(arg, "xs", "unpad-param-type"))
-            {
-                formatter->setParamTypeUnPaddingMode(true);
-            }
-            else if (isOption(arg, "xM", "align-method-colon"))
-            {
-                formatter->setAlignMethodColon(true);
-            }
-            else if (isOption(arg, "xP0", "pad-method-colon=none"))
-            {
-                formatter->setObjCColonPaddingMode(astyle::COLON_PAD_NONE);
-            }
-            else if (isOption(arg, "xP1", "pad-method-colon=all"))
-            {
-                formatter->setObjCColonPaddingMode(astyle::COLON_PAD_ALL);
-            }
-            else if (isOption(arg, "xP2", "pad-method-colon=after"))
-            {
-                formatter->setObjCColonPaddingMode(astyle::COLON_PAD_AFTER);
-            }
-            else if (isOption(arg, "xP3", "pad-method-colon=before"))
-            {
-                formatter->setObjCColonPaddingMode(astyle::COLON_PAD_BEFORE);
-            }
-        }
-    }
-}
-
 LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedded )
 {
 
@@ -1333,6 +1031,7 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
             currentSyntax=syntaxReaders[langDefPath];
             result=LOAD_OK;
         } else {
+
             currentSyntax=new SyntaxReader();
             result=currentSyntax->load(langDefPath, pluginParameter, outputType);
             syntaxReaders[langDefPath]=currentSyntax;
@@ -1340,23 +1039,12 @@ LoadResult CodeGenerator::loadLanguage ( const string& langDefPath, bool embedde
 
         if ( result==LOAD_OK ) {
             formattingPossible=currentSyntax->enableReformatting();
-
-            if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
-                // remove dynamic keyword tag delimiters of the old language definition
-                vector<string>::iterator keyStyleOpenBegin =
-                    openTags.begin() + NUMBER_BUILTIN_STATES;
-                vector<string>::iterator keyStyleCloseBegin =
-                    closeTags.begin() + NUMBER_BUILTIN_STATES;
-                openTags.erase ( keyStyleOpenBegin, openTags.end() );
-                closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
-            }
-            // add new keyword tag delimiters
-            for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
-                openTags.push_back ( getKeywordOpenTag ( i ) );
-                closeTags.push_back ( getKeywordCloseTag ( i ) );
-            }
+            updateKeywordClasses();
         }
     }
+
+    kwOffset=currentSyntax->getKeywordCount() - docStyle.getKeywordStyleCount();
+
     return result;
 }
 
@@ -1644,7 +1332,6 @@ void CodeGenerator::openTag ( State s )
 {
     *out << openTags[ ( unsigned int ) s];
     currentState=s;
-
 }
 
 void CodeGenerator::closeTag ( State s )
@@ -1704,10 +1391,6 @@ void CodeGenerator::processRootState()
         return;
     }
 
-    if (!embedLangStart.empty()) {
-        if (!loadEmbeddedLang(currentSyntax->getNewPath(embedLangStart))) return;
-    }
-
     State state=STANDARD;
     openTag ( STANDARD );
 
@@ -1757,12 +1440,17 @@ void CodeGenerator::processRootState()
             eof=processSymbolState();
             openTag ( STANDARD );
             break;
-
         case EMBEDDED_CODE_END:
             closeTag ( STANDARD );
             eof=processSyntaxChangeState(state);
             openTag ( STANDARD );
             break;
+        case SYNTAX_ERROR:
+            closeTag ( STANDARD );
+            eof=processSyntaxErrorState();
+            openTag ( STANDARD );
+            break;
+
         case _EOL:
             // XTERM256 fix (issue with less cmd)
             if  (!firstLine || showLineNumbers) {
@@ -2187,7 +1875,6 @@ bool CodeGenerator::processStringState ( State oldState )
 
 bool CodeGenerator::processSymbolState()
 {
-
     State newState=STANDARD;
     bool eof=false,
          exitState=false;
@@ -2215,6 +1902,38 @@ bool CodeGenerator::processSymbolState()
     } while ( !exitState && !eof );
 
     closeTag ( SYMBOL );
+    return eof;
+}
+
+bool CodeGenerator::processSyntaxErrorState()
+{
+    State newState=STANDARD;
+    bool eof=false,
+    exitState=false;
+
+    openTag ( SYNTAX_ERROR );
+    do {
+        printMaskedToken ( newState!=_WS );
+        newState= getCurrentState(SYNTAX_ERROR);
+        switch ( newState ) {
+            case _WS:
+                processWsState();
+                exitState=isolateTags;
+                break;
+            case _EOL:
+                insertLineNumber();
+                exitState=true;
+                break;
+            case _EOF:
+                eof = true;
+                break;
+            default:
+                exitState=newState!=SYMBOL;
+                break;
+        }
+    } while ( !exitState && !eof );
+
+    closeTag ( SYNTAX_ERROR );
     return eof;
 }
 
@@ -2370,6 +2089,8 @@ string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
             return STY_NAME_SYM;
         case STRING_INTERPOLATION:
             return STY_NAME_IPL;
+        case SYNTAX_ERROR:
+            return STY_NAME_ERR;
         case _WS:
             return "ws";
         case KEYWORD: {
@@ -2377,8 +2098,9 @@ string CodeGenerator::getTestcaseName(State s, unsigned int kwClass) {
             if (!kwClass)
                 return "ws";
 
-            char kwName[5] = {0};
-            snprintf(kwName, sizeof(kwName), "kw%c", ('a'+kwClass-1));
+            char kwName[20] = {0};
+            snprintf(kwName, sizeof(kwName), "keyword %c", ('a'+kwClass-1));
+
             return string(kwName);
         }
         default:
@@ -2425,7 +2147,8 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
 
         if (line.find(STY_NAME_NUM, typeDescPos)==typeDescPos)
             assertState=NUMBER;
-        else if (line.find(STY_NAME_STR, typeDescPos)==typeDescPos)
+        //TODO temp. fix to allow old and new string classes
+        else if (line.find(STY_NAME_STR, typeDescPos)==typeDescPos || line.find("str", typeDescPos)==typeDescPos)
             assertState=STRING;
         else if (line.find(STY_NAME_ESC, typeDescPos)==typeDescPos)
             assertState=ESC_CHAR;
@@ -2446,7 +2169,7 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
         else if (line.find(STY_NAME_DST, typeDescPos)==typeDescPos)
             assertState=DIRECTIVE_STRING;
 
-        else if (line.find("kw", typeDescPos)==typeDescPos) {
+        else if (line.find("kw", typeDescPos)==typeDescPos || line.find("st", typeDescPos)==typeDescPos) {
             assertState=KEYWORD;
             if (isalpha(line[typeDescPos+2]))
                 assertGroup=line[typeDescPos+2] - 'a' +1;
@@ -2480,7 +2203,11 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
 
 string CodeGenerator::getNewLine()
 {
-    return (printNewLines) ? newLineTag : "";
+    ostringstream ss;
+    printSyntaxError(ss);
+    if (printNewLines)
+        ss << newLineTag;
+    return ss.str();
 }
 
 Diluculum::LuaValueList CodeGenerator::callDecorateLineFct(bool isLineStart)
@@ -2546,7 +2273,7 @@ void CodeGenerator::insertLineNumber ( bool insertNewLine )
         numberPrefix << openTags[LINENUMBER];
         maskString ( numberPrefix, os.str() );
 
-        //use initialSpacer here, spacer can be overriden by plug-in (format.spacer)
+        //use initialSpacer here, spacer can be overridden by plug-in (format.spacer)
         numberPrefix << initialSpacer << closeTags[LINENUMBER];
         wsBuffer += numberPrefix.str();
     }
@@ -2707,6 +2434,27 @@ bool CodeGenerator::syntaxRequiresTwoPassRun() {
 void CodeGenerator::clearPersistentSnippets(){
     if (currentSyntax) {
         currentSyntax->clearPersistentSnippets();
+    }
+}
+
+void CodeGenerator::updateKeywordClasses(){
+
+    if (openTags.size()) {
+        if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
+            // remove dynamic keyword tag delimiters of the old language definition
+            vector<string>::iterator keyStyleOpenBegin =
+            openTags.begin() + NUMBER_BUILTIN_STATES;
+            vector<string>::iterator keyStyleCloseBegin =
+            closeTags.begin() + NUMBER_BUILTIN_STATES;
+            openTags.erase ( keyStyleOpenBegin, openTags.end() );
+            closeTags.erase ( keyStyleCloseBegin, closeTags.end() );
+        }
+        // add new keyword tag delimiters
+
+        for ( unsigned int i=0; i< currentSyntax->getKeywordClasses().size(); i++ ) {
+            openTags.push_back ( getKeywordOpenTag ( i ) );
+            closeTags.push_back ( getKeywordCloseTag ( i ) );
+        }
     }
 }
 

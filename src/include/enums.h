@@ -35,6 +35,8 @@ enum State {
     LINENUMBER,
     SYMBOL,
     STRING_INTERPOLATION,
+    SYNTAX_ERROR,
+    SYNTAX_ERROR_MSG,
 
     // don't use constants > KEYWORD as array indices!
     KEYWORD,
@@ -84,6 +86,14 @@ enum LoadResult {
     LOAD_FAILED_LUA
 };
 
+/** language server initialization results*/
+enum LSResult {
+    INIT_OK,
+    INIT_BAD_PIPE,
+    INIT_BAD_REQUEST,
+    CMD_ERROR
+};
+
 /** output formats */
 enum OutputType {
     HTML,
@@ -93,12 +103,11 @@ enum OutputType {
     RTF,
     ESC_ANSI,
     ESC_XTERM256,
-    HTML32_UNUSED,
+    ESC_TRUECOLOR,
     SVG,
     BBCODE,
     PANGO,
-    ODTFLAT,
-    ESC_TRUECOLOR
+    ODTFLAT
 };
 
 }

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python
 
-# Script to pull one of the thousands of themes available at eclipsecolorthemes.org.
-# The XML file is converted to the highlight Lua file format.
+# Script to pull one of the themes available at eclipsecolorthemes.org.
+# The retrieved XML file is converted to the highlight Lua file format.
 
 import requests
 import sys
@@ -10,17 +10,17 @@ import xml.etree.ElementTree as ET
 from datetime import date
 
 if __name__ == '__main__':
-    
-    if (len(sys.argv)!=2):
-        print ("Please define the theme number to download from eclipsecolorthemes.org")
+
+    if (len(sys.argv) != 2):
+        print("Please define the theme number to download from eclipsecolorthemes.org")
         sys.exit()
 
     themeID = sys.argv[1]
 
-    print ("Retrieving Theme #%s..." % themeID)
+    print("Retrieving Theme #%s..." % themeID)
     r = requests.get(
         'http://www.eclipsecolorthemes.org/',
-        params=[('view', 'empty'), ('action', 'download'),('theme', themeID),('type', 'xml')],
+        params=[('view', 'empty'), ('action', 'download'), ('theme', themeID), ('type', 'xml')],
     )
 
     root = ET.fromstring(r.text)
@@ -31,14 +31,14 @@ if __name__ == '__main__':
     scheme = root.attrib['name']
     author = root.attrib['author']
     id = root.attrib['id']
-    
-    if (id==""):
-        print ("This ID is not known.")
+
+    if (id == ""):
+        print("This ID is not known.")
         sys.exit()
 
-    canvas = root.find('background').attrib['color'] 
+    canvas = root.find('background').attrib['color']
     default = root.find('foreground').attrib['color']
-    number = root.find('number').attrib['color'] 
+    number = root.find('number').attrib['color']
     operator = root.find('operator').attrib['color']
     string = root.find('string').attrib['color']
     escape = root.find('commentTaskTag').attrib['color']
@@ -86,14 +86,30 @@ Keywords = {
   { Colour = "%s", Italic = false, Bold = true  }, --> kwd 5
   { Colour = "%s", Italic = false, Bold = true  }, --> kwd 6
 }
+
+SemanticTokenTypes = {
+  { Type = 'type', Style = Keywords[2] },
+  { Type = 'class', Style =  Keywords[1] },
+  { Type = 'struct', Style =  Keywords[4] },
+  { Type = 'interface', Style = Keywords[1] },
+  { Type = 'parameter', Style = Keywords[6] },
+  { Type = 'variable', Style = Keywords[5] },
+  { Type = 'enumMember', Style = Keywords[5] },
+  { Type = 'function', Style = Keywords[4] },
+  { Type = 'method', Style = Keywords[4] },
+  { Type = 'keyword', Style =  Keywords[1]},
+  { Type = 'number', Style = Number },
+  { Type = 'regexp', Style = String },
+  { Type = 'operator', Style = Operator },
+}
 """ % (today, author, url, id, scheme,
         canvas, default, number, operator, string, escape, stringPreProc,
         interpolation, lineComment, blockComment, lineNum, preprocessor,
         kwa, kwb, kwc, kwd, kwe, kwf)
 
-    themeName = '%s.theme' %  "_".join(scheme.lower().split())
+    themeName = '%s.theme' % "_".join(scheme.lower().split())
 
-    print ("Saving Highlight Theme File %s..." % themeName)
+    print("Saving Highlight Theme File %s..." % themeName)
 
     f = open(themeName, 'w')
     f.write(theme)

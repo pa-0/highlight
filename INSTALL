@@ -21,11 +21,11 @@ root of highlight-x.x
 |
 |-- extras              # extras for highlight scripting
 |   |-- css-themes      # detailed theme explanation
+|   |-- eclipse-themes  # eclipsecolorthemes.org converter script
 |   |-- json            # Lua to JSON converters
 |   |-- langdefs-res.   # language definition template with explanations
 |   |-- pandoc          # Pandoc macros
 |   |-- tcl             # TCL extension
-|   |-- web_plugins     # plugins for various web toolkits
 |   |-- pywal           # pywal terminal colouring template
 |   `-- swig            # SWIG interface and sample code
 |-- gui_files           # supporting files for the optional GUI
@@ -56,9 +56,11 @@ makefile                # basic makefile
 README                  # user manual
 README_DE               # German user manual
 README_LANGLIST         # list of supported languages
+README_LSP_CLIENT       # Language server instructions
 README_PLUGINS          # plug-in manual
 README_REGEX            # regular expression manual
 README_RELEASE          # information for packagers
+README_V4_MIGRATION     # version 4 breaking changes
 TODO                    # just ideas, no plans
 
 
@@ -117,7 +119,7 @@ a) Install Qt Creator IDE (www.qt.io)
 
 b) Install MingW (gcc toolchain)
 
-    -Download Online-Installer: 
+    -Download Online-Installer:
      https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/
     -Start mingw-w64-install.exe and select default options
     -Add bin directory of the downloaded files to the system PATH
@@ -129,7 +131,7 @@ c) Compile Qt:
     -If you install Strawberry Perl, remove its g++ compiler path from your system PATH
     -Open cmd.exe and change into a directory "QT-ROOT" which will contain the Qt sources
     -Execute the following cmds
-     git clone git://code.qt.io/qt/qt5.git 
+     git clone git://code.qt.io/qt/qt5.git
      cd qt5
      git checkout 5.15.0
      perl init-repository
@@ -150,13 +152,13 @@ e) Install Boost
 
     -Download and extract package from boost.org (no compilation needed)
 
-f) Compile Lua 
+f) Compile Lua
 
     -Download source package: https://www.lua.org/download.html
     -Open QtCreator and create a new Project ("without Qt")
     -Import all c files of the Lua package except lua.c and luac.c
-    -Edit the project file like this: 
-    
+    -Edit the project file like this:
+
      TEMPLATE = lib
      CONFIG += console
      CONFIG -= app_bundle
@@ -169,10 +171,10 @@ f) Compile Lua
 
 g) Install upx from http://upx.sourceforge.net/
 
-h) Open the pro files in src/w32-projects and src/gui_qt in QtCreator and 
+h) Open the pro files in src/w32-projects and src/gui_qt in QtCreator and
    adjust the paths of libraries and tools. Compile the lib project first.
 
-   
+
 3.3 Precompiled packages
 ------------------------
 
@@ -218,7 +220,7 @@ http://packages.ubuntu.com/oneiric/allpackages
 Windows Chocolatey
 https://chocolatey.org/packages/highlight
 
-   
+
 4. Known compiler issues
 ========================
 
@@ -261,19 +263,19 @@ it with the -static option (see src/makefile, LDFLAGS variable).
 
 Linux Mint
 
-There is a system script called highlight which is located in a preferenced path: 
+There is a system script called highlight which is located in a preferenced path:
 
 mintsystem provides: /usr/local/bin/highlight
  highlight provides: /usr/bin/highlight
 
-Calling this script with the true highlight command line options will have no effect. 
+Calling this script with the true highlight command line options will have no effect.
 See bug tracker items: https://bugs.launchpad.net/linuxmint/+bug/593583 and
                        https://bugs.launchpad.net/linuxmint/+bug/815005
-                   
+
 
 OpenSUSE Leap 42.2
 ==================
 
-The lua-devel package installation causes error messages. 
+The lua-devel package installation causes error messages.
 Workaround: ignore dependency conflict.
 

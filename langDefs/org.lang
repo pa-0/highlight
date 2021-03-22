@@ -60,7 +60,7 @@ end
 -- add more here as needed
 NestedSections = {
   { Lang="python", Delimiter= { [[\#\+begin_src\ python|\#\+BEGIN_SRC\ python]], [[\#\+end_src|\#\+END_SRC]] } },
-  { Lang="sh", Delimiter= { [[\#\+begin_src\ sh|\#\+BEGIN_SRC\ sh]], [[\#\+end_src|\#\+END_SRC]] } },
+  { Lang="shellscript", Delimiter= { [[\#\+begin_src\ sh|\#\+BEGIN_SRC\ sh]], [[\#\+end_src|\#\+END_SRC]] } },
   { Lang="perl", Delimiter= { [[\#\+begin_src\ pl|\#\+BEGIN_SRC\ pl]], [[\#\+end_src|\#\+END_SRC]] } },
   { Lang="ruby", Delimiter= { [[\#\+begin_src\ ruby|\#\+BEGIN_SRC\ ruby]], [[\#\+end_src|\#\+END_SRC]] } },
 }

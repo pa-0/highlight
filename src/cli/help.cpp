@@ -67,7 +67,7 @@ void printHelp(const std::string &topic)
         cout <<"\n";
         cout <<"Print all installed themes with --list-scripts=themes.\n";
         cout <<"\n";
-        cout <<"Use --base16 to read a theme of the Base16 set or add 'base16/' as prefix.\n";
+        cout <<"Add 'base16/' as prefix to read a theme of the Base16 set.\n";
         cout <<"\n";
         cout <<"Exemplary config files:\n";
         cout <<"darkspectrum.theme: dark canvas (vim) \n";
@@ -115,7 +115,13 @@ void printHelp(const std::string &topic)
         cout <<"This indicator points at the tested syntax element of the previous line.\n";
         cout <<"The state identifiers match the corresponding HTML output CSS class names.\n\n";
         cout <<"See README_TESTCASES.adoc for a detailed description and examples.\n";
-    }else {
+    } else if (topic=="lsp") {
+        cout <<"LANGUAGE SERVER PROTOCOL HELP:\n\n";
+        cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
+        cout <<"Language servers are be configured in the lsp.conf file. Each parameter of this file\n";
+        cout <<"can also be set using --ls-exec, --ls-option, --ls-delay and --ls-syntax.\n";
+        cout <<"Important: LSP requires absolute input file paths.\n";
+    } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";
         cout<<"General options:\n";
@@ -126,7 +132,7 @@ void printHelp(const std::string &topic)
         cout<<"     --config-file=<file>       set path to a lang or theme file\n";
         cout<<" -d, --outdir=<directory>       name of output directory\n";
         cout<<" -h, --help[=topic]             print this help or a topic description\n";
-        cout<<"                                  <topic> = [syntax, theme, plugin, config, test]\n";
+        cout<<"                                  <topic> = [syntax, theme, plugin, config, test, lsp]\n";
         cout<<" -i, --input=<file>             name of single input file\n";
         cout<<" -o, --output=<file>            name of single output file\n";
         cout<<" -P, --progress                 print progress bar in batch mode\n";
@@ -135,7 +141,7 @@ void printHelp(const std::string &topic)
         cout<<"     --syntax-by-name=<name>    specify type of source code by given name\n";
         cout<<"                                  will not read a file of this name, useful for stdin\n";
         cout<<"     --syntax-supported         test if the given syntax can be loaded\n";
-        cout<<" -v, --verbose                  print debug info\n";
+        cout<<" -v, --verbose                  print debug info; repeat to show more information\n";
         cout<<"     --force[=syntax]           generate output if input syntax is unknown\n";
         cout<<"     --list-scripts=<type>      list installed scripts\n";
         cout<<"                                  <type> = [langs, themes, plugins]\n";
@@ -150,13 +156,11 @@ void printHelp(const std::string &topic)
         cout<<"     --print-style              print stylesheet only (see --style-outfile)\n";
         cout<<"     --skip=<list>              ignore listed unknown file types\n";
         cout<<"                                  (Example: --skip='bak;c~;h~')\n";
-        cout<<"     --start-nested=<lang>      define nested language which starts input\n";
-        cout<<"                                  without opening delimiter\n";
+
         cout<<"     --stdout                   output to stdout (batch mode, --print-style)\n";
         cout<<"     --validate-input           test if input is text, remove Unicode BOM\n";
         cout<<"     --version                  print version and copyright information\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"Output formatting options:\n";
         cout<<"\n";
         cout<<" -O, --out-format=<format>      output file in given format\n";
@@ -172,10 +176,8 @@ void printHelp(const std::string &topic)
         cout<<" -F, --reformat=<style>         reformats and indents output in given style\n";
         cout<<"                                  <style> = [allman, gnu, google, horstmann,\n";
         cout<<"                                  java, kr, linux, lisp, mozilla, otbs, pico,\n";
-        cout<<"                                  vtk, ratliff, stroustrup, webkit, whitesmith, user]\n";
-        cout<<"                                  The user style does not apply a predefined scheme.\n";
-        cout<<"                                  Use --reformat-option to define the reformatting.\n";
-        cout<<"     --reformat-option=<opt>    apply an astyle cmd line option (assumes -F)\n";
+        cout<<"                                  vtk, ratliff, stroustrup, webkit, whitesmith]\n";
+
         cout<<" -I, --include-style            include style definition in output file\n";
         cout<<" -J, --line-length=<num>        line length before wrapping (see -V, -W)\n";
         cout<<" -j, --line-number-length=<num> line number width incl. left padding (default: 5)\n";
@@ -196,8 +198,6 @@ void printHelp(const std::string &topic)
         cout<<"     --wrap-no-numbers          omit line numbers of wrapped lines\n";
         cout<<"                                  (assumes -l)\n";
         cout<<" -z, --zeroes                   pad line numbers with 0's\n";
-        cout<<"     --base16[=theme]           use a theme of the Base16 collection\n";
-        cout<<"     --delim-cr                 set CR as end-of-line delimiter (MacOS 9)\n";
         cout<<"     --isolate                  output each syntax token separately (verbose output)\n";
         cout<<"     --keep-injections          output plug-in injections in spite of -f\n";
         cout<<"     --kw-case=<case>           change case of case insensitive keywords\n";
@@ -205,8 +205,6 @@ void printHelp(const std::string &topic)
         cout<<"     --no-trailing-nl[=mode]    omit trailing newline. If mode is empty-file, omit\n";
         cout<<"                                  only for empty input\n";
         cout<<"     --no-version-info          omit version info comment\n";
-       // cout<<"     --two-pass=<file>          write plug-in with persistent state information\n";
-       // cout<<"                                  (beta; requires syntax with store instructions)\n";
 
         cout<<"\n\n";
         cout<<"(X)HTML output options:\n";
@@ -228,45 +226,39 @@ void printHelp(const std::string &topic)
         cout<<" -r, --replace-quotes           replace double quotes by \\dq{}\n";
         cout<<"     --beamer                   adapt output for the Beamer package\n";
         cout<<"     --pretty-symbols           improve appearance of brackets and other symbols\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"RTF output options:\n";
         cout<<"\n";
         cout<<"     --page-color               include page color attributes\n";
         cout<<" -x, --page-size=<ps>           set page size \n";
         cout<<"                                  <ps> = [a3, a4, a5, b4, b5, b6, letter]\n";
         cout<<"     --char-styles              include character stylesheets\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"SVG output options:\n";
         cout<<"\n";
         cout<<"     --height                   set image height (units allowed)\n";
         cout<<"     --width                    set image width (see --height)\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
         cout<<"Terminal escape output options (xterm256 or truecolor):\n";
         cout<<"\n";
         cout<<"     --canvas[=width]           set background colour padding (default: 80)\n";
-        cout<<"\n";
-        cout<<"\n";
-        cout<<"GNU source-highlight compatibility options:\n";
-        cout<<"\n";
-        cout<<"     --doc                      create stand alone document\n";
-        cout<<"     --no-doc                   cancel the --doc option\n";
-        cout<<"     --css=filename             the external style sheet filename\n";
-        cout<<"     --src-lang=STRING          source language\n";
-        cout<<" -t, --tab=INT                  specify tab length\n";
-        cout<<" -n, --line-number[=0]          number all output lines, optional padding\n";
-        cout<<"     --line-number-ref[=p]      number all output lines and generate an anchor,\n";
-        cout<<"                                  made of the specified prefix p + the line\n";
-        cout<<"                                  number  (default='line')\n";
-        cout<<"     --output-dir=path          output directory\n";
-        cout<<"     --failsafe                 if no language definition is found for the\n";
-        cout<<"                                  input, it is simply copied to the output\n";
-        cout<<"\n";
-        cout<<"\n";
+        cout<<"\n\n";
+
+        cout<<"Language Server options:\n\n";
+        cout<<"     --ls-profile=<server>      read LSP configuration from lsp.conf\n";
+        cout<<"     --ls-delay=<ms>            set server initialization delay\n";
+        cout<<"     --ls-exec=<bin>            set server executable name\n";
+        cout<<"     --ls-option=<option>       set server CLI option (can be repeated)\n";
+        cout<<"     --ls-hover                 execute hover requests (HTML output only)\n";
+        cout<<"     --ls-semantic              retrieve semantic token types (requires LSP 3.16)\n";
+        cout<<"     --ls-syntax=<lang>         set syntax which is understood by the server\n";
+        cout<<"     --ls-syntax-error          retrieve syntax error information\n";
+        cout<<"                                  (assumes --ls-hover or --ls-semantic)\n";
+        cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
+        cout<<"\n\n";
+
         cout<<"If no in- or output files are specified, stdin and stdout will be used.\n";
-        cout<<"Since version 3.44, reading from stdin can also be triggered by the '-' option.\n";
+        cout<<"Reading from stdin can also be triggered using the '-' option.\n";
         cout<<"Default output format: xterm256 or truecolor if appropriate, HTML otherwise.\n";
         cout<<"Style definitions are stored in highlight.css (HTML, XHTML, SVG) or\n";
         cout<<"highlight.sty (LaTeX, TeX) if neither -c nor -I is given.\n";

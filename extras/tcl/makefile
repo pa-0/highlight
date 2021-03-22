@@ -1,5 +1,5 @@
-# Simple Makefile for tclansifilter
-# This file will compile the tclansifilter shared object.
+# Simple Makefile for tclhighlight
+# This file will compile the tclhighlight shared object.
 
 CC=g++
 
@@ -19,7 +19,8 @@ astyle/ASStreamIterator.cpp astyle/ASResource.cpp astyle/ASFormatter.cpp\
 astyle/ASBeautifier.cpp astyle/ASEnhancer.cpp \
 Diluculum/InternalUtils.cpp  Diluculum/LuaExceptions.cpp  Diluculum/LuaFunction.cpp\
 Diluculum/LuaState.cpp Diluculum/LuaUserData.cpp  Diluculum/LuaUtils.cpp  Diluculum/LuaValue.cpp\
-Diluculum/LuaVariable.cpp  Diluculum/LuaWrappers.cpp
+Diluculum/LuaVariable.cpp  Diluculum/LuaWrappers.cpp\
+lspclient.cpp keystore.cpp
 
 OBJECTS=$(SOURCES:.cpp=.o) tclhighlight.o
 BINARY=tclhighlight.so

@@ -2,7 +2,7 @@
                           stringtools.h  -  description
                              -------------------
     begin                : Mon Dec 10 2001
-    copyright            : (C) 2001-2010 by Andre Simon
+    copyright            : (C) 2001-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -67,7 +67,7 @@ string trim(const string& s);
     \param s string containing tokens
     \param delim Token delimiter
     \return vector containing found tokens */
-vector <string> splitString ( const string& s, unsigned char delim );
+vector<string> splitString ( const string& s, unsigned char delim );
 
 /** Convert string to a numeric value of the given type
     \param val variable of specified type which will contain the numeric value

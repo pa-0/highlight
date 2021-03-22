@@ -34,7 +34,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false)
+    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), keywordStyleCnt(0), outputType(HTML)
 {}
 
 ThemeReader::~ThemeReader()
@@ -44,8 +44,42 @@ ThemeReader::~ThemeReader()
     }
 }
 
+OutputType ThemeReader::getOutputType(const string &typeDesc) {
+
+    if (typeDesc=="html" || typeDesc=="xhtml") return HTML;
+
+    if (typeDesc=="rtf") return RTF;
+    if (typeDesc=="latex") return LATEX;
+    if (typeDesc=="tex") return TEX;
+    if (typeDesc=="rtf") return RTF;
+    if (typeDesc=="ansi") return ESC_ANSI;
+    if (typeDesc=="xterm256") return ESC_XTERM256;
+    if (typeDesc=="truecolor") return ESC_TRUECOLOR;
+
+    if (typeDesc=="svg") return SVG;
+    if (typeDesc=="bbcode") return BBCODE;
+    if (typeDesc=="pango") return PANGO;
+    if (typeDesc=="odt") return ODTFLAT;
+    return HTML;
+}
+
 void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& var)
 {
+
+    if (var["Custom"].value()!=Diluculum::Nil) {
+
+        int idx=1;
+
+        while (var["Custom"][idx].value() !=Diluculum::Nil) {
+
+            if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
+                style.setCustomStyle (var["Custom"][idx]["Style"].value().asString() );
+                return;
+            }
+            idx++;
+        }
+    }
+
     string styleColor="#000000";
     bool styleBold=false, styleItalic=false, styleUnderline=false;
 
@@ -62,11 +96,17 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
     style.setBold(styleBold);
     style.setItalic(styleItalic);
     style.setUnderline(styleUnderline);
+
+    if (var["Underline"].value()!=Diluculum::Nil)
+        styleUnderline= var["Underline"].value().asBoolean();
 }
 
-bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
+bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bool loadSemanticStyles)
 {
     try {
+
+        outputType = type;
+
         fileOK=true;
 
         Diluculum::LuaState ls;
@@ -83,9 +123,9 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
         ls["HL_FORMAT_BBCODE"]=BBCODE;
         ls["HL_FORMAT_PANGO"]=PANGO;
         ls["HL_FORMAT_ODT"]=ODTFLAT;
-        ls["HL_OUTPUT"] = type;
+        ls["HL_OUTPUT"] = outputType;
         ls.doString("Injections={}");
-        
+
         lua_register (ls.getState(), "StoreValue", KeyStore::luaStore);
 
         ls.doFile (styleDefinitionPath);
@@ -96,7 +136,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
 
             Diluculum::LuaValueMap categoryMap;
             categoryMap = ls["Categories"].value().asTable();
-                
+
             for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
             {
                 categories.append(it->second.asString());
@@ -105,7 +145,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
                 }
             }
         }
-        
+
         if (pluginChunks.size()) {
             Diluculum::LuaValueList params;
             params.push_back(desc);
@@ -127,18 +167,66 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
         initStyle(line, ls["LineNum"]);
         initStyle(operators, ls["Operator"]);
 
+        errorMessages.setBold(true);
+        errorMessages.setColour(Colour("#ff0000"));
+
+        if (outputType==HTML || outputType==XHTML) {
+            hover.setCustomStyle ("cursor:help");
+            errorMessages.setCustomStyle ("color:red; border:solid 1px red; margin-left: 3em");
+
+            ostringstream lineColourFmt;
+            Colour lineColour = line.getColour();
+            lineColourFmt << "#"<<lineColour.getRed(HTML)<<lineColour.getGreen(HTML)<<lineColour.getBlue(HTML);
+            line.setCustomStyle("user-select: none; color: " + lineColourFmt.str());
+        }
+
+        if (outputType==LATEX) {
+            errorMessages.setCustomStyle ("\\marginpar{\\small\\itshape\\color{red}#1}");
+        }
+
+        if (ls["ErrorMessage"].value() !=Diluculum::Nil){
+            initStyle(errorMessages, ls["ErrorMessage"]);
+        }
+
+        if (ls["Hover"].value() !=Diluculum::Nil){
+            initStyle(hover, ls["Hover"]);
+        }
+
+        errors.setBold(true);
+        errors.setColour(Colour("#ff0000"));
+        if (ls["Error"].value() !=Diluculum::Nil){
+            initStyle(errors, ls["Error"]);
+        }
+
         int idx=1;
         ElementStyle kwStyle;
         char kwName[5];
-        while (ls["Keywords"][idx].value() !=Diluculum::Nil) {
+        while (ls["Keywords"][idx].value() !=Diluculum::Nil && idx < 27) {
             initStyle(kwStyle, ls["Keywords"][idx]);
             snprintf(kwName, sizeof(kwName), "kw%c", ('a'+idx-1));
             keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
             idx++;
         }
-        
+
+        keywordStyleCnt = idx - 1;
+
+        if (loadSemanticStyles && ls["SemanticTokenTypes"].value() !=Diluculum::Nil) {
+
+            idx=1;
+            while (ls["SemanticTokenTypes"][idx].value() !=Diluculum::Nil && idx < 27) {
+
+                initStyle(kwStyle, ls["SemanticTokenTypes"][idx]["Style"]);
+                snprintf(kwName, sizeof(kwName), "st%c", ('a'+idx+-1));
+                keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
+                semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = keywordStyleCnt + idx;
+                //std::cerr<<"semanticStyleMap "<< (ls["SemanticTokenTypes"][idx]["Type"].value().asString()) << " -> "<< keywordStyleCnt + idx<<"\n";
+
+                idx++;
+            }
+        }
+
         originalStyles=keywordStyles;
-        
+
         idx=1;
         while (ls["Injections"][idx].value() !=Diluculum::Nil) {
             themeInjections +=ls["Injections"][idx].value().asString();
@@ -157,6 +245,19 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type)
     }
 
     return fileOK;
+}
+
+int ThemeReader::getSemanticStyle(const string &type) {
+
+    return semanticStyleMap.count(type) ? semanticStyleMap[type] : 0;
+}
+
+int ThemeReader::getSemanticTokenStyleCount() const {
+    return semanticStyleMap.size();
+}
+
+int ThemeReader::getKeywordStyleCount() const {
+    return keywordStyleCnt;
 }
 
 string ThemeReader::getErrorMessage() const
@@ -224,6 +325,21 @@ ElementStyle ThemeReader::getOperatorStyle() const
     return operators;
 }
 
+ElementStyle ThemeReader::getHoverStyle() const
+{
+    return hover;
+}
+
+ElementStyle ThemeReader::getErrorStyle() const
+{
+    return errors;
+}
+
+ElementStyle ThemeReader::getErrorMessageStyle() const
+{
+    return errorMessages;
+}
+
 bool ThemeReader::found () const
 {
     return fileOK;
@@ -255,19 +371,19 @@ string ThemeReader::getInjections() const
 }
 
 void ThemeReader::overrideAttributes(vector<int>& attributes) {
-    
+
     if (dirtyAttributes)
         keywordStyles=originalStyles;
-    
+
     for ( std::vector<int>::iterator it = attributes.begin() ; it != attributes.end(); ++it)
     {
         int kwGroup=*it & 0xf;
         char kwName[5];
         snprintf(kwName, sizeof(kwName), "kw%c", ('a'+kwGroup-1));
-        
+
         if (keywordStyles.count ( kwName)) {
-   
-            ElementStyle elem = keywordStyles[kwName]; 
+
+            ElementStyle elem = keywordStyles[kwName];
             if (*it & 128) elem.setBold(true);
             if (*it & 256) elem.setItalic(true);
             if (*it & 512) elem.setUnderline(true);
@@ -280,21 +396,21 @@ void ThemeReader::overrideAttributes(vector<int>& attributes) {
     }
 }
 
-float ThemeReader::getsRGB(int rgbValue) {
+float ThemeReader::getsRGB(int rgbValue) const {
 	float s = (float)rgbValue / 255;
 	s = (s <= 0.03928) ? s / 12.92 : std::pow(((s + 0.055) / 1.055), 2.4);
 	return s;
 }
 
-float ThemeReader::getBrightness(const Colour& colour) {
-    return  0.2126*getsRGB(colour.getRed()) + 
-            0.7152*getsRGB(colour.getGreen()) + 
+float ThemeReader::getBrightness(const Colour& colour) const {
+    return  0.2126*getsRGB(colour.getRed()) +
+            0.7152*getsRGB(colour.getGreen()) +
             0.0722*getsRGB(colour.getBlue());
 }
-float ThemeReader::getContrast() {
+float ThemeReader::getContrast() const {
     float canvasBrightness = getBrightness(canvas.getColour());
     float defaultBrightness = getBrightness(defaultElem.getColour());
-    return  (std::max(canvasBrightness, defaultBrightness) + 0.05) / 
+    return  (std::max(canvasBrightness, defaultBrightness) + 0.05) /
             (std::min(canvasBrightness, defaultBrightness) + 0.05);
 }
 
