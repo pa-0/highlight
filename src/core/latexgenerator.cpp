@@ -42,7 +42,7 @@ LatexGenerator::LatexGenerator()
     longLineTag = "\\hspace*{\\fill}" + newLineTag;
     spacer = initialSpacer = "\\ ";
     maskWs=true;
-    maskWsBegin = "\\hlstd{";
+    maskWsBegin = "\\hl"+STY_NAME_STD+"{";
     maskWsEnd = "}";
     excludeWs=true;
     styleCommentOpen="%";

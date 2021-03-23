@@ -23,15 +23,13 @@ What does this mean?
 
 Many editors make use of "Language Servers" to get syntax information of various
 programming languages without the need to implement a deep understanding of the
-files'' syntax they process. Most prominent editor using LSP is VSCode.
-A lot of language servers are designed and tested for this editor, since MS
-published the LSP specification and VSCode is the reference. Other well known
-editors with LSP support are Kate, vim, Emacs and Eclipse.
+files'' syntax they process. Well known code editors with LSP support are VSCode,
+Kate, vim, Emacs and Eclipse.
 
 More information about LSP and editor support:
 https://langserver.org/
 
-LSP features:
+Highlight''s LSP based features:
 
 * enhanced tooltips using hover requests
 * semantic highlighting
@@ -65,7 +63,7 @@ Servers = {
 }
 ..........................................................................
 
-The profile settings here may be set with the corresponding --ls-* options.
+These profile settings may also be set with corresponding `--ls-*` options.
 
 
 == OPTIONS
@@ -87,12 +85,16 @@ Language Server options:
      --ls-workspace=<dir>       set workspace directory to init. the server
 ..........................................................................
 
+The GUI offers an LSP tab to enable these options.
+
+Important: LSP features require absolute input file paths.
 
 == THEMES
 
-Colour themes have a new section to define semantic token styles. The
-types use the same identifiers which are reported by the language server.
-If the server reports a token type not listed here, it will be ignored.
+Colour themes have a new section to define semantic token styles. These
+types use the same identifiers which are reported by the language server
+capabilities. If the server reports token types not listed here, they
+will be ignored.
 
 +
 ..........................................................................
@@ -127,6 +129,7 @@ Hover = { Custom = { { Format = "html", Style = "cursor:help" } } }
 
 Additional elements to describe token modifiers will be added in a later release.
 
+
 === EXAMPLE INVOCATION
 +
 ..........................................................................
@@ -135,8 +138,6 @@ highlight  -I --ls-profile ccls --ls-workspace '/home/andre/Projekte/c' /home/an
 
 highlight  -I  --ls-profile rust-analyzer --ls-workspace '/home/andre/Projekte/rust/fibo'  /home/andre/Projekte/rust/fibo/src/main.rs  --out-format html --ls-semantic > fibo.html
 ..........................................................................
-
-The GUI offers an LSP tab to enable these options.
 
 
 === DEBUGGING

@@ -42,7 +42,8 @@ root of highlight-x.x
 |   `-- gui-qt          # optional GUI code
 |   `-- include         # Header files
 |   |   |-- astyle      # Artistic Style headers
-|   |   `-- Diliculum   # Diliculum headers
+|   |   |-- Diliculum   # Diliculum headers
+|   |   `-- picojson    # PicoJSON headers
 `-- themes              # color themes (*.theme)
 
 AUTHORS                 # contributors of code and patches

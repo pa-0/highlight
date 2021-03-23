@@ -62,7 +62,6 @@ A deprecation notice is shown during the beta release cycle.
 == REMOVED LIBRARY FUNCTIONS
 +
 ..........................................................................
-
 DataDir::searchDataDir -> DataDir::initSearchDirectories
 CodeGenerator::setIndentationOptions
 CodeGenerator::setStartingNestedLang
@@ -99,9 +98,14 @@ CodeGenerator::setStartingNestedLang
 lsp.conf
 
 
-== CSS STYLE NAMES
+== STYLE NAMES
 +
 
-The `str` class was renamed to `sng` (conflicts with new st* names).
+To avoid conflicts with new `st*` names, these classes were renamed:
+
+..........................................................................
+    str -> sng
+    std -> def
+..........................................................................
 
 // EOF //

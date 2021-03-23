@@ -6,11 +6,21 @@
 :toc: left
 :toclevels: 1
 
+
+== highlight 4.0
+
+23.03.2021
+
+  - renamed `std` style name to `def`
+  - version and README updates
+
+
 == highlight 4.0 beta 7
 
 15.03.2021
 
   - removed `extras/web_plugins`
+
 
 == highlight 4.0 beta 6
 
@@ -18,11 +28,13 @@
 
   - added user-select default property to HTML line number style
 
+
 == highlight 4.0 beta 5
 
 20.02.2021
 
   - revised color themes
+
 
 == highlight 4.0 beta 4
 
@@ -33,6 +45,7 @@
   - enabled syntax message output with `--ls-syntax-error`
   - GUI: enabled syntax error checkbox
 
+
 == highlight 4.0 beta 3
 
 11.02.2021
@@ -42,6 +55,7 @@
   - added Error and Hover theme properties
   - enabled syntax error highlighting with `ls-semantic`
 
+
 == highlight 4.0 beta 2
 
 09.02.2021
@@ -49,8 +63,10 @@
   - improved LSP message handling
   - added delay LSP parameter
   - added LSP semantic token styles to base16 themes
+  - renamed `str` style name to `sng`
   - CLI: enabled `--ls-semantic` option
   - GUI: enabled semantic checkbox and a server capability test
+
 
 == highlight 4.0 beta 1
 
@@ -62,11 +78,13 @@
   - CLI: deprecated `--start-nested`, `--reformat=user`, `--reformat-option`, `--base16`, `--delim-cr`, `--plug-in-read`
   - GUI: added LSP configuration tab
 
+
 == highlight 3.61
 
 09.01.2021
 
   - added `--syntax-supported` option
+
 
 == highlight 3.60
 
@@ -77,6 +95,7 @@
   - fixed single argument and truecolor output of mark_lines.lua plug-in (https://gitlab.com/saalen/highlight/-/issues/164)
   - added lineno and column parameters to Decorate hook
   - LIB: moved CodeGenerator::readUserStyleDef and getStyleDefinition to public (https://gitlab.com/saalen/highlight/-/issues/173)
+
 
 == highlight 3.59
 
@@ -94,6 +113,7 @@
   - CLI: fixed segfault if the user home directory cannot be determined (https://gitlab.com/saalen/highlight/-/issues/171)
   - GUI: initial font set to Monospace
   - GUI: replaced highlight.xpm by highlight.png icon
+
 
 == highlight 3.58
 

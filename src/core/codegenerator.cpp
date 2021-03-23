@@ -57,7 +57,7 @@ namespace highlight
 const unsigned int CodeGenerator::NUMBER_BUILTIN_STATES = highlight::KEYWORD;
 
 // must not start with kw, st, sm prefixes
-const string CodeGenerator::STY_NAME_STD="std";
+const string CodeGenerator::STY_NAME_STD="def";
 const string CodeGenerator::STY_NAME_STR="sng";
 const string CodeGenerator::STY_NAME_NUM="num";
 const string CodeGenerator::STY_NAME_SLC="slc";

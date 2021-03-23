@@ -45,7 +45,7 @@ TexGenerator::TexGenerator()
     spacer = initialSpacer = "\\ ";
     maskWs=true;
     excludeWs=true;
-    maskWsBegin = "{\\hlstd";
+    maskWsBegin = "{\\hl"+STY_NAME_STD;
     maskWsEnd = "}";
     styleCommentOpen="%";
 }
