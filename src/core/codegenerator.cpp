@@ -2164,7 +2164,8 @@ void CodeGenerator::runSyntaxTestcases(unsigned int column){
             assertState=ML_COMMENT;
         else if (line.find("ws", typeDescPos)==typeDescPos)
             assertState=_WS;
-        else if (line.find(STY_NAME_STD, typeDescPos)==typeDescPos)
+        //TODO temp. fix to allow old and new default classes
+        else if (line.find(STY_NAME_STD, typeDescPos)==typeDescPos  || line.find("std", typeDescPos)==typeDescPos)
             assertState=STANDARD;
         else if (line.find(STY_NAME_DST, typeDescPos)==typeDescPos)
             assertState=DIRECTIVE_STRING;

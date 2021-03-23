@@ -1,6 +1,6 @@
 = HIGHLIGHT TESTCASES MANUAL
 André Simon
-v3.56, April 2020
+v4.0, March 2021
 :lang: en
 :icons: font
 :toc: left
@@ -30,7 +30,7 @@ See the feature discussion here: https://gitlab.com/saalen/highlight/issues/80
 
 [NOTE]
 ================================================================================
-For UTF-8 encoded input, you need to set `--encoding=utf-8`. Otherwise the 
+For UTF-8 encoded input, you need to set `--encoding=utf-8`. Otherwise the
 state indicator positions will not be calculated correctly.
 ================================================================================
 
@@ -50,8 +50,8 @@ The column is defined by ``^`` ("here") or ``<`` ("comment start / first column"
 The state is defined by one of the following identifiers:
 
 [horizontal]
-`std` :: standard / no recognition
-`str` :: string
+`def` :: standard / no recognition // SEE V4 migration note below
+`sng` :: string                    // SEE V4 migration note below
 `num` :: number
 `slc` :: single line comment
 `com` :: multiline comment
@@ -61,13 +61,17 @@ The state is defined by one of the following identifiers:
 `opt` :: operator
 `ipl` :: interpolation
 `ws`  :: whitespace
-`kw`  :: keyword group X (X: a..z)
+`kwX`  :: keyword group X (X: a..z)
+`stX`  :: semantic token X (X: a..z)
 
 The state identifiers match the corresponding HTML output CSS class names.
 
 Since release 3.47, the whitespace indicator `ws` is no longer exclusive.
 A test will succeed at a position with whitespace if the enclosing state is matched
 or if `ws` is tested specifically.
+
+V4 migration: For a smooth transition after the V4 release, `std` will be recognized
+as `def`, and `str` is equivalent to `sng`.
 
 Add a leading `~` to an indicator to match any other state as success.
 
@@ -89,7 +93,7 @@ int main() {
  */
 
     int var =   0x1234;
-/*      ^^^ std ^    ^ num */
+/*      ^^^ def ^    ^ num */
 //          ^ opt             4)
     std::cout << "whatever: " << var <<   "\n";
 //               ^^^^^^^^^^^^ str    ^^opt ^^ esc
