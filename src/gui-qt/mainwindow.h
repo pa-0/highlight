@@ -2,7 +2,7 @@
                                mainwindow.h
                              -------------------
     begin                : Mo 16.03.2009
-    copyright            : (C) 2009-2020 by Andre Simon
+    copyright            : (C) 2009-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

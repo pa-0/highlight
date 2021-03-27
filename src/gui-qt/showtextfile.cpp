@@ -3,7 +3,7 @@
                                showtestfile.cpp
                              -------------------
     begin                : Mo 16.03.2009
-    copyright            : (C) 2009-2017 by Andre Simon
+    copyright            : (C) 2009-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -67,14 +67,14 @@ bool ShowTextFile::setFileName(const QString& fileName)
     if ( file.open( QIODevice::ReadOnly) ) {
         QTextStream stream( &file );
         //m_ui->textBrowser->setText( stream.readAll() );
-        
+
         QString line;
         do {
             line = stream.readLine();
             if (! (line.startsWith(":") || line.startsWith("//")) )
                 m_ui->textBrowser->append( line );
         } while (!line.isNull());
-        
+
         m_ui->lbTitle->setText(fileName);
         m_ui->textBrowser->moveCursor(QTextCursor::Start);
     }

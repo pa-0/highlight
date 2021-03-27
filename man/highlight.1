@@ -1,4 +1,4 @@
-.TH highlight 1 "2021-03-15" "Andre Simon" "user documentation"
+.TH highlight 1 "2021-03-27" "Andre Simon" "user documentation"
 
 .SH NAME
 Highlight - a universal sourcecode to formatted text converter
@@ -214,7 +214,8 @@ will be no style definitions.
 
 Reformatting code (-F) will only work with C, C++, C# and Java input files.
 
-LSP options require absolute input file paths.
+LSP features require absolute input paths and disable reformatting (-F).
+
 .SH BUGS
 Wrapping lines with -V or -W will cause faulty highlighting of long single line comments and directives.
 Using line-range might interfere with multi line syntax elements. Use with caution.
@@ -262,4 +263,4 @@ Run highlight --list-scripts=langs to see all supported syntax types.
 .SH AUTHORS
 Andre Simon <as@andre-simon.de>
 .SH SEE ALSO
-README file and highlight webpage at http://www.andre-simon.de/.
+README files and http://www.andre-simon.de/.

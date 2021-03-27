@@ -1,8 +1,8 @@
 /***************************************************************************
-                          LatexCode.cpp  -  description
+                    latexgenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

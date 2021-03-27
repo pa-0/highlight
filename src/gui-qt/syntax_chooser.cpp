@@ -2,7 +2,7 @@
                              syntax_chooser.cpp
                              -------------------
     begin                : Mo 17.03.2017
-    copyright            : (C) 2017 by Andre Simon
+    copyright            : (C) 2017-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

@@ -120,7 +120,7 @@ void printHelp(const std::string &topic)
         cout <<"Highlight can invoke LSP servers to enhance its output. Warning: These features are WIP.\n";
         cout <<"Language servers are be configured in the lsp.conf file. Each parameter of this file\n";
         cout <<"can also be set using --ls-exec, --ls-option, --ls-delay and --ls-syntax.\n";
-        cout <<"Important: LSP requires absolute input file paths.\n";
+        cout <<"Important: LSP features require absolute input paths and disable reformatting (-F).\n";
     } else {
         cout<<"USAGE: highlight [OPTIONS]... [FILES]...\n";
         cout<<"\n";
@@ -263,9 +263,11 @@ void printHelp(const std::string &topic)
         cout<<"Style definitions are stored in highlight.css (HTML, XHTML, SVG) or\n";
         cout<<"highlight.sty (LaTeX, TeX) if neither -c nor -I is given.\n";
         cout<<"Reformatting code (-F) will only work with C, C++, C# and Java input files.\n";
+        cout<<"LSP features require absolute input paths and disable reformatting (-F).\n";
         cout<<"Wrapping lines with -V or -W will cause faulty highlighting of long single\n";
         cout<<"line comments and directives. Using line-range might interfere with multi\n";
         cout<<"line syntax elements. Use with caution.\n\n";
+
         cout<<"Run highlight --list-scripts=langs to see all supported syntax types.\n\n";
         cout<<"Refer to README files how to apply plug-ins to customize the output.\n\n";
         cout<<"Updates and information: http://www.andre-simon.de/\n";

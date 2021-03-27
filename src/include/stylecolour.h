@@ -2,7 +2,7 @@
                           stylecolour.h  -  description
                              -------------------
     begin                : Die Nov 5 2002
-    copyright            : (C) 2002 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -94,13 +94,13 @@ public:
     /**  @param type Output type
          @return Blue value in color representation according to output type */
     string getBlue ( OutputType type ) const;
-    
+
     /**  @return red value */
     int getRed () const;
-    
+
     /**  @return green value */
     int getGreen () const;
-    
+
     /**  @return blue value */
     int getBlue () const;
 

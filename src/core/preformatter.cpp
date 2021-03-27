@@ -2,7 +2,7 @@
                         PreFormatter.cpp  -  description
                              -------------------
     begin                : Mo Jan 03 2005
-    copyright            : (C) 2005-2007 by Andre Simon
+    copyright            : (C) 2005-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

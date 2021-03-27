@@ -1,5 +1,5 @@
 /***************************************************************************
-                          TexGenerator.cpp  -  description
+                    TexGenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
     copyright            : (C) 2002-2021 by Andre Simon

@@ -2,7 +2,7 @@
                     odtgenerator.cpp  -  description
                              -------------------
     begin                : Jul 19 2012
-    copyright            : (C) 2012 by Andre Simon
+    copyright            : (C) 2012-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

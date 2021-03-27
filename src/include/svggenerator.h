@@ -1,8 +1,8 @@
 /***************************************************************************
-                          xmlcode.h  -  description
+                          SVGGenerator.h  -  description
                              -------------------
     begin                : Mo 23.06.2008
-    copyright            : (C) 2008 by Andre Simon
+    copyright            : (C) 2008-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

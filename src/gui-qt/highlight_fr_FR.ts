@@ -13,37 +13,38 @@
     <message>
         <location filename="mainwindow.cpp" line="141"/>
         <source>Could not read a colour theme: </source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de lire un thème de couleur : </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="145"/>
         <source>light</source>
-        <translation type="unfinished"></translation>
+        <translation>light</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="146"/>
         <source>dark</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>dark</translatorcomment>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="147"/>
         <source>B16 light</source>
-        <translation type="unfinished"></translation>
+        <translation>B16 light</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="148"/>
         <source>B16 dark</source>
-        <translation type="unfinished"></translation>
+        <translation>B16 dark</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="151"/>
         <source>Please select a Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Veuillez sélectionner un serveur</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="156"/>
         <source>Could not find LSP profiles. Check installation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de trouver les profils LSP. Vérifiez l&apos;installation.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="172"/>
@@ -53,12 +54,12 @@
     <message>
         <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS Short Names</source>
-        <translation type="unfinished"></translation>
+        <translation>Noms courts NTFS</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS short names may be disabled on your volumes. Highlight can not read input with multibyte file names if no short name is available. This information will no longer bother you.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les noms courts NTFS peuvent être désactivés sur vos volumes. Highlight ne peut pas lire les entrées avec des noms de fichiers à plusieurs octets si aucun nom court n&apos;est disponible. Cette information ne vous gênera plus.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="299"/>
@@ -156,7 +157,7 @@ Erreur de syntaxe Lua : %2</translation>
         <location filename="mainwindow.cpp" line="1730"/>
         <location filename="mainwindow.cpp" line="1741"/>
         <source>(user script)</source>
-        <translation type="unfinished"></translation>
+        <translation>(script de l&apos;utilisateur)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1757"/>
@@ -171,37 +172,37 @@ Erreur de syntaxe Lua : %2</translation>
     <message>
         <location filename="mainwindow.cpp" line="1761"/>
         <source>Current theme: %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème actuel : %1 %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1764"/>
         <source>Contrast: %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Contraste : %1 %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2216"/>
         <source>Language server initialization successful</source>
-        <translation type="unfinished"></translation>
+        <translation>Initialisation du serveur de langue réussie</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2221"/>
         <source>Language server connection failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de la connexion au serveur de langue</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2223"/>
         <source>Language server initialization failed</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;initialisation du serveur de langue a échoué</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2251"/>
         <source>Select workspace directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le répertoire de l&apos;espace de travail</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2255"/>
         <source>Choose the Language Server executable</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisissez l&apos;exécutable du Language Server</translation>
     </message>
     <message>
         <source>Current syntax: %1</source>
@@ -246,7 +247,7 @@ Veuillez m&apos;envoyer une note à l&apos;adresse « as (at) andre-simon (dot) 
     <message>
         <location filename="mainwindow.cpp" line="1945"/>
         <source>Select one or more syntax or theme scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner un ou plusieurs scripts de syntaxe ou de thème</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2005"/>
@@ -450,12 +451,12 @@ Veuillez m&apos;envoyer une note à l&apos;adresse « as (at) andre-simon (dot) 
     <message>
         <location filename="mainwindow.ui" line="513"/>
         <source>Only output the selected lines of the preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>N&apos;édite que les lignes sélectionnées de l&apos;aperçu.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="516"/>
         <source>Output selected lines only</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortie des lignes sélectionnées uniquement</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="541"/>
@@ -520,38 +521,38 @@ Veuillez m&apos;envoyer une note à l&apos;adresse « as (at) andre-simon (dot) 
     <message>
         <location filename="mainwindow.ui" line="683"/>
         <source>Scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Scripts</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="689"/>
         <source>Choose a custom syntax or theme script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisissez une syntaxe personnalisée ou un script de thème.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="692"/>
         <source>Add custom script to pool</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un script personnalisé au pool</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="706"/>
         <source>You can check one file of each type (syntax and theme) to override the default behaviour. If checked, the scripts will be watched for changes.</source>
         <oldsource>You can check one file of each type (syntax and theme) to override the default behaviour.</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Vous pouvez cocher un fichier de chaque type (syntaxe et thème) pour remplacer le comportement par défaut. Si cette option est cochée, les scripts seront surveillés pour détecter toute modification.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="715"/>
         <source>Remove the selected scripts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer les scripts sélectionnés.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="725"/>
         <source>Remove all scripts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimez tous les scripts.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="746"/>
         <source>Script description</source>
-        <translation type="unfinished"></translation>
+        <translation>Script description</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="964"/>
@@ -878,137 +879,137 @@ Le résultat doit correspondre à l&apos;encodage du fichier d&apos;entrée.</tr
     <message>
         <location filename="mainwindow.ui" line="396"/>
         <source>Copy highlighted code of the selected file into the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Copie le code en surbrillance du fichier sélectionné dans le presse-papiers.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="613"/>
         <source>Shows description of a selected plug-in script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Affiche la description d&apos;un script de plug-in sélectionné.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="743"/>
         <source>Shows description of a selected script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Affiche la description d&apos;un script sélectionné.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="757"/>
         <source>Configure the LSP Client</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurer le client LSP</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="764"/>
         <source>LSP</source>
-        <translation type="unfinished"></translation>
+        <translation>LSP</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="772"/>
         <source>Language Server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Serveur de langue :</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="779"/>
         <source>Select a Language Server profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez un profil de serveur de langue.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="796"/>
         <source>Executable:</source>
-        <translation type="unfinished"></translation>
+        <translation>Exécutable :</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="803"/>
         <source>Path of the server executable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Chemin de l&apos;exécutable du serveur.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="816"/>
         <source>Select the server executable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez l&apos;exécutable du serveur.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="830"/>
         <source>Print LSP messages to standard error</source>
-        <translation type="unfinished"></translation>
+        <translation>Imprimer les messages LSP sur l&apos;erreur standard</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="833"/>
         <source>Output Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Logs de sortie</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="840"/>
         <source>Start an initialization request.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lancer une demande d&apos;initialisation.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="843"/>
         <source>Check Capabilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier les capacités</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="861"/>
         <source>Workspace:</source>
-        <translation type="unfinished"></translation>
+        <translation>Espace de travail :</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="868"/>
         <source>The workspace directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le répertoire de l&apos;espace de travail.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="881"/>
         <source>Select the workspace directory of your project.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le répertoire de l&apos;espace de travail de votre projet.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="893"/>
         <source>Run hover requests to add tooltips to your output (HTML only).</source>
-        <translation type="unfinished"></translation>
+        <translation>Exécutez des requêtes de survol pour ajouter des infobulles à votre sortie (HTML uniquement).</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="896"/>
         <source>Hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Survol</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="906"/>
         <source>Improve token recognition with semantic highlighting.</source>
-        <translation type="unfinished"></translation>
+        <translation>Améliorer la reconnaissance de jetons grâce à la mise en évidence sémantique.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="909"/>
         <source>Semantic Highlighting</source>
-        <translation type="unfinished"></translation>
+        <translation>Highlighting sémantique</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="919"/>
         <source>Show syntax errors and messages (depends on output format).</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les erreurs de syntaxe et les messages (dépend du format de sortie).</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="922"/>
         <source>Show Syntax Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les erreurs de syntaxe</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1050"/>
         <source>ANSI ESC</source>
-        <translation type="unfinished"></translation>
+        <translation>ANSI ESC</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1055"/>
         <source>XTerm256 ESC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1060"/>
         <source>Truecolor ESC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1554"/>
         <source>Add an anchor to each line.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajoutez une ancre à chaque ligne.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1557"/>
@@ -1358,7 +1359,7 @@ Définir la largeur à 0 pour conserver les tabulations.</translation>
     <message>
         <location filename="mainwindow.ui" line="2536"/>
         <source>DejaVu Sans Mono</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2551"/>
@@ -1443,7 +1444,7 @@ Définir la largeur à 0 pour conserver les tabulations.</translation>
     <message>
         <location filename="mainwindow.ui" line="2667"/>
         <source>&amp;File access trace (W32)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1495,7 @@ Définir la largeur à 0 pour conserver les tabulations.</translation>
     <message>
         <location filename="io_report.ui" line="82"/>
         <source>Failed syntax tests:</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec des tests de syntaxe :</translation>
     </message>
 </context>
 <context>

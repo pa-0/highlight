@@ -19,37 +19,37 @@ Revise su instalación.</translation>
     <message>
         <location filename="mainwindow.cpp" line="141"/>
         <source>Could not read a colour theme: </source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede leer un tema de color: </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="145"/>
         <source>light</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="146"/>
         <source>dark</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="147"/>
         <source>B16 light</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="148"/>
         <source>B16 dark</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="151"/>
         <source>Please select a Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione un servidor</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="156"/>
         <source>Could not find LSP profiles. Check installation.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se encuentran los perfiles LSP. Compruebe la instalación.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="172"/>
@@ -60,27 +60,27 @@ Revise su instalacion.</translation>
     <message>
         <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS Short Names</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombres cortos de NTFS</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="296"/>
         <source>NTFS short names may be disabled on your volumes. Highlight can not read input with multibyte file names if no short name is available. This information will no longer bother you.</source>
-        <translation type="unfinished"></translation>
+        <translation>Los nombres cortos de NTFS pueden estar desactivados en sus volúmenes. Highlight no puede leer entradas con nombres de archivo multibyte si no hay un nombre corto disponible. Esta información ya no le molestará.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="299"/>
         <source>Always at your service</source>
-        <translation type="unfinished"></translation>
+        <translation>Siempre a su servicio</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="343"/>
         <source>Select one or more files to open</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione uno o varios archivos para abrirlos</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="380"/>
         <source>Select destination directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione el directorio de destino</translation>
     </message>
     <message>
         <source>Tags file error</source>
@@ -109,7 +109,7 @@ Revise su instalacion.</translation>
     <message>
         <location filename="mainwindow.cpp" line="1213"/>
         <source>Processing %1 (%2/%3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Procesando %1 (%2/%3)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1223"/>
@@ -136,13 +136,14 @@ Revise su instalacion.</translation>
     <message>
         <location filename="mainwindow.cpp" line="1231"/>
         <source>Lua error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error de Lua</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1231"/>
         <source>Could not convert %1:
 Lua Syntax error: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>No se pudo convertir %1:
+Error de sintaxis Lua: %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1406"/>
@@ -159,18 +160,18 @@ Lua Syntax error: %2</source>
         <location filename="mainwindow.cpp" line="1758"/>
         <location filename="mainwindow.cpp" line="1813"/>
         <source>clipboard data</source>
-        <translation type="unfinished"></translation>
+        <translation>datos del portapapeles</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1689"/>
         <source>%1 options</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 opciones</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1730"/>
         <location filename="mainwindow.cpp" line="1741"/>
         <source>(user script)</source>
-        <translation type="unfinished"></translation>
+        <translation>(guión del usuario)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1757"/>
@@ -185,37 +186,37 @@ Lua Syntax error: %2</source>
     <message>
         <location filename="mainwindow.cpp" line="1761"/>
         <source>Current theme: %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema actual: %1 %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1764"/>
         <source>Contrast: %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Contraste: %1 %2</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2216"/>
         <source>Language server initialization successful</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicialización del servidor de idiomas con éxito</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2221"/>
         <source>Language server connection failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Fallo en la conexión con el servidor de idiomas</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2223"/>
         <source>Language server initialization failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Fallo en la inicialización del servidor de idiomas</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2251"/>
         <source>Select workspace directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione el directorio del espacio de trabajo</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2255"/>
         <source>Choose the Language Server executable</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija el ejecutable de Language Server</translation>
     </message>
     <message>
         <source>Current syntax: %1</source>
@@ -229,7 +230,7 @@ Lua Syntax error: %2</source>
     <message>
         <location filename="mainwindow.cpp" line="2063"/>
         <source>Some plug-in effects may not be visible in the preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>Es posible que algunos efectos del plug-in no sean visibles en la vista previa.</translation>
     </message>
     <message>
         <source>Choose a ctags file</source>
@@ -246,7 +247,7 @@ Lua Syntax error: %2</source>
     <message>
         <location filename="mainwindow.cpp" line="1875"/>
         <source>About providing translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre el suministro de traducciones</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1876"/>
@@ -255,22 +256,26 @@ The highlight.ts file for Linguist resides in the src/gui-qt subdirectory.
 The qm file generated by lrelease has to be saved in gui-files/l10n.
 
 Please send a note to as (at) andre-simon (dot) de if you have issues during translating or if you have finished or updated a translation.</source>
-        <translation type="unfinished"></translation>
+        <translation>La interfaz gráfica de usuario se ha desarrollado con el kit de herramientas Qt, y las traducciones pueden realizarse con las herramientas Qt Linguist y lrelease.
+El archivo highlight.ts para Linguist reside en el subdirectorio src/gui-qt.
+El archivo qm generado por lrelease debe guardarse en gui-files/l10n.
+
+Por favor, envíe una nota a as (at) andre-simon (dot) de si tiene problemas durante la traducción o si ha terminado o actualizado una traducción.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1934"/>
         <source>Select one or more plug-ins</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione uno o más plug-ins</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1945"/>
         <source>Select one or more syntax or theme scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione uno o más scripts de sintaxis o de temas</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="2005"/>
         <source>Choose a plug-in input file</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija un archivo de entrada del plug-in</translation>
     </message>
 </context>
 <context>
@@ -363,7 +368,7 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
         <location filename="mainwindow.ui" line="984"/>
         <source>Output for&amp;mat:</source>
         <oldsource>Output format:</oldsource>
-        <translation type="unfinished">Formato de salida:</translation>
+        <translation>Formato de salida:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1006"/>
@@ -398,7 +403,7 @@ Please send a note to as (at) andre-simon (dot) de if you have issues during tra
     <message>
         <location filename="mainwindow.ui" line="1035"/>
         <source>ODT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1040"/>
@@ -754,7 +759,7 @@ Vea ctags.sf.net para más detalles.</translation>
     <message>
         <location filename="mainwindow.ui" line="1204"/>
         <source>Set encoding:</source>
-        <translation type="unfinished"></translation>
+        <translation>Establece la codificación:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="273"/>
@@ -767,7 +772,7 @@ Vea ctags.sf.net para más detalles.</translation>
         <location filename="mainwindow.ui" line="1816"/>
         <location filename="mainwindow.ui" line="2111"/>
         <source>Stylesheet file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivo de hoja de estilo:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1463"/>
@@ -775,370 +780,370 @@ Vea ctags.sf.net para más detalles.</translation>
         <location filename="mainwindow.ui" line="1846"/>
         <location filename="mainwindow.ui" line="2141"/>
         <source>Stylesheet include file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivo de inclusión de hojas de estilo:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="17"/>
         <source>Highlight</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="174"/>
         <source>Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivos</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="435"/>
         <source>Paste clipboard content into the preview window.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pegar el contenido del portapapeles en la ventana de vista previa.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="438"/>
         <source>Paste from clipboard (%1)</source>
         <oldsource>Paste from clipboard</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Pegar desde el portapapeles (%1)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="455"/>
         <source>Copy highlighted code into the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Copie el código resaltado en el portapapeles.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="419"/>
         <source>Select syntax:</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecciona la sintaxis:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="109"/>
         <source>Wi&amp;ndows</source>
         <oldsource>&amp;Windows</oldsource>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
         <source>H&amp;ighlighting options</source>
         <oldsource>Highlighting options</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Opciones de resaltado</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="329"/>
         <source>Browse output directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Examinar el directorio de salida</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="426"/>
         <source>Select the correct syntax of the code snippet.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione la sintaxis correcta del fragmento de código.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="458"/>
         <source>Copy preview to clipboard (%1)</source>
         <oldsource>Copy preview to clipboard</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Copiar vista previa en el portapapeles (%1)</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="481"/>
         <source>Paste code from clipboard and copy the output back in one step</source>
-        <translation type="unfinished"></translation>
+        <translation>Pegue el código desde el portapapeles y copie el resultado en un solo paso</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="487"/>
         <source>Paste, Convert and Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Pegar, convertir y copiar</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="513"/>
         <source>Only output the selected lines of the preview.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sólo se emiten las líneas seleccionadas de la vista previa.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="516"/>
         <source>Output selected lines only</source>
-        <translation type="unfinished"></translation>
+        <translation>Salida de las líneas seleccionadas solamente</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="541"/>
         <source>Plug-ins</source>
-        <translation type="unfinished"></translation>
+        <translation>Plug-ins</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="550"/>
         <source>Add plug-in to pool</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir el complemento al pool</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="601"/>
         <location filename="mainwindow.ui" line="737"/>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation>Descripción</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="616"/>
         <source>Plug-In description</source>
-        <translation type="unfinished"></translation>
+        <translation>Descripción del plug-in</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="644"/>
         <source>Plug-in parameter</source>
         <oldsource>Plug-in input file</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Parámetro del plug-in</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="653"/>
         <source>Optional plug-in parameter, this may be a path to a plug-in input file</source>
         <oldsource>Optional path to a plug-in input file</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Parámetro opcional del plug-in, puede ser una ruta a un archivo de entrada del plug-in</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="666"/>
         <source>Select the plug-in input file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione el archivo de entrada del plug-in.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="683"/>
         <source>Scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Scripts</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="689"/>
         <source>Choose a custom syntax or theme script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija una sintaxis personalizada o un script temático.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="692"/>
         <source>Add custom script to pool</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir un script personalizado al pool</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="706"/>
         <source>You can check one file of each type (syntax and theme) to override the default behaviour. If checked, the scripts will be watched for changes.</source>
         <oldsource>You can check one file of each type (syntax and theme) to override the default behaviour.</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Puede marcar un archivo de cada tipo (sintaxis y tema) para anular el comportamiento por defecto. Si se marca, se vigilarán los scripts en busca de cambios.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="715"/>
         <source>Remove the selected scripts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar los scripts seleccionados.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="725"/>
         <source>Remove all scripts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar todos los scripts.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="746"/>
         <source>Script description</source>
-        <translation type="unfinished"></translation>
+        <translation>Descripción del script</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="757"/>
         <source>Configure the LSP Client</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar el cliente LSP</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="764"/>
         <source>LSP</source>
-        <translation type="unfinished"></translation>
+        <translation>LSP</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="772"/>
         <source>Language Server:</source>
-        <translation type="unfinished"></translation>
+        <translation>Servidor de idiomas:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="779"/>
         <source>Select a Language Server profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione un perfil de Servidor de Idiomas.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="796"/>
         <source>Executable:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ejecutable:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="803"/>
         <source>Path of the server executable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ruta del ejecutable del servidor.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="816"/>
         <source>Select the server executable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione el ejecutable del servidor.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="830"/>
         <source>Print LSP messages to standard error</source>
-        <translation type="unfinished"></translation>
+        <translation>Imprimir los mensajes de LSP en el error estándar</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="833"/>
         <source>Output Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Registros de salida</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="840"/>
         <source>Start an initialization request.</source>
-        <translation type="unfinished"></translation>
+        <translation>Iniciar una solicitud de inicialización.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="843"/>
         <source>Check Capabilities</source>
-        <translation type="unfinished"></translation>
+        <translation>Comprobar las capacidades</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="861"/>
         <source>Workspace:</source>
-        <translation type="unfinished"></translation>
+        <translation>Espacio de trabajo:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="868"/>
         <source>The workspace directory.</source>
-        <translation type="unfinished"></translation>
+        <translation>El directorio del espacio de trabajo.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="881"/>
         <source>Select the workspace directory of your project.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione el directorio del espacio de trabajo de su proyecto.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="893"/>
         <source>Run hover requests to add tooltips to your output (HTML only).</source>
-        <translation type="unfinished"></translation>
+        <translation>Ejecutar peticiones hover para añadir tooltips a su salida (sólo HTML).</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="896"/>
         <source>Hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Hover</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="906"/>
         <source>Improve token recognition with semantic highlighting.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mejore el reconocimiento de tokens con el resaltado semántico.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="909"/>
         <source>Semantic Highlighting</source>
-        <translation type="unfinished"></translation>
+        <translation>Resaltado semántico</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="919"/>
         <source>Show syntax errors and messages (depends on output format).</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar errores de sintaxis y mensajes (depende del formato de salida).</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="922"/>
         <source>Show Syntax Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar errores de sintaxis</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1045"/>
         <source>BBCode</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1050"/>
         <source>ANSI ESC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1055"/>
         <source>XTerm256 ESC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1060"/>
         <source>Truecolor ESC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1102"/>
         <source>Set line numbering start.</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer el inicio de la numeración de las líneas.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1168"/>
         <source>Output any plug-in text injections even if document header and footer is omitted.</source>
-        <translation type="unfinished"></translation>
+        <translation>Imprime las inyecciones de texto del plug-in incluso si se omite el encabezado y el pie de página del documento.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1171"/>
         <source>Keep Plug-In injections</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantener las inyecciones Plug-In</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1189"/>
         <source>Generate output without version information comment.</source>
-        <translation type="unfinished"></translation>
+        <translation>Generar salida sin comentario de información de la versión.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1192"/>
         <source>Omit version info comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Omitir el comentario de información de la versión</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1201"/>
         <source>Set the output file encoding.</source>
-        <translation type="unfinished"></translation>
+        <translation>Establezca la codificación del archivo de salida.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1362"/>
         <source>Stylesheets</source>
-        <translation type="unfinished"></translation>
+        <translation>Hojas de estilo</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1547"/>
         <source>Line numbering options:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opciones de numeración de líneas:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1554"/>
         <source>Add an anchor to each line.</source>
-        <translation type="unfinished"></translation>
+        <translation>Añade un ancla a cada línea.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1577"/>
         <source>Output as ordered list</source>
-        <translation type="unfinished"></translation>
+        <translation>Salida como lista ordenada</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1604"/>
         <source>Enclose in pre tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Encerrar en etiquetas pre</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1618"/>
         <source>Add HTML MIME Type when copying code to the clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir el tipo MIME de HTML al copiar el código en el portapapeles</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1621"/>
         <source>Copy with MIME type</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia con tipo MIME</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1659"/>
         <source>Adapt output for the Babel package</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptar la salida del paquete Babel</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1662"/>
         <source>Add Babel compatibility</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir compatibilidad con Babel</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1669"/>
         <source>Adapt output for the Beamer package</source>
-        <translation type="unfinished"></translation>
+        <translation>Adaptar la salida del paquete Beamer</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1672"/>
         <source>Add Beamer compatibility</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir compatibilidad con Beamer</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1682"/>
         <source>Add pretty symbols</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir símbolos bonitos</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1762"/>
@@ -1156,33 +1161,34 @@ Vea ctags.sf.net para más detalles.</translation>
     <message>
         <location filename="mainwindow.ui" line="1923"/>
         <source>Set page color attribute to background color.</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer el atributo de color de la página al color de fondo.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2328"/>
         <source>Reformat and indent your code.
 This feature is enabled for C, C++, C# and Java code.</source>
-        <translation type="unfinished"></translation>
+        <translation>Reformatea y sangras tu código.
+Esta función está habilitada para código C, C++, C# y Java.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2536"/>
         <source>DejaVu Sans Mono</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2551"/>
         <source>Font si&amp;ze:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tamaño de fuente</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2662"/>
         <source>&amp;Plug-Ins</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2667"/>
         <source>&amp;File access trace (W32)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>TeX options</source>
@@ -1393,7 +1399,7 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <location filename="mainwindow.ui" line="2512"/>
         <source>Font na&amp;me:</source>
         <oldsource>Font name:</oldsource>
-        <translation type="unfinished">Nombre de la fuente:</translation>
+        <translation>&amp;Nombre de la fuente:</translation>
     </message>
     <message>
         <source>Select or enter the font name.</source>
@@ -1412,12 +1418,12 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <location filename="mainwindow.ui" line="2646"/>
         <source>&amp;Visit andre-simon.de</source>
         <oldsource>Visit andre-simon.de</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visite andre-simon.de</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2657"/>
         <source>&amp;Dock floating panels</source>
-        <translation type="unfinished"></translation>
+        <translation>Paneles &amp;flotantes para muelles</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="30"/>
@@ -1446,33 +1452,33 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
     <message>
         <location filename="mainwindow.ui" line="399"/>
         <source>Copy file to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar archivo en el portapapeles</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="547"/>
         <source>Choose a plug-in script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija una secuencia de comandos plug-in.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="561"/>
         <source>List of plug-ins. Toggle checkbox to enable the scripts. The preview window may not display all plug-in effects.</source>
         <oldsource>List of plug-ins. Toggle checkbox to enable the scripts.</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Lista de plug-ins. Marque la casilla para activar los scripts. Es posible que la ventana de vista previa no muestre todos los efectos de los plug-ins.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="579"/>
         <source>Remove the selected plug-ins.</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar los plug-ins seleccionados.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="589"/>
         <source>Remove all plug-ins.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimine todos los plug-ins.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="58"/>
         <source>Output progress:</source>
-        <translation type="unfinished"></translation>
+        <translation>Progreso de la salida:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="86"/>
@@ -1487,42 +1493,42 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
     <message>
         <location filename="mainwindow.ui" line="396"/>
         <source>Copy highlighted code of the selected file into the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar el código resaltado del archivo seleccionado en el portapapeles.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="613"/>
         <source>Shows description of a selected plug-in script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muestra la descripción de un script plug-in seleccionado.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="743"/>
         <source>Shows description of a selected script.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muestra la descripción de un script seleccionado.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="1926"/>
         <source>Set page color</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer el color de la página</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2019"/>
         <source>I&amp;mage width:</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ancho de la imagen:</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2498"/>
         <source>Do not add line numbering to lines which were automatically wrapped.</source>
-        <translation type="unfinished"></translation>
+        <translation>No añada la numeración de líneas a las líneas que se envolvieron automáticamente.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2501"/>
         <source>Omit line numbers of wrapped lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Omitir los números de línea de las líneas envueltas</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2533"/>
         <source>Select or enter the font name. HTML supports a list of fonts, separated with comma.</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione o introduzca el nombre de la fuente. HTML admite una lista de fuentes, separadas por comas.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2588"/>
@@ -1553,7 +1559,7 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <location filename="mainwindow.ui" line="2613"/>
         <source>&amp;Readme</source>
         <oldsource>Readme</oldsource>
-        <translation type="unfinished">Leeme</translation>
+        <translation>&amp;Léeme</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="2618"/>
@@ -1579,7 +1585,7 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
         <location filename="mainwindow.ui" line="2641"/>
         <source>A&amp;bout translations</source>
         <oldsource>About &amp;translations</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sobre las traducciones</translation>
     </message>
 </context>
 <context>
@@ -1630,7 +1636,7 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
     <message>
         <location filename="io_report.ui" line="82"/>
         <source>Failed syntax tests:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pruebas de sintaxis fallidas:</translation>
     </message>
 </context>
 <context>
@@ -1638,38 +1644,39 @@ En caso de ser 0 se mantendrán los tabuladores.</translation>
     <message>
         <location filename="syntax_chooser.ui" line="14"/>
         <source>Syntax selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Selección de sintaxis</translation>
     </message>
     <message>
         <location filename="syntax_chooser.ui" line="32"/>
         <source>Select correct syntax</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione la sintaxis correcta</translation>
     </message>
     <message>
         <location filename="syntax_chooser.ui" line="50"/>
         <source>TextLabel</source>
-        <translation type="unfinished">EtiquetaDeTexto</translation>
+        <translation>EtiquetaDeTexto</translation>
     </message>
     <message>
         <location filename="syntax_chooser.ui" line="74"/>
         <source>These entries are configured in filetypes.conf.</source>
-        <translation type="unfinished"></translation>
+        <translation>Estas entradas se configuran en filetypes.conf.</translation>
     </message>
     <message>
         <location filename="syntax_chooser.ui" line="81"/>
         <source>The selection will be remembered for this session.</source>
-        <translation type="unfinished"></translation>
+        <translation>La selección se recordará para esta sesión.</translation>
     </message>
     <message>
         <location filename="syntax_chooser.ui" line="84"/>
         <source>Remember selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Recuerde la selección</translation>
     </message>
     <message>
         <location filename="syntax_chooser.cpp" line="57"/>
         <source>The file extension %1 is assigned to multiple syntax definitions.
 Select the correct one:</source>
-        <translation type="unfinished"></translation>
+        <translation>La extensión de archivo %1 está asignada a múltiples definiciones de sintaxis.
+Seleccione la correcta:</translation>
     </message>
 </context>
 </TS>

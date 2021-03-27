@@ -2,7 +2,7 @@
                      XHtmlGenerator.cpp  -  description
                              -------------------
     begin                : Wed Nov 28 2001
-    copyright            : (C) 2001 by Andre Simon
+    copyright            : (C) 2001-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

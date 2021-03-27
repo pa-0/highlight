@@ -2,7 +2,7 @@
                           themereader.cpp  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
                           latexgenerator.h  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -123,9 +123,9 @@ private:
 
     /** test if symbols like <,>,{,},~ should be replaced by nicer definitions */
     bool prettySymbols;
-    
+
     bool beamerMode;
-    
+
     string getNewLine();
 
     string getStyleDefinition();

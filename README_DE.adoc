@@ -779,11 +779,11 @@ LineNum        = Attributes (Zeilennummern)
 
 Operator       = Attributes (Operatoren)
 
-Hover          = Attibutes (LSP Hover Elemente)
+Hover          = Attributes (LSP Hover Elemente)
 
-Error          = Attibutes (LSP Syntaxfehler)
+Error          = Attributes (LSP Syntaxfehler)
 
-ErrorMessage   = Attibutes (LSP Fehlerbeschreibungen)
+ErrorMessage   = Attributes (LSP Fehlerbeschreibungen)
 
 Keywords= {
   Attributes1,

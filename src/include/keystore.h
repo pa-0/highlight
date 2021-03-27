@@ -2,7 +2,7 @@
                           keystore.h  -  description
                              -------------------
     begin                : Sat Aug 05 2020
-    copyright            : (C) 2002-2020 by Andre Simon
+    copyright            : (C) 2002-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -48,7 +48,7 @@ public:
 
     /** maps keys to values to be accessed in Lua Code*/
     static map <string, string> keyStoreMap;
-    
+
     static int luaStore (lua_State *L);
 };
 

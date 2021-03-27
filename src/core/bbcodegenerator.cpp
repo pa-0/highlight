@@ -2,7 +2,7 @@
                     bbcodegenerator.cpp  -  description
                              -------------------
     begin                : Jul 21 2009
-    copyright            : (C) 2004-2016 by Andre Simon
+    copyright            : (C) 2004-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

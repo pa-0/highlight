@@ -2,7 +2,7 @@
                          xhtmlgenerator.h  -  description
                              -------------------
     begin                : Mo Jun 21 2004
-    copyright            : (C) 2004 by Andre Simon
+    copyright            : (C) 2004-2021 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

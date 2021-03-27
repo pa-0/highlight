@@ -2113,7 +2113,7 @@ QString MainWindow::getDistPluginPath(){
 
 QString MainWindow::getDistFileConfigPath(QString name){
 #ifdef Q_OS_OSX
-    return QDir::toNativeSeparators(QString("%1/../Resources/filetypes.conf").arg(QCoreApplication::applicationDirPath()));
+    return QDir::toNativeSeparators(QString("%1/../Resources/%2").arg(QCoreApplication::applicationDirPath()).arg(name));
 #else
     #ifdef CONFIG_DIR
     return QDir::toNativeSeparators(QString("%1/%2").arg(CONFIG_DIR).arg(name));

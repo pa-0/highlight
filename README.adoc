@@ -772,11 +772,11 @@ LineNum        = Attributes (line numbers)
 
 Operator       = Attributes (operators)
 
-Hover          = Attibutes (LSP Hover elements)
+Hover          = Attributes (LSP Hover elements)
 
-Error          = Attibutes (LSP syntax errors)
+Error          = Attributes (LSP syntax errors)
 
-ErrorMessage   = Attibutes (LSP error descriptions)
+ErrorMessage   = Attributes (LSP error descriptions)
 
 Keywords= {
   Attributes1,
