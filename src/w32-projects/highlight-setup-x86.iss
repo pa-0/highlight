@@ -5,7 +5,7 @@
 AppName=Highlight Code Converter
 
 AppVerName=Highlight
-OutputBaseFilename=highlight-setup-3.59-x64
+OutputBaseFilename=highlight-setup-4.0-x64
 
 AppPublisher=André Simon
 AppPublisherURL=http://www.andre-simon.de
@@ -28,7 +28,6 @@ Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "A
 
 [Files]
 Source: "..\..\highlight-gui.exe"; DestDir: "{app}";  Flags: ignoreversion
-;Source: "dlls\x64\*.dll"; DestDir: "{app}";  Flags: ignoreversion
 Source: "hl_icon_exe.ico"; DestDir: "{app}";  Flags: ignoreversion
 Source: "..\..\langDefs\*.lang"; DestDir: "{app}\langDefs\";  Flags: ignoreversion sortfilesbyextension
 Source: "..\..\themes\*.theme"; DestDir: "{app}\themes\";  Flags: ignoreversion sortfilesbyextension
@@ -53,18 +52,15 @@ Source: "..\..\extras\pandoc\*.*";  DestDir: "{app}\extras\pandoc";  Flags: igno
 Source: "..\..\extras\langDefs-resources\*.*";  DestDir: "{app}\extras\";  Flags: ignoreversion; Components: sourcecode;
 Source: "..\..\extras\themes-resources\base16\*.*";  DestDir: "{app}\extras\themes-resources\";  Flags: ignoreversion;Components: sourcecode;
 Source: "..\..\extras\themes-resources\css-themes\*.*";  DestDir: "{app}\extras\themes-resources\";  Flags: ignoreversion;Components: sourcecode;
-Source: "..\..\extras\web_plugins\dokuwiki\*.*";  DestDir: "{app}\extras\plugins\dokuwiki\";  Flags: ignoreversion; Components: sourcecode;
-Source: "..\..\extras\web_plugins\movabletype\*.*";  DestDir: "{app}\extras\plugins\movabletype\";  Flags: ignoreversion; Components: sourcecode;
-Source: "..\..\extras\web_plugins\wordpress\*.*";  DestDir: "{app}\extras\plugins\wordpress";  Flags: ignoreversion; Components: sourcecode;
-Source: "..\..\extras\web_plugins\serendipity_event_highlight\*.*";  DestDir: "{app}\extras\plugins\serendipity_event_highlight";  Flags: ignoreversion;  Components: sourcecode;
-
 
 Source: "..\..\highlight.exe";   DestDir: "{app}";  Flags: ignoreversion; Components: cli;
 Source: "..\..\man\*.*";  DestDir: "{app}\man\";  Flags: ignoreversion; Components: cli;
 
 Source: "..\include\*.*";  DestDir: "{app}\src\include\";  Flags: ignoreversion; Components: sourcecode;
 Source: "..\include\astyle\*.*";  DestDir: "{app}\src\include\astyle\";  Flags: ignoreversion; Components: sourcecode;
-Source: "..\include\Diluculum\*.*";  DestDir: "{app}\src\include\Diluculum\";  Flags: ignoreversion; Components: sourcecode;
+Source: "..\include\Diluculum\*.*"; DestDir: "{app}\src\include\Diluculum\";  Flags: ignoreversion; Components: sourcecode;
+Source: "..\include\picojson\*.*"; DestDir: "{app}\src\include\picojson\";  Flags: ignoreversion; Components: sourcecode;
+
 Source: "..\core\*.*";  Excludes: "*.o,*.depend"; DestDir: "{app}\src\core\";  Flags: ignoreversion; Components: sourcecode;
 Source: "..\core\astyle\*.*";  Excludes: "*.o"; DestDir: "{app}\src\core\astyle\";  Flags: ignoreversion; Components: sourcecode;
 Source: "..\core\Diluculum\*.*";  Excludes: "*.o"; DestDir: "{app}\src\core\Diluculum\";  Flags: ignoreversion; Components: sourcecode;
