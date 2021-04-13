@@ -9,9 +9,10 @@ Content
 3. Compilation and installation
 4. Known compiler issues
 5. LaTeX unicode support
-6. Lazy pointer issue under MacOS X
-7. Static linking (to run highlight as service)
-8. Known distribution issues
+6. MacOS X - brew package ignores new filetypes.conf
+7. MacOS X - lazy pointer issue
+8. Static linking (to run highlight as service)
+9. Known distribution issues
 
 
 1. Package structure
@@ -239,8 +240,19 @@ Fedora: tetex-unicode
 SuSE:   latex-ucs
 
 
-6. Lazy pointer issue under MacOS X
-===================================
+6. MacOS X - brew package ignores new filetypes.conf
+====================================================
+
+If file suffixes like js, coffee, rs are no longer recognized, filetypes.conf might be out of date.<br>
+Upgrade thr config like this:
+
+cd $(brew --prefix)/etc/highlight
+mv filetypes.conf filetypes.conf.bak
+mv filetypes.conf.default filetypes.conf
+
+
+7. MacOS X - lazy pointer issue
+===============================
 
 Stripping the highlight binary causes program termination at runtime:
 
@@ -252,14 +264,14 @@ To avoid this issue, edit the makefile to not strip the binary after
 linkage (see src/makefile, LDFLAGS variable).
 
 
-7. Static linking (to run highlight as service)
+8. Static linking (to run highlight as service)
 ===============================================
 
 If highlight cannot be run as service because of shared linkage, link
 it with the -static option (see src/makefile, LDFLAGS variable).
 
 
-8. Known distribution issues
+9. Known distribution issues
 ============================
 
 Linux Mint
@@ -275,7 +287,6 @@ See bug tracker items: https://bugs.launchpad.net/linuxmint/+bug/593583 and
 
 
 OpenSUSE Leap 42.2
-==================
 
 The lua-devel package installation causes error messages.
 Workaround: ignore dependency conflict.
