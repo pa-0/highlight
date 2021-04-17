@@ -50,17 +50,16 @@ SemanticTokenTypes  = {
 
 --Error = { Custom = { { Format = "html", Style = "color: blue", Override = true } } }
 
---[[ErrorMessage = { Custom = {
-                           { Format = "html", Style = "color: blue", Override = true } ,
-                           {Format = "latex", Style = "\\marginpar{\\small\\itshape\\color{blue}#1}", Override = false }
-                 }
-               }
+--[[
+ErrorMessage = { Custom = {
+  { Format = "html", Style = "color: blue", Override = true } ,
+  { Format = "latex", Style = "\\marginpar{\\small\\itshape\\color{blue}#1}", Override = false } }
+}
 ]]
 
 --Hover = { Custom = { { Format = "html", Style = "cursor:help", Override = true } } }
 
 -- not used yet:
-
 SemanticTokenModifiers  = {
   { Type = 'declaration', Style = { Colour= "#ff9421" } },
   { Type = 'definition', Style = { Colour= "#ff9421" } },
