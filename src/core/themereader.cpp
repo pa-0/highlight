@@ -73,7 +73,13 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
         while (var["Custom"][idx].value() !=Diluculum::Nil) {
 
             if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
+
                 style.setCustomStyle (var["Custom"][idx]["Style"].value().asString() );
+
+                if (var["Custom"][idx]["Override"].value()!=Diluculum::Nil) {
+                    style.setCustomOverride (var["Custom"][idx]["Override"].value().asBoolean() );
+                }
+
                 return;
             }
             idx++;
@@ -171,16 +177,14 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         errorMessages.setColour(Colour("#ff0000"));
 
         if (outputType==HTML || outputType==XHTML) {
+            hover.setCustomOverride(true);
             hover.setCustomStyle ("cursor:help");
-            errorMessages.setCustomStyle ("color:red; border:solid 1px red; margin-left: 3em");
-
-            ostringstream lineColourFmt;
-            Colour lineColour = line.getColour();
-            lineColourFmt << "#"<<lineColour.getRed(HTML)<<lineColour.getGreen(HTML)<<lineColour.getBlue(HTML);
-            line.setCustomStyle("user-select: none; color: " + lineColourFmt.str());
+            errorMessages.setCustomStyle ("border:solid 1px red; margin-left: 3em");
+            line.setCustomStyle("user-select: none");
         }
 
         if (outputType==LATEX) {
+            errorMessages.setCustomOverride(true);
             errorMessages.setCustomStyle ("\\marginpar{\\small\\itshape\\color{red}#1}");
         }
 
@@ -197,6 +201,10 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         if (ls["Error"].value() !=Diluculum::Nil){
             initStyle(errors, ls["Error"]);
         }
+
+
+        keywordStyles.clear();
+        semanticStyleMap.clear();
 
         int idx=1;
         ElementStyle kwStyle;
@@ -219,8 +227,6 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
                 snprintf(kwName, sizeof(kwName), "st%c", ('a'+idx+-1));
                 keywordStyles.insert ( make_pair ( string(kwName), kwStyle ));
                 semanticStyleMap[ls["SemanticTokenTypes"][idx]["Type"].value().asString()] = keywordStyleCnt + idx;
-                //std::cerr<<"semanticStyleMap "<< (ls["SemanticTokenTypes"][idx]["Type"].value().asString()) << " -> "<< keywordStyleCnt + idx<<"\n";
-
                 idx++;
             }
         }

@@ -118,13 +118,11 @@ string SVGGenerator::getAttributes ( const string & elemName,
 {
     ostringstream s;
 
-    string customStyle(elem.getCustomStyle());
-
     if ( !elemName.empty() ) {
         s << elemName << " { ";
     }
 
-    if (customStyle.empty()) {
+    if (!elem.getCustomOverride()) {
         s   << "fill:#"
             << ( elem.getColour().getRed ( HTML ) )
             << ( elem.getColour().getGreen ( HTML ) )
@@ -132,9 +130,17 @@ string SVGGenerator::getAttributes ( const string & elemName,
             << ( elem.isBold() ?     "; font-weight:bold" :"" )
             << ( elem.isItalic() ?   "; font-style:italic" :"" )
             << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
-    } else {
+    }
+
+    string customStyle(elem.getCustomStyle());
+
+    if (!customStyle.empty()) {
+        if (!elem.getCustomOverride()) {
+            s << "; ";
+        }
         s << customStyle;
     }
+
     if ( !elemName.empty() ) {
         s << "; }\n" ;
     }

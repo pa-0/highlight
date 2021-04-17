@@ -182,7 +182,7 @@ void HtmlGenerator::initOutputTags ()
 
 }
 
-string  HtmlGenerator::getAttributes ( const string & elemName, const ElementStyle & elem )
+string HtmlGenerator::getAttributes ( const string & elemName, const ElementStyle & elem )
 {
     ostringstream s;
     if ( !elemName.empty() ) {
@@ -191,17 +191,22 @@ string  HtmlGenerator::getAttributes ( const string & elemName, const ElementSty
         s <<"."<<elemName<<" { ";
     }
 
+    if (!elem.getCustomOverride()) {
+        s << "color:#"
+            << ( elem.getColour().getRed ( HTML ) )
+            << ( elem.getColour().getGreen ( HTML ) )
+            << ( elem.getColour().getBlue ( HTML ) )
+            << ( elem.isBold() ?     "; font-weight:bold" :"" )
+            << ( elem.isItalic() ?   "; font-style:italic" :"" )
+            << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
+    }
+
     string customStyle(elem.getCustomStyle());
 
-    if (customStyle.empty()) {
-        s << "color:#"
-        << ( elem.getColour().getRed ( HTML ) )
-        << ( elem.getColour().getGreen ( HTML ) )
-        << ( elem.getColour().getBlue ( HTML ) )
-        << ( elem.isBold() ?     "; font-weight:bold" :"" )
-        << ( elem.isItalic() ?   "; font-style:italic" :"" )
-        << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
-    } else {
+    if (!customStyle.empty()) {
+        if (!elem.getCustomOverride()) {
+            s << "; ";
+        }
         s << customStyle;
     }
 
@@ -211,12 +216,12 @@ string  HtmlGenerator::getAttributes ( const string & elemName, const ElementSty
     return s.str();
 }
 
-string  HtmlGenerator::getOpenTag ( const string& styleName )
+string HtmlGenerator::getOpenTag ( const string& styleName )
 {
     return "<span class=\"" + (cssClassName.empty() ? "":cssClassName+ " ")  + styleName + "\">";
 }
 
-string  HtmlGenerator::getOpenTag ( const ElementStyle & elem )
+string HtmlGenerator::getOpenTag ( const ElementStyle & elem )
 {
     return "<span style=\""+getAttributes ( "", elem ) + "\">";
 }

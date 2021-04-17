@@ -197,19 +197,17 @@ string LatexGenerator::getAttributes ( const string & elemName,
 {
     ostringstream s;
 
-    string customStyle(elem.getCustomStyle());
-
     s  << "\\newcommand{\\hl"
     << elemName
     << "}[1]{";
 
-    if (customStyle.empty()) {
+    if (!elem.getCustomOverride()) {
 
         s   <<"\\textcolor[rgb]{"
-            << elem.getColour().getRed ( LATEX ) << ","
-            << elem.getColour().getGreen ( LATEX ) << ","
-            << elem.getColour().getBlue ( LATEX )
-            << "}{";
+        << elem.getColour().getRed ( LATEX ) << ","
+        << elem.getColour().getGreen ( LATEX ) << ","
+        << elem.getColour().getBlue ( LATEX )
+        << "}{";
 
         if ( elem.isBold() )
             s << "\\bf{";
@@ -224,12 +222,17 @@ string LatexGenerator::getAttributes ( const string & elemName,
             s << "}";
 
         s  <<"}";
-    } else {
+    }
+
+    string customStyle(elem.getCustomStyle());
+    if (!customStyle.empty()) {
         s << customStyle;
     }
+
     s  <<"}\n";
     return s.str();
 }
+
 
 
 string LatexGenerator::getNewLine()

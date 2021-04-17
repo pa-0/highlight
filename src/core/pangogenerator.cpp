@@ -41,18 +41,23 @@ string PangoGenerator::getAttributes ( const ElementStyle & elem )
 {
     ostringstream s;
 
-    string customStyle(elem.getCustomStyle());
-
-    if (customStyle.empty()) {
+    if (!elem.getCustomOverride()) {
         s << "foreground=\"#"
         << ( elem.getColour().getRed ( HTML ) )
         << ( elem.getColour().getGreen ( HTML ) )
         << ( elem.getColour().getBlue ( HTML ) )
         << "\""
-        << ( elem.isBold() ?     " weight=\"bold\"" :"" )
-        << ( elem.isItalic() ?   " style=\"italic\"" :"" )
+        << ( elem.isBold() ? " weight=\"bold\"" :"" )
+        << ( elem.isItalic() ? " style=\"italic\"" :"" )
         << ( elem.isUnderline() ? " underline=\"single\"" :"" );
-    } else {
+    }
+
+    string customStyle(elem.getCustomStyle());
+
+    if (!customStyle.empty()) {
+        if (!elem.getCustomOverride()) {
+            s << " ";
+        }
         s << customStyle;
     }
 

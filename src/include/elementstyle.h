@@ -65,6 +65,7 @@ public:
         bold = other.isBold();
         italic = other.isItalic();
         underline = other.isUnderline();
+        customOverride = other.getCustomOverride();
         customStyle = other.getCustomStyle();
     }
 
@@ -75,6 +76,7 @@ public:
         bold = other.isBold();
         italic = other.isItalic();
         underline = other.isUnderline();
+        customOverride = other.getCustomOverride();
         customStyle = other.getCustomStyle();
 
         return *this;
@@ -100,43 +102,31 @@ public:
     bool isUnderline() const;
 
     /** \param b set italic flag */
-    void setItalic ( bool b )
-    {
-        italic = b;
-    }
+    void setItalic ( bool b );
 
     /** \param b set bold flag */
-    void setBold ( bool b )
-    {
-        bold = b;
-    }
+    void setBold ( bool b );
 
     /** \param b set underline flag */
-    void setUnderline ( bool b )
-    {
-        underline = b;
-    }
+    void setUnderline ( bool b );
 
     /** \return Element colour */
     Colour getColour() const;
 
     /** \param col colour of this element */
-    void setColour (const Colour& col )
-    {
-        colour = col;
-    }
+    void setColour (const Colour& col );
 
-    std::string getCustomStyle() const {
-        return customStyle;
-    }
+    std::string getCustomStyle() const;
 
-    void setCustomStyle(const string & style) {
-        customStyle = style;
-    }
+    void setCustomStyle(const string & style);
+
+    bool getCustomOverride() const;
+
+    void setCustomOverride(bool override);
 
 private:
     Colour colour;
-    bool bold, italic, underline;
+    bool bold, italic, underline, customOverride;
     std::string customStyle;
 };
 

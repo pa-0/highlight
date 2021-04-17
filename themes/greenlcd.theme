@@ -28,6 +28,8 @@ Keywords = {
 
 Error = { Colour = "#f200cc" }
 
+ErrorMessage = { Custom = { { Format = "html", Style = "color: #f200cc; border:solid 1px #f200cc; margin-left: 3em", Override = true } } }
+
 -- new LSP based elements:
 
 SemanticTokenTypes  = {

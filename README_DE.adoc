@@ -1,6 +1,6 @@
 = HIGHLIGHT HANDBUCH
 André Simon
-v4.0, March 2021
+v4.1, April 2021
 :lang: de
 :toc: left
 :toc-title: Contents
@@ -746,7 +746,7 @@ Colour::    String, Farbe in Hex-Notation (`#rrggbb`)
 Bold::      Boolean, True wenn Font bold sein soll (optional)
 Italic::    Boolean, True wenn Font kursiv sein soll (optional)
 Underline:: Boolean, True wenn Font unterstrichen sein soll (optional)
-Custom::    Array, enthaelt `Format` und `Style` Attribute fuer spezielle Formatierungen
+Custom::    Array, enthaelt `Format`, `Style` und `Override` Attribute fuer spezielle Formatierungen
 
 ==== Theme-Elemente
 
@@ -856,6 +856,12 @@ SemanticTokenTypes = {
   { Type = 'regexp', Style = String },
   { Type = 'operator', Style = Operator },
 }
+
+--ErrorMessage = {
+--  Custom = {
+--    { Format = "html", Style = "color: blue; border:solid 1px blue; margin-left: 3em", Override = true }
+--  }
+--}
 --------------------------------------------------------------------------------
 
 

@@ -79,13 +79,11 @@ string TexGenerator::getAttributes ( const string & elemName,const ElementStyle 
 {
     ostringstream s;
 
-    string customStyle(elem.getCustomStyle());
-
     s   << "\\def\\hl"
         << elemName
         << "{";
 
-    if (customStyle.empty()) {
+    if (!elem.getCustomOverride()) {
 
         if ( elem.isBold() )  s << "\\bf";
         if ( elem.isItalic() )  s << "\\it";
@@ -93,7 +91,11 @@ string TexGenerator::getAttributes ( const string & elemName,const ElementStyle 
             << ( elem.getColour().getRed ( TEX ) ) <<" "
             << ( elem.getColour().getGreen ( TEX ) ) <<" "
             << ( elem.getColour().getBlue ( TEX ) ) <<" 0.0}";
-    } else {
+    }
+
+    string customStyle(elem.getCustomStyle());
+
+    if (!customStyle.empty()) {
         s << customStyle;
     }
 

@@ -30,17 +30,17 @@ namespace highlight
 {
 
 ElementStyle::ElementStyle (const Colour &col, bool b, bool i, bool u )
-    : colour ( col ) , bold ( b ), italic ( i ), underline ( u )
+: colour ( col ) , bold ( b ), italic ( i ), underline ( u ), customOverride(false)
 {}
 
 ElementStyle:: ElementStyle ( const string & elementStyleString )
-    : bold ( false ), italic ( false ), underline ( false )
+: bold ( false ), italic ( false ), underline ( false ), customOverride(false)
 {
     set ( elementStyleString );
 }
 
 ElementStyle::ElementStyle()
-    : bold ( false ), italic ( false ), underline ( false )
+: bold ( false ), italic ( false ), underline ( false ), customOverride(false)
 {}
 
 void ElementStyle::set ( const string & elementStyleString )
@@ -97,6 +97,44 @@ bool ElementStyle::isUnderline() const
 Colour ElementStyle::getColour() const
 {
     return colour;
+}
+
+void ElementStyle::setItalic ( bool b )
+{
+    italic = b;
+}
+
+/** \param b set bold flag */
+void ElementStyle::setBold ( bool b )
+{
+    bold = b;
+}
+
+/** \param b set underline flag */
+void ElementStyle::setUnderline ( bool b )
+{
+    underline = b;
+}
+
+void ElementStyle::setColour (const Colour& col )
+{
+    colour = col;
+}
+
+std::string ElementStyle::getCustomStyle() const {
+    return customStyle;
+}
+
+void ElementStyle::setCustomStyle(const string & style) {
+    customStyle = style;
+}
+
+bool ElementStyle::getCustomOverride() const {
+    return customOverride;
+}
+
+void ElementStyle::setCustomOverride(bool override) {
+    customOverride = override;
 }
 
 }
