@@ -66,6 +66,8 @@ OutputType ThemeReader::getOutputType(const string &typeDesc) {
 void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& var)
 {
 
+    style.setCustomStyle(""); // Init with a default value.
+
     if (var["Custom"].value()!=Diluculum::Nil) {
 
         int idx=1;
@@ -75,12 +77,8 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
             if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
 
                 style.setCustomStyle (var["Custom"][idx]["Style"].value().asString() );
-
-                if (var["Custom"][idx]["Override"].value()!=Diluculum::Nil) {
-                    style.setCustomOverride (var["Custom"][idx]["Override"].value().asBoolean() );
-                }
-
-                return;
+                style.setCustomOverride ( true );
+                break;
             }
             idx++;
         }
@@ -89,22 +87,30 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
     string styleColor="#000000";
     bool styleBold=false, styleItalic=false, styleUnderline=false;
 
-    if (var["Colour"].value()!=Diluculum::Nil)
+    if (var["Colour"].value()!=Diluculum::Nil) {
         styleColor= var["Colour"].value().asString();
-    if (var["Bold"].value()!=Diluculum::Nil)
+        style.setCustomOverride(false);
+    }
+
+    if (var["Bold"].value()!=Diluculum::Nil) {
         styleBold= var["Bold"].value().asBoolean();
-    if (var["Italic"].value()!=Diluculum::Nil)
+        style.setCustomOverride(false);
+    }
+
+    if (var["Italic"].value()!=Diluculum::Nil) {
         styleItalic= var["Italic"].value().asBoolean();
-    if (var["Underline"].value()!=Diluculum::Nil)
+        style.setCustomOverride(false);
+    }
+
+    if (var["Underline"].value()!=Diluculum::Nil) {
         styleUnderline= var["Underline"].value().asBoolean();
+        style.setCustomOverride(false);
+    }
 
     style.setColour(Colour(styleColor));
     style.setBold(styleBold);
     style.setItalic(styleItalic);
     style.setUnderline(styleUnderline);
-
-    if (var["Underline"].value()!=Diluculum::Nil)
-        styleUnderline= var["Underline"].value().asBoolean();
 }
 
 bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bool loadSemanticStyles)
@@ -180,7 +186,10 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             hover.setCustomOverride(true);
             hover.setCustomStyle ("cursor:help");
             errorMessages.setCustomStyle ("border:solid 1px red; margin-left: 3em");
-            line.setCustomStyle("user-select: none");
+
+            if (line.getCustomStyle().empty()) {
+                line.setCustomStyle("user-select: none");
+            }
         }
 
         if (outputType==LATEX) {
@@ -201,7 +210,6 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
         if (ls["Error"].value() !=Diluculum::Nil){
             initStyle(errors, ls["Error"]);
         }
-
 
         keywordStyles.clear();
         semanticStyleMap.clear();

@@ -739,7 +739,7 @@ Colour::    String, defines colour in HTML hex notation (`#rrggbb`)
 Bold::      Boolean, true if font should be bold (optional)
 Italic::    Boolean, true if font should be italic (optional)
 Underline:: Boolean, true if font should be underlined (optional)
-Custom::    Array, contains `Format`, `Style` and `Override` for custom styles
+Custom::    Array, contains `Format` and `Style` for custom styles
 
 ==== Theme elements
 
@@ -843,7 +843,7 @@ SemanticTokenTypes = {
 
 --ErrorMessage = {
 --  Custom = {
---    { Format = "html", Style = "color: blue; border:solid 1px blue; margin-left: 3em", Override = true }
+--    { Format = "html", Style = "color: blue; border:solid 1px blue; margin-left: 3em" }
 --  }
 --}
 --------------------------------------------------------------------------------

@@ -16,6 +16,9 @@ Operator       = { Colour="#2fe7a9" }
 LineComment = BlockComment
 Interpolation  = Escape
 
+Error = { Colour = "#f200cc" }
+ErrorMessage = { Colour="#2fe7a9", Custom = { { Format = "html", Style = "color:#f200cc; border:solid 1px #f200cc; margin-left: 3em" } } }
+
 Keywords = {
   { Colour= "#00ed00", Bold=true },
   { Colour= "#00ed00" },
@@ -24,11 +27,6 @@ Keywords = {
   { Colour= "#73ffde" },
   { Colour= "#c6ff73" },
 }
-
-
-Error = { Colour = "#f200cc" }
-
-ErrorMessage = { Custom = { { Format = "html", Style = "color: #f200cc; border:solid 1px #f200cc; margin-left: 3em", Override = true } } }
 
 -- new LSP based elements:
 

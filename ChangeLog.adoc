@@ -11,9 +11,10 @@
 
 17.04.2021
 
-  - added `Override` flag to `Custom` style definitions (https://gitlab.com/saalen/highlight/-/issues/182)
+  - improved handling of Custom theme attributes (https://gitlab.com/saalen/highlight/-/issues/182)
   - fixed wrong color code in edit-kwrite.theme
   - added rng file mapping (https://gitlab.com/saalen/highlight/-/merge_requests/129)
+
 
 == highlight 4.0
 
