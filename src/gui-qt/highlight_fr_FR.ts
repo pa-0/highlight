@@ -294,8 +294,8 @@ Veuillez m&apos;envoyer une note à l&apos;adresse « as (at) andre-simon (dot) 
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>Highlighting options</oldsource>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
         <translation>Options de coloration</translation>
     </message>
     <message>

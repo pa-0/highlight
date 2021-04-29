@@ -821,9 +821,9 @@ Vea ctags.sf.net para más detalles.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>Highlighting options</oldsource>
-        <translation>&amp;Opciones de resaltado</translation>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
+        <translation>Opciones de resaltado</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="329"/>

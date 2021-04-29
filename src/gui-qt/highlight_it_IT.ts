@@ -294,9 +294,9 @@ In caso di difficoltà, o se hai completato o aggiornato una traduzione, contatt
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>High&amp;lighting options</oldsource>
-        <translation>Opzioni di &amp;evidenziatura codice</translation>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
+        <translation>Opzioni di evidenziatura codice</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="174"/>

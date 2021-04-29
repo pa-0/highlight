@@ -1549,8 +1549,8 @@ Setze die Anzahl auf Null, um Tabs auszugeben.</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>Highlighting options</oldsource>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
         <translation>Hervorhebungs-Optionen</translation>
     </message>
     <message>

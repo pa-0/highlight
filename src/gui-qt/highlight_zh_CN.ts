@@ -968,8 +968,8 @@ See ctags.sf.net for details.</source>
     </message>
     <message>
         <location line="+20"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>Highlighting options</oldsource>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
         <translation type="unfinished">代码高亮选项</translation>
     </message>
     <message>

@@ -1540,9 +1540,9 @@ Set the width to 0 to keep tabs.</source>
     </message>
     <message>
         <location filename="mainwindow.ui" line="129"/>
-        <source>H&amp;ighlighting options</source>
-        <oldsource>Highlighting options</oldsource>
-        <translation>Опции за о&amp;цветяване</translation>
+        <source>Highlighting options</source>
+        <oldsource>H&amp;ighlighting options</oldsource>
+        <translation>Опции за оцветяване</translation>
     </message>
     <message>
         <source>You can apply system shortcuts for copy and paste.</source>

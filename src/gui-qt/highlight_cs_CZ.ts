@@ -603,7 +603,7 @@ Odstraní značku Unicode BOM.</translation>
     </message>
     <message>
         <source>Highlighting options</source>
-        <translation type="vanished">Volby pro zvýrazňování</translation>
+        <translation>Volby pro zvýrazňování</translation>
     </message>
     <message>
         <source>Select a CSS include file.</source>
@@ -1100,10 +1100,6 @@ This feature is enabled for C, C++, C# and Java code.</source>
     </message>
     <message>
         <source>Font si&amp;ze:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>H&amp;ighlighting options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
