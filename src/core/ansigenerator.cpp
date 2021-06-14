@@ -56,8 +56,7 @@ AnsiGenerator::~AnsiGenerator() {}
 
 void AnsiGenerator::initOutputTags()
 {
-    string defaultColor = Platform::isDarkTerminal() ? "00": "30";
-    openTags.push_back ( getOpenTag ( "00", defaultColor) );
+    openTags.push_back ( getOpenTag ( "00", "39" ) );
     openTags.push_back ( getOpenTag ( "00", "31" ) ); //str
     openTags.push_back ( getOpenTag ( "00", "34" ) );//number
     openTags.push_back ( getOpenTag ( "00", "34" ) );//sl comment
@@ -65,8 +64,8 @@ void AnsiGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( "00", "35" ) );//escapeChar
     openTags.push_back ( getOpenTag ( "00", "35" ) );//directive
     openTags.push_back ( getOpenTag ( "00", "31" ) );//directive string
-    openTags.push_back ( getOpenTag ( "00", defaultColor ) );//linenum
-    openTags.push_back ( getOpenTag ( "00", "00" ) );//symbol
+    openTags.push_back ( getOpenTag ( "00", "39" ) );//linenum
+    openTags.push_back ( getOpenTag ( "00", "39" ) );//symbol
     openTags.push_back ( getOpenTag ( "00", "35" ) );//interpolation
 
     openTags.push_back ( getOpenTag ( "01", "31" ) );//error
