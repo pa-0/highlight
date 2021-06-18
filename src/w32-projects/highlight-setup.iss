@@ -5,7 +5,7 @@
 AppName=Highlight Code Converter
 
 AppVerName=Highlight
-OutputBaseFilename=highlight-setup-4.0
+OutputBaseFilename=highlight-setup-4.1
 
 AppPublisher=André Simon
 AppPublisherURL=http://www.andre-simon.de
@@ -35,7 +35,7 @@ Source: "..\..\README*"; DestDir: "{app}";  Flags: ignoreversion
 Source: "..\..\AUTHORS"; DestDir: "{app}";  Flags: ignoreversion
 Source: "..\..\ChangeLog.adoc"; DestDir: "{app}";  Flags: ignoreversion
 Source: "..\..\COPYING"; DestDir: "{app}";  Flags: ignoreversion
-Source: "..\..\filetypes.conf"; DestDir: "{app}";  Flags: ignoreversion
+Source: "..\..\*.conf"; DestDir: "{app}";  Flags: ignoreversion
 Source: "..\..\gui_files\l10n\*.qm"; DestDir: "{app}\gui_files\l10n\";  Flags: ignoreversion sortfilesbyextension
 Source: "..\..\gui_files\ext\*.*"; DestDir: "{app}\gui_files\ext\";  Flags: ignoreversion
 Source: "..\..\plugins\*.lua";  DestDir: "{app}\plugins\";  Flags: ignoreversion;

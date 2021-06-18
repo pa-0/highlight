@@ -158,6 +158,14 @@ bool getDirectoryEntries ( vector<string> &fileList,
                            bool recursiveSearch )
 {
     if ( !wildcard.empty() ) {
+
+#ifdef _WIN32
+        // avoid cmd shell file pattern expansion
+        if ( wildcard.size()>2 && wildcard[0]=='\'' && wildcard[wildcard.size()-1]=='\'' ) {
+            wildcard = wildcard.substr (1, wildcard.size()-2);
+        }
+#endif
+
         string directory_path;
         string::size_type Pos = wildcard.find_last_of ( pathSeparator );
         if ( Pos == string::npos ) {
