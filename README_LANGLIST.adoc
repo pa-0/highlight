@@ -230,6 +230,7 @@ Packaged language definitions, obtained via `highlight --list-scripts=langs`
 | Prolog                         | link:./langDefs/pro.lang[`pro.lang`,title="View source file"] |  pro
 | PureBASIC                      | link:./langDefs/purebasic.lang[`purebasic.lang`,title="View source file"] |  pb pbf pbi
 | Pure                           | link:./langDefs/pure.lang[`pure.lang`,title="View source file"] | 
+| PureScript                     | link:./langDefs/purescript.lang[`purescript.lang`,title="View source file"] | 
 | Pyrex                          | link:./langDefs/pyrex.lang[`pyrex.lang`,title="View source file"] |  pyx
 | Python                         | link:./langDefs/python.lang[`python.lang`,title="View source file"] |  cpy gyp gypi pxd pxi py py3 pyi pyw rpy sconstruct snakefile wscript
 | QMake Project                  | link:./langDefs/qmake.lang[`qmake.lang`,title="View source file"] | 
