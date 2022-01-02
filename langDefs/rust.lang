@@ -31,7 +31,7 @@ Keywords={
     Regex=[[(\w+\!?)\s*\(]]
   },
   { Id=5,
-    Regex=[[b'.']]
+      Regex=[[b'(?:[\x00-\x08\x0B\x0C\x0E-\x26\x28-\x5B\x5D-\x7F]|\\(?:[0tnr\'\\]|x[0-9a-fA-F]{2}))']]
   }
 }
 

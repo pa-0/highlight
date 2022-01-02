@@ -11,7 +11,7 @@ before_script:
   # ======================
   # Install Node.js:
   - apt-get install -y curl
-  - curl -sL https://deb.nodesource.com/setup_13.x | bash
+  - curl -sL https://deb.nodesource.com/setup_17.x | bash
   - apt-get install -y nodejs
   - node -v
   - npm -v
