@@ -11,7 +11,7 @@ Keywords={
   },
   { Id=2,
     List={"depends", "includes", "always", "leaves", "nocare", "notfile", "noupdate", "temporary", "echo",
-          "exit", "glob", "match", "search"}, 
+          "exit", "glob", "match", "search"},
   },
   { Id=3,
     Regex=[[(\$\([0-9a-zA-Z\$\(\)\_\+]*\))]],
