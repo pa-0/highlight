@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>957</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -104,14 +104,7 @@
     <addaction name="actionVisit_website"/>
     <addaction name="action_About_Highlight"/>
    </widget>
-   <widget class="QMenu" name="menuWindows">
-    <property name="title">
-     <string>Wi&amp;ndows</string>
-    </property>
-    <addaction name="actionDock_floating_panels"/>
-   </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuWindows"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -120,7 +113,7 @@
     <bool>false</bool>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
@@ -265,7 +258,6 @@
             <widget class="QLabel" name="label_11">
              <property name="font">
               <font>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -375,7 +367,6 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -447,7 +438,6 @@
           <widget class="QPushButton" name="pbCopyToCP">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -636,7 +626,6 @@
           <widget class="QLabel" name="label_15">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -976,7 +965,6 @@
              </property>
              <property name="font">
               <font>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -998,7 +986,6 @@
              </property>
              <property name="font">
               <font>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -1539,7 +1526,6 @@ The result has to match the input file encoding.</string>
                   <widget class="QLabel" name="label_8">
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -2525,22 +2511,17 @@ Set the width to 0 to keep tabs.</string>
               </size>
              </property>
              <property name="font">
-              <font>
-               <family>MS Shell Dlg 2</family>
-              </font>
+              <font/>
              </property>
              <property name="toolTip">
               <string>Select or enter the font name. HTML supports a list of fonts, separated with comma.</string>
-             </property>
-             <property name="currentText">
-              <string>DejaVu Sans Mono</string>
              </property>
              <property name="fontFilters">
               <set>QFontComboBox::MonospacedFonts</set>
              </property>
              <property name="currentFont">
               <font>
-               <family>DejaVu Sans Mono</family>
+               <family>DejaVu Sans</family>
               </font>
              </property>
             </widget>
@@ -2571,6 +2552,9 @@ Set the width to 0 to keep tabs.</string>
              </property>
              <property name="toolTip">
               <string>Enter the font size.</string>
+             </property>
+             <property name="text">
+              <string>10</string>
              </property>
             </widget>
            </item>
@@ -2651,7 +2635,7 @@ Set the width to 0 to keep tabs.</string>
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Dock floating panels</string>

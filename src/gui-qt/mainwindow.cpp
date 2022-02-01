@@ -2,7 +2,7 @@
                                mainwindow.cpp
                              -------------------
     begin                : Mo 16.03.2009
-    copyright            : (C) 2009-2021 by Andre Simon
+    copyright            : (C) 2009-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -1993,11 +1993,6 @@ void MainWindow::on_pbClearAllScripts_clicked()
 void MainWindow::on_actionVisit_website_triggered()
 {
     QDesktopServices::openUrl(QUrl("http://www.andre-simon.de/"));
-}
-
-void MainWindow::on_actionDock_floating_panels_toggled(bool arg1)
-{
-    ui->dockWidget->setFloating(arg1);
 }
 
 void MainWindow::on_pbPluginReadFilePath_clicked()

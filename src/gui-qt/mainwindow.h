@@ -2,7 +2,7 @@
                                mainwindow.h
                              -------------------
     begin                : Mo 16.03.2009
-    copyright            : (C) 2009-2021 by Andre Simon
+    copyright            : (C) 2009-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -202,7 +202,6 @@ private slots:
     void openFiles();
     void loadLSProfile();
 
-    void on_actionDock_floating_panels_toggled(bool arg1);
     void on_pbPluginReadFilePath_clicked();
 
     void on_pbBrowseOutDir_clicked();

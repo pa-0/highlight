@@ -2,7 +2,7 @@
                           version.h  -  description
                              -------------------
     begin                : Mon March 3 2003
-    copyright            : (C) 2003-2021 by Andre Simon
+    copyright            : (C) 2003-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -31,7 +31,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 #define HIGHLIGHT_MAJOR "4"
-#define HIGHLIGHT_MINOR "1"
+#define HIGHLIGHT_MINOR "2"
 
 #define HIGHLIGHT_VERSION  HIGHLIGHT_MAJOR "." HIGHLIGHT_MINOR
 
