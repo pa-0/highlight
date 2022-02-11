@@ -13,7 +13,7 @@ Keywords={
     Regex=[[ def(un|macro|method)\s+([\w\-]+)]], Group=2
   },
   { Id=3,
-    Regex=[[ \:[^\s\(\)\*\+\%]+ ]],
+    Regex=[[ \:\w+ ]],
   },
   { Id=4,
     Regex=[[ \*\w+?\* ]],
