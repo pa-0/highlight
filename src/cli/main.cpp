@@ -2,7 +2,7 @@
                           main.cpp  -  description
                              -------------------
     begin                : Die Apr 23 22:16:35 CEST 2002
-    copyright            : (C) 2002-2021 by Andre Simon
+    copyright            : (C) 2002-2022 by Andre Simon
     email                : a.simon@mailbox.org
 
    Highlight is a universal source code to formatted text converter.
@@ -49,7 +49,7 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
     } else {
         cout << "\n highlight version "
             << highlight::Info::getVersion()
-            << "\n Copyright (C) 2002-2021 Andre Simon <a dot simon at mailbox.org>"
+            << "\n Copyright (C) 2002-2022 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
             << "\n\n Artistic Style Classes (3.1 rev. 672)"
@@ -361,6 +361,15 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         printConfigInfo();
         return EXIT_SUCCESS;
     }
+
+#ifdef WIN32
+    //https://docs.microsoft.com/en-us/windows/console/setconsolemode
+    HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode;
+    GetConsoleMode(hOutput, &dwMode);
+    dwMode |= ENABLE_PROCESSED_OUTPUT | 0x200 ;
+    SetConsoleMode(hOutput, dwMode);
+#endif
 
     //call before printInstalledLanguages!
     dataDir.loadFileTypeConfig ( "filetypes" );
