@@ -2,7 +2,7 @@
                           rtfcode.cpp  -  description
                              -------------------
     begin                : Die Jul 9 2002
-    copyright            : (C) 2002-2021 by Andre Simon
+    copyright            : (C) 2002-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -208,7 +208,7 @@ void RtfGenerator::printBody()
                       docStyle.getBgColour().getGreen() * 256+
                       docStyle.getBgColour().getBlue() * 256 * 256;
 
-        *out<<"\\viewbksp1\\ilfomacatclnup0{\\*\\background{\\shp{{\\*\\shpinst\\shpleft0\\shptop0\\shpright0\\shpbottom0\\shpfhdr0\\shpbxmargin\\shpbymargin\\shpwr0\\shpwrk0\\shpfblwtxt1\\shpz0{\\sp{\\sn shapeType}{\\sv 1}}{\\sp{\\sn fillColor}{\\sv "<<svVal<<"}}{\\sp{\\sn fFilled}{\\sv 1}}{\\sp{\\sn lineWidth}{\\sv 0}}{\\sp{\\sn fLine}{\\sv 0}}{\\sp{\\sn bWMode}{\\sv 9}}{\\sp{\\sn fBackground}{\\sv 1}}}}}}\n";
+        *out<<"\\viewbksp1\\ilfomacatclnup0{\\*\\background{\\shp{{\\*\\shpinst\\shpleft0\\shptop0\\shpright0\\shpbottom0\\shpfhdr0\\shpbxmargin\\shpbymargin\\shpwr0\\shpwrk0\\shpfblwtxt1\\shpz0\\shplid1025{\\sp{\\sn shapeType}{\\sv 1}}{\\sp{\\sn fillColor}{\\sv "<<svVal<<"}}{\\sp{\\sn fFilled}{\\sv 1}}{\\sp{\\sn lineWidth}{\\sv 0}}{\\sp{\\sn fLine}{\\sv 0}}{\\sp{\\sn bWMode}{\\sv 9}}{\\sp{\\sn fBackground}{\\sv 1}}}}}}\n";
     }
 
     *out  << "\\paperw"<< psMap[pageSize].width <<"\\paperh"<< psMap[pageSize].height
