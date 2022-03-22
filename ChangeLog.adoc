@@ -16,6 +16,8 @@
   - added support for Nix (https://gitlab.com/saalen/highlight/-/issues/200)
   - added ino file mapping / Arduino C (https://gitlab.com/saalen/highlight/-/issues/201)
   - fixed RTF page color attributes (https://gitlab.com/saalen/highlight/-/issues/195)
+  - fixed symbol parsing in lisp.lang https://gitlab.com/saalen/highlight/-/issues/198
+  - fixed string parsing in csharp.lang (https://gitlab.com/saalen/highlight/-/issues/199)
   - fixed string parsing in conf.lang (https://gitlab.com/saalen/highlight/-/issues/203)
   - GUI: added Japanese translation (thanks to FunFun)
   - GUI: disabled floating panel (state restore fails)
