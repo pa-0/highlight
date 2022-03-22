@@ -13,6 +13,7 @@
   - added support for Critic markup (https://gitlab.com/saalen/highlight/-/issues/197)
   - added support for jam/ham (https://gitlab.com/saalen/highlight/-/issues/196)
   - added support for PureScript (https://gitlab.com/saalen/highlight/-/merge_requests/132/)
+  - added support for Nix (https://gitlab.com/saalen/highlight/-/issues/200)
   - fixed RTF page color attributes (https://gitlab.com/saalen/highlight/-/issues/195)
   - GUI: added Japanese translation (thanks to FunFun)
   - GUI: disabled floating panel (state restore fails)
