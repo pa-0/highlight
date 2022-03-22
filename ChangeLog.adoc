@@ -20,6 +20,7 @@
   - fixed symbol parsing in lisp.lang https://gitlab.com/saalen/highlight/-/issues/198
   - fixed string parsing in csharp.lang (https://gitlab.com/saalen/highlight/-/issues/199)
   - fixed string parsing in conf.lang (https://gitlab.com/saalen/highlight/-/issues/203)
+  - CLI W32: prevented automatic file pattern expansion (https://gitlab.com/saalen/highlight/-/issues/186)
   - GUI: added Japanese translation (thanks to FunFun)
   - GUI: disabled floating panel (state restore fails)
 
