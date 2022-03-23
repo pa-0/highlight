@@ -15,6 +15,9 @@ data_dir = ${PREFIX}/share/highlight/
 # Location of the highlight binary:
 bin_dir = ${PREFIX}/bin/
 
+# Location of the highlight library:
+lib_dir = ${PREFIX}/lib/
+
 # Location of the highlight man pages:
 man_dir = ${PREFIX}/share/man/
 
@@ -134,6 +137,9 @@ install-gui:
 	${INSTALL_DATA} ./highlight.desktop ${DESTDIR}${desktop_apps}
 	${INSTALL_DATA} ./src/gui-qt/highlight.png ${DESTDIR}${desktop_icons}
 	${INSTALL_PROGRAM} ./src/highlight-gui ${DESTDIR}${bin_dir}
+
+install-lib-shared:
+	${INSTALL_DATA} ./src/libhighlight.so.4.0 ${DESTDIR}${lib_dir}
 
 uninstall:
 	@echo "Removing highlight files from system..."

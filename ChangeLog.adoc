@@ -8,12 +8,20 @@
 
 == highlight 4.2
 
-01.02.2022
+22.03.2022
 
   - added support for Critic markup (https://gitlab.com/saalen/highlight/-/issues/197)
   - added support for jam/ham (https://gitlab.com/saalen/highlight/-/issues/196)
   - added support for PureScript (https://gitlab.com/saalen/highlight/-/merge_requests/132/)
+  - added support for Nix (https://gitlab.com/saalen/highlight/-/issues/200)
+  - added ino file mapping / Arduino C (https://gitlab.com/saalen/highlight/-/issues/201)
   - fixed RTF page color attributes (https://gitlab.com/saalen/highlight/-/issues/195)
+  - fixed identifier parsing in yaml.lang (https://gitlab.com/saalen/highlight/-/issues/190)
+  - fixed symbol parsing in lisp.lang https://gitlab.com/saalen/highlight/-/issues/198
+  - fixed string parsing in csharp.lang (https://gitlab.com/saalen/highlight/-/issues/199)
+  - fixed string parsing in conf.lang (https://gitlab.com/saalen/highlight/-/issues/203)
+  - added make target `install-lib-shared` to install shared lib (https://gitlab.com/saalen/highlight/-/issues/202)
+  - CLI W32: prevented automatic file pattern expansion (https://gitlab.com/saalen/highlight/-/issues/186)
   - GUI: added Japanese translation (thanks to FunFun)
   - GUI: disabled floating panel (state restore fails)
 
