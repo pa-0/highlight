@@ -52,20 +52,19 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 
     // Read file open filter
     QFile  filterDef(getDistFileFilterPath());
-    QRegExp rx("(\\S+)\\s?\\(\\*\\.([\\w\\d]+)");
+    QRegularExpression rx("(\\S+)\\s?\\(\\*\\.([\\w\\d]+)");
 
     if (filterDef.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&filterDef);
         QString line;
-
-        QStringList syntaxPair;
         while (!in.atEnd()) {
             line = in.readLine();
             fileOpenFilter+=line;
             fileOpenFilter+=";;";
-            if( rx.indexIn(line)!=-1) {
-                syntaxPair = rx.capturedTexts();
-                ui->comboSelectSyntax->addItem(syntaxPair[1], syntaxPair[2]);
+            QRegularExpressionMatchIterator i = rx.globalMatch(line);
+            if (i.hasNext()) {
+                QRegularExpressionMatch match = i.next();
+                ui->comboSelectSyntax->addItem(match.captured(1), match.captured(2));
             }
         }
     } else {
