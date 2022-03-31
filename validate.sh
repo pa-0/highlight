@@ -43,7 +43,7 @@ tmpLog=./eclint.log
 eclint check 2> $tmpLog || {
 	echo -e "\033[31;1m~~~ ERROR! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 	echo -e "The following files didn't pass the validation test:\n\033[33;1m";
-	cat $tmpLog | grep  "^[^ ]";
+	grep  "^[^ ]" $tmpLog;
 	echo -e "\n\033[31;1mRun ECLint locally for detailed information about the problems.";
 	echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 	echo -e "/// Aborting All Tests ///\033[0m";
