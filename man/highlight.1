@@ -5,7 +5,7 @@ Highlight - a universal sourcecode to formatted text converter
 
 .SH SYNOPSIS
 .B highlight
-[OPTIONS]... [FILES]...
+[\fIOPTIONS\fR]... [\fIFILES\fR]...
 
 .SH DESCRIPTION
 .B Highlight
@@ -19,186 +19,186 @@ It supports about 180 programming languages, which are defined in Lua scripts.
 It's easily possible to enhance highlight's database of programming languages and colour themes.
 See the README file for details.
 .SH GENERAL OPTIONS
-.IP "-B, --batch-recursive=<wildcard>"
+.IP "\fB-B\fR, \fB--batch-recursive\fR=<\fIwildcard\fR>"
 convert all files matching the wildcard (uses recursive search)
-.IP "-D, --data-dir=<path>"
+.IP "\fB-D\fR, \fB--data-dir\fR=<\fIpath\fR>"
 set path to highlight data directory
-.IP "--config-file=<file>"
+.IP "\fB--config-file\fR=<\fIfile\fR>"
 set path to a lang or theme file
-.IP "-h, --help[=topic]"
+.IP "\fB-h\fR, \fB--help\fR[=\fItopic\fR]"
 print this help or a topic description
 <topic> = [syntax, theme, plugin, config]
-.IP "-i, --input=<file>"
+.IP "\fB-i\fR, \fB--input\fR=<\fIfile\fR>"
 name of input file
-.IP "-o, --output=<file>"
+.IP "\fB-o\fR, \fB--output\fR=<\fIfile\fR>"
 name of output file
-.IP "-d, --outdir=<output directory>"
+.IP "\fB-d\fR, \fB--outdir\fR=<\fIoutput directory\fR>"
 name of output directory
-.IP "-P, --progress"
+.IP "\fB-P\fR, \fB--progress\fR"
 print progress bar in batch mode
-.IP "-S, --syntax=<type|path>"
+.IP "\fB-S\fR, \fB--syntax\fR=<\fItype\fR|\fIpath\fR>"
 set type of source code, necessary if input file suffix is missing. The syntax may also be defined as path of the language file.
-.IP "--syntax-by-name=<name>"
+.IP "\fB--syntax-by-name\fR=<\fIname\fR>"
 specify type of source code by given name.  Will not read a file of this name, useful for stdin and to determine the syntax of the file before piping its content to highlight. This option overrides --syntax.
-.IP "--syntax-supported"
+.IP "\fB--syntax-supported\fR"
 test if the given syntax can be loaded and print the result  (assumes -S or --syntax-by-name)
-.IP "-v, --verbose"
+.IP "\fB-v\fR, \fB--verbose\fR"
 print debug info to stderr; repeat to show more information
-.IP "-q, --quiet"
+.IP "\fB-q\fR, \fB--quiet\fR"
 suppress progress info in batch mode
-.IP "--force[=syntax]"
+.IP "\fB--force\fR[=\fIsyntax\fR]"
 generate output if input syntax is unknown. The fallback syntax may be set here, Plain Text is default.
-.IP "--list-scripts=<type>"
+.IP "\fB--list-scripts\fR=<\fItype\fR>"
 list installed scripts
 <type> = [langs, themes, plugins]
-.IP "--list-cat=<categories>"
+.IP "\fB--list-cat\fR=<\fIcategories\fR>"
 filter the scripts by the given categories (example: --list-cat='source;script')
-.IP "--max-size=<size>"
+.IP "\fB--max-size\fR=<\fIsize\fR>"
 set maximum input file size (examples: 512M, 1G; default: 256M)
-.IP "--plug-in=<script>"
+.IP "\fB--plug-in\fR=<\fIscript\fR>"
 execute Lua plug-in script; repeat option to apply multiple plug-ins
-.IP "--plug-in-param"
+.IP "\fB--plug-in-param\fR"
 set plug-in input parameter. This might be an input file name (ie. 'tags').
-.IP "--print-config"
+.IP "\fB--print-config\fR"
 print path configuration
-.IP "--print-style"
+.IP "\fB--print-style\fR"
 print stylesheet only (see --style-outfile)
-.IP "--skip=<list>"
+.IP "\fB--skip\fR=<\fIlist\fR>"
 ignore listed unknown file types (example: --skip='bak;c~;h~')
-.IP "--stdout"
+.IP "\fB--stdout\fR"
 output to stdout (batch mode, --print-style)
-.IP "--validate-input"
+.IP "\fB--validate-input\fR"
 test if input is a valid text file
-.IP "--version"
+.IP "\fB--version\fR"
 print version and copyright info
 
 .SH OUTPUT FORMATTING OPTIONS
-.IP "-O, --out-format=<format>"
+.IP "\fB-O\fR, \fB--out-format\fR=<\fIformat\fR>"
 output file in given format
 <format>=[html, xhtml, latex, tex, rtf, odt, ansi, xterm256, truecolor, bbcode, pango, svg]
-.IP "-c, --style-outfile=<file>"
+.IP "\fB-c\fR, \fB--style-outfile\fR=<\fIfile\fR>"
 name of style definition file
-.IP "-T, --doc-title"
+.IP "\fB-T\fR, \fB--doc-title\fR"
 document title
-.IP "-e, --style-infile=<file>"
+.IP "\fB-e\fR, \fB--style-infile\fR=<\fIfile\fR>"
 name of file to be included in style-outfile
-.IP "-f, --fragment"
+.IP "\fB-f\fR, \fB--fragment\fR"
 omit header and footer of the output document (see --keep-injections)
-.IP "-F, --reformat=<style>"
+.IP "\fB-F\fR, \fB--reformat\fR=<\fIstyle\fR>"
 reformat output in given style.
 <style>=[allman, gnu, google, horstmann, java, kr, linux, lisp, mozilla, otbs, pico, vtk, ratliff, stroustrup, webkit, whitesmith]
-.IP "-I, --include-style"
+.IP "\fB-I\fR, \fB--include-style\fR"
 include style definition in output
-.IP "-J, --line-length=<num>"
+.IP "\fB-J\fR, \fB--line-length\fR=<\fInum\fR>"
 line length before wrapping (see -V, -W)
-.IP "-j, --line-number-length=<num>"
+.IP "\fB-j\fR, \fB--line-number-length\fR=<\fInum\fR>"
 line number length incl. left padding. Default length: 5
-.IP "-k, --font=<font>"
+.IP "\fB-k\fR, \fB--font\fR=<\fIfont\fR>"
 set font (specific to output format)
-.IP "-K, --font-size=<num?>"
+.IP "\fB-K\fR, \fB--font-size\fR=<\fInum?\fR>"
 set font size (specific to output format)
-.IP "-l, --line-numbers"
+.IP "\fB-l\fR, \fB--line-numbers\fR"
 print line numbers in output file
-.IP "-m, --line-number-start=<cnt>"
+.IP "\fB-m\fR, \fB--line-number-start\fR=<\fIcnt\fR>"
 start line numbering with cnt (assumes -l)
-.IP "--line-range=<start-end>"
+.IP "\fB--line-range\fR=<\fIstart\fR-\fIend\fR>"
 output only lines from number <start> to <end>
-.IP "-s, --style=<style name|path>"
+.IP "\fB-s\fR, \fB--style\fR=<\fIstyle name\fR|\fIpath\fR>"
 set highlighting style (theme). Add 'base16/' prefix to use a Base16 theme. The theme may also be defined as path of the theme file.
-.IP "-t  --replace-tabs=<num>"
+.IP "\fB-t\fR  \fB--replace-tabs\fR=<\fInum\fR>"
 replace tabs by num spaces
-.IP "-u, --encoding=<enc>"
+.IP "\fB-u\fR, \fB--encoding\fR=<\fIenc\fR>"
 set output encoding which matches input file encoding; omit encoding information if set to "NONE"
-.IP "-V, --wrap-simple"
+.IP "\fB-V\fR, \fB--wrap-simple\fR"
 wrap lines after 80 (default) characters without indenting function parameters and statements.
-.IP "-W, --wrap"
+.IP "\fB-W\fR, \fB--wrap\fR"
 wrap lines after 80 (default) characters (use with caution).
-.IP "-z, --zeroes"
+.IP "\fB-z\fR, \fB--zeroes\fR"
 fill leading space of line numbers with zeroes
-.IP "--isolate"
+.IP "\fB--isolate\fR"
 output each syntax token in separate tags (verbose output)
-.IP "--keep-injections"
+.IP "\fB--keep-injections\fR"
 output plug-in header and footer injections in spite of -f
-.IP "--kw-case=<upper|lower|capitalize>"
+.IP "\fB--kw-case\fR=<\fIupper\fR|\fIlower\fR|\fIcapitalize\fR>"
 output all keywords in given case if language is not case sensitive
-.IP "--no-trailing-nl[=mode]"
+.IP "\fB--no-trailing-nl\fR[=\fImode\fR]"
 omit trailing newline. If mode is "empty-file", omit only for empty input
-.IP "--no-version-info"
+.IP "\fB--no-version-info\fR"
 omit version info comment
-.IP "--wrap-no-numbers"
+.IP "\fB--wrap-no-numbers\fR"
 omit line numbers of wrapped lines (assumes -l)
 
 .SH "(X)HTML OPTIONS"
-.IP "-a, --anchors"
+.IP "\fB-a\fR, \fB--anchors\fR"
 attach anchors to line numbers (HTML only)
-.IP "-y, --anchor-prefix=<str>"
+.IP "\fB-y\fR, \fB--anchor-prefix\fR=<\fIstr\fR>"
 set anchor name prefix
-.IP "-N, --anchor-filename"
+.IP "\fB-N\fR, \fB--anchor-filename\fR"
 use input file name as anchor name
-.IP "-C, --print-index"
+.IP "\fB-C\fR, \fB--print-index\fR"
 print index file with links to all output files
-.IP "-n, --ordered-list"
+.IP "\fB-n\fR, \fB--ordered-list\fR"
 print lines as ordered list items
-.IP "--class-name=<str>"
+.IP "\fB--class-name\fR=<\fIstr\fR>"
 set CSS class name prefix; omit class name if set to "NONE"
-.IP "--inline-css"
+.IP "\fB--inline-css\fR"
 output CSS within each tag (verbose output)
-.IP "--enclose-pre"
+.IP "\fB--enclose-pre\fR"
 enclose fragmented output with pre tag (assumes -f)
 
 .SH "LATEX OPTIONS"
-.IP "-b, --babel"
+.IP "\fB-b\fR, \fB--babel\fR"
 disable Babel package shorthands
-.IP "-r, --replace-quotes"
+.IP "\fB-r\fR, \fB--replace-quotes\fR"
 replace double quotes by \\dq
-.IP "--beamer"
+.IP "\fB--beamer\fR"
 adapt output for the Beamer package
-.IP "--pretty-symbols"
+.IP "\fB--pretty-symbols\fR"
 improve appearance of brackets and other symbols
 
 .SH "RTF OPTIONS"
-.IP "--page-color"
+.IP "\fB--page-color\fR"
 include page color attributes
-.IP "-x, --page-size=<size>"
+.IP "\fB-x\fR, \fB--page-size\fR=<\fIsize\fR>"
 set page size, <size>=[a3, a4, a5, b4, b5, b6, letter]
-.IP "--char-styles"
+.IP "\fB--char-styles\fR"
 include character stylesheets
 
 .SH "SVG OPTIONS"
-.IP "--height=<h>"
+.IP "\fB--height\fR=<\fIh\fR>"
 set image height (units allowed)
-.IP "--width=<w>"
+.IP "\fB--width\fR=<\fIw\fR>"
 set image size (see --height)
 
 .SH "TERMINAL ESCAPE OUTPUT OPTIONS (XTERM256 OR TRUECOLOR)"
-.IP "--canvas[=width]"
+.IP "\fB--canvas\fR[=\fIwidth\fR]"
 set background colour padding (default: 80)
 
 .SH "LANGUAGE SERVER OPTIONS"
-.IP "--ls-profile=<server>"
+.IP "\fB--ls-profile\fR=<\fIserver\fR>"
 load LSP configuration from lsp.conf
-.IP "--ls-delay=<ms>"
+.IP "\fB--ls-delay\fR=<\fIms\fR>"
 set server initialization delay in milliseconds
-.IP "--ls-exec=<bin>"
+.IP "\fB--ls-exec\fR=<\fIbin\fR>"
 set server executable name
-.IP "--ls-option=<option>"
+.IP "\fB--ls-option\fR=<\fIoption\fR>"
 set server CLI option (can be repeated)
-.IP "--ls-hover"
+.IP "\fB--ls-hover\fR"
 execute hover requests (HTML output only)
-.IP "--ls-semantic"
+.IP "\fB--ls-semantic\fR"
 query server for semantic token types (requires LSP 3.16)
-.IP "--ls-syntax=<lang>"
+.IP "\fB--ls-syntax\fR=<\fIlang\fR>"
 set syntax which is understood by the server
-.IP "--ls-syntax-error"
+.IP "\fB--ls-syntax-error\fR"
 retrieve syntax error information (assumes --ls-hover or --ls-semantic)
-.IP "--ls-workspace=<dir>"
+.IP "\fB--ls-workspace\fR=<\fIdir\fR>"
 set workspace directory to initialize the server
 
 .SH ENV VARIABLES
 Highlight recognizes these variables:
-.IP "HIGHLIGHT_DATADIR"
+.IP "\fIHIGHLIGHT_DATADIR\fR"
 sets the path to highlight's configuration scripts
-.IP "HIGHLIGHT_OPTIONS"
+.IP "\fIHIGHLIGHT_OPTIONS\fR"
 may contain command line options, but no input file paths.
 
 .SH HINTS
@@ -220,14 +220,11 @@ LSP features require absolute input paths and disable reformatting (-F).
 Wrapping lines with -V or -W will cause faulty highlighting of long single line comments and directives.
 Using line-range might interfere with multi line syntax elements. Use with caution.
 .SH FILES
-The configuration files are stored in
-.I /usr/share/highlight/.
+The configuration files are stored in \fI/usr/share/highlight/\fR.
 Language definitions, themes and plugins are located in subdirectories.
 .PP
-Documentation files are stored in
-.I /usr/share/doc/highlight/
-, configuration files in
-.I /etc/highlight/.
+Documentation files are stored in \fI/usr/share/doc/highlight/\fR,
+configuration files in \fI/etc/highlight/\fR.
 .PP
 See README how to install own scripts in the home directory.
 .SH EXAMPLES
