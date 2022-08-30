@@ -68,7 +68,9 @@ ifdef PIC
 	CFLAGS+=-fPIC
 endif
 
+ifneq ($(OS), Windows_NT)
 LDFLAGS = -ldl
+endif
 # Do not strip by default (Mac OS X lazy pointer issues)
 # Add -static to avoid linking with shared libs (can cause trouble when highlight
 # is run as service)
