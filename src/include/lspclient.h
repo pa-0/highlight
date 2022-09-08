@@ -28,7 +28,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef LSPCLIENT_H
 #define LSPCLIENT_H
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
