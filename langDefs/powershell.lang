@@ -71,10 +71,20 @@ Strings={
 
 IgnoreCase=true
 
+--Comments={
+--  { Block=false,
+--    Delimiter= { [[#]] },
+--  },
+--}
+
+-- https://gitlab.com/saalen/highlight/-/issues/210
 Comments={
   { Block=false,
-    Delimiter= { [[#]] },
+    Delimiter= { [[(?<!\<)#(?!>)]] }
   },
+  { Block=true,
+    Delimiter= { [[<#]],[[#>]] },
+  }
 }
 
 Operators=[[\(|\)|\[|\]|\{|\}|\,|\;|\.|\:|\&|<|>|\!|\=|\/|\*|\%|\+|\-|\~|\?|\||\.]]
