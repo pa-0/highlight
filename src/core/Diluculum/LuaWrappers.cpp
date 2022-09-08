@@ -36,7 +36,7 @@ namespace Diluculum
       void ReportErrorFromCFunction (lua_State* ls, const::std::string& what)
       {
          lua_Debug ar;
-         int ret = lua_getstack (ls, 0, &ar);
+         [[maybe_unused]] int ret = lua_getstack (ls, 0, &ar);
 
          assert (ret != 0 && "'lua_getstack()' wasn't supposed to return '0' "
                  "here. Possible error cause: 'ReportErrorFromCFunction()' "
