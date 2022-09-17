@@ -6,6 +6,14 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.3
+
+17.09.2022
+
+  - added support for Fortran77 star comments comments (https://gitlab.com/saalen/highlight/-/issues/208)
+  - added support for PowerShell block comments (https://gitlab.com/saalen/highlight/-/issues/210)
+  - fixed Python formatted string pattern (https://gitlab.com/saalen/highlight/-/issues/212)
+
 == highlight 4.2
 
 22.03.2022
