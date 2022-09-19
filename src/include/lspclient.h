@@ -80,7 +80,7 @@ private:
 
     int initDelay;
 
-#ifdef WIN32
+#ifdef _WIN32
     HANDLE g_hChildStd_IN_Rd ;
     HANDLE g_hChildStd_IN_Wr ;
     HANDLE g_hChildStd_OUT_Rd ;
