@@ -49,6 +49,9 @@ bash_comp_dir = ${data_dir}bash-completion/completions/
 # Location of fish completions:
 fish_comp_dir = ${data_dir}fish/vendor_completions.d/
 
+# Location of zsh completions:
+zsh_comp_dir = ${data_dir}zsh/site-functions/
+
 # Location of additional gui files
 desktop_apps = ${data_dir}applications/
 desktop_icons = ${data_dir}icons/hicolor/256x256/apps/
@@ -85,6 +88,7 @@ install:
 	@echo "Configuration directory:    ${DESTDIR}${hl_conf_dir}"
 	@echo "Bash completions directory: ${DESTDIR}${bash_comp_dir}"
 	@echo "Fish completions directory: ${DESTDIR}${fish_comp_dir}"
+	@echo "Zsh completions directory:  ${DESTDIR}${zsh_comp_dir}"
 	@echo
 
 	${MKDIR} ${DESTDIR}${hl_doc_dir}
@@ -109,6 +113,7 @@ install:
 	${MKDIR} ${DESTDIR}${man_dir}man5/
 	${MKDIR} ${DESTDIR}${bash_comp_dir}
 	${MKDIR} ${DESTDIR}${fish_comp_dir}
+	${MKDIR} ${DESTDIR}${zsh_comp_dir}
 	${MKDIR} ${DESTDIR}${bin_dir}
 
 	${INSTALL_DATA} ./langDefs/*.lang ${DESTDIR}${hl_data_dir}langDefs/
@@ -123,6 +128,7 @@ install:
 
 	${INSTALL_DATA} ./sh-completion/highlight.bash ${DESTDIR}${bash_comp_dir}highlight
 	${INSTALL_DATA} ./sh-completion/highlight.fish ${DESTDIR}${fish_comp_dir}
+	${INSTALL_DATA} ./sh-completion/highlight.zsh ${DESTDIR}${zsh_comp_dir}_highlight
 
 	${INSTALL_DATA} ./AUTHORS ${DESTDIR}${hl_doc_dir}
 	${INSTALL_DATA} ./README* ${DESTDIR}${hl_doc_dir}
@@ -192,6 +198,11 @@ clean-obj:
 apidocs:
 	doxygen Doxyfile
 
+completions:
+	sh-completion/gen-completions bash >sh-completion/highlight.bash
+	sh-completion/gen-completions fish >sh-completion/highlight.fish
+	sh-completion/gen-completions zsh >sh-completion/highlight.zsh
+
 help:
 	@echo "This makefile offers the following options:"
 	@echo
@@ -203,6 +214,7 @@ help:
 	@echo "install-gui      Copy GUI data files to ${hl_data_dir}."
 	@echo "clean            Remove object files and binaries."
 	@echo "apidocs          Generate HTML API documentation using doxygen."
+	@echo "completions 	Generate shell completion scripts."
 	@echo "uninstall        Remove highlight files from system."
 	@echo
 	@echo "See src/makefile for compilation and linking options."
