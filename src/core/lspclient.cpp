@@ -27,7 +27,11 @@
 #include "lspclient.h"
 #include "stringtools.h"
 
+#ifdef _WIN32
+#include <process.h>
+#else
 #include <unistd.h>
+#endif
 
 #include <sstream>
 #include <iostream>
