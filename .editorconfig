@@ -50,7 +50,7 @@ insert_final_newline = true
 
 ## Shell Scripts
 ################
-[*.{sh,bash,fish}]
+[*.sh]
 end_of_line = lf
 indent_style = tab
 indent_size = unset
