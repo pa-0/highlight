@@ -8,8 +8,9 @@
 
 == highlight 4.3
 
-17.09.2022
+24.09.2022
 
+  - added support for Carbon
   - added support for Fortran77 star comments comments (https://gitlab.com/saalen/highlight/-/issues/208)
   - added support for PowerShell block comments (https://gitlab.com/saalen/highlight/-/issues/210)
   - fixed Python formatted string pattern (https://gitlab.com/saalen/highlight/-/issues/212)
