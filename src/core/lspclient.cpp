@@ -27,6 +27,12 @@
 #include "lspclient.h"
 #include "stringtools.h"
 
+#ifdef _WIN32
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -48,7 +54,7 @@ namespace highlight
     {
         serverName=serverVersion="?";
 
-        #ifdef WIN32
+        #ifdef _WIN32
         g_hChildStd_IN_Rd = NULL;
         g_hChildStd_IN_Wr = NULL;
         g_hChildStd_OUT_Rd = NULL;
@@ -60,7 +66,7 @@ namespace highlight
 
     LSPClient::~LSPClient()
     {
-        #ifdef WIN32
+        #ifdef _WIN32
         if (initialized) {
             CloseHandle(g_hChildStd_OUT_Wr);
             CloseHandle(g_hChildStd_IN_Rd);
@@ -99,7 +105,7 @@ namespace highlight
 
         initialized=true;
 
-        #ifdef WIN32
+        #ifdef _WIN32
 
         // https://docs.microsoft.com/de-de/windows/win32/procthread/creating-a-child-process-with-redirected-input-and-output
 
@@ -247,7 +253,7 @@ namespace highlight
             std::cerr << "LSP REQ:\n" << msg << "\n";
         }
 
-        #ifdef WIN32
+        #ifdef _WIN32
 
         DWORD dwWritten;
 
@@ -275,7 +281,7 @@ namespace highlight
         resultString.resize(128);
         bool readOK = false;
 
-        #ifdef WIN32
+        #ifdef _WIN32
 
         DWORD headerReadLen = 0;
         readOK = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &headerReadLen, NULL);
@@ -314,7 +320,7 @@ namespace highlight
             // payload - otherwise no repeated WRITE/READ is possible
 
             // Probably need to grab more
-#ifdef WIN32
+#ifdef _WIN32
             DWORD remainderReadLen = 0;
 #else
             size_t remainderReadLen=0;
@@ -324,7 +330,7 @@ namespace highlight
 
                 resultString.resize(payloadLen);
 
-                #ifdef WIN32
+                #ifdef _WIN32
                 ReadFile(g_hChildStd_OUT_Rd, (void*)&resultString[headerReadLen - start],
                          payloadLen - (headerReadLen - start), &remainderReadLen, NULL);
                 #else

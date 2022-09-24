@@ -41,7 +41,7 @@ string DataDir::LSB_DOC_DIR="/usr/share/doc/highlight/";
 void DataDir::initSearchDirectories ( const string &userDefinedDir )
 {
 
-#ifndef WIN32
+#ifndef _WIN32
     possibleDirs.push_back ( Platform::getHomePath() + "/.highlight/" );
 #endif
 
@@ -52,7 +52,7 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
         possibleDirs.push_back ( hlEnvPath );
     }
 
-#ifndef WIN32
+#ifndef _WIN32
 
 #ifdef HL_DATA_DIR
     possibleDirs.push_back ( HL_DATA_DIR );
@@ -132,7 +132,7 @@ const string DataDir::getPluginPath ( )
 
 const string DataDir::getSystemDataPath ( )
 {
-#ifndef WIN32
+#ifndef _WIN32
 #ifdef HL_DATA_DIR
     return HL_DATA_DIR;
 #else

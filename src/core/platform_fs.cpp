@@ -47,7 +47,7 @@ using std::vector;
 namespace Platform
 {
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 const char pathSeparator = '\\';
 

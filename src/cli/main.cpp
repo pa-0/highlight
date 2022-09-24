@@ -362,7 +362,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
         return EXIT_SUCCESS;
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     //https://docs.microsoft.com/en-us/windows/console/setconsolemode
     HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode;
@@ -546,7 +546,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     //generator->setIndentationOptions(options.getAStyleOptions());
 
     string outDirectory = options.getOutDirectory();
-#ifndef WIN32
+#ifndef _WIN32
     ifstream dirTest ( outDirectory.c_str() );
     if ( !outDirectory.empty() && !options.quietMode() && !dirTest ) {
         cerr << "highlight: Output directory \""
