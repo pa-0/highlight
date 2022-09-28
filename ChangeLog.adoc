@@ -14,6 +14,9 @@
   - added support for Fortran77 star comments comments (https://gitlab.com/saalen/highlight/-/issues/208)
   - added support for PowerShell block comments (https://gitlab.com/saalen/highlight/-/issues/210)
   - fixed Python formatted string pattern (https://gitlab.com/saalen/highlight/-/issues/212)
+  - added new shell completion generation script (https://gitlab.com/saalen/highlight/-/merge_requests/137/)
+  - W32: fixed Windows compilation headers (https://gitlab.com/saalen/highlight/-/merge_requests/138)
+
 
 == highlight 4.2
 
