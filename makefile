@@ -195,9 +195,6 @@ clean cleanall:
 clean-obj:
 	$(MAKE) -C ./src -f ./makefile clean-obj
 
-apidocs:
-	doxygen Doxyfile
-
 completions:
 	sh-completion/gen-completions bash >sh-completion/highlight.bash
 	sh-completion/gen-completions fish >sh-completion/highlight.fish
@@ -213,8 +210,7 @@ help:
 	@echo "install          Copy all data files to ${hl_data_dir}."
 	@echo "install-gui      Copy GUI data files to ${hl_data_dir}."
 	@echo "clean            Remove object files and binaries."
-	@echo "apidocs          Generate HTML API documentation using doxygen."
-	@echo "completions 	Generate shell completion scripts."
+	@echo "completions      Generate shell completion scripts."
 	@echo "uninstall        Remove highlight files from system."
 	@echo
 	@echo "See src/makefile for compilation and linking options."
