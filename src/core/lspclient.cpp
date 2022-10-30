@@ -48,6 +48,7 @@ namespace highlight
     hoverProvider(false),
     semanticTokensProvider(false),
     logRequests(false),
+    legacyProtocol(false),
     initDelay(0),
     msgId(1.0),
     lastErrorCode(0)
@@ -97,6 +98,11 @@ namespace highlight
     void LSPClient::setSyntax ( const std::string& syntax ){
         triggerSyntax = syntax;
     }
+
+    void LSPClient::setLegacyProtocol ( bool legacy ) {
+        legacyProtocol = legacy;
+    }
+
 
     void LSPClient::signal_callback_handler(int signum){
     }
@@ -433,9 +439,16 @@ namespace highlight
             return false;
         }
 
-        if (   !jsonResponse.get("result").is<picojson::object>()
-            && !jsonResponse.get("result").get("capabilities").is<picojson::object>()) {
+        if (legacyProtocol) {
+            hoverProvider = true;
+            return true;
+        }
 
+        if (!jsonResponse.get("result").is<picojson::object>()) {
+            return false;
+        }
+
+        if (!jsonResponse.get("result").get("capabilities").is<picojson::object>()) {
             return false;
         }
 

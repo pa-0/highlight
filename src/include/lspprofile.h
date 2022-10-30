@@ -56,6 +56,7 @@ public:
     std::string executable;              ///< server executable path
     std::string syntax;                  ///< language definition which can be enhanced using the LS
     int delay;                           ///< server delay in milliseconds after initialization request
+    bool legacy;                         ///< do not rely on a LS capabilities response
     std::vector<std::string> options;    ///< server executable start options
 };
 

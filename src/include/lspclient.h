@@ -63,6 +63,7 @@ private:
     bool hoverProvider;
     bool semanticTokensProvider;
     bool logRequests;
+    bool legacyProtocol;
 
     std::string executable, workspace;
     std::string serverName, serverVersion;
@@ -121,6 +122,8 @@ public:
     void setWorkspace ( const std::string& ws );
 
     void setSyntax ( const std::string& syntax );
+
+    void setLegacyProtocol ( bool legacy );
 
     bool connect();
 

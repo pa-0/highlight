@@ -379,6 +379,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     std::string lsExecutable(options.getLsExecutable());         ///< server executable path
     std::string lsSyntax(options.getLsSyntax());                   ///< language definition which can be enhanced using the LS
     int lsDelay=options.getLsDelay();
+    bool lsLegacy=options.isLsLegacy();
     std::vector<std::string> lsOptions = options.getLSOptions(); ///< server executable start options
 
     if (lsProfile.size()) {
@@ -393,6 +394,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 lsOptions = profile.options;
             if (lsDelay==0)
                 lsDelay = profile.delay;
+            if (lsLegacy==false)
+                lsLegacy = profile.legacy;
         } else {
             cerr << "highlight: Unknown LSP profile '"<< lsProfile << "'.\n";
             return EXIT_FAILURE;
@@ -698,15 +701,14 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
                 }
 
                 highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
-                                                                              options.getLsWorkspace(), lsSyntax,
-                                                                              lsDelay,
-                                                                              options.verbosityLevel() );
+                                                                              options.getLsWorkspace(), lsSyntax, lsDelay,
+                                                                              options.verbosityLevel(), lsLegacy );
                 if ( lsInitRes==highlight::INIT_BAD_PIPE ) {
                     cerr << "highlight: language server connection failed\n";
                     initError = true;
                     break;
                 } else if ( lsInitRes==highlight::INIT_BAD_REQUEST ) {
-                    cerr << "highlight: language server initialization failed\n";
+                    cerr << "highlight: language server initialization failed. Consider --ls-legacy option.\n";
                     initError = true;
                     break;
                 }

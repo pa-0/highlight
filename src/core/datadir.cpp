@@ -233,7 +233,8 @@ bool DataDir::loadLSPConfig (const string& path )
         std::string serverName;              ///< server name
         std::string executable;              ///< server executable path
         std::string syntax;                  ///< language definition which can be enhanced using the LS
-        int delay;
+        int delay;                           ///< server delay in milliseconds after initialization request
+        bool legacy;                         ///< do not rely on a LS capabilities response
         std::vector<std::string> options;    ///< server executable start options
         Diluculum::LuaValue mapEntry;
 
@@ -246,6 +247,11 @@ bool DataDir::loadLSPConfig (const string& path )
             delay = 0;
             if (mapEntry["Delay"] !=Diluculum::Nil) {
                 delay = mapEntry["Delay"].asNumber();
+            }
+
+            legacy = false;
+            if (mapEntry["Legacy"] !=Diluculum::Nil) {
+                legacy = mapEntry["Legacy"].asBoolean();
             }
 
             if (mapEntry["Options"] !=Diluculum::Nil) {
@@ -262,6 +268,7 @@ bool DataDir::loadLSPConfig (const string& path )
             profile.syntax = syntax;
             profile.options = options;
             profile.delay = delay;
+            profile.legacy = legacy;
 
             lspProfiles[serverName]=profile;
 

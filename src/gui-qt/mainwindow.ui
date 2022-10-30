@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>957</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -753,30 +753,6 @@
          <string>LSP</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_31">
-           <item>
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>Language Server:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboLSProfiles">
-             <property name="toolTip">
-              <string>Select a Language Server profile.</string>
-             </property>
-             <property name="editable">
-              <bool>false</bool>
-             </property>
-             <property name="currentText">
-              <string notr="true"/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
          <item row="1" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_32">
            <item>
@@ -811,6 +787,30 @@
            </item>
           </layout>
          </item>
+         <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_31">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Language Server:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboLSProfiles">
+             <property name="toolTip">
+              <string>Select a Language Server profile.</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
          <item row="2" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_34">
            <item>
@@ -834,13 +834,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item row="3" column="0">
-          <widget class="Line" name="line_6">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
          </item>
          <item row="4" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_33">
@@ -876,16 +869,10 @@
            </item>
           </layout>
          </item>
-         <item row="5" column="0">
-          <widget class="QCheckBox" name="cbLSHover">
-           <property name="toolTip">
-            <string>Run hover requests to add tooltips to your output (HTML only).</string>
-           </property>
-           <property name="text">
-            <string>Hover</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
+         <item row="3" column="0">
+          <widget class="Line" name="line_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -912,6 +899,29 @@
            </property>
            <property name="checkable">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="cbLSHover">
+           <property name="toolTip">
+            <string>Run hover requests to add tooltips to your output (HTML only).</string>
+           </property>
+           <property name="text">
+            <string>Hover</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QCheckBox" name="cbLSLegacy">
+           <property name="toolTip">
+            <string>Do not require a server capabilities response</string>
+           </property>
+           <property name="text">
+            <string>Legacy Protocol</string>
            </property>
           </widget>
          </item>

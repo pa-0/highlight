@@ -255,6 +255,7 @@ void printHelp(const std::string &topic)
         cout<<"     --ls-syntax-error          retrieve syntax error information\n";
         cout<<"                                  (assumes --ls-hover or --ls-semantic)\n";
         cout<<"     --ls-workspace=<dir>       set workspace directory to init. the server\n";
+        cout<<"     --ls-legacy                do not require a server capabilities response\n";
         cout<<"\n\n";
 
         cout<<"If no in- or output files are specified, stdin and stdout will be used.\n";

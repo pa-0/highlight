@@ -129,7 +129,7 @@ public:
     bool initTheme ( const string& themePath, bool loadSemanticStyles=false );
 
     LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace,
-                                  const string& syntax, int delay, int logLevel );
+                                  const string& syntax, int delay, int logLevel, bool legacy = false );
 
     void exitLanguageServer ();
 

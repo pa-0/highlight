@@ -1,6 +1,6 @@
 = HIGHLIGHT MANUAL
 André Simon
-v4.1, April 2021
+v4.4, October 2021
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -311,6 +311,7 @@ Language Server options:
      --ls-syntax-error          retrieve syntax error information
                                   (assumes --ls-hover or --ls-semantic)
      --ls-workspace=<dir>       set workspace directory to init. the server
+     --ls-legacy                do not require a server capabilities response
 ................................................................................
 
 === GUI OPTIONS

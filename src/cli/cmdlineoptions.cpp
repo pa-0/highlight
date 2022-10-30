@@ -51,7 +51,8 @@ enum Optcode {
         S_OPT_REFORMAT_OPT, S_OPT_RANGE_OPT, S_OPT_BASE16, S_OPT_CATEGORIES, S_OPT_PIPED_FNAME,
         S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED,
         S_OPT_LS_PROFILE, S_OPT_LS_WORKSPACE, S_OPT_LS_EXEC, S_OPT_LS_OPTION, S_OPT_LS_HOVER,
-        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX, S_OPT_LS_SYNTAX_ERROR, S_OPT_LS_DELAY
+        S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX, S_OPT_LS_SYNTAX_ERROR,
+        S_OPT_LS_DELAY, S_OPT_LS_LEGACY
     };
 
 const Arg_parser::Option options[] = {
@@ -150,9 +151,9 @@ const Arg_parser::Option options[] = {
         { S_OPT_LS_SEMANTIC, OPT_LS_SEMANTIC, Arg_parser::no },
         { S_OPT_LS_RAINBOW, OPT_LS_RAINBOW, Arg_parser::no },
         { S_OPT_LS_SYNTAX_ERROR, OPT_LS_SYNTAX_ERROR, Arg_parser::no },
-
         { S_OPT_LS_SYNTAX, OPT_LS_SYNTAX, Arg_parser::yes },
         { S_OPT_LS_DELAY, OPT_LS_DELAY, Arg_parser::yes },
+        { S_OPT_LS_LEGACY, OPT_LS_LEGACY, Arg_parser::no },
 
         { 0, 0, Arg_parser::no }
     };
@@ -216,6 +217,7 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_ls_semantic(false),
     opt_ls_rainbow(false),
     opt_ls_syntax_error(false),
+    opt_ls_legacy(false),
     maxFileSize(268435456),
     fallbackSyntax("txt"),
     anchorPrefix ( "l" ),
@@ -675,6 +677,9 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
         case S_OPT_LS_SYNTAX_ERROR:
             opt_ls_syntax_error = true;
             break;
+        case S_OPT_LS_LEGACY:
+            opt_ls_legacy = true;
+            break;
         case S_OPT_LS_DELAY:
              StringTools::str2num<int> ( lsDelay, arg, std::dec );
             break;
@@ -915,6 +920,10 @@ bool CmdLineOptions::isLsSemantic() const
 bool CmdLineOptions::isLsSyntaxError() const
 {
     return opt_ls_syntax_error;
+}
+bool CmdLineOptions::isLsLegacy() const
+{
+    return opt_ls_legacy;
 }
 const string &CmdLineOptions::getDataDir() const
 {

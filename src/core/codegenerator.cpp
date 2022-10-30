@@ -205,7 +205,7 @@ bool CodeGenerator::initTheme ( const string& themePath, bool loadSemanticStyles
 
 LSResult CodeGenerator::initLanguageServer ( const string& executable, const vector<string> &options,
                                              const string& workspace, const string& syntax,
-                                             int delay, int logLevel )
+                                             int delay, int logLevel, bool legacy )
 {
     if (LSPClient.isInitialized()) {
         return LSResult::INIT_OK;
@@ -218,6 +218,7 @@ LSResult CodeGenerator::initLanguageServer ( const string& executable, const vec
     LSPClient.setOptions(options);
     LSPClient.setSyntax(syntax);
     LSPClient.setInitializeDelay(delay);
+    LSPClient.setLegacyProtocol(legacy);
     if (!LSPClient.connect()){
         return LSResult::INIT_BAD_PIPE;
     }

@@ -6,6 +6,14 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.4
+
+30.10.2022
+
+  - added `Legacy` option in lsp.conf to add support for LSP servers without capabilities report
+  - CLI: added `--ls-legacy` option
+  - GUI: added legacy checkbox in the LSP section
+
 == highlight 4.3
 
 24.09.2022

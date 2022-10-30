@@ -537,6 +537,8 @@ void MainWindow::writeSettings()
                       ui->cbLSSemantic->isChecked());
     settings.setValue(ui->cbLSSyntaxErrors->property(name).toString(),
                       ui->cbLSSyntaxErrors->isChecked());
+    settings.setValue(ui->cbLSLegacy->property(name).toString(),
+                      ui->cbLSLegacy->isChecked());
 
     settings.setValue(ui->leSVGHeight->property(name).toString(),
                       ui->leSVGHeight->text());
@@ -633,6 +635,7 @@ void MainWindow::readSettings()
     ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
     ui->cbLSSemantic->setChecked(settings.value(ui->cbLSSemantic->property(name).toString()).toBool());
     ui->cbLSSyntaxErrors->setChecked(settings.value(ui->cbLSSyntaxErrors->property(name).toString()).toBool());
+    ui->cbLSLegacy->setChecked(settings.value(ui->cbLSLegacy->property(name).toString()).toBool());
 
     ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
     ui->comboEncoding->setCurrentIndex(0);
@@ -706,7 +709,8 @@ bool MainWindow::loadLSProfiles()
        std::string serverName;              ///< server name
        std::string executable;              ///< server executable path
        std::string syntax;                  ///< language definition which can be enhanced using the LS
-       int delay=0;
+       int delay=0;                         ///< server delay in milliseconds after initialization request
+       bool legacy=false;                   ///< do not rely on a LS capabilities response
        std::vector<std::string> options;    ///< server executable start options
        Diluculum::LuaValue mapEntry;
 
@@ -730,12 +734,18 @@ bool MainWindow::loadLSProfiles()
                delay = mapEntry["Delay"].asNumber();
            }
 
+           legacy = false;
+           if (mapEntry["Legacy"] !=Diluculum::Nil) {
+                legacy = mapEntry["Legacy"].asBoolean();
+           }
+
            highlight::LSPProfile profile;
            profile.executable = executable;
            profile.serverName = serverName;
            profile.syntax = syntax;
            profile.options = options;
            profile.delay = delay;
+           profile.legacy = legacy;
 
            lspProfiles[serverName]=profile;
 
@@ -2166,6 +2176,8 @@ void MainWindow::loadLSProfile() {
             lsOptions = profile.options;
             lsDelay = profile.delay;
 
+            ui->cbLSLegacy->setChecked(profile.legacy);
+
             ui->leLSExec->setText(QString::fromStdString(lsExecutable));
         }
     }
@@ -2183,7 +2195,8 @@ bool MainWindow::initializeLS(highlight::CodeGenerator* generator, bool tellMe)
     highlight::LSResult lsInitRes=generator->initLanguageServer ( lsExecutable, lsOptions,
                                                                   lsWorkSpace, lsSyntax,
                                                                   lsDelay,
-                                                                  ui->cbLSDebug->isChecked() ? 2 : 0 );
+                                                                  ui->cbLSDebug->isChecked() ? 2 : 0,
+                                                                  ui->cbLSLegacy->isChecked() );
     if ( lsInitRes==highlight::INIT_OK ) {
         if (tellMe) {
 
