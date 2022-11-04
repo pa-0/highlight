@@ -10,6 +10,7 @@
 
 30.10.2022
 
+  - added support for Zig
   - added `Legacy` option in lsp.conf to add support for LSP servers without capabilities report
   - CLI: added `--ls-legacy` option
   - GUI: added legacy checkbox in the LSP section
