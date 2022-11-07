@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>957</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -141,7 +141,7 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -258,6 +258,7 @@
             <widget class="QLabel" name="label_11">
              <property name="font">
               <font>
+               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -367,6 +368,7 @@
            <property name="font">
             <font>
              <pointsize>11</pointsize>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -438,6 +440,7 @@
           <widget class="QPushButton" name="pbCopyToCP">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -626,6 +629,7 @@
           <widget class="QLabel" name="label_15">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -975,6 +979,7 @@
              </property>
              <property name="font">
               <font>
+               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -996,6 +1001,7 @@
              </property>
              <property name="font">
               <font>
+               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -1536,6 +1542,7 @@ The result has to match the input file encoding.</string>
                   <widget class="QLabel" name="label_8">
                    <property name="font">
                     <font>
+                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -2531,7 +2538,7 @@ Set the width to 0 to keep tabs.</string>
              </property>
              <property name="currentFont">
               <font>
-               <family>DejaVu Sans</family>
+               <family>Consolas</family>
               </font>
              </property>
             </widget>

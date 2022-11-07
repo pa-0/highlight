@@ -1217,7 +1217,7 @@ void MainWindow::on_pbStartConversion_clicked()
         inFilePath = getWindowsShortPath(inFilePath);
 
 #endif
-        currentFile = inFilePath.toStdString();
+        currentFile = inFilePath.toLocal8Bit().data();
 
         statusBar()->showMessage(tr("Processing %1 (%2/%3)").arg(origFilePath).arg(i+1).arg(ui->lvInputFiles->count()));
 
@@ -1261,7 +1261,7 @@ void MainWindow::on_pbStartConversion_clicked()
                     absOutPath = getWindowsShortPath(absOutPath);
                 }
 #endif
-                outfileName = absOutPath.toStdString();
+                outfileName = absOutPath.toLocal8Bit().data();
             } else {
                 QFileInfo outFileInfo;
                 QString fName=inFileName;
@@ -1289,7 +1289,7 @@ void MainWindow::on_pbStartConversion_clicked()
                     absOutPath = getWindowsShortPath(absOutPath);
                 }
 #endif
-                outfileName = absOutPath.toStdString();
+                outfileName = absOutPath.toLocal8Bit().data();
             }
 
             if (ui->cbHTMLFileNameAnchor->isChecked()) {
@@ -1792,13 +1792,13 @@ void MainWindow::updatePreview()
                 if (getDataFromCP) {
                     previewData= QString::fromUtf8( pwgenerator.generateString(savedClipboardContent.toStdString()).c_str());
                 } else {
-                    previewData= QString::fromUtf8( pwgenerator.generateStringFromFile(previewInputPath.toStdString()).c_str());
+                    previewData= QString::fromUtf8( pwgenerator.generateStringFromFile(previewInputPath.toLocal8Bit().data()).c_str());
                 }
             } else {
                 if (getDataFromCP) {
                     previewData= QString::fromStdString( pwgenerator.generateString(savedClipboardContent.toStdString()));
                 } else {
-                    previewData= QString::fromStdString( pwgenerator.generateStringFromFile(previewInputPath.toStdString()));
+                    previewData= QString::fromStdString( pwgenerator.generateStringFromFile(previewInputPath.toLocal8Bit().data()));
                 }
             }
 
