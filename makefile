@@ -218,4 +218,4 @@ help:
 # Target needed for redhat 9.0 rpmbuild
 install-strip:
 
-.PHONY: clean all install apidocs help uninstall install-strip clean-obj
+.PHONY: clean all install help uninstall install-strip clean-obj

@@ -12,8 +12,10 @@
 
   - added support for Zig
   - added `Legacy` option in lsp.conf to add support for LSP servers without capabilities report
+  - removed apidocs target in makefile (https://gitlab.com/saalen/highlight/-/issues/213)
   - CLI: added `--ls-legacy` option
   - GUI: added legacy checkbox in the LSP section
+  - GUI W32: fixed issue with non standard filename encodings (https://gitlab.com/saalen/highlight/-/issues/215)
 
 == highlight 4.3
 

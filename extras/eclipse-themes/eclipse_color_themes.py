@@ -4,6 +4,9 @@
 # Script to pull one of the themes available at eclipsecolorthemes.org.
 # The retrieved XML file is converted to the highlight Lua file format.
 
+# In October 2022 eclipsecolorthemes.org went offline. See possible new source:
+# https://github.com/eclipse-color-theme/eclipse-color-theme/issues/290
+
 import requests
 import sys
 import xml.etree.ElementTree as ET
