@@ -2,7 +2,7 @@
                     latexgenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002-2021 by Andre Simon
+    copyright            : (C) 2002-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -245,7 +245,10 @@ string LatexGenerator::getNewLine()
     if ( preFormatter.isWrappedLine ( lineNumber-1 ) ) {
         ss << "\\Righttorque";
     }
-    ss << (( showLineNumbers ) ? newLineTag:longLineTag);
+    if (printNewLines) {
+        ss << (( showLineNumbers ) ? newLineTag:longLineTag);
+    }
+
     return ss.str();
 }
 
