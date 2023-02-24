@@ -2,7 +2,7 @@
                     latexgenerator.cpp  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002-2021 by Andre Simon
+    copyright            : (C) 2002-2022 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -83,8 +83,8 @@ string LatexGenerator::getHeader()
        << "\\usepackage{alltt}\n"
        << "\\usepackage[T1]{fontenc}\n";
 
-    //if (beamerMode)
-    //    os  << "\\usepackage{beamerarticle}\n";
+    if (replaceQuotes)
+        os  << "\\usepackage{ngerman}\n";
 
     if ( StringTools::change_case ( encoding ) == "utf-8" ) {
         os << "\\usepackage{ucs}\n\\usepackage[utf8x]{inputenc}\n";
@@ -245,7 +245,10 @@ string LatexGenerator::getNewLine()
     if ( preFormatter.isWrappedLine ( lineNumber-1 ) ) {
         ss << "\\Righttorque";
     }
-    ss << (( showLineNumbers ) ? newLineTag:longLineTag);
+    if (printNewLines) {
+        ss << (( showLineNumbers ) ? newLineTag:longLineTag);
+    }
+
     return ss.str();
 }
 
