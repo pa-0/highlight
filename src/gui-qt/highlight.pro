@@ -4,7 +4,7 @@ TEMPLATE = app
 INCLUDEPATH += . ../include
 QT += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += widgets
 
 PRECOMPILED_HEADER = precomp.h
 DEFINES += O2 QT
@@ -30,7 +30,7 @@ RESOURCES = highlight-gui.qrc
 TRANSLATIONS = highlight_de_DE.ts highlight_es_ES.ts highlight_cs_CZ.ts \
     highlight_zh_CN.ts highlight_it_IT.ts highlight_fr_FR.ts highlight_bg_BG.ts
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++17
 
 # If Lua 5.2 is not default on your system yet you have to omit 5.1 here:
 unix {
@@ -73,14 +73,15 @@ win32 {
     QMAKE_POST_LINK = F:\upx393w\upx.exe --best --force F:\git\highlight\highlight-gui.exe
 }
 
-macx-clang {
+
+macx-clang|macx-clang-arm64  {
     QMAKE_CC = clang
     QMAKE_CXX = clang++
     INCLUDEPATH+=/usr/local/Cellar/lua/5.4.4/include/
     INCLUDEPATH += ../../include
-    INCLUDEPATH+=/usr/local/Cellar/boost/1.78.0_1/include
+    INCLUDEPATH+=/usr/local/Cellar/boost/1.80.0/include
 
-    QMAKE_MACOSX_DEPLOYMENT_TARGET=10.13
+    QMAKE_MACOSX_DEPLOYMENT_TARGET=12.3
     CONFIG += app_bundle
     LIBS += -L.. -lhighlight
     LIBS += -L/Users/andresimon/MyProjects/lua-5.4.1/src -llua
