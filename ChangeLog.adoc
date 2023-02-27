@@ -9,11 +9,12 @@
 
 == highlight 4.5
 
-08.01.2023
+23.02.2023
 
   - added support for Hare
   - fixed `--no-trailing-nl` option for LaTeX output (https://gitlab.com/saalen/highlight/-/issues/216)
   - fixed typos in rnc.lang, spn.lang and znn.lang (https://gitlab.com/saalen/highlight/-/merge_requests/139)
+  - fixed missing ngerman package for `--replace-quotes` option (https://gitlab.com/saalen/highlight/-/issues/222)
 
 
 == highlight 4.4

@@ -2,7 +2,7 @@
                           version.h  -  description
                              -------------------
     begin                : Mon March 3 2003
-    copyright            : (C) 2003-2022 by Andre Simon
+    copyright            : (C) 2003-2023 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
