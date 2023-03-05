@@ -2,7 +2,7 @@
                           main.cpp  -  description
                              -------------------
     begin                : Die Apr 23 22:16:35 CEST 2002
-    copyright            : (C) 2002-2022 by Andre Simon
+    copyright            : (C) 2002-2023 by Andre Simon
     email                : a.simon@mailbox.org
 
    Highlight is a universal source code to formatted text converter.
@@ -49,12 +49,11 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
     } else {
         cout << "\n highlight version "
             << highlight::Info::getVersion()
-            << "\n Copyright (C) 2002-2022 Andre Simon <a dot simon at mailbox.org>"
+            << "\n Copyright (C) 2002-2023 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
-            << "\n\n Artistic Style Classes (3.1 rev. 672)"
-            << "\n Copyright (C) 2006-2018 by Jim Pattee <jimp03 at email.com>"
-            << "\n Copyright (C) 1998-2002 by Tal Davidson"
+            << "\n\n Artistic Style Classes (3.2)"
+            << "\n Copyright (C) 1998-2023 The Artistic Style Authors"
             << "\n\n Diluculum Lua wrapper (1.0)"
             << "\n Copyright (C) 2005-2013 by Leandro Motta Barros"
             << "\n\n xterm 256 color matching functions"
