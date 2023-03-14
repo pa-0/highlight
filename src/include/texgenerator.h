@@ -2,7 +2,7 @@
                           TexGenerator.h  -  description
                              -------------------
     begin                : Mit Jul 24 2002
-    copyright            : (C) 2002-2021 by Andrï¿½Simon
+    copyright            : (C) 2002-2023 by Andrï¿½Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

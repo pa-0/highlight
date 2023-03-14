@@ -35,6 +35,7 @@ root of highlight-x.x
 |-- langDefs            # language definitions (*.lang)
 |-- man                 # man page
 |-- plugins             # Lua plugin scripts (*.lua)
+|-- sh-completion       # shell command completions
 |-- src                 # source code
 |   |-- cli             # command line interface code
 |   |-- core            # highlight core code (builds the library)

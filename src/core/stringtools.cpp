@@ -2,7 +2,7 @@
                           stringtools.cpp  -  description
                              -------------------
     begin                : Mon Dec 10 2001
-    copyright            : (C) 2001-2021 by Andre Simon
+    copyright            : (C) 2001-2023 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

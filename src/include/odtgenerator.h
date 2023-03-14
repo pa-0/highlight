@@ -2,7 +2,7 @@
                          odtgenerator.h  -  description
                              -------------------
     begin                : Jul 19 2012
-    copyright            : (C) 2004-2021 by Andre Simon
+    copyright            : (C) 2004-2023 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

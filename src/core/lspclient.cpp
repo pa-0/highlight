@@ -2,7 +2,7 @@
  *                          lspclient.cpp  -  description
  *                             -------------------
  *    begin                : Wed Jan 20 2021
- *    copyright            : (C) 2002-2021 by Andre Simon
+ *    copyright            : (C) 2002-2023 by Andre Simon
  *    email                : a.simon@mailbox.org
  ***************************************************************************/
 

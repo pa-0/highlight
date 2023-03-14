@@ -2,7 +2,7 @@
                           keystore.cpp  -  description
                              -------------------
     begin                : Sat Aug 05 2020
-    copyright            : (C) 2002-2021 by Andre Simon
+    copyright            : (C) 2002-2023 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

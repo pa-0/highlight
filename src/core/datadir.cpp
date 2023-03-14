@@ -2,7 +2,7 @@
                           dataDir.cpp  -  description
                              -------------------
     begin                : Sam March 1 2003
-    copyright            : (C) 2003-2021 by Andre Simon
+    copyright            : (C) 2003-2023 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 

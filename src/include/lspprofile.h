@@ -2,7 +2,7 @@
  *                      LSPProfile.h  -  description
  *                           -------------------
  *  begin                : Fr Jan 22 2021
- *  copyright            : (C) 2021 by Andre Simon
+ *  copyright            : (C) 2021-2023 by Andre Simon
  *  email                : a.simon@mailbox.org
  ***************************************************************************/
 
