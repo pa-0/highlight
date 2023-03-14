@@ -1,5 +1,5 @@
 // ASResource.cpp
-// Copyright (c) 2018 by Jim Pattee <jimp03@email.com>.
+// Copyright (c) 2023 The Artistic Style Authors.
 // This code is licensed under the MIT License.
 // License.md describes the conditions under which this software may be distributed.
 
@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------------
 
 #include "astyle/astyle.h"
+
 #include <algorithm>
 
 //-----------------------------------------------------------------------------
@@ -69,6 +70,7 @@ const string ASResource::AS_SET = string("set");
 const string ASResource::AS_STATIC = string("static");
 const string ASResource::AS_STATIC_CAST = string("static_cast");
 const string ASResource::AS_STRUCT = string("struct");
+const string ASResource::AS_TYPEDEF_STRUCT = string("typedef struct");
 const string ASResource::AS_SWITCH = string("switch");
 const string ASResource::AS_SYNCHRONIZED = string("synchronized");
 const string ASResource::AS_TEMPLATE = string("template");
@@ -94,6 +96,8 @@ const string ASResource::AS_BAR_IF = string("#if");
 const string ASResource::AS_BAR_EL = string("#el");
 const string ASResource::AS_BAR_ENDIF = string("#endif");
 
+const string ASResource::AS_OPEN_PAREN = string("(");
+const string ASResource::AS_CLOSE_PAREN = string(")");
 const string ASResource::AS_OPEN_BRACE = string("{");
 const string ASResource::AS_CLOSE_BRACE = string("}");
 const string ASResource::AS_OPEN_LINE_COMMENT = string("//");
@@ -137,6 +141,8 @@ const string ASResource::AS_ARROW = string("->");
 const string ASResource::AS_AND = string("&&");
 const string ASResource::AS_OR = string("||");
 const string ASResource::AS_SCOPE_RESOLUTION = string("::");
+const string ASResource::AS_SPACESHIP = string("<=>");
+const string ASResource::AS_EQUAL_JS = string("===");
 
 const string ASResource::AS_PLUS = string("+");
 const string ASResource::AS_MINUS = string("-");
@@ -154,6 +160,7 @@ const string ASResource::AS_QUESTION = string("?");
 const string ASResource::AS_COLON = string(":");
 const string ASResource::AS_COMMA = string(",");
 const string ASResource::AS_SEMICOLON = string(";");
+
 
 /**
  * Sort comparison function.
@@ -486,8 +493,12 @@ void ASResource::buildOperators(vector<const string*>* operators, int fileType)
 	{
 		operators->emplace_back(&AS_GCC_MIN_ASSIGN);
 		operators->emplace_back(&AS_GCC_MAX_ASSIGN);
+		operators->emplace_back(&AS_SPACESHIP);
 	}
-
+	if (fileType == JS_TYPE)
+	{
+		operators->emplace_back(&AS_EQUAL_JS);
+	}
 	assert(operators->size() < elements);
 	sort(operators->begin(), operators->end(), sortOnLength);
 }

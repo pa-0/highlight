@@ -1278,6 +1278,23 @@ void CodeGenerator::initASStream() {
         if (streamIterator) delete streamIterator;
         streamIterator =  new astyle::ASStreamIterator ( in );
         formatter->init ( streamIterator );
+
+        if (currentSyntax->getDescription()=="C#")
+	    {
+		    formatter->setSharpStyle();
+	    } else if (currentSyntax->getDescription()=="Java")
+	    {
+		    formatter->setJavaStyle();
+	    } else if (currentSyntax->getDescription()=="Javascript")
+	    {
+		    formatter->setJSStyle();
+	    } else if (currentSyntax->getDescription()=="Objective C")
+        {
+    		formatter->setObjCStyle();
+        } else {
+            formatter->setCStyle();
+        }
+
     }
 }
 

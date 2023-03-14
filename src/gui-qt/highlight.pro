@@ -77,9 +77,9 @@ win32 {
 macx-clang|macx-clang-arm64  {
     QMAKE_CC = clang
     QMAKE_CXX = clang++
-    INCLUDEPATH+=/usr/local/Cellar/lua/5.4.4/include/
+    INCLUDEPATH+=/usr/local/Cellar/lua/5.4.4_1/include/
     INCLUDEPATH += ../../include
-    INCLUDEPATH+=/usr/local/Cellar/boost/1.80.0/include
+    INCLUDEPATH+=/usr/local/Cellar/boost/1.81.0_1/include
 
     QMAKE_MACOSX_DEPLOYMENT_TARGET=12.3
     CONFIG += app_bundle
