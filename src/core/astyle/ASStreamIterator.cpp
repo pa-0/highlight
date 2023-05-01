@@ -5,16 +5,31 @@ namespace astyle
 {
 
 
-ASStreamIterator::ASStreamIterator(istream *in)
+ASStreamIterator::ASStreamIterator(istream *in, unsigned char EOFChar) : ASSourceIterator()
 {
 	inStream = in;
 	buffer.reserve(200);
 	eolWindows = eolLinux = eolMacOld = 0;
 	peekStart = 0;
+	extraEOFChar = EOFChar;
 	prevLineDeleted = false;
 	checkForEmptyLine = false;
 }
-
+bool ASStreamIterator::hasMoreLines() const{
+	return ! AtEnd();
+}
+bool ASStreamIterator::AtEnd(char c) const{
+	bool instream_eof = inStream->eof();
+	if (extraEOFChar == 255)
+		return instream_eof;
+	
+	bool c_null = c == extraEOFChar;
+	bool instream_peek_null = false;
+	if (instream_eof == false && c_null == false)
+		instream_peek_null = inStream->peek() == extraEOFChar;
+	bool ret = instream_eof || c_null || instream_peek_null;
+	return ret;
+}
 
 ASStreamIterator::~ASStreamIterator()
 {
@@ -24,7 +39,7 @@ ASStreamIterator::~ASStreamIterator()
 
 void ASStreamIterator::saveLastInputLine()
 {
-	assert(inStream->eof());
+	assert(AtEnd());
 	prevBuffer = buffer;
 }
 
@@ -57,13 +72,13 @@ string ASStreamIterator::nextLine(bool emptyLineWasDeleted)
 	char ch;
 	inStream->get(ch);
 
-	while (!inStream->eof() && ch != '\n' && ch != '\r')
+	while (!AtEnd(ch) && ch != '\n' && ch != '\r')
 	{
 		buffer.append(1, ch);
 		inStream->get(ch);
 	}
 
-	if (inStream->eof())
+	if (AtEnd(ch))
 	{
 		return buffer;
 	}
@@ -71,7 +86,7 @@ string ASStreamIterator::nextLine(bool emptyLineWasDeleted)
 	int peekCh = inStream->peek();
 
 	// find input end-of-line characters
-	if (!inStream->eof())
+	if (!AtEnd())
 	{
 		if (ch == '\r')         // CR+LF is windows otherwise Mac OS 9
 		{
@@ -131,13 +146,13 @@ string ASStreamIterator::peekNextLine()
 
 	// read the next record
 	inStream->get(ch);
-	while (!inStream->eof() && ch != '\n' && ch != '\r')
+	while (!AtEnd(ch) && ch != '\n' && ch != '\r')
 	{
 		nextLine.append(1, ch);
 		inStream->get(ch);
 	}
 
-	if (inStream->eof())
+	if (AtEnd(ch))
 	{
 		return nextLine;
 	}
@@ -145,7 +160,7 @@ string ASStreamIterator::peekNextLine()
 	int peekCh = inStream->peek();
 
 	// remove end-of-line characters
-	if (!inStream->eof())
+	if (!AtEnd(ch))
 	{
 		if ((peekCh == '\n' || peekCh == '\r') && peekCh != ch)  /////////////  changed  //////////
 			inStream->get(ch);
