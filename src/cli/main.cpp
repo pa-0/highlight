@@ -366,7 +366,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode;
     GetConsoleMode(hOutput, &dwMode);
-    dwMode |= ENABLE_PROCESSED_OUTPUT | 0x200 ;
+    dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOutput, dwMode);
 #endif
 
