@@ -117,7 +117,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define OPT_ISOLATE_TAGS     "isolate"
 #define OPT_MAX_FILE_SIZE    "max-size"
 #define OPT_SYNTAX_SUPPORTED "syntax-supported"
-
+#define OPT_SERVICE_MODE     "service-mode"
+#ifdef _WIN32
+#define OPT_DISABLE_ECHO     "disable-echo"
+#endif // _WIN32
 // Improve CLI option compatibility with GNU source-highlight
 #define OPT_COMPAT_DOC       "doc"
 #define OPT_COMPAT_NODOC     "no-doc"
@@ -153,6 +156,11 @@ public:
     */
     CmdLineOptions ( const int argc, const char *argv[] );
     ~CmdLineOptions();
+
+    void CmdLineOptions::ProcessSingleOption(const int code, const std::string & arg);
+
+    /** \param length sets line length */
+    void setLineLength(int length);
 
     /** \return Single output file name*/
     const std::string &getSingleOutFilename();
@@ -318,6 +326,12 @@ public:
 
     /** \return True if input should be validated */
     bool validateInput() const ;
+
+    /** \return True if should run in constant service mode */
+    bool runServiceMode() const ;
+
+    /** \return True to disable console echo back */
+    bool disableEcho() const ;
 
     /** \return True if wrapped lines should get unique numbers */
     bool numberWrappedLines() const ;
@@ -542,6 +556,8 @@ private:
     bool opt_isolate;
     bool opt_encoding_explicit;
     bool opt_syntax_supported_check;
+    bool opt_service_mode;
+    bool opt_disable_echo;
 
     bool opt_ls_hover;
     bool opt_ls_semantic;

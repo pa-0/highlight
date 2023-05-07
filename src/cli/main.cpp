@@ -336,7 +336,72 @@ vector <string> HLCmdLineApp::collectPluginPaths(const vector<string>& plugins)
     }
     return absolutePaths;
 }
+bool HLCmdLineApp::ServiceModeCheck(CmdLineOptions options, highlight::CodeGenerator* generator, string &suffix, unsigned int &curFileIndex){
+    if (! options.runServiceMode() || cin.eof())
+        return false;
 
+    cerr << flush;
+    if (! service_mode_tag.empty())
+        cout << service_mode_tag << endl;
+    cout << flush;
+    curFileIndex = 0; //stay on our stdin
+    
+    if (cin.peek() == generator->getAdditionalEOFChar()) {
+        cin.get();//eof char
+        if (cin.peek() == '\n')//this should always be true if they properly give input but if they separated files with just EOF marker we won't chomp their first char
+            cin.get();//eol after it
+    }
+
+    string modeChanges;
+    getline(cin, modeChanges);
+    if (modeChanges == "exit"){
+        cin.setstate(std::ios_base::eofbit);
+        return false;
+    }
+
+    istringstream modesStream(modeChanges);
+    string modeChange;
+    string modeRes;
+    while (getline(modesStream, modeChange, ';')) {
+        istringstream modeStream(modeChange);
+        string modeKey;
+        string modeVal="";
+        getline(modeStream,modeKey,'=');
+        getline(modeStream,modeVal);
+
+        if (modeKey == ""){
+        }
+        else if (modeKey == "syntax") {
+            if (modeVal.find(".") != -1)
+                suffix = dataDir.guessFileType(dataDir.getFileSuffix(modeVal), modeVal);
+            else
+                suffix = modeVal;
+                modeRes += "Syntax: " + suffix + " ";
+        }else if (modeKey == "line-length"){
+            try {
+                options.setLineLength(std::stoi(modeVal));
+                modeRes += "LineLen: " + modeVal + " ";
+            } catch (std::exception e) {
+                cerr << "Unable to parse line length option: " << modeVal << endl;
+            }
+            generator->setPreformatting(options.getWrappingStyle(),
+                (generator->getPrintLineNumbers()) ?
+                options.getLineLength() - options.getNumberWidth() : options.getLineLength(),
+                options.getNumberSpaces());
+        } else if (modeKey == "eof") {
+            unsigned char eof = (unsigned char)modeVal[0];
+            generator->setAdditionalEOFChar(eof);
+            modeRes += "eof char val: " + std::to_string(eof) + " ";
+        } else if (modeKey == "tag") {
+            service_mode_tag = modeVal;
+            modeRes += "Tag: " + service_mode_tag + " ";
+        }else
+            cerr << "Invalid service mode key change of: " << modeKey << " ignoring." << endl;
+    }
+    if (options.verbosityLevel())
+        cerr << "Updated Items: " << modeRes << endl;
+    return true;
+}
 int HLCmdLineApp::run ( const int argc, const char*argv[] )
 {
     CmdLineOptions options ( argc, argv );
@@ -368,6 +433,13 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     GetConsoleMode(hOutput, &dwMode);
     dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOutput, dwMode);
+    if ( options.disableEcho() ) {
+        HANDLE hConsole = { GetStdHandle(STD_INPUT_HANDLE) };
+        DWORD consoleMode{};
+        GetConsoleMode(hConsole, &consoleMode);
+        consoleMode &= ~ENABLE_ECHO_INPUT;
+        SetConsoleMode(hConsole, consoleMode);
+    }
 #endif
 
     //call before printInstalledLanguages!
@@ -582,7 +654,8 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     generator->setFilesCnt(fileCount);
 
-    while ( i < fileCount && !initError ) {
+    while ( (ServiceModeCheck(options, generator.get(), suffix, i) || i < fileCount) && !initError ) {
+        cout.flush();
 
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {
 
@@ -605,7 +678,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        if ( !options.syntaxGiven() ) { // determine file type for each file
+        if (suffix.empty() && !options.syntaxGiven() ) { // determine file type for each file
             suffix = dataDir.guessFileType ( dataDir.getFileSuffix ( inFileList[i] ), inFileList[i] );
         }
 

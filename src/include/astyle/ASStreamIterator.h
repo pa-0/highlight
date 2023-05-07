@@ -34,13 +34,13 @@
 namespace astyle
 {
 
-class ASStreamIterator : public ASSourceIterator
+class ASStreamIterator : virtual public ASSourceIterator
 {
 	public:
 		bool checkForEmptyLine;
 
 		// function declarations
-		ASStreamIterator(istream *in);
+		ASStreamIterator(istream *in, unsigned char extraEOFChar=255);
 		virtual ~ASStreamIterator();
 		string nextLine(bool emptyLineWasDeleted);
 		string peekNextLine();
@@ -50,8 +50,8 @@ class ASStreamIterator : public ASSourceIterator
 		// inline functions
 		bool compareToInputBuffer(const string &nextLine) const { return nextLine == prevBuffer; }
 		const char* getOutputEOL() const { return outputEOL; }
-		bool hasMoreLines() const { return !inStream->eof(); }
-		
+		bool hasMoreLines() const;
+
 		int getStreamLength() const { return 0; }
 		streamoff tellg() { return 0; }
 		
@@ -61,12 +61,14 @@ class ASStreamIterator : public ASSourceIterator
 		istream * inStream;          // pointer to the input stream
 		string buffer;         // current input line
 		string prevBuffer;     // previous input line
+		unsigned char extraEOFChar=255; //Additional EOF char that will signal a file done on STDIN
 		int eolWindows;        // number of Windows line endings (CRLF)
 		int eolLinux;          // number of Linux line endings (LF)
 		int eolMacOld;         // number of old Mac line endings (CR)
 		int peekStart;         // starting position for peekNextLine()
 		char outputEOL[4];     // output end of line char
 		bool prevLineDeleted;  // the previous input line was deleted
+		bool AtEnd(char c=-1) const;
 };
 
 }

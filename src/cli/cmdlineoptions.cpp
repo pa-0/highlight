@@ -52,7 +52,7 @@ enum Optcode {
         S_OPT_ISOLATE, S_OPT_MAX_FILE_SIZE, S_OPT_SYNTAX_SUPPORTED,
         S_OPT_LS_PROFILE, S_OPT_LS_WORKSPACE, S_OPT_LS_EXEC, S_OPT_LS_OPTION, S_OPT_LS_HOVER,
         S_OPT_LS_SEMANTIC, S_OPT_LS_RAINBOW, S_OPT_LS_SYNTAX, S_OPT_LS_SYNTAX_ERROR,
-        S_OPT_LS_DELAY, S_OPT_LS_LEGACY
+        S_OPT_LS_DELAY, S_OPT_LS_LEGACY, S_OPT_SERVICE_MODE, S_OPT_DISABLE_ECHO
     };
 
 const Arg_parser::Option options[] = {
@@ -105,6 +105,10 @@ const Arg_parser::Option options[] = {
         { S_OPT_KW_CASE,          OPT_KW_CASE,      Arg_parser::yes },
         { S_OPT_PRINT_CONFIG,     OPT_PRINT_CONFIG, Arg_parser::no  },
         { S_OPT_TEST_INPUT,       OPT_TEST_INPUT,   Arg_parser::no  },
+        { S_OPT_SERVICE_MODE,     OPT_SERVICE_MODE, Arg_parser::no  },
+#ifdef _WIN32
+        { S_OPT_DISABLE_ECHO,     OPT_DISABLE_ECHO, Arg_parser::no  },
+#endif // _WIN32
         { S_OPT_NO_NUMBER_WL,     OPT_NO_NUMBER_WL, Arg_parser::no  },
         { S_OPT_RTF_CHAR_STYLES,  OPT_RTF_CHAR_STYLES, Arg_parser::no  },
         { S_OPT_RTF_PAGE_COLOR,   OPT_RTF_PAGE_COLOR,  Arg_parser::no  },
@@ -211,6 +215,8 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     opt_no_version_info(false),
     explicit_output_format(false),
     opt_isolate(false),
+    opt_service_mode(false),
+    opt_disable_echo(false),
     opt_encoding_explicit(false),
     opt_syntax_supported_check(false),
     opt_ls_hover(false),
@@ -277,6 +283,9 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
 
 CmdLineOptions::~CmdLineOptions() {}
 
+void CmdLineOptions::setLineLength(int length){
+    lineLength = length;
+}
 void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bool readInputFilenames) {
 
 
@@ -512,6 +521,12 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
             break;
         case S_OPT_TEST_INPUT:
             opt_validate=true;
+            break;
+        case S_OPT_SERVICE_MODE:
+            opt_service_mode=true;
+            break;
+        case S_OPT_DISABLE_ECHO:
+            opt_disable_echo=true;
             break;
         case S_OPT_NO_NUMBER_WL:
             opt_number_wrapped_lines=false;
@@ -1049,6 +1064,14 @@ bool CmdLineOptions::includeCharStyles() const
 bool CmdLineOptions::includePageColor() const
 {
   return opt_page_color;
+}
+bool CmdLineOptions::runServiceMode() const
+{
+    return opt_service_mode;
+}
+bool CmdLineOptions::disableEcho() const
+{
+    return opt_disable_echo;
 }
 int CmdLineOptions::disableTrailingNL() const
 {

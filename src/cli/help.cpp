@@ -159,6 +159,10 @@ void printHelp(const std::string &topic)
 
         cout<<"     --stdout                   output to stdout (batch mode, --print-style)\n";
         cout<<"     --validate-input           test if input is text, remove Unicode BOM\n";
+        cout<<"     --service-mode             run in service mode, not stopping until signaled\n";
+#if _WIN32
+        cout<<"     --disable-echo             Disable console echo back for stdin data\n";
+#endif // _WIN32
         cout<<"     --version                  print version and copyright information\n";
         cout<<"\n\n";
         cout<<"Output formatting options:\n";

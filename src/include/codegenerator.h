@@ -207,6 +207,12 @@ public:
     */
     void setPreformatting ( WrapMode lineWrappingStyle, unsigned int lineLength,int numberSpaces );
 
+    /// @brief Sets an additional EOF char to look for in stream, 255 to clear
+    /// @param eofChar
+    void setAdditionalEOFChar ( unsigned char eofChar =255 );
+
+    unsigned char getAdditionalEOFChar();
+
     /** \return True if document style was found */
     bool styleFound();
 
@@ -547,6 +553,8 @@ protected:
       \return line number  */
     unsigned int getLineNumber();
 
+    bool CodeGenerator::AtEnd(char c = -1) const;
+
     vector <string> openTags,   ///< list of format delimiters (open new format descriptions)
            closeTags;   ///< list of format delimiters (close format descriptions)
 
@@ -780,6 +788,9 @@ private:
     /**first input line to be processed*/
     unsigned int startLineCnt;
     unsigned int startLineCntCurFile;
+
+    /**Additional EOF char*/
+    unsigned char extraEOFChar;
 
     /**maximum count of input lines to be processed*/
     unsigned int maxLineCnt;

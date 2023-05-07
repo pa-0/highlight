@@ -480,7 +480,14 @@ bool CodeGenerator::formattingIsPossible()
 {
     return formattingPossible;
 }
-
+unsigned char CodeGenerator::getAdditionalEOFChar()
+{
+    return extraEOFChar;
+}
+void CodeGenerator::setAdditionalEOFChar ( unsigned char eofChar )
+{
+    extraEOFChar = eofChar;
+}
 void CodeGenerator::setPreformatting ( WrapMode lineWrappingStyle,
                                        unsigned int lineLength,
                                        int numberSpaces )
@@ -580,7 +587,18 @@ unsigned int CodeGenerator::getLineNumber()
 {
     return lineNumber;
 }
+bool CodeGenerator::AtEnd(char c) const {
+    bool instream_eof = in->eof();
+    if (extraEOFChar == 255)
+        return instream_eof;
 
+    bool c_null = c == extraEOFChar;
+    bool instream_peek_null = false;
+    if (instream_eof == false && c_null == false)
+        instream_peek_null = in->peek() == extraEOFChar;
+    bool ret = instream_eof || c_null || instream_peek_null;
+    return ret;
+}
 bool CodeGenerator::readNewLine ( string &newLine )
 {
     bool eof=false;
@@ -594,10 +612,11 @@ bool CodeGenerator::readNewLine ( string &newLine )
                 newLine = formatter->nextLine();
             }
         } else {
-            eof = ! getline ( *in, newLine, eolDelimiter );
+            eof = AtEnd() || ! getline ( *in, newLine, eolDelimiter );
         }
         --startLineCntCurFile;
     }
+
     startLineCntCurFile=1;
 #ifndef _WIN32
     // drop CR of CRLF files
@@ -1276,7 +1295,7 @@ string CodeGenerator::generateString ( const string &input )
 void CodeGenerator::initASStream() {
     if ( formatter != NULL ) {
         if (streamIterator) delete streamIterator;
-        streamIterator =  new astyle::ASStreamIterator ( in );
+        streamIterator =  new astyle::ASStreamIterator ( in, extraEOFChar );
         formatter->init ( streamIterator );
 
         if (currentSyntax->getDescription()=="C#") {
