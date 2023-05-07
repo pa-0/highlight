@@ -336,7 +336,7 @@ vector <string> HLCmdLineApp::collectPluginPaths(const vector<string>& plugins)
     }
     return absolutePaths;
 }
-bool HLCmdLineApp::ServiceModeCheck(CmdLineOptions options, highlight::CodeGenerator* generator, string &suffix, unsigned int &curFileIndex){
+bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator* generator, string &suffix, unsigned int &curFileIndex){
     if (! options.runServiceMode() || cin.eof())
         return false;
 
@@ -345,11 +345,11 @@ bool HLCmdLineApp::ServiceModeCheck(CmdLineOptions options, highlight::CodeGener
         cout << service_mode_tag << endl;
     cout << flush;
     curFileIndex = 0; //stay on our stdin
-    
+
     if (cin.peek() == generator->getAdditionalEOFChar()) {
-        cin.get();//eof char
-        if (cin.peek() == '\n')//this should always be true if they properly give input but if they separated files with just EOF marker we won't chomp their first char
-            cin.get();//eol after it
+        cin.get(); //eof char
+        if (cin.peek() == '\n') //this should always be true if they properly give input but if they separated files with just EOF marker we won't chomp their first char
+            cin.get(); //eol after it
     }
 
     string modeChanges;
@@ -372,16 +372,16 @@ bool HLCmdLineApp::ServiceModeCheck(CmdLineOptions options, highlight::CodeGener
         if (modeKey == ""){
         }
         else if (modeKey == "syntax") {
-            if (modeVal.find(".") != -1)
+            if (modeVal.find(".") != string::npos)
                 suffix = dataDir.guessFileType(dataDir.getFileSuffix(modeVal), modeVal);
             else
                 suffix = modeVal;
-                modeRes += "Syntax: " + suffix + " ";
+            modeRes += "Syntax: " + suffix + " ";
         }else if (modeKey == "line-length"){
             try {
                 options.setLineLength(std::stoi(modeVal));
                 modeRes += "LineLen: " + modeVal + " ";
-            } catch (std::exception e) {
+            } catch (std::exception &e) {
                 cerr << "Unable to parse line length option: " << modeVal << endl;
             }
             generator->setPreformatting(options.getWrappingStyle(),
@@ -395,7 +395,7 @@ bool HLCmdLineApp::ServiceModeCheck(CmdLineOptions options, highlight::CodeGener
         } else if (modeKey == "tag") {
             service_mode_tag = modeVal;
             modeRes += "Tag: " + service_mode_tag + " ";
-        }else
+        } else
             cerr << "Invalid service mode key change of: " << modeKey << " ignoring." << endl;
     }
     if (options.verbosityLevel())
@@ -654,7 +654,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     generator->setFilesCnt(fileCount);
 
-    while ( (ServiceModeCheck(options, generator.get(), suffix, i) || i < fileCount) && !initError ) {
+    while ( (serviceModeCheck(options, generator.get(), suffix, i) || i < fileCount) && !initError ) {
         cout.flush();
 
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {

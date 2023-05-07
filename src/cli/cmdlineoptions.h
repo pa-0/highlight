@@ -157,7 +157,7 @@ public:
     CmdLineOptions ( const int argc, const char *argv[] );
     ~CmdLineOptions();
 
-    void CmdLineOptions::ProcessSingleOption(const int code, const std::string & arg);
+    void ProcessSingleOption(const int code, const std::string & arg);
 
     /** \param length sets line length */
     void setLineLength(int length);

@@ -553,7 +553,7 @@ protected:
       \return line number  */
     unsigned int getLineNumber();
 
-    bool CodeGenerator::AtEnd(char c = -1) const;
+    bool AtEnd(char c = -1) const;
 
     vector <string> openTags,   ///< list of format delimiters (open new format descriptions)
            closeTags;   ///< list of format delimiters (close format descriptions)

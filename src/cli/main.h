@@ -68,7 +68,7 @@ private:
 
     DataDir dataDir;
 
-    bool ServiceModeCheck(CmdLineOptions options, highlight::CodeGenerator * generator, string &suffix, unsigned int &curFileIndex);
+    bool serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator * generator, string &suffix, unsigned int &curFileIndex);
     string service_mode_tag;
 
 
