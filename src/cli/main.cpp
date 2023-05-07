@@ -343,7 +343,9 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
     cerr << flush;
     if (! service_mode_tag.empty())
         cout << service_mode_tag << endl;
+
     cout << flush;
+
     curFileIndex = 0; //stay on our stdin
 
     if (cin.peek() == generator->getAdditionalEOFChar()) {
@@ -362,28 +364,30 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
     istringstream modesStream(modeChanges);
     string modeChange;
     string modeRes;
-    while (getline(modesStream, modeChange, ';')) {
-        istringstream modeStream(modeChange);
-        string modeKey;
-        string modeVal="";
-        getline(modeStream,modeKey,'=');
-        getline(modeStream,modeVal);
+    string modeKey;
+    string modeVal;
 
-        if (modeKey == ""){
-        }
-        else if (modeKey == "syntax") {
+    while (getline(modesStream, modeChange, ';')) {
+
+        istringstream modeStream(modeChange);
+
+        getline(modeStream, modeKey, '=');
+        getline(modeStream, modeVal);
+
+        if (modeKey == "syntax") {
             if (modeVal.find(".") != string::npos)
                 suffix = dataDir.guessFileType(dataDir.getFileSuffix(modeVal), modeVal);
             else
                 suffix = modeVal;
             modeRes += "Syntax: " + suffix + " ";
-        }else if (modeKey == "line-length"){
-            try {
-                options.setLineLength(std::stoi(modeVal));
-                modeRes += "LineLen: " + modeVal + " ";
-            } catch (std::exception &e) {
-                cerr << "Unable to parse line length option: " << modeVal << endl;
-            }
+        } else if (modeKey == "line-length"){
+            int lineLength=0;
+
+            StringTools::str2num<int> ( lineLength, modeVal, std::dec );
+
+            options.setLineLength(lineLength);
+            modeRes += "LineLen: " + modeVal + " ";
+
             generator->setPreformatting(options.getWrappingStyle(),
                 (generator->getPrintLineNumbers()) ?
                 options.getLineLength() - options.getNumberWidth() : options.getLineLength(),
@@ -395,11 +399,12 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
         } else if (modeKey == "tag") {
             service_mode_tag = modeVal;
             modeRes += "Tag: " + service_mode_tag + " ";
-        } else
+        } else if (modeKey.length() )
             cerr << "Invalid service mode key change of: " << modeKey << " ignoring." << endl;
     }
     if (options.verbosityLevel())
         cerr << "Updated Items: " << modeRes << endl;
+
     return true;
 }
 int HLCmdLineApp::run ( const int argc, const char*argv[] )
