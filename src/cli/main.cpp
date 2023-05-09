@@ -337,7 +337,7 @@ vector <string> HLCmdLineApp::collectPluginPaths(const vector<string>& plugins)
     return absolutePaths;
 }
 bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator* generator, string &suffix, unsigned int &curFileIndex){
-    if (! options.runServiceMode() || cin.eof())
+    if (! options.runServiceMode())
         return false;
 
     cerr << flush;
@@ -345,6 +345,9 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
         cout << service_mode_tag << endl;
 
     cout << flush;
+
+    if (cin.eof())
+        return false;
 
     curFileIndex = 0; //stay on our stdin
 
