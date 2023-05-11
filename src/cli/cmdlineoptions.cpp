@@ -106,9 +106,7 @@ const Arg_parser::Option options[] = {
         { S_OPT_PRINT_CONFIG,     OPT_PRINT_CONFIG, Arg_parser::no  },
         { S_OPT_TEST_INPUT,       OPT_TEST_INPUT,   Arg_parser::no  },
         { S_OPT_SERVICE_MODE,     OPT_SERVICE_MODE, Arg_parser::no  },
-#ifdef _WIN32
         { S_OPT_DISABLE_ECHO,     OPT_DISABLE_ECHO, Arg_parser::no  },
-#endif // _WIN32
         { S_OPT_NO_NUMBER_WL,     OPT_NO_NUMBER_WL, Arg_parser::no  },
         { S_OPT_RTF_CHAR_STYLES,  OPT_RTF_CHAR_STYLES, Arg_parser::no  },
         { S_OPT_RTF_PAGE_COLOR,   OPT_RTF_PAGE_COLOR,  Arg_parser::no  },
