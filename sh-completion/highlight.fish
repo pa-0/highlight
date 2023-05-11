@@ -78,3 +78,5 @@ complete -c highlight -l ls-semantic -d 'retrieve semantic token types (requires
 complete -c highlight -l ls-syntax -r -d 'set syntax which is understood by the server'
 complete -c highlight -l ls-syntax-error -d 'retrieve syntax error information (assumes --ls-hover or --ls-semantic)'
 complete -c highlight -l ls-workspace -r -d 'set workspace directory to init'
+complete -c highlight -l ls-legacy -r -d 'do not require a server capabilities response'
+complete -c highlight -l service-mode -r -d 'run in service mode, not stopping until signaled'

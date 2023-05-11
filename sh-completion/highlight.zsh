@@ -81,6 +81,8 @@ _highlight() {
     "--ls-syntax[set syntax which is understood by the server]: :_files"
     "--ls-syntax-error[retrieve syntax error information (assumes --ls-hover or --ls-semantic)]"
     "--ls-workspace[set workspace directory to init]: :_files"
+    "--ls-legacy[do not require a server capabilities response]: :_files"
+    "--service-mode[run in service mode, not stopping until signaled]: :_files"
   )
   _arguments -s -S \
     $options \

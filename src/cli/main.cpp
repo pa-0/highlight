@@ -435,6 +435,12 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     }
 
 #ifdef _WIN32
+
+// available in recent Windows SDK
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif
+
     //https://docs.microsoft.com/en-us/windows/console/setconsolemode
     HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode;

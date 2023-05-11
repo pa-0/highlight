@@ -183,6 +183,8 @@ parser:option "--ls-workspace"
    :description "set workspace directory to init. the server"
 parser:option "--ls-legacy"
    :description "do not require a server capabilities response"
+parser:option "--service-mode"
+   :description "run in service mode, not stopping until signaled"
 
 local p = argparse "gen-completions"
 p:argument "shell"

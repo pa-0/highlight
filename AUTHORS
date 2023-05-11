@@ -7,6 +7,7 @@ Leandro Motta Barros
 Developer of the Artistic Style lib:
 Tal Davidson <davidsont at bigfoot com>
 Jim Pattee <jimp03 at email com>
+André Simon <a dot simon at mailbox dot org>
 
 Developer of the PicoJSON lib:
 Kazuho Oku
@@ -60,7 +61,7 @@ Roger Sperberg (andes, oxygenated)
 Tristano Ajmone (edit-godot, edit-fasm)
 Andrei Rosca (edit-flashdevelop)
 
-Patches:
+Patches / Merge Requests:
 
 Marc Duponcheel (gcc 3.x compatibility)
 Jonas Fonseca (Ruby language definition)
@@ -88,3 +89,4 @@ Victor Ananjevsky (various)
 Andrew Fuller (xterm256 font attributes)
 Troy Sankey (JS regex)
 Oğuz Ersen (manpage formatting)
+https://gitlab.com/MitchC (service mode)

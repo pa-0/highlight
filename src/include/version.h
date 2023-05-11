@@ -31,7 +31,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 #define HIGHLIGHT_MAJOR "4"
-#define HIGHLIGHT_MINOR "5"
+#define HIGHLIGHT_MINOR "6"
 
 #define HIGHLIGHT_VERSION  HIGHLIGHT_MAJOR "." HIGHLIGHT_MINOR
 

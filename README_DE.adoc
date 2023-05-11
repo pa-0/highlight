@@ -1,6 +1,6 @@
 = HIGHLIGHT HANDBUCH
 André Simon
-v4.5, February 2023
+v4.6, Mai 2023
 :lang: de
 :toc: left
 :toc-title: Contents
@@ -203,6 +203,7 @@ General options:
                                   (Example: --skip='bak;c~;h~')
      --stdout                   output to stdout (batch mode, --print-style)
      --validate-input           test if input is text, remove Unicode BOM
+     --service-mode             run in service mode, not stopping until signaled
      --version                  print version and copyright information
 
 
@@ -390,6 +391,7 @@ highlight --out-format=ansi <inputfile> | less -R
 highlight --out-format=xterm256 <inputfile> | less -R
 .....................................................
 
+
 ==== Text-Ausgabe:
 
 Wird als Sprachdefinition txt angegeben, findet keine Syntaxhervorhebung statt.
@@ -397,6 +399,59 @@ Wird als Sprachdefinition txt angegeben, findet keine Syntaxhervorhebung statt.
 .......................................................
 highlight -S txt --out-format=latex README > readme.tex
 .......................................................
+
+
+==== Service Mode:
+
+Since version 4.6 highlight can be invoked as long running process to process files
+using stdin and stdout. This might result in better performance, ie. when used in a
+file viewer application.
+
+Service mode (`--service-mode`) is designed to allow several inputs to be parsed on
+demand from an external application without restarting highlight each time.
+Service mode runs continuously until a kill signal is sent, EOF is read from STDIN,
+or the "exit" command is sent instead of a mode line specified below. Service mode
+expects each input to be separated by a EOF character on a line by itself (if EOF
+was set to '\0' then "\n\0\n"). Before each file (including the first file) a new
+mode line must be sent with any mode changes to occur (even if no changes are
+desired a new line must be sent).
+Mode options are changed with key value pairs like `option=value` separated by a
+semicolon (no trailing semicolon for last item needed). Any options not changed will
+retain their previous value.  Right now only the following options are supported:
+
+[horizontal]
+`syntax=file.ext` ::: to change the syntax to the extension from the filename,
+or syntax=<syntax_suffix> to set the syntax to use directly (ie csharp).
+tag= if provided and not empty will be printed by itself on a new line to stdout
+after a file has been processed.
+
+`line-length=##` :::  set the line length for output wrapping
+
+`eof=##` ::: A single character (0x00-0xFE) that stdin will contain to separate one
+file from the next. Recommend 0x00 if you can send it, otherwise 0x01-0x07 are
+generally easy for most clients to send, ie 0x07 ('\a') for bell. It is near
+impossible to send several characters above 128 in windows through most term emulators.
+Note the EOF char must occur on its own new line it cannot be found mid-line.
+There is no need for a new line between the previous EOF and the next mode options line.
+You also cannot send the EOF char to new line as it is used as a delimiter already as
+described.
+
+Finally any file contents can be sent however the file cannot contain the EOF char.
+The requirement for the EOF char to be on a line by itself could be altered.  It was
+done that way to have minimal changes to the existed code.  For the most part we simply
+expand current true EOF checks to check for the alternate EOF char.
+Also adds disable echo (`--disable-echo`) for win32 builds to disable console echo back
+for STDIN. This can be controlled fairly easily in linux with stty if desired by the
+user, but windows does not have something similar.  If we want to expand disable-echo
+to other platforms that have stty doing
+
+...........................................................
+tcgetattr(fileno(stdin), &term);
+term.c_lflag &= ~ECHO;
+tcsetattr(fileno(stdin), 0, &term);
+...........................................................
+
+See extras/highlight-service.py for an interactive Python script.
 
 
 === FORTGESCHRITTENE OPTIONEN

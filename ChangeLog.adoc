@@ -6,6 +6,14 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.6
+
+11.05.2023
+
+  - added  `--service-mode` option to run highlight as long running process (https://gitlab.com/saalen/highlight/-/merge_requests/140)
+  - added extras/highlight-service.py as ex example for the service mode
+  - W32: added  `--disable-echo` option (https://gitlab.com/saalen/highlight/-/merge_requests/140)
+  - W32: fixed output of ANSI sequences (https://gitlab.com/saalen/highlight/-/issues/194)
 
 == highlight 4.5
 

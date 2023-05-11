@@ -4,7 +4,7 @@ _highlight() {
     args=("${COMP_WORDS[@]}")
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="-B --batch-recursive -D --data-dir --config-file -d --outdir -h --help -i --input -o --output -P --progress -q --quiet -S --syntax --syntax-by-name --syntax-supported -v --verbose --force --list-scripts --list-cat --max-size --plug-in --plug-in-param --print-config --print-style --skip --stdout --validate-input --version -O --out-format -c --style-outfile -e --style-infile -f --fragment -F --reformat -I --include-style -J --line-length -j --line-number-length --line-range -k --font -K --font-size -l --line-numbers -m --line-number-start -s --style -t --replace-tabs -T --doc-title -u --encoding -V --wrap-simple -W --wrap --wrap-no-numbers -z --zeroes --isolate --keep-injections --kw-case --no-trailing-nl --no-version-info -a --anchors -y --anchor-prefix -N --anchor-filename -C --print-index -n --ordered-list --class-name --inline-css --enclose-pre -b --babel -r --replace-quotes --beamer --pretty-symbols --page-color -x --page-size --char-styles --height --width --canvas --ls-profile --ls-delay --ls-exec --ls-option --ls-hover --ls-semantic --ls-syntax --ls-syntax-error --ls-workspace"
+    opts="-B --batch-recursive -D --data-dir --config-file -d --outdir -h --help -i --input -o --output -P --progress -q --quiet -S --syntax --syntax-by-name --syntax-supported -v --verbose --force --list-scripts --list-cat --max-size --plug-in --plug-in-param --print-config --print-style --skip --stdout --validate-input --version -O --out-format -c --style-outfile -e --style-infile -f --fragment -F --reformat -I --include-style -J --line-length -j --line-number-length --line-range -k --font -K --font-size -l --line-numbers -m --line-number-start -s --style -t --replace-tabs -T --doc-title -u --encoding -V --wrap-simple -W --wrap --wrap-no-numbers -z --zeroes --isolate --keep-injections --kw-case --no-trailing-nl --no-version-info -a --anchors -y --anchor-prefix -N --anchor-filename -C --print-index -n --ordered-list --class-name --inline-css --enclose-pre -b --babel -r --replace-quotes --beamer --pretty-symbols --page-color -x --page-size --char-styles --height --width --canvas --ls-profile --ls-delay --ls-exec --ls-option --ls-hover --ls-semantic --ls-syntax --ls-syntax-error --ls-workspace --ls-legacy --service-mode"
 
     case "$prev" in
         -B|--batch-recursive)
@@ -160,6 +160,14 @@ _highlight() {
             return 0
             ;;
         --ls-workspace)
+            COMPREPLY=($(compgen -f -- "$cur"))
+            return 0
+            ;;
+        --ls-legacy)
+            COMPREPLY=($(compgen -f -- "$cur"))
+            return 0
+            ;;
+        --service-mode)
             COMPREPLY=($(compgen -f -- "$cur"))
             return 0
             ;;
