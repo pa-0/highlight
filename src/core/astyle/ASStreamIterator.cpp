@@ -5,7 +5,7 @@ namespace astyle
 {
 
 
-ASStreamIterator::ASStreamIterator(istream *in, unsigned char EOFChar) : ASSourceIterator()
+ASStreamIterator::ASStreamIterator(std::istream *in, unsigned char EOFChar) : ASSourceIterator()
 {
 	inStream = in;
 	buffer.reserve(200);
@@ -22,7 +22,7 @@ bool ASStreamIterator::AtEnd(char c) const{
 	bool instream_eof = inStream->eof();
 	if (extraEOFChar == 255)
 		return instream_eof;
-	
+
 	bool c_null = c == extraEOFChar;
 	bool instream_peek_null = false;
 	if (instream_eof == false && c_null == false)
@@ -50,7 +50,7 @@ void ASStreamIterator::saveLastInputLine()
  * @return        string containing the next input line minus any end of line characters
  */
 //template<typename T>
-string ASStreamIterator::nextLine(bool emptyLineWasDeleted)
+std::string ASStreamIterator::nextLine(bool emptyLineWasDeleted)
 {
 	// verify that the current position is correct
 	assert (peekStart == 0);
@@ -135,10 +135,10 @@ string ASStreamIterator::nextLine(bool emptyLineWasDeleted)
 // when finished peeking you MUST call peekReset()
 // call this function from ASFormatter ONLY
 //template<typename T>
-string ASStreamIterator::peekNextLine()
+std::string ASStreamIterator::peekNextLine()
 {
 	assert (hasMoreLines());
-	string nextLine;
+	std::string nextLine;
 	char ch;
 
 	if (peekStart == 0)

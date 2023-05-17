@@ -81,7 +81,7 @@ macx-clang|macx-clang-arm64  {
     INCLUDEPATH += ../../include
     INCLUDEPATH+=/usr/local/Cellar/boost/1.81.0_1/include
 
-    QMAKE_MACOSX_DEPLOYMENT_TARGET=12.3
+    QMAKE_MACOSX_DEPLOYMENT_TARGET=13.0
     CONFIG += app_bundle
     LIBS += -L.. -lhighlight
     LIBS += -L/Users/andresimon/MyProjects/lua-5.4.1/src -llua

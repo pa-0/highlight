@@ -40,27 +40,27 @@ class ASStreamIterator : virtual public ASSourceIterator
 		bool checkForEmptyLine;
 
 		// function declarations
-		ASStreamIterator(istream *in, unsigned char extraEOFChar=255);
+		ASStreamIterator(std::istream *in, unsigned char extraEOFChar=255);
 		virtual ~ASStreamIterator();
-		string nextLine(bool emptyLineWasDeleted);
-		string peekNextLine();
+		std::string nextLine(bool emptyLineWasDeleted);
+		std::string peekNextLine();
 		void peekReset();
 		void saveLastInputLine();
 
 		// inline functions
-		bool compareToInputBuffer(const string &nextLine) const { return nextLine == prevBuffer; }
+		bool compareToInputBuffer(const std::string &nextLine) const { return nextLine == prevBuffer; }
 		const char* getOutputEOL() const { return outputEOL; }
 		bool hasMoreLines() const;
 
 		int getStreamLength() const { return 0; }
-		streamoff tellg() { return 0; }
-		
-        streamoff getPeekStart() const  { return 0; }
+		std::streamoff tellg() { return 0; }
+
+        std::streamoff getPeekStart() const  { return 0; }
 
 	private:
-		istream * inStream;          // pointer to the input stream
-		string buffer;         // current input line
-		string prevBuffer;     // previous input line
+		std::istream * inStream;          // pointer to the input stream
+		std::string buffer;         // current input line
+		std::string prevBuffer;     // previous input line
 		unsigned char extraEOFChar=255; //Additional EOF char that will signal a file done on STDIN
 		int eolWindows;        // number of Windows line endings (CRLF)
 		int eolLinux;          // number of Linux line endings (LF)

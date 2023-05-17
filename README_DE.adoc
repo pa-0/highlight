@@ -403,53 +403,62 @@ highlight -S txt --out-format=latex README > readme.tex
 
 ==== Service Mode:
 
-Since version 4.6 highlight can be invoked as long running process to process
-files using stdin and stdout. This might result in better performance, ie.
-when used in a file viewer application.
+Seit Version 4.6 kann Highlight als lang laufender Prozess aufgerufen werden,
+um Dateien über stdin und stdout zu verarbeiten. Dies kann zu einer besseren
+Leistung führen, z.B. wenn es in einer Dateiansichtsanwendung verwendet wird.
 
-Service mode (`--service-mode`) is designed to allow several inputs to be
-parsed on demand from an external application without restarting highlight
-each time. Service mode runs continuously until a kill signal is sent, EOF is
-read from STDIN, or the "exit" command is sent instead of a mode line specified
-below. Service mode expects each input to be separated by a EOF character on a
-line by itself (if EOF was set to '\0' then "\n\0\n"). Before each file
-(including the first file) a new mode line must be sent with any mode changes
-to occur (even if no changes are desired a new line must be sent).
+Der Service-Modus (--service-mode) ist so konzipiert, dass mehrere Eingaben
+von einer externen Anwendung auf Anfrage verarbeitet werden können, ohne
+Highlight jedes Mal neu zu starten. Der Service-Modus läuft kontinuierlich,
+bis ein Beendigungssignal gesendet wird, EOF von STDIN gelesen wird oder der
+Befehl "exit" anstelle einer unten angegebenen Moduszeile gesendet wird. Der
+Service-Modus erwartet, dass jede Eingabe durch ein EOF-Zeichen in einer
+eigenen Zeile getrennt ist (wenn EOF auf '\0' gesetzt war, dann "\n\0\n").
+Vor jeder Datei (einschließlich der ersten Datei) muss eine neue Moduszeile
+mit allen gewünschten Modusänderungen gesendet werden (auch wenn keine
+Änderungen gewünscht sind, muss eine neue Zeile gesendet werden).
 
-Mode options are changed with key value pairs like `option=value` separated by
-a semicolon (no trailing semicolon for last item needed). Any options not
-changed will retain their previous value.
+Modusoptionen werden als Schlüssel-Wert-Paare wie option=Wert geändert,
+getrennt durch ein Semikolon (kein abschließendes Semikolon für das letzte
+Element erforderlich). Alle nicht geänderten Optionen behalten ihren
+vorherigen Wert bei.
 
-The following options are supported:
+Folgende Optionen werden unterstützt:
 
 [horizontal]
-`syntax=file.ext` ::: to change the syntax to the extension from the filename,
-or syntax=<syntax_suffix> to set the syntax to use directly (ie csharp).
+syntax=Dateiendung ::: um die Syntax anhand der Dateiendung zu ändern oder
+syntax=<Syntax-Suffix> um die Syntax direkt festzulegen (z.B. csharp).
 
-`tag=###` ::: if provided and not empty will be printed by itself on a new line
-to stdout after a file has been processed.
+tag=### ::: falls angegeben und nicht leer, wird es nach der Verarbeitung
+einer Datei allein in einer neuen Zeile auf stdout ausgegeben.
 
-`line-length=##` :::  set the line length for output wrapping
+line-length=## ::: setzt die Zeilenlänge für die Ausgabeumbrüche.
 
-`eof=##` ::: A single character (0x00-0xFE) that stdin will contain to separate
-one file from the next. Recommend 0x00 if you can send it, otherwise 0x01-0x07
-are generally easy for most clients to send, ie 0x07 ('\a') for bell. It is near
-impossible to send several characters above 128 in windows through most term
-emulators.
+eof=## ::: Ein einzelnes Zeichen (0x00-0xFE), das in stdin vorhanden ist,
+um eine Datei von der nächsten zu trennen. Empfohlen wird 0x00, falls möglich,
+ansonsten sind 0x01-0x07 in der Regel für die meisten Clients einfach zu
+senden, z.B. 0x07 ('\a') für den Glockenton. Es ist nahezu unmöglich, mehrere
+Zeichen über 128 in Windows über die meisten Terminal-Emulatoren zu senden.
 
-Note the EOF char must occur on its own new line it cannot be found mid-line.
-There is no need for a new line between the previous EOF and the next mode
-options line. You also cannot send the EOF char to new line as it is used as a
-delimiter already as described.
+Beachten Sie, dass das EOF-Zeichen auf einer eigenen neuen Zeile stehen muss
+und nicht mitten in einer Zeile gefunden werden kann. Zwischen dem vorherigen
+EOF und der nächsten Modusoptionen-Zeile ist keine neue Zeile erforderlich.
+Sie können das EOF-Zeichen auch nicht an eine neue Zeile senden, da es bereits
+als Trennzeichen verwendet wird, wie beschrieben.
 
-Finally any file contents can be sent however the file cannot contain the EOF
-char. The requirement for the EOF char to be on a line by itself could be altered.
-It was done that way to have minimal changes to the existed code.  For the most
-part we simply expand current true EOF checks to check for the alternate EOF char.
-Also adds disable echo (`--disable-echo`) for win32 builds to disable console
-echo back for STDIN. This can be controlled fairly easily in linux with stty if
-desired by the user, but windows does not have something similar. If we want to
-expand disable-echo to other platforms that have stty doing
+Schließlich können beliebige Dateiinhalte gesendet werden, jedoch darf die Datei
+das EOF-Zeichen nicht enthalten. Die Anforderung, dass das EOF-Zeichen auf einer
+eigenen Zeile stehen muss, könnte geändert werden. Es wurde so gemacht, um
+minimale Änderungen am vorhandenen Code vorzunehmen. Im Großen und Ganzen
+erweitern wir einfach die aktuellen Überprüfungen auf das wahre EOF, um das
+alternative EOF-Zeichen zu überprüfen.
+
+Es wurde auch die Option zur Deaktivierung der Echounterdrückung (`--disable-echo`)
+für Win32-Builds hinzugefügt, um das Konsolen-Echo für STDIN zu deaktivieren. Dies
+kann bei Bedarf vom Benutzer in Linux relativ einfach mit `stty` gesteuert werden,
+aber Windows hat nichts Vergleichbares. Wenn wir die Deaktivierung der
+Echounterdrückung auf andere Plattformen erweitern möchten, die `stty` verwenden,
+können wir Folgendes tun:
 
 ...........................................................
 tcgetattr(fileno(stdin), &term);
@@ -457,7 +466,7 @@ term.c_lflag &= ~ECHO;
 tcsetattr(fileno(stdin), 0, &term);
 ...........................................................
 
-See extras/highlight-service.py for an interactive Python script.
+Siehe `extras/highlight-service.py` für ein interaktives Python-Skript.
 
 
 === FORTGESCHRITTENE OPTIONEN
