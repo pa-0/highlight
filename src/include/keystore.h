@@ -34,7 +34,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <Diluculum/LuaFunction.hpp>
 #include <Diluculum/LuaVariable.hpp>
 
-using namespace std;
 
 namespace highlight
 {
@@ -47,7 +46,7 @@ public:
     ~KeyStore();
 
     /** maps keys to values to be accessed in Lua Code*/
-    static map <string, string> keyStoreMap;
+    static std::map <std::string, std::string> keyStoreMap;
 
     static int luaStore (lua_State *L);
 };

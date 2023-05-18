@@ -15,5 +15,5 @@ SOURCES += F:\git\highlight\src\core\Diluculum\*.cpp
 
 INCLUDEPATH += F:\libs\lua_5.4.0
 INCLUDEPATH += ../../include
-INCLUDEPATH += F:\libs\boost_1_70_0
+INCLUDEPATH += F:\libs\boost_1_82_0
 QMAKE_CXXFLAGS += -std=c++11

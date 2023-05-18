@@ -27,6 +27,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 //?? https://codereview.qt-project.org/#change,51048
 
+#undef NOCRYPT
+
 #include <QtGlobal>
 
 #if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
@@ -39,6 +41,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDir>
 
 #include "mainwindow.h"
+
 
 int main(int argc, char *argv[])
 {

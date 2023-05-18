@@ -38,13 +38,12 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "elementstyle.h"
 #include "stylecolour.h"
 
-using namespace std;
 
 namespace highlight
 {
 
 /** maps keyword class names and the corresponding formatting information*/
-typedef map <string, ElementStyle> KeywordStyles;
+typedef map <std::string, ElementStyle> KeywordStyles;
 
 /** iterator for keyword styles*/
 typedef KeywordStyles::const_iterator KSIterator;
@@ -62,13 +61,13 @@ private:
     ElementStyle defaultElem;
     ElementStyle canvas;
 
-    string errorMsg;
-    string desc, categories;
-    string themeInjections;
+    std::string errorMsg;
+    std::string desc, categories;
+    std::string themeInjections;
 
-    vector<Diluculum::LuaFunction*> pluginChunks;
+    std::vector<Diluculum::LuaFunction*> pluginChunks;
 
-    map<string, int> semanticStyleMap;
+    map<std::string, int> semanticStyleMap;
 
     bool fileOK, restoreStyles, dirtyAttributes;
 
@@ -84,7 +83,7 @@ private:
 
     float getBrightness(const Colour& colour) const;
 
-    OutputType getOutputType(const string &typeDesc);
+    OutputType getOutputType(const std::string &typeDesc);
 
 public:
     /** Constructor */
@@ -96,7 +95,7 @@ public:
           \param outputType
           \param loadSemanticStyles
           \return True if successful */
-    bool load ( const string & styleDefinitionFile, OutputType outputType=HTML, bool loadSemanticStyles = false );
+    bool load ( const std::string & styleDefinitionFile, OutputType outputType=HTML, bool loadSemanticStyles = false );
 
     void addUserChunk(const Diluculum::LuaFunction& chunk)
     {
@@ -104,25 +103,25 @@ public:
     }
 
     /** \return class names defined in the theme file */
-    vector <string> getClassNames() const;
+    std::vector <std::string> getClassNames() const;
 
     /** \return keyword styles */
     KeywordStyles getKeywordStyles() const;
 
     /** \return Font size */
-    string getErrorMessage() const;
+    std::string getErrorMessage() const;
 
-    const string &getDescription() const
+    const std::string &getDescription() const
     {
         return desc;
     }
 
-    const string &getCategoryDescription() const
+    const std::string &getCategoryDescription() const
     {
         return categories;
     }
 
-    string getInjections() const;
+    std::string getInjections() const;
 
     /** \return Background colour*/
     Colour getBgColour() const;
@@ -172,18 +171,18 @@ public:
     /** \param className Name of keyword class (eg kwa, kwb, .., kwd)
         \return keyword style of the given className
     */
-    ElementStyle getKeywordStyle ( const string &className ) ;
+    ElementStyle getKeywordStyle ( const std::string &className ) ;
 
     /** \return True if language definition was found */
     bool found() const ;
 
-    int getSemanticStyle(const string &type);
+    int getSemanticStyle(const std::string &type);
 
     int getSemanticTokenStyleCount() const;
 
     int getKeywordStyleCount() const;
 
-    void overrideAttributes( vector<int>& attributes);
+    void overrideAttributes( std::vector<int>& attributes);
 
     float getContrast() const;
 };

@@ -29,7 +29,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 namespace highlight
 {
 
-map<string, string> KeyStore::keyStoreMap;
+std::map<std::string, std::string> KeyStore::keyStoreMap;
 
 KeyStore::KeyStore()
 {}

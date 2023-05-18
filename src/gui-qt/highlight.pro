@@ -57,9 +57,10 @@ win32 {
 
     INCLUDEPATH += F:\libs\lua_5.4.0\
     INCLUDEPATH += ../../include
-    INCLUDEPATH += F:/libs/boost_1_70_0
+    INCLUDEPATH += F:/libs/boost_1_82_0
 
     DEFINES += WIN32
+    DEFINES -= NOCRYPT
     CONFIG += static
     LIBS += -LF:\git\highlight\src -lhighlight
 

@@ -32,7 +32,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "arg_parser.h"
 
-using namespace std;
 
 enum Optcode {
         S_OPT_ENCLOSE_PRE = 256, S_OPT_FORCE_OUTPUT,
@@ -249,17 +248,17 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
     parseRuntimeOptions(argc, argv);
 
     if ( skipArg.size() && inputFileNames.size() > 1) {
-        istringstream valueStream;
-        string elem;
+        std::istringstream valueStream;
+        std::string elem;
         valueStream.str ( StringTools::change_case ( skipArg,StringTools::CASE_LOWER ) );
 
         while ( getline ( valueStream, elem, ';' ) ) {
             ignoredFileTypes.insert ( elem );
         }
 
-        vector<string>::iterator file=inputFileNames.begin();
+        std::vector<std::string>::iterator file=inputFileNames.begin();
         while ( file!=inputFileNames.end()) {
-            for ( set<string>::iterator ext=ignoredFileTypes.begin(); ext!=ignoredFileTypes.end(); ext++ ) {
+            for ( std::set<std::string>::iterator ext=ignoredFileTypes.begin(); ext!=ignoredFileTypes.end(); ext++ ) {
                 if (file!=inputFileNames.end() && StringTools::endsWith(  *file, *ext )) {
                     file = inputFileNames.erase ( file );
                     break;

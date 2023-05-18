@@ -5,7 +5,7 @@
 AppName=Highlight Code Converter
 
 AppVerName=Highlight
-OutputBaseFilename=highlight-setup-4.4-x64
+OutputBaseFilename=highlight-setup-4.6-x64
 
 AppPublisher=André Simon
 AppPublisherURL=http://www.andre-simon.de

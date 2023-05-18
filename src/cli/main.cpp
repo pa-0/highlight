@@ -40,14 +40,13 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MAX_LINE__WIDTH       80
 
-using namespace std;
 
 void HLCmdLineApp::printVersionInfo(bool quietMode)
 {
     if (quietMode) {
-        cout << highlight::Info::getVersion() << "\n";
+        std::cout << highlight::Info::getVersion() << "\n";
     } else {
-        cout << "\n highlight version "
+        std::cout << "\n highlight version "
             << highlight::Info::getVersion()
             << "\n Copyright (C) 2002-2023 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
@@ -70,43 +69,43 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
 
 void HLCmdLineApp::printBadInstallationInfo()
 {
-    cerr << "highlight: Data directory not found ("<<DataDir::LSB_DATA_DIR<<")."
+    std::cerr << "highlight: Data directory not found ("<<DataDir::LSB_DATA_DIR<<")."
          " Bad installation or wrong "<< OPT_DATADIR << " parameter."
          << "\n\nCopy the highlight files into one of the directories listed "
          << "in INSTALL.\nYou may also set the data directory with "
          << OPT_DATADIR << ".\n";
 }
 
-int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcard, const string& kind, const string& option, const string& categoryFilterList)
+int HLCmdLineApp::printInstalledFiles(const std::string& where, const std::string& wildcard, const std::string& kind, const std::string& option, const std::string& categoryFilterList)
 {
-    vector <string> filePaths;
-    string searchDir = where + wildcard;
+    std::vector <string> filePaths;
+    std::string searchDir = where + wildcard;
 
     bool directoryOK = Platform::getDirectoryEntries ( filePaths, searchDir, true );
     if ( !directoryOK ) {
-        cerr << "highlight: Could not access directory "
+        std::cerr << "highlight: Could not access directory "
              <<  searchDir
              << ", aborted.\n";
         return EXIT_FAILURE;
     }
 
-    sort ( filePaths.begin(), filePaths.end() );
-    string suffix, desc;
+    std::sort ( filePaths.begin(), filePaths.end() );
+    std::string suffix, desc;
     Diluculum::LuaValueMap categoryMap;
-    cout << "\nInstalled " << kind << "s";
+    std::cout << "\nInstalled " << kind << "s";
 
     if (categoryFilterList.size())
-        cout << " matching \""<<categoryFilterList<<"\"";
+        std::cout << " matching \""<<categoryFilterList<<"\"";
 
-    cout << " (located in " << where << "):\n\n";
+    std::cout << " (located in " << where << "):\n\n";
     int matchedFileCnt=0;
     std::set<string> categoryNames;
     std::set<string> categoryFilters;
 
-    istringstream valueStream;
-    string catFilter;
-    valueStream.str ( StringTools::change_case ( categoryFilterList,StringTools::CASE_LOWER ) );
-    while ( getline ( valueStream, catFilter, ';' ) ) {
+    std::istringstream valueStream;
+    std::string catFilter;
+    valueStream.str ( StringTools::change_case ( categoryFilterList, StringTools::CASE_LOWER ) );
+    while ( std::getline ( valueStream, catFilter, ';' ) ) {
         categoryFilters.insert ( catFilter );
     }
 
@@ -139,41 +138,41 @@ int HLCmdLineApp::printInstalledFiles(const string& where, const string& wildcar
 
             matchedFileCnt++;
             if (kind=="langDef") {
-                cout << setw ( 30 ) <<setiosflags ( ios::left ) <<desc<<": "<<suffix;
+                std::cout << setw ( 30 ) <<setiosflags ( ios::left ) <<desc<<": "<<suffix;
 
                 int extCnt=0;
                 for (StringMap::iterator it=dataDir.assocByExtension.begin(); it!=dataDir.assocByExtension.end(); it++) {
                     if (it->second==suffix ) {
-                        cout << ((++extCnt==1)?" ( ":" ")<<it->first;
+                        std::cout << ((++extCnt==1)?" ( ":" ")<<it->first;
                     }
                 }
-                cout << ((extCnt)?" )":"");
+                std::cout << ((extCnt)?" )":"");
             } else {
-                cout << setw ( 30 ) <<setiosflags ( ios::left ) <<suffix<<": "<<desc;
+                std::cout << setw ( 30 ) <<setiosflags ( ios::left ) <<suffix<<": "<<desc;
 
             }
-            cout << endl;
+            std::cout << endl;
         } catch (std::runtime_error &error) {
-            cout << "Failed to read '" << path<< "': " << error.what() << endl;
+            std::cout << "Failed to read '" << path << "': " << error.what() << endl;
         }
     }
 
     if (!matchedFileCnt) {
-        cout <<"No files found." << endl;
+        std::cout <<"No files found." << endl;
     } else {
 
         if (!categoryFilters.size()){
-            cout << "\nFound "<<kind<<" categories:\n\n";
+            std::cout << "\nFound "<<kind<<" categories:\n\n";
             for (std::set<string>::iterator it=categoryNames.begin(); it!=categoryNames.end(); ++it)
                 std::cout << *it<< ' ';
-            cout << "\n";
+            std::cout << "\n";
         }
 
-        cout <<"\nUse name of the desired "<<kind
+        std::cout <<"\nUse name of the desired "<<kind
             << " with --" << option << ". Filter categories with --list-cat." << endl;
 
         if (kind=="theme") {
-            cout <<"\nAdd base16/ prefix to apply a Base16 theme." << endl;
+            std::cout <<"\nAdd base16/ prefix to apply a Base16 theme." << endl;
         }
 
         printConfigInfo();
@@ -247,17 +246,17 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
 
 void HLCmdLineApp::printConfigInfo ( )
 {
-    cout << "\nConfig file search directories:\n";
+    std::cout << "\nConfig file search directories:\n";
     dataDir.printConfigPaths();
-    cout << "\nFiletype config file:\n"<<dataDir.getFiletypesConfPath ( "filetypes" ) <<"\n";
-    cout << endl;
+    std::cout << "\nFiletype config file:\n"<<dataDir.getFiletypesConfPath ( "filetypes" ) <<"\n";
+    std::cout << endl;
 #ifdef HL_DATA_DIR
-    cout << "Compiler directive HL_DATA_DIR = " <<HL_DATA_DIR<< "\n";
+    std::cout << "Compiler directive HL_DATA_DIR = " <<HL_DATA_DIR<< "\n";
 #endif
 #ifdef HL_CONFIG_DIR
-    cout << "Compiler directive HL_CONFIG_DIR = " <<HL_CONFIG_DIR<< "\n";
+    std::cout << "Compiler directive HL_CONFIG_DIR = " <<HL_CONFIG_DIR<< "\n";
 #endif
-    cout << endl;
+    std::cout << endl;
 }
 
 int HLCmdLineApp::getNumDigits ( int i )
@@ -275,20 +274,20 @@ void HLCmdLineApp::printProgressBar ( int total, int count )
     if ( !total ) return;
     int p=100*count / total;
     int numProgressItems=p/10;
-    cout << "\r[";
+    std::cout << "\r[";
     for ( int i=0; i<10; i++ ) {
-        cout << ( ( i<numProgressItems ) ?"#":" " );
+        std::cout << ( ( i<numProgressItems ) ?"#":" " );
     }
-    cout<< "] " <<setw ( 3 ) <<p<<"%, "<<count << " / " << total << "  " <<flush;
+    std::cout<< "] " <<setw ( 3 ) <<p<<"%, "<<count << " / " << total << "  " <<flush;
     if ( p==100 ) {
-        cout << endl;
+        std::cout << endl;
     }
 }
 
 void HLCmdLineApp::printCurrentAction ( const string&outfilePath,
                                         int total, int count, int countWidth )
 {
-    cout << "Writing file "
+    std::cout << "Writing file "
          << setw ( countWidth ) << count
          << " of "
          << total
@@ -342,9 +341,9 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
 
     cerr << flush;
     if (! service_mode_tag.empty())
-        cout << service_mode_tag << endl;
+        std::cout << service_mode_tag << endl;
 
-    cout << flush;
+    std::cout << flush;
 
     if (cin.eof())
         return false;
@@ -525,7 +524,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             string langDefPath (options.getAbsLangPath().empty() ? dataDir.getLangPath ( resolvedSuffix +".lang") : options.getAbsLangPath());
 
             if (generator->loadLanguage( langDefPath ) == highlight::LOAD_OK) {
-                cout << "highlight: This syntax is supported\n";
+                std::cout << "highlight: This syntax is supported\n";
                 return EXIT_SUCCESS;
             } else {
                 cerr << "highlight: This syntax is not supported\n";
@@ -669,7 +668,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
     generator->setFilesCnt(fileCount);
 
     while ( (serviceModeCheck(options, generator.get(), suffix, i) || i < fileCount) && !initError ) {
-        cout.flush();
+        std::cout.flush();
 
         if ( Platform::fileSize(inFileList[i]) > options.getMaxFileSize() ) {
 
@@ -906,7 +905,7 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             } else {
                 twoPassMode=true;
                 if ( !options.quietMode() &&  !options.forceStdout() ) {
-                    cout << "Enabling two-pass mode using "<<twoPassOutFile<<"\n";
+                    std::cout << "Enabling two-pass mode using "<<twoPassOutFile<<"\n";
                 }
                 //start over, add plug-in to list in next iteration
                 usedFileNames.clear();
