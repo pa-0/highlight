@@ -691,8 +691,10 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
             }
         }
 
-        if (suffix.empty() && !options.syntaxGiven() ) { // determine file type for each file
-            suffix = dataDir.guessFileType ( dataDir.getFileSuffix ( inFileList[i] ), inFileList[i] );
+        if (!options.runServiceMode()) {
+            if (suffix.empty() || !options.syntaxGiven() ) { // determine file type for each file
+                suffix = dataDir.guessFileType ( dataDir.getFileSuffix ( inFileList[i] ), inFileList[i] );
+            }
         }
 
         if ( suffix.empty()  && options.forceOutput()) suffix=options.getFallbackSyntax(); //avoid segfault
