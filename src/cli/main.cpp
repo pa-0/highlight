@@ -38,9 +38,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "syntaxreader.h"
 #include "lspprofile.h"
 
-#define MAX_LINE__WIDTH       80
-
-
 void HLCmdLineApp::printVersionInfo(bool quietMode)
 {
     if (quietMode) {
@@ -51,7 +48,7 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n Copyright (C) 2002-2023 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
-            << "\n\n Artistic Style Classes (3.2)"
+            << "\n\n Artistic Style Classes (3.3)"
             << "\n Copyright (C) 1998-2023 The Artistic Style Authors"
             << "\n\n Diluculum Lua wrapper (1.0)"
             << "\n Copyright (C) 2005-2013 by Leandro Motta Barros"

@@ -429,16 +429,14 @@ The following options are supported:
 `syntax=file.ext` ::: to change the syntax to the extension from the filename,
 or syntax=<syntax_suffix> to set the syntax to use directly (ie csharp).
 
-`tag=###` ::: if provided and not empty will be printed by itself on a new line
+`tag=##` ::: if provided and not empty will be printed by itself on a new line
 to stdout after a file has been processed.
-
-`line-length=##` :::  set the line length for output wrapping
 
 `eof=##` ::: A single character (0x00-0xFE) that stdin will contain to separate
 one file from the next. Recommend 0x00 if you can send it, otherwise 0x01-0x07
-are generally easy for most clients to send, ie 0x07 ('\a') for bell. It is near
-impossible to send several characters above 128 in windows through most term
-emulators.
+are generally easy for most clients to send, ie 0x07 ('\a') for bell. It is
+near impossible to send several characters above 128 in windows through most
+term emulators.
 
 Note the EOF char must occur on its own new line it cannot be found mid-line.
 There is no need for a new line between the previous EOF and the next mode
@@ -446,9 +444,8 @@ options line. You also cannot send the EOF char to new line as it is used as a
 delimiter already as described.
 
 Finally any file contents can be sent however the file cannot contain the EOF
-char. The requirement for the EOF char to be on a line by itself could be altered.
-It was done that way to have minimal changes to the existed code.  For the most
-part we simply expand current true EOF checks to check for the alternate EOF char.
+char. The requirement for the EOF char to be on a line by itself could be
+altered.
 Also adds disable echo (`--disable-echo`) for win32 builds to disable console
 echo back for STDIN. This can be controlled fairly easily in linux with stty if
 desired by the user, but windows does not have something similar. If we want to

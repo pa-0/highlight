@@ -432,8 +432,6 @@ syntax=<Syntax-Suffix> um die Syntax direkt festzulegen (z.B. csharp).
 tag=### ::: falls angegeben und nicht leer, wird es nach der Verarbeitung
 einer Datei allein in einer neuen Zeile auf stdout ausgegeben.
 
-line-length=## ::: setzt die Zeilenlänge für die Ausgabeumbrüche.
-
 eof=## ::: Ein einzelnes Zeichen (0x00-0xFE), das in stdin vorhanden ist,
 um eine Datei von der nächsten zu trennen. Empfohlen wird 0x00, falls möglich,
 ansonsten sind 0x01-0x07 in der Regel für die meisten Clients einfach zu
@@ -446,19 +444,16 @@ EOF und der nächsten Modusoptionen-Zeile ist keine neue Zeile erforderlich.
 Sie können das EOF-Zeichen auch nicht an eine neue Zeile senden, da es bereits
 als Trennzeichen verwendet wird, wie beschrieben.
 
-Schließlich können beliebige Dateiinhalte gesendet werden, jedoch darf die Datei
-das EOF-Zeichen nicht enthalten. Die Anforderung, dass das EOF-Zeichen auf einer
-eigenen Zeile stehen muss, könnte geändert werden. Es wurde so gemacht, um
-minimale Änderungen am vorhandenen Code vorzunehmen. Im Großen und Ganzen
-erweitern wir einfach die aktuellen Überprüfungen auf das wahre EOF, um das
-alternative EOF-Zeichen zu überprüfen.
+Schließlich können beliebige Dateiinhalte gesendet werden, jedoch darf die
+Datei das EOF-Zeichen nicht enthalten. Die Anforderung, dass das EOF-Zeichen
+auf einer eigenen Zeile stehen muss, könnte geändert werden.
 
-Es wurde auch die Option zur Deaktivierung der Echounterdrückung (`--disable-echo`)
-für Win32-Builds hinzugefügt, um das Konsolen-Echo für STDIN zu deaktivieren. Dies
-kann bei Bedarf vom Benutzer in Linux relativ einfach mit `stty` gesteuert werden,
-aber Windows hat nichts Vergleichbares. Wenn wir die Deaktivierung der
-Echounterdrückung auf andere Plattformen erweitern möchten, die `stty` verwenden,
-können wir Folgendes tun:
+Es wurde auch die Option zur Deaktivierung der Echounterdrückung
+(`--disable-echo`) für Win32-Builds hinzugefügt, um das Konsolen-Echo für STDIN
+zu deaktivieren. Dies kann bei Bedarf vom Benutzer in Linux relativ einfach mit
+`stty` gesteuert werden, aber Windows hat nichts Vergleichbares. Wenn wir die
+Deaktivierung der Echounterdrückung auf andere Plattformen erweitern möchten,
+die `stty` verwenden, können wir Folgendes tun:
 
 ...........................................................
 tcgetattr(fileno(stdin), &term);
