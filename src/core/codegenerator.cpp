@@ -152,6 +152,7 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      lineNumberWidth ( 5 ),
      startLineCnt( 1 ),
      startLineCntCurFile( 1 ),
+     extraEOFChar( 255 ),
      maxLineCnt ( UINT_MAX ),
      inputFilesCnt (0),
      processedFilesCnt (0),
