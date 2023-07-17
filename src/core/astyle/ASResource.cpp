@@ -8,7 +8,6 @@
 //-----------------------------------------------------------------------------
 
 #include "astyle/astyle.h"
-
 #include <algorithm>
 
 //-----------------------------------------------------------------------------
@@ -628,7 +627,7 @@ void ASResource::buildPreDefinitionHeaders(std::vector<const std::string*>* preD
 
 // check if a specific line position contains a header.
 const std::string* ASBase::findHeader(const std::string& line, int i,
-                                 const std::vector<const std::string*>* possibleHeaders) const
+                                      const std::vector<const std::string*>* possibleHeaders) const
 {
 	assert(isCharPotentialHeader(line, i));
 	// check the word
@@ -679,7 +678,8 @@ bool ASBase::findKeyword(const std::string& line, int i, const std::string& keyw
 	if (line.compare(i, keywordLength, keyword) != 0)
 		return false;
 	// check that this is not part of a longer word
-	if (wordEnd == line.length()) {
+	if (wordEnd == line.length())
+	{
 		//std::cerr << "findKeyword t1 \n";
 		return true;
 	}
@@ -697,7 +697,7 @@ bool ASBase::findKeyword(const std::string& line, int i, const std::string& keyw
 
 // check if a specific line position contains an operator.
 const std::string* ASBase::findOperator(const std::string& line, int i,
-                                   const std::vector<const std::string*>* possibleOperators) const
+                                        const std::vector<const std::string*>* possibleOperators) const
 {
 	assert(isCharPotentialOperator(line[i]));
 	// find the operator in the vector

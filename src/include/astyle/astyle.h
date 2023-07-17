@@ -313,10 +313,10 @@ protected:  // inline functions
 
 protected:  // functions definitions are at the end of ASResource.cpp
 	const std::string* findHeader(const std::string& line, int i,
-	                         const std::vector<const std::string*>* possibleHeaders) const;
+	                              const std::vector<const std::string*>* possibleHeaders) const;
 	bool findKeyword(const std::string& line, int i, const std::string& keyword) const;
 	const std::string* findOperator(const std::string& line, int i,
-	                           const std::vector<const std::string*>* possibleOperators) const;
+	                                const std::vector<const std::string*>* possibleOperators) const;
 	std::string getCurrentWord(const std::string& line, size_t index) const;
 	bool isDigit(char ch) const;
 	bool isLegalNameChar(char ch) const;
@@ -353,8 +353,8 @@ public:
 	void setAfterParenIndent(bool state);
 	void setJavaStyle();
 	void setJSStyle();
-    void setObjCStyle();
-    void setSharpStyle();
+	void setObjCStyle();
+	void setSharpStyle();
 
 	void setLabelIndent(bool state);
 	void setMaxContinuationIndentLength(int max);
@@ -371,6 +371,7 @@ public:
 	void setPreprocDefineIndent(bool state);
 	void setPreprocConditionalIndent(bool state);
 	void setSqueezeWhitespace(bool state);
+	void setLambdaIndentation(bool state);
 	int  getBeautifierFileType() const;
 	int  getFileType() const;
 	int  getIndentLength() const;
@@ -556,6 +557,7 @@ private:  // variables
 	bool shouldIndentPreprocConditional;
 	bool lambdaIndicator;
 	bool squeezeWhitespace;
+	bool attemptLambdaIndentation;
 	int  indentCount;
 	int  spaceIndentCount;
 	int  spaceIndentObjCMethodAlignment;
@@ -853,8 +855,8 @@ private:  // functions
 	const std::string* getFollowingOperator() const;
 	std::string getPreviousWord(const std::string& line, int currPos) const;
 	std::string peekNextText(const std::string& firstLine,
-	                    bool endOnEmptyLine = false,
-	                    const std::shared_ptr<ASPeekStream>& streamArg = nullptr) const;
+	                         bool endOnEmptyLine = false,
+	                         const std::shared_ptr<ASPeekStream>& streamArg = nullptr) const;
 
 private:  // variables
 	int formatterFileType;
@@ -991,7 +993,7 @@ private:  // variables
 	bool isFormattingModeOff;
 	bool isInEnum;
 	bool isInStruct;
-    bool isInContinuedPreProc;
+	bool isInContinuedPreProc;
 	bool isInExecSQL;
 	bool isInAsm;
 	bool isInAsmOneLine;

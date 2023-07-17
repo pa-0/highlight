@@ -6,6 +6,13 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.7
+
+17.07.2023
+
+  - updated astyle lib to version 3.4.1
+  - CLI: fixed member variable initialization (https://gitlab.com/saalen/highlight/-/merge_requests/143)
+
 == highlight 4.6
 
 11.05.2023

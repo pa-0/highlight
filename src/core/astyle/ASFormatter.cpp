@@ -1507,7 +1507,7 @@ std::string ASFormatter::nextLine()
 				}
 			}
 			if (currentChar != ';'
-					|| foundStructHeader // #518
+			        || foundStructHeader // #518
 			        || (needHeaderOpeningBrace && parenStack->back() == 0))
 				currentHeader = nullptr;
 
@@ -2922,7 +2922,8 @@ void ASFormatter::initNewLine()
 	else if (isWhiteSpace(currentLine[charNum]) && !(charNum + 1 < (int) currentLine.length()))
 	{
 		lineIsEmpty = true;
-		if (!isImmediatelyPostEmptyLine  ) {
+		if (!isImmediatelyPostEmptyLine  )
+		{
 			squeezeEmptyLineCount = 0;
 		}
 	}
@@ -3436,14 +3437,15 @@ bool ASFormatter::isDereferenceOrAddressOf() const
 	if (isCharImmediatelyPostTemplate)
 		return false;
 
-	//TODO FIXME
 	// https://sourceforge.net/p/astyle/bugs/537/
-	 if ( previousNonWSChar == ',' && parenthesesCount <= 0) {
+	// https://sourceforge.net/p/astyle/bugs/552/
+	if ( previousNonWSChar == ',' && parenthesesCount <= 0 && currentChar != '&')
+	{
 		return false;
 	}
 
 	if (previousNonWSChar == '='
-	        //|| previousNonWSChar == ','  // #537
+	        || (previousNonWSChar == ',' && currentChar == '&')  // #537, #552
 	        || previousNonWSChar == '.'
 	        || previousNonWSChar == '{'
 	        || previousNonWSChar == '>'
@@ -3976,8 +3978,8 @@ bool ASFormatter::isMultiStatementLine() const
  * @return  the next non-whitespace substd::string.
  */
 std::string ASFormatter::peekNextText(const std::string& firstLine,
-                                 bool endOnEmptyLine /*false*/,
-                                 const std::shared_ptr<ASPeekStream>& streamArg /*nullptr*/) const
+                                      bool endOnEmptyLine /*false*/,
+                                      const std::shared_ptr<ASPeekStream>& streamArg /*nullptr*/) const
 {
 	assert(sourceIterator->getPeekStart() == 0 || streamArg != nullptr);	// Borland may need != 0
 	bool isFirstLine = true;
@@ -4681,7 +4683,7 @@ void ASFormatter::padParensOrBrackets(char openDelim, char closeDelim, bool shou
 	int spacesOutsideToDelete = 0;
 	int spacesInsideToDelete = 0;
 
-	if (currentChar ==openDelim)
+	if (currentChar == openDelim)
 	{
 		spacesOutsideToDelete = formattedLine.length() - 1;
 		spacesInsideToDelete = 0;
@@ -6226,7 +6228,8 @@ void ASFormatter::formatQuoteBody()
 
 	int _braceCount = 0;
 
-	if (checkInterpolation && currentChar=='{') {
+	if (checkInterpolation && currentChar == '{')
+	{
 		++_braceCount;
 	}
 
@@ -6254,7 +6257,7 @@ void ASFormatter::formatQuoteBody()
 				checkInterpolation = false;
 			}
 		}
-		else if (isSharpStyle())
+		else if (isSharpStyle() && !checkInterpolation )
 		{
 			if ((int) currentLine.length() > charNum + 1
 			        && currentLine[charNum + 1] == '"')			// check consecutive quotes
@@ -6286,11 +6289,12 @@ void ASFormatter::formatQuoteBody()
 		{
 			currentChar = currentLine[++charNum];
 
-			if (checkInterpolation) {
-				if (currentChar=='{')
+			if (checkInterpolation)
+			{
+				if (currentChar == '{')
 					++_braceCount;
 
-				if (currentChar=='}')
+				if (currentChar == '}')
 					--_braceCount;
 			}
 			appendCurrentChar();
@@ -6298,8 +6302,9 @@ void ASFormatter::formatQuoteBody()
 	}
 	if (charNum + 1 >= (int) currentLine.length()
 	        && currentChar != '\\'
-	        && !isInVerbatimQuote) {
-				isInQuote = false;				// missing closing quote
+	        && !isInVerbatimQuote)
+	{
+		isInQuote = false;				// missing closing quote
 	}
 
 }
@@ -6325,7 +6330,8 @@ void ASFormatter::formatQuoteOpener()
 			verbatimDelimiter = currentLine.substr(charNum + 1, parenPos - charNum - 1);
 		}
 	}
-	else if (isSharpStyle() && (previousChar == '@' || previousChar == '$' )) {
+	else if (isSharpStyle() && (previousChar == '@' || previousChar == '$' ))
+	{
 		isInVerbatimQuote = true;
 		checkInterpolation = true;
 	}
@@ -6807,6 +6813,14 @@ void ASFormatter::findReturnTypeSplitPoint(const std::string& firstLine)
 			if (line.compare(i, 2, "//") == 0)
 			{
 				i = line.length();
+				continue;
+			}
+
+			// https://sourceforge.net/p/astyle/bugs/504/
+			if (line[line.length()-1] == ':')
+			{
+				i = line.length();
+				foundSplitPoint = true;
 				continue;
 			}
 			// not in quote or comment
