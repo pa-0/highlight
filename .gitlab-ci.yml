@@ -11,7 +11,7 @@ before_script:
   # ======================
   # Install Node.js:
   - apt-get install -y curl
-  - curl -sL https://deb.nodesource.com/setup_17.x | bash
+  - curl -sL https://deb.nodesource.com/setup_20.x | bash
   - apt-get install -y nodejs
   - node -v
   - npm -v
@@ -24,11 +24,6 @@ compile:
     - make install
     # Verify that our compiled app works properly with a custom "test" script
     - bash ./src/ci_test.sh
-
-  # Save the compiled output from the above for downloading via GitLab and in Gitlab 8.6 to use in future build steps
-  #artifacts:
-  #  paths:
-  #  - ansifilter
 
 validate:
   script:
