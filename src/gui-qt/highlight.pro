@@ -27,8 +27,15 @@ FORMS += mainwindow.ui \
     syntax_chooser.ui
 
 RESOURCES = highlight-gui.qrc
-TRANSLATIONS = highlight_de_DE.ts highlight_es_ES.ts highlight_cs_CZ.ts \
-    highlight_zh_CN.ts highlight_it_IT.ts highlight_fr_FR.ts highlight_bg_BG.ts
+TRANSLATIONS = \
+    highlight_de_DE.ts \
+    highlight_es_ES.ts \
+    highlight_cs_CZ.ts \
+    highlight_zh_CN.ts \
+    highlight_it_IT.ts \
+    highlight_fr_FR.ts \
+    highlight_bg_BG.ts \
+    highlight_ja_JP.ts
 
 QMAKE_CXXFLAGS += -std=c++17
 
