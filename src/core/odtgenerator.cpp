@@ -48,9 +48,11 @@ string ODTGenerator::getStyleDefinition()
 {
     if ( disableStyleCache || styleDefinitionCache.empty() ) {
         ostringstream os;
+        bool fontSizeDigits=getBaseFontSize().find_first_not_of("0123456789.")==string::npos;
 
         os  << "<office:styles>\n<style:style style:name=\"Standard\" style:family=\"paragraph\" style:class=\"text\">\n"
-            << "  <style:text-properties style:font-name=\""<< getBaseFont()<<"\" fo:font-size=\""<<getBaseFontSize()<<"pt\"/>"
+            << "  <style:text-properties style:font-name=\"" << getBaseFont()
+            <<"\" fo:font-size=\"" << getBaseFontSize() << ((fontSizeDigits) ? "pt" : "") << "\"/>"
             << "</style:style>\n</office:styles>"
             << "<office:automatic-styles>\n";
 
