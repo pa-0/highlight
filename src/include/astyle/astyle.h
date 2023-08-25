@@ -265,11 +265,11 @@ public:
 	static const std::string AS_OPEN_LINE_COMMENT, AS_OPEN_COMMENT, AS_CLOSE_COMMENT;
 	static const std::string AS_BAR_DEFINE, AS_BAR_INCLUDE, AS_BAR_IF, AS_BAR_EL, AS_BAR_ENDIF;
 	static const std::string AS_AUTO, AS_RETURN;
-	static const std::string AS_CIN, AS_COUT, AS_CERR;
+	static const std::string AS_CIN, AS_COUT, AS_CERR, AS_MAPPING;
 	static const std::string AS_ASSIGN, AS_PLUS_ASSIGN, AS_MINUS_ASSIGN, AS_MULT_ASSIGN;
 	static const std::string AS_DIV_ASSIGN, AS_MOD_ASSIGN, AS_XOR_ASSIGN, AS_OR_ASSIGN, AS_AND_ASSIGN;
 	static const std::string AS_GR_GR_ASSIGN, AS_LS_LS_ASSIGN, AS_GR_GR_GR_ASSIGN, AS_LS_LS_LS_ASSIGN;
-	static const std::string AS_GCC_MIN_ASSIGN, AS_GCC_MAX_ASSIGN, AS_SPACESHIP, AS_EQUAL_JS;
+	static const std::string AS_GCC_MIN_ASSIGN, AS_GCC_MAX_ASSIGN, AS_SPACESHIP, AS_EQUAL_JS, AS_COALESCE_CS;
 	static const std::string AS_EQUAL, AS_PLUS_PLUS, AS_MINUS_MINUS, AS_NOT_EQUAL, AS_GR_EQUAL;
 	static const std::string AS_LS_EQUAL, AS_LS_LS_LS, AS_LS_LS, AS_GR_GR_GR, AS_GR_GR;
 	static const std::string AS_QUESTION_QUESTION, AS_LAMBDA;
@@ -417,6 +417,8 @@ protected:
 	bool isInBeautifySQL;
 	bool isInIndentableStruct;
 	bool isInIndentablePreproc;
+	bool lambdaIndicator;
+
 
 private:  // functions
 	void adjustObjCMethodDefinitionIndentation(const std::string& line_);
@@ -555,7 +557,6 @@ private:  // variables
 	bool foundPreCommandMacro;
 	bool shouldAlignMethodColon;
 	bool shouldIndentPreprocConditional;
-	bool lambdaIndicator;
 	bool squeezeWhitespace;
 	bool attemptLambdaIndentation;
 	int  indentCount;
@@ -1083,6 +1084,7 @@ private:  // variables
 	bool isFirstPreprocConditional;
 	bool processedFirstConditional;
 	bool isJavaStaticConstructor;
+	bool isInAllocator;
 
 private:  // inline functions
 	// append the CURRENT character (curentChar) to the current formatted line.

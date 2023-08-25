@@ -142,6 +142,7 @@ const std::string ASResource::AS_OR = std::string("||");
 const std::string ASResource::AS_SCOPE_RESOLUTION = std::string("::");
 const std::string ASResource::AS_SPACESHIP = std::string("<=>");
 const std::string ASResource::AS_EQUAL_JS = std::string("===");
+const std::string ASResource::AS_COALESCE_CS = std::string("?" "?="); // Avoid trigraph
 
 const std::string ASResource::AS_PLUS = std::string("+");
 const std::string ASResource::AS_MINUS = std::string("-");
@@ -498,6 +499,10 @@ void ASResource::buildOperators(std::vector<const std::string*>* operators, int 
 	{
 		operators->emplace_back(&AS_EQUAL_JS);
 	}
+	if (fileType == SHARP_TYPE)
+    {
+    	operators->emplace_back(&AS_COALESCE_CS);
+    }
 	assert(operators->size() < elements);
 	sort(operators->begin(), operators->end(), sortOnLength);
 }
@@ -738,7 +743,8 @@ bool ASBase::isLegalNameChar(char ch) const
 	if ((unsigned char) ch > 127)
 		return false;
 	return (isalnum((unsigned char) ch)
-	        || ch == '.' || ch == '_'
+	        || (!isSharpStyle() && ch == '.')
+	        || ch == '_'
 	        || (isJavaStyle() && ch == '$')
 	        || (isSharpStyle() && ch == '@'));  // may be used as a prefix
 }
