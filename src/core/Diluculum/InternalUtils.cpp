@@ -28,7 +28,6 @@
 #include "InternalUtils.hpp"
 #include <Diluculum/LuaUtils.hpp>
 #include <cstring>
-#include <boost/lexical_cast.hpp>
 
 namespace Diluculum
 {
@@ -111,7 +110,7 @@ namespace Diluculum
 
          size_t newSize = f->getSize() + size;
 
-         boost::scoped_array<char> buff (new char[newSize]);
+         std::unique_ptr<char> buff (new char[newSize]);
 
          memcpy (buff.get(), f->getData(), f->getSize());
          memcpy (buff.get() + f->getSize(), data, size);

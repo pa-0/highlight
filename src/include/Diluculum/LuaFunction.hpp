@@ -28,7 +28,6 @@
 #define _DILUCULUM_LUA_FUNCTION_HPP_
 
 #include <string>
-#include <boost/scoped_array.hpp>
 #include <lua.hpp>
 #include <Diluculum/Types.hpp>
 

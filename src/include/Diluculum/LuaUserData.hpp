@@ -27,7 +27,6 @@
 #ifndef _DILUCULUM_LUA_USER_DATA_HPP_
 #define _DILUCULUM_LUA_USER_DATA_HPP_
 
-#include <boost/scoped_array.hpp>
 #include <lua.hpp>
 #include <Diluculum/Types.hpp>
 
@@ -110,7 +109,7 @@ namespace Diluculum
          size_t size_;
 
          /// A (smart) pointer to the data owned by this \c LuaUserData.
-         boost::scoped_array<char> data_;
+         std::unique_ptr<char> data_;
    };
 
 } // namespace Diluculum
