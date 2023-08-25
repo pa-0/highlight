@@ -14,6 +14,7 @@
  - moved old yaml.lang to yaml-ansible.lang and added a new yaml definition (https://gitlab.com/saalen/highlight/-/issues/235)
  - omit size property in BBCode output if `--fragment` is set (https://gitlab.com/saalen/highlight/-/issues/234)
  - allowed font size unit with `--font-size` for HTML and ODT output (https://gitlab.com/saalen/highlight/-/merge_requests/145/)
+ - GUI: updated JP translation (https://gitlab.com/saalen/highlight/-/merge_requests/144)
 
 
 == highlight 4.7
