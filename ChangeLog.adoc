@@ -11,6 +11,7 @@
 25.08.2023
 
  - updated astyle lib to version 3.4.6
+ - moved old yaml.lang to yaml-ansible.lang and added a new yaml definition (https://gitlab.com/saalen/highlight/-/issues/235)
  - omit size property in BBCode output if `--fragment` is set (https://gitlab.com/saalen/highlight/-/issues/234)
 
 
