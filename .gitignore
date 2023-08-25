@@ -18,6 +18,10 @@
 # Executables
 *.exe
 
+.DS_Store
+
+.ccls-cache/
+
 src/gui-qt/moc_predefs.h
 src/highlight
 src/highlight-gui

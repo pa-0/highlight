@@ -42,19 +42,17 @@ BBCodeGenerator::~BBCodeGenerator() {}
 
 string BBCodeGenerator::getHeader()
 {
-    return string();
+    return "[size=" + getBaseFontSize() + "]";
 }
 
 void BBCodeGenerator::printBody()
 {
-    *out << "[size="<<getBaseFontSize()<<"]";
     processRootState();
-    *out << "[/size]";
 }
 
 string BBCodeGenerator::getFooter()
 {
-    return string();
+    return "[/size]";
 }
 
 string  BBCodeGenerator::getOpenTag (const ElementStyle & elem )
@@ -62,10 +60,10 @@ string  BBCodeGenerator::getOpenTag (const ElementStyle & elem )
     ostringstream s;
 
     s << "[color=#";
-    s  << elem.getColour().getRed ( HTML )
-       << elem.getColour().getGreen ( HTML )
-       << elem.getColour().getBlue ( HTML )
-       << "]";
+    s << elem.getColour().getRed ( HTML )
+      << elem.getColour().getGreen ( HTML )
+      << elem.getColour().getBlue ( HTML )
+      << "]";
 
     if ( elem.isBold() ) s << "[b]";
     if ( elem.isItalic() ) s << "[i]";
