@@ -28,6 +28,7 @@
 #define _DILUCULUM_LUA_USER_DATA_HPP_
 
 #include <lua.hpp>
+#include <memory>
 #include <Diluculum/Types.hpp>
 
 
