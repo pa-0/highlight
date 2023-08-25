@@ -27,6 +27,7 @@
 #ifndef _DILUCULUM_LUA_FUNCTION_HPP_
 #define _DILUCULUM_LUA_FUNCTION_HPP_
 
+#include <cassert>
 #include <string>
 #include <lua.hpp>
 #include <Diluculum/Types.hpp>
