@@ -111,6 +111,7 @@ void HtmlGenerator::printBody()
                 *out<<" class=\"" << cssClassName << "\"";
             *out<< ">";
         } else {
+            bool fontSizeDigits=getBaseFontSize().find_first_not_of("0123456789.")==string::npos;
             bool quoteFont=getBaseFont().find_first_of(",'")==string::npos;
             *out << "<pre style=\""
                  << "color:#"
@@ -121,8 +122,8 @@ void HtmlGenerator::printBody()
                  << ( docStyle.getBgColour().getRed ( HTML ) )
                  << ( docStyle.getBgColour().getGreen ( HTML ) )
                  << ( docStyle.getBgColour().getBlue ( HTML ) )
-                 << "; font-size:" << this->getBaseFontSize()
-                 << "pt; font-family:"
+                 << "; font-size:" << this->getBaseFontSize() << ((fontSizeDigits)?"pt":"")
+                 << "; font-family:"
                  <<((quoteFont)?"'":"")
                  << this->getBaseFont()
                  <<((quoteFont)?"'":"")
@@ -242,6 +243,7 @@ string HtmlGenerator::getGeneratorComment()
 string HtmlGenerator::getStyleDefinition()
 {
     if (disableStyleCache || styleDefinitionCache.empty() ) {
+        bool fontSizeDigits=getBaseFontSize().find_first_not_of("0123456789.")==string::npos;
         bool quoteFont=getBaseFont().find_first_of(",'")==string::npos;
         ostringstream os;
 
@@ -269,9 +271,9 @@ string HtmlGenerator::getStyleDefinition()
            << ( docStyle.getBgColour().getRed ( HTML ) )
            << ( docStyle.getBgColour().getGreen ( HTML ) )
            << ( docStyle.getBgColour().getBlue ( HTML ) )
-           << "; font-size:" << this->getBaseFontSize();
+           << "; font-size:" << getBaseFontSize() << ((fontSizeDigits)?"pt":"");
 
-        os << "pt; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
+        os << "; font-family:"<<((quoteFont)?"'":"") << getBaseFont() << ((quoteFont)?"'":"")
            << "; white-space: pre-wrap; }\n";
 
         os  << getAttributes ( STY_NAME_NUM, docStyle.getNumberStyle() )
@@ -371,13 +373,14 @@ void HtmlGenerator::insertLineNumber ( bool insertNewLine )
 
         if ( orderedList ) {
             if ( useInlineCSS ) {
+                bool fontSizeDigits=getBaseFontSize().find_first_not_of("0123456789.")==string::npos;
                 bool quoteFont=getBaseFont().find_first_of(",'")==string::npos;
                 numberPrefix<< "<li"
                             << lineID
                             << " style=\""
                             << getAttributes ( "", docStyle.getLineStyle() )
-                            << "; font-size:" << this->getBaseFontSize()
-                            << "pt; font-family:"<<((quoteFont)?"'":"")
+                            << "; font-size:" << this->getBaseFontSize() << ((fontSizeDigits)?"pt":"")
+                            << "; font-family:"<<((quoteFont)?"'":"")
                             << getBaseFont() << ((quoteFont)?"'":"")
                             << ";\">";
             } else {
