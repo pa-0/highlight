@@ -28,6 +28,8 @@
 #include "InternalUtils.hpp"
 #include <Diluculum/LuaUtils.hpp>
 #include <cstring>
+#include <boost/scoped_array.hpp>
+
 
 namespace Diluculum
 {
@@ -110,7 +112,7 @@ namespace Diluculum
 
          size_t newSize = f->getSize() + size;
 
-         std::unique_ptr<char> buff (new char[newSize]);
+         boost::scoped_array<char> buff (new char[newSize]);
 
          memcpy (buff.get(), f->getData(), f->getSize());
          memcpy (buff.get() + f->getSize(), data, size);

@@ -28,7 +28,10 @@
 #define _DILUCULUM_LUA_USER_DATA_HPP_
 
 #include <lua.hpp>
-#include <memory>
+
+//https://stackoverflow.com/questions/31135178/c-array-of-char-using-unique-ptr
+#include <boost/scoped_array.hpp>
+
 #include <Diluculum/Types.hpp>
 
 
@@ -110,7 +113,7 @@ namespace Diluculum
          size_t size_;
 
          /// A (smart) pointer to the data owned by this \c LuaUserData.
-         std::unique_ptr<char> data_;
+         boost::scoped_array<char> data_;
    };
 
 } // namespace Diluculum
