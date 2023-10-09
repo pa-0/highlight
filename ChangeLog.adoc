@@ -10,6 +10,7 @@
 
 09.10.2023
 
+ - added support for Elm (https://gitlab.com/saalen/highlight/-/issues/237)
  - fixed Lua nested string deprecation error (https://gitlab.com/saalen/highlight/-/issues/238)
 
 
