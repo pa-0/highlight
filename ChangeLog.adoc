@@ -6,6 +6,13 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.9
+
+09.10.2023
+
+ - fixed Lua nested string deprecation error (https://gitlab.com/saalen/highlight/-/issues/238)
+
+
 == highlight 4.8
 
 28.08.2023
