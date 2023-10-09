@@ -10,6 +10,7 @@
 
 09.10.2023
 
+ - updated astyle lib to version 3.4.9
  - added support for Elm (https://gitlab.com/saalen/highlight/-/issues/237)
  - fixed Lua nested string deprecation error (https://gitlab.com/saalen/highlight/-/issues/238)
 

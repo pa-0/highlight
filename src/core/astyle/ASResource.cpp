@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------------
 
 #include "astyle/astyle.h"
+
 #include <algorithm>
 
 //-----------------------------------------------------------------------------
@@ -159,6 +160,7 @@ const std::string ASResource::AS_BIT_XOR = std::string("^");
 const std::string ASResource::AS_QUESTION = std::string("?");
 const std::string ASResource::AS_COLON = std::string(":");
 const std::string ASResource::AS_COMMA = std::string(",");
+const std::string ASResource::AS_DOT = std::string(".");
 const std::string ASResource::AS_SEMICOLON = std::string(";");
 
 
@@ -314,8 +316,6 @@ void ASResource::buildHeaders(std::vector<const std::string*>* headers, int file
 void ASResource::buildIndentableHeaders(std::vector<const std::string*>* indentableHeaders)
 {
 	indentableHeaders->emplace_back(&AS_RETURN);
-
-//	sort(indentableHeaders->begin(), indentableHeaders->end(), sortOnName);
 }
 
 /**
@@ -357,7 +357,7 @@ void ASResource::buildIndentableMacros(std::vector<const std::pair<const std::st
  */
 void ASResource::buildNonAssignmentOperators(std::vector<const std::string*>* nonAssignmentOperators)
 {
-	const size_t elements = 15;
+	const size_t elements = 16;
 	nonAssignmentOperators->reserve(elements);
 
 	nonAssignmentOperators->emplace_back(&AS_EQUAL);
@@ -374,6 +374,7 @@ void ASResource::buildNonAssignmentOperators(std::vector<const std::string*>* no
 	nonAssignmentOperators->emplace_back(&AS_AND);
 	nonAssignmentOperators->emplace_back(&AS_OR);
 	nonAssignmentOperators->emplace_back(&AS_LAMBDA);
+	nonAssignmentOperators->emplace_back(&AS_DOT);
 
 	assert(nonAssignmentOperators->size() < elements);
 	sort(nonAssignmentOperators->begin(), nonAssignmentOperators->end(), sortOnLength);
@@ -663,7 +664,7 @@ const std::string* ASBase::findHeader(const std::string& line, int i,
 		if ((header == &AS_GET
 		        || header == &AS_SET
 		        || header == &AS_DEFAULT)
-		        && (peekChar == ';' || peekChar == '(' || peekChar == '='))
+		        && (peekChar == '.' || peekChar == ';' || peekChar == '(' || peekChar == '='))
 			break;
 		return header;
 	}
@@ -673,7 +674,6 @@ const std::string* ASBase::findHeader(const std::string& line, int i,
 // check if a specific line position contains a keyword.
 bool ASBase::findKeyword(const std::string& line, int i, const std::string& keyword) const
 {
-	//std::cerr << "findKeyword "<< i << " "<< line << " -< "<< keyword << "\n";
 	assert(isCharPotentialHeader(line, i));
 	// check the word
 	const size_t keywordLength = keyword.length();
@@ -724,12 +724,14 @@ const std::string* ASBase::findOperator(const std::string& line, int i,
 // index must point to the beginning of the word
 std::string ASBase::getCurrentWord(const std::string& line, size_t index) const
 {
-	assert(isCharPotentialHeader(line, index));
+	//assert(isCharPotentialHeader(line, index));
 	size_t lineLength = line.length();
 	size_t i;
 	for (i = index; i < lineLength; i++)
 	{
-		if (!isLegalNameChar(line[i]))
+		if (!isLegalNameChar(line[i])
+			|| ( (isCStyle() || isJavaStyle()) && i > index && line[i]=='.')
+			)
 			break;
 	}
 	return line.substr(index, i - index);
@@ -743,8 +745,8 @@ bool ASBase::isLegalNameChar(char ch) const
 	if ((unsigned char) ch > 127)
 		return false;
 	return (isalnum((unsigned char) ch)
-	        || (!isSharpStyle() && ch == '.')
-	        || ch == '_'
+            || ch == '_'
+            || (!isSharpStyle() && ch == '.' )
 	        || (isJavaStyle() && ch == '$')
 	        || (isSharpStyle() && ch == '@'));  // may be used as a prefix
 }

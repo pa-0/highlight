@@ -32,6 +32,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 #include <algorithm>
 #include <Diluculum/LuaState.hpp>
+#include <astyle/astyle.h>
 
 #include "main.h"
 #include "datadir.h"
@@ -48,7 +49,7 @@ void HLCmdLineApp::printVersionInfo(bool quietMode)
             << "\n Copyright (C) 2002-2023 Andre Simon <a dot simon at mailbox.org>"
             << "\n\n Argparser class"
             << "\n Copyright (C) 2006-2008 Antonio Diaz Diaz <ant_diaz at teleline.es>"
-            << "\n\n Artistic Style Classes (3.4.6)"
+            << "\n\n Artistic Style Classes (" << ASTYLE_VERSION << ")"
             << "\n Copyright (C) 1998-2023 The Artistic Style Authors"
             << "\n\n Diluculum Lua wrapper (1.0)"
             << "\n Copyright (C) 2005-2013 by Leandro Motta Barros"
