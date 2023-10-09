@@ -54,17 +54,17 @@ Deutsche Anleitung: {README_DE}
 
 == OVERVIEW
 
-Highlight converts sourcecode to HTML, XHTML, RTF, ODT, LaTeX, TeX, SVG, BBCode,
-Pango markup and terminal escape sequences with coloured syntax highlighting.
-Syntax definitions and colour themes are customizable.
+Highlight converts sourcecode to HTML, XHTML, RTF, ODT, LaTeX, TeX, SVG,
+BBCode, Pango markup and terminal escape sequences with coloured syntax
+highlighting. Syntax definitions and colour themes are customizable.
 
 
 === INTENDED PURPOSE
 
-Highlight was designed to offer a flexible but easy to use syntax highlighter
-for several output formats. No syntax or colouring information is hardcoded,
-instead all relevant data is stored in configuration scripts. These Lua scripts
-may be altered and enhanced with plug-ins.
+Highlight was created to provide a versatile yet user-friendly syntax highlighter
+for multiple output formats. Instead of hardcoding syntax and colouring information,
+all necessary data is saved in configuration scripts. These Lua scripts can be
+edited and enhanced with plug-ins.
 
 
 === FEATURE LIST
@@ -317,23 +317,23 @@ Language Server options:
 
 === GUI OPTIONS
 
-The Graphical User Interface offers a subset of the CLI's features. It includes
-a dynamic preview of the output file's apperarance. Please see screenshots and
-screencasts on the project website.
-Invoke highlight-gui with the `--portable` option to let it save its settings
-in the binary's current directory (instead of using the registry).
+The GUI provides a selection of the CLI's capabilities and features a live
+preview of the output file's appearance. Refer to the project website for
+accompanying screenshots and screencasts.
+Invoke highlight-gui with the `--portable` option to save its settings in the
+binary's current directory (instead of using the registry).
 
 
 === INPUT AND OUTPUT
 
-If no input or output file name is defined by `--input` and `--output` options,
-highlight will use stdin and stdout for file processing.
-Since version 3.44, reading from stdin can also be triggered by the `-` option.
+If the `--input` and `--output` options are not defined, Highlight will
+automatically use stdin and stdout for file processing.
+Reading from stdin can also be triggered by the `-` option.
 
-If no input filename is defined by `--input` or given at the prompt, highlight is
-not able to determine the language type by means of the file extension (except
-some scripting languages which are figured out by the shebang in the first input
-line). In this case you have to pass highlight the language with `--syntax` or
+If no input file is defined by `--input` or provided at prompt, highlight cannot
+determine the language type through the file extension (excluding some scripting
+languages that can be derived from the shebang on the first input line).
+In this scenario, you must specify the language for highlight with `--syntax` or
 `--syntax-by-name` (this usually should be the file suffix of the source file or
 its name, respectively).
 Example: If you want to convert a Python file, highlight needs to load the
@@ -383,12 +383,12 @@ Note: Using a plug-in script is the preferred way to enhance styling.
 
 ==== Terminal output:
 
-Since there are limited colours defined for ANSI terminal output, there exists
+As there are only a few colours defined for ANSI terminal output, there exists
 only one hard coded colour theme with `--out-format=ansi`. You should therefore
 use `--out-format=xterm256` to enable output in 256 colours. The 256 colour mode
-is supported by recent releases of xterm, rxvt and Putty (among others).
-The latest terminal emulators also support 16m colors, this mode is enabled
-with `--out-format=truecolor`.
+is supported by recent releases of xterm, rxvt and Putty (amongst others).
+Recently published terminal emulators also support 16m colors, this mode is
+enabled with `--out-format=truecolor`.
 
 .....................................................
 highlight --out-format=ansi <inputfile> | less -R

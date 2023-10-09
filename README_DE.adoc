@@ -61,8 +61,8 @@ Sprachdefinitionen und Farbstile sind konfigurierbar.
 
 === SINN UND ZWECK
 
-Highlight wurde mit dem Ziel entworfen, einen flexiblen und einfach zu
-bedienenden Syntaxhighlighter fuer mehrere Ausgabeformate anzubieten.
+Highlight wurde mit dem Ziel entworfen, einen flexiblen und benutzerfreundlichen
+Syntaxhighlighter fuer mehrere Ausgabeformate anzubieten.
 Statt hartkodierter Sprachbeschreibungen und Farbschemata sind alle wichtigen
 Informationen in Konfigurationsskripten enthalten. Diese Lua-Skripte koennen
 mit Plug-Ins angepasst und erweitert werden.
