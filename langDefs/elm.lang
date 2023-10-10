@@ -16,14 +16,13 @@ Keywords={
   { Id=3,
     List={ "String", "Int", "Float" }
   },
-  -- decorators:
-  --{ Id=2,
-  --  Regex=[[@[\w\.]+]],
-  --},
-
   { Id=4,
-    Regex=[[(\w+)\s*\(]],
+    Regex=[[([a-zA-Z]\w+)\s*\(]],
   },
+  -- attributes:
+  { Id=2,
+    Regex=[[\.([\w]+)]],
+  }
 }
 
 Strings={
