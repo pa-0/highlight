@@ -12,6 +12,7 @@
 
  - updated astyle lib to version 3.4.9
  - added support for Elm (https://gitlab.com/saalen/highlight/-/issues/237)
+ - added support for Factor (https://gitlab.com/saalen/highlight/-/issues/239)
  - added support for Cpp2
  - fixed Lua nested string deprecation error (https://gitlab.com/saalen/highlight/-/issues/238)
 
