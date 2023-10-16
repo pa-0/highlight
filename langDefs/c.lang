@@ -13,7 +13,7 @@ Keywords={
       "reinterpret_cast", "static_cast", "this", "throw", "try", "catch", "using", "true", "false", "bitand", "and", "bitor", "or", "xor",
       "compl", "and_eq", "or_eq", "xor_eq", "not", "not_eq", "assert", "static_assert",
       "alignas","alignof","concept","consteval","constexpr","constinit","co_await","co_return","co_yield","decltype",
-      "noexcept","requires","thread_local",
+      "noexcept","requires","thread_local", "module", "import"
     }
   },
   { Id=2,
