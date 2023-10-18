@@ -1,6 +1,6 @@
 = HIGHLIGHT HANDBUCH
 André Simon
-v4.6, Mai 2023
+v4.9, Oktober 2023
 :lang: de
 :toc: left
 :toc-title: Contents
