@@ -180,7 +180,9 @@ Functions:
 [horizontal]
 `AddKeyword`              :: function
 `RemoveKeyword`           :: function
+`AddPersistentState`      :: function
 `OnStateChange`           :: function
+`OverrideParam`           :: function
 `Decorate`                :: function
 `DecorateLineBegin`       :: function
 `DecorateLineEnd`         :: function
@@ -483,7 +485,6 @@ Add additional styling information:
 
 === FUNCTION STOREVALUE
 
-[[StoreValue]]
 ................................................................................
 Like above.
 ................................................................................
