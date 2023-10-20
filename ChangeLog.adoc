@@ -6,6 +6,13 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.10
+
+20.10.2023
+
+ - updated astyle lib to version 3.4.10
+
+
 == highlight 4.9
 
 16.10.2023
