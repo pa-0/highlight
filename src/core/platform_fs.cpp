@@ -41,6 +41,20 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <errno.h>
 
+#ifdef _WIN32
+
+#include <windows.h>
+
+#else
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <string.h>
+
+#endif
+
+
 using std::string;
 using std::vector;
 
@@ -48,7 +62,6 @@ namespace Platform
 {
 
 #ifdef _WIN32
-#include <windows.h>
 const char pathSeparator = '\\';
 
 #ifndef QT
@@ -88,10 +101,6 @@ std::string getTempFilePath(){
 }
 
 #else
-#include <unistd.h>
-#include <sys/types.h>
-#include <pwd.h>
-#include <string.h>
 
 const char pathSeparator = '/';
 

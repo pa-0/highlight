@@ -1,6 +1,6 @@
 = HIGHLIGHT MANUAL
 André Simon
-v4.6, May 2023
+v4.9, October 2023
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -61,18 +61,18 @@ highlighting. Syntax definitions and colour themes are customizable.
 
 === INTENDED PURPOSE
 
-Highlight was created to provide a versatile yet user-friendly syntax highlighter
-for multiple output formats. Instead of hardcoding syntax and colouring information,
-all necessary data is saved in configuration scripts. These Lua scripts can be
-edited and enhanced with plug-ins.
+Highlight was created to provide a versatile yet user-friendly syntax
+highlighter for multiple output formats. Instead of hardcoding syntax and
+colouring information, all necessary data is saved in configuration scripts.
+These Lua scripts can be edited and enhanced with plug-ins.
 
 
 === FEATURE LIST
 
-* highlighting of keywords, types, strings, numbers, escape sequences, comments,
-  operators and preprocessor directives
-* coloured output in HTML, XHTML 1.1, RTF, TeX, LaTeX, SVG, BBCode, Pango Markup
-  and terminal escape sequences
+* highlighting of keywords, types, strings, numbers, escape sequences,
+  comments, operators and preprocessor directives
+* coloured output in HTML, XHTML 1.1, RTF, TeX, LaTeX, SVG, BBCode, Pango
+  Markup and terminal escape sequences
 * supports referenced stylesheet files for HTML, LaTeX, TeX or SVG output
 * configuration files are Lua scripts
 * supports plug-in scripts to tweak language definitions and themes
