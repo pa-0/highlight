@@ -73,7 +73,7 @@ private:
     string getOpenTag ( const string& font,
                         const string& fgCol, const string& bgCol="" );
 
-    /** initialize tags in specific format according to colouring information provided in DucumentStyle */
+    /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param styleID current style ID

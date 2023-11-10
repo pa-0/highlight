@@ -102,7 +102,7 @@ private:
     /** Prints document body*/
     void printBody();
 
-    /** initialize tags in specific format according to colouring information provided in DucumentStyle */
+    /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     string styleDefinitionCache;

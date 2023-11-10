@@ -1,5 +1,5 @@
 ---
-pagetitle:   Highligh.pp Example
+pagetitle:   Highlight.pp Example
 author-meta: Tristano Ajmone
 css: example.css
 ...

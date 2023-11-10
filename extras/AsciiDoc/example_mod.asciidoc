@@ -196,7 +196,7 @@ In the link:./sass[`/sass/`] folder you'll find the commented SCSS sources used 
 
 === Custom LangDefs
 
-If you'd like to make available to Highlight some custom langDefs, or override the native language definitions of Highlight with your same-named customized versions, you only need to set the `HIGHLIGHT_DATADIR` environment variable to point to your custom Hihglight settings folder before invoking Asciidoctor.
+If you'd like to make available to Highlight some custom langDefs, or override the native language definitions of Highlight with your same-named customized versions, you only need to set the `HIGHLIGHT_DATADIR` environment variable to point to your custom Highlight settings folder before invoking Asciidoctor.
 
 The modded extension will check if the `HIGHLIGHT_DATADIR` environment variable is set, and if it is it will enforce it by invoking Highlight with the `--data-dir=<HIGHLIGHT_DATADIR>` option so that it gets the highest override priority.
 

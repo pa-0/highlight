@@ -165,7 +165,7 @@ private:
     /** Print document footer*/
     string getFooter();
 
-    /** initialize tags in specific format according to colouring information provided in DucumentStyle */
+    /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /**  \param styleName Style name

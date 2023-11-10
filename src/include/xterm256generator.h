@@ -75,7 +75,7 @@ private:
     /** \return escaped character*/
     virtual string maskCharacter ( unsigned char );
 
-    /** initialize tags in specific format according to colouring information provided in DucumentStyle */
+    /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param style associated element style

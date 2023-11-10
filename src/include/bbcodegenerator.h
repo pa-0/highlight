@@ -74,7 +74,7 @@ private:
     /** @return BBcode close tags */
     string  getCloseTag ( const ElementStyle &elem );
 
-    /** initialize tags in specific format according to colouring information provided in DucumentStyle */
+    /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param styleID current style ID

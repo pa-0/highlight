@@ -735,7 +735,7 @@ private:
     void printFooter();
 
     /** initialize tags in specific format according to colouring information
-     *  provided in DucumentStyle */
+     *  provided in DocumentStyle */
     virtual void initOutputTags() = 0;
 
     /** \param styleID keyword style id
