@@ -16,16 +16,16 @@ Keywords={
       "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws",
       "transient", "try", "void", "volatile", "while", "@interface",
 
-	    -- contextual Java keywords
-	    "exports", "module", "non-sealed", "open", "opens", "permits", "provides", "record",
-	    "requires", "sealed", "to", "transitive", "uses",  "var", "when", "with", "yield",
+      -- contextual Java keywords
+      "exports", "module", "non-sealed", "open", "opens", "permits", "provides", "record",
+      "requires", "sealed", "to", "transitive", "uses",  "var", "when", "with", "yield",
 
-	    -- reserved Groovy words. Added here for convenience
-	    "def", "default", "threadsafe",
+      -- reserved Groovy words. Added here for convenience
+      "def", "default", "threadsafe",
 
-	    -- contextual Groovy keywords
-	    "as", "in", "trait"
-},
+      -- contextual Groovy keywords
+      "as", "in", "trait"
+    }
   },
   { Id=2,
     List={"false", "true", "null"},
