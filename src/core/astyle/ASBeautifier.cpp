@@ -72,7 +72,7 @@ ASBeautifier::ASBeautifier()
 	setPreprocDefineIndent(false);
 	setPreprocConditionalIndent(false);
 	setAlignMethodColon(false);
-	isInAssignment = false;
+	isInAssignment = isInInitializerList = false;
 
 	// initialize ASBeautifier member vectors
 	beautifierFileType = INVALID_TYPE;		// reset to an invalid type
@@ -211,6 +211,7 @@ ASBeautifier::ASBeautifier(const ASBeautifier& other) : ASBase(other)
 	squeezeWhitespace = other.squeezeWhitespace;
 	attemptLambdaIndentation = other.attemptLambdaIndentation;
 	isInAssignment = other.isInAssignment;
+	isInInitializerList = other.isInInitializerList;
 	namespaceIndent = other.namespaceIndent;
 	braceIndent = other.braceIndent;
 	braceIndentVtk = other.braceIndentVtk;
@@ -751,7 +752,7 @@ std::string ASBeautifier::beautify(const std::string& originalLine)
 	size_t iPrelim = headerStack->size();
 
 	// calculate preliminary indentation based on headerStack and data from past lines
-	computePreliminaryIndentation();
+	computePreliminaryIndentation(line);
 
 	// parse characters in the current line.
 	parseCurrentLine(line);
@@ -856,6 +857,14 @@ void ASBeautifier::setObjCStyle()
 void ASBeautifier::setSharpStyle()
 {
 	fileType = SHARP_TYPE;
+}
+
+/**
+ * set indentation style to GHC.
+ */
+void ASBeautifier::setGHCStyle()
+{
+	fileType = GHC_TYPE;
 }
 
 /**
@@ -1389,7 +1398,7 @@ void ASBeautifier::registerContinuationIndent(const std::string& line, int i, in
 		continuationIndentCount = minIndent + spaceIndentCount_;
 
 	// this is not done for an in-statement array
-	int multiplier = isInAssignment ? 1 : 2; // GH16 - no multiply in assignments
+	int multiplier = isInAssignment ? 1 : 2; // GL16 - no multiply in assignments
 	if (continuationIndentCount > maxContinuationIndent
 	        && !(prevNonLegalCh == '=' && currentNonLegalCh == '{'))
 		continuationIndentCount = indentLength * multiplier + spaceIndentCount_;
@@ -1435,7 +1444,7 @@ void ASBeautifier::registerContinuationIndentColon(const std::string& line, int 
  */
 std::pair<int, int> ASBeautifier::computePreprocessorIndent()
 {
-	computePreliminaryIndentation();
+	computePreliminaryIndentation("");
 	std::pair<int, int> entry(indentCount, spaceIndentCount);
 	if (!headerStack->empty()
 	        && entry.first > 0
@@ -2080,7 +2089,7 @@ void ASBeautifier::processPreprocessor(const std::string& preproc, const std::st
 // Compute the preliminary indentation based on data in the headerStack
 // and data from previous lines.
 // Update the class variable indentCount.
-void ASBeautifier::computePreliminaryIndentation()
+void ASBeautifier::computePreliminaryIndentation(const std::string& line)
 {
 	indentCount = 0;
 	spaceIndentCount = 0;
@@ -2108,10 +2117,12 @@ void ASBeautifier::computePreliminaryIndentation()
 			        || (*headerStack)[i] == &AS_THROWS
 			        || (*headerStack)[i] == &AS_STATIC))
 				++indentCount;
+		} else {
+		    //GL37
+			if (!(i > 0 && (*headerStack)[i - 1] != &AS_OPEN_BRACE
+                && (*headerStack)[i] == &AS_OPEN_BRACE))
+                ++indentCount;
 		}
-		else if (!(i > 0 && (*headerStack)[i - 1] != &AS_OPEN_BRACE
-		           && (*headerStack)[i] == &AS_OPEN_BRACE))
-			++indentCount;
 
 		if (!isJavaStyle() && !namespaceIndent && i > 0
 		        && ((*headerStack)[i - 1] == &AS_NAMESPACE
@@ -2136,6 +2147,24 @@ void ASBeautifier::computePreliminaryIndentation()
 			++indentCount;
 			isInSwitch = true;
 		}
+
+		// GL26 check if line is a label.... do not indent
+		//std::cerr << "line "<<line<< "\n";
+		/*
+		if (!blockIndent) {
+
+			size_t lastCharPos = line.find_last_not_of(" \t");
+			if ( isCStyle()
+				&& line[lastCharPos] == ':'
+
+				) {
+					if (labelIndent)
+						--indentCount; // unindent label by one indent
+					else
+						indentCount = 0;
+			}
+
+		} */
 
 	}	// end of for loop
 
@@ -2683,9 +2712,11 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 				isInQuote = true;
 
 				char prevCh = i > 0 ? line[i - 1] : ' ';
+				char prevPrevCh = i > 1 ? line[i - 2] : ' ';
 
+				// GL 32
 				// https://sourceforge.net/p/astyle/bugs/535/
-				if (isCStyle() && prevCh == 'R' && !(isalpha(prevNonSpaceCh) || prevNonSpaceCh == '('  ))
+				if (isCStyle() && prevCh == 'R' && !isalpha(prevPrevCh) && !(isalpha(prevNonSpaceCh) ))
 				{
 					int parenPos = line.find('(', i);
 					if (parenPos != -1)
@@ -2888,8 +2919,10 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 		}
 
 		// handle parentheses
-		if (ch == '(' || ch == '[' || ch == ')' || ch == ']')
+		if ((ch == '(' && !isInInitializerList) || ch == '[' || ch == ')' || ch == ']')
 		{
+
+			// GL28 xx
 			if (ch == '(' || ch == '[')
 			{
 				isInOperator = false;
@@ -2928,7 +2961,7 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 					if (   !isLegalNameChar(prevNonSpaceCh)
 					        && prevNonSpaceCh != ']'
 					        && prevNonSpaceCh != ')'
-					        && prevNonSpaceCh != '*'  // GH #11
+					        && prevNonSpaceCh != '*'  // GL #11
 					        //&& line.find(AS_AUTO, 0 ) == std::string::npos
 					   )
 					{
@@ -3026,6 +3059,9 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 				if (isTopLevel())
 					isBlockOpener = true;
 			}
+
+			// GL28 fix initializer lists like x({a.x=0;})
+			isInInitializerList = isCStyle() && isBlockOpener && (prevNonSpaceCh=='(' || prevNonSpaceCh=='=');
 
 			if (!isBlockOpener && currentHeader != nullptr)
 			{
@@ -3504,7 +3540,7 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 		// handle ends of statements
 		if ((ch == ';' && parenDepth == 0) || ch == '}')
 		{
-			isInAssignment = false;
+			isInAssignment = isInInitializerList = false;
 
 			if (ch == '}')
 			{
@@ -3854,12 +3890,36 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 				// For C++ input/output, operator<<, >> and . method calls should be
 				// aligned, if we are not in a statement already and
 				// also not in the "operator<<(...)" header line
+
+				// GL28: method calls have to contain only alphanumeric identifier
+				size_t openParenPos = line.find(AS_OPEN_PAREN, i);
+
+				std::string methodName = getNextWord(line, i);
+				size_t methodNameEndPos =  i + methodName.length() + 1;
+				size_t firstCharAfterMethod = line.substr(i + methodName.length() + 1).find_first_not_of(" \t");
+				if (firstCharAfterMethod != std::string::npos)
+				{
+					methodNameEndPos += firstCharAfterMethod;
+				}
+
+				size_t firstCharOfLine = line.find_first_not_of(" \t");
+				bool lineStartsWithDot = false;
+				if (firstCharOfLine != std::string::npos)
+				{
+					lineStartsWithDot = line[firstCharOfLine] == '.';
+				}
+
+				// GL28: do not mixup template closing ">>" with IO operator
+				std::string searchTemplatePattern = line.substr(0, i);
+				size_t countLS = std::count_if( searchTemplatePattern.begin(), searchTemplatePattern.end(), []( char c ){return c =='<';});
+
 				if (!isInOperator
 				        && continuationIndentStack->empty()
 				        && isCStyle()
-				        && (foundNonAssignmentOp == &AS_GR_GR
-				            || foundNonAssignmentOp == &AS_LS_LS
-                            || (foundNonAssignmentOp == &AS_DOT && line.find(AS_OPEN_PAREN, i) != std::string::npos)))
+				        && !lineStartsWithDot
+				        && ( (foundNonAssignmentOp == &AS_GR_GR && countLS < 2 )
+				            ||  foundNonAssignmentOp == &AS_LS_LS
+				            || (foundNonAssignmentOp == &AS_DOT && openParenPos == methodNameEndPos)))
 				{
 					// this will be true if the line begins with the operator
 					if (i < foundNonAssignmentOp->length() && spaceIndentCount == 0)
@@ -3873,6 +3933,7 @@ void ASBeautifier::parseCurrentLine(const std::string& line)
 			{
 
 				isInAssignment = true;
+
 				foundPreCommandHeader = false;		// clears this for array assignments
 				foundPreCommandMacro = false;
 

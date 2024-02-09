@@ -42,6 +42,7 @@ ASFormatter::ASFormatter()
 	referenceAlignment = REF_SAME_AS_PTR;
 	objCColonPadMode = COLON_PAD_NO_CHANGE;
 	lineEnd = LINEEND_DEFAULT;
+	squeezeEmptyLineNum = std::string::npos;
 	maxCodeLength = std::string::npos;
 	isInStruct = false;
 	shouldPadCommas = false;
@@ -76,7 +77,7 @@ ASFormatter::ASFormatter()
 	shouldAttachReturnTypeDecl = false;
 	shouldBreakElseIfs = false;
 	shouldBreakLineAfterLogical = false;
-	shouldAddBraces = false;
+	shouldAddBraces = 0;
 	shouldAddOneLineBraces = false;
 	shouldRemoveBraces = false;
 	shouldPadMethodColon = false;
@@ -89,6 +90,8 @@ ASFormatter::ASFormatter()
 	shouldPadBracketsOutside = false;
 	shouldPadBracketsInside = false;
 	shouldUnPadBrackets = false;
+	isInMultlineStatement = false;
+	isInExplicitBlock = 0;
 
 	// initialize ASFormatter member std::vectors
 	formatterFileType = INVALID_TYPE;		// reset to an invalid type
@@ -175,6 +178,7 @@ void ASFormatter::init(ASSourceIterator* si)
 	clearFormattedLineSplitPoints();
 
 	currentHeader = nullptr;
+	previousHeader = nullptr;
 	currentLine = "";
 	readyFormattedLine = "";
 	formattedLine = "";
@@ -203,6 +207,7 @@ void ASFormatter::init(ASSourceIterator* si)
 	templateDepth = 0;
 	squareBracketCount = 0;
 	parenthesesCount = 0;
+	closingBracesCount = 0;
 	squeezeEmptyLineCount = 0;
 
 	runInIndentChars = 0;
@@ -312,6 +317,8 @@ void ASFormatter::init(ASSourceIterator* si)
 	isInHeader = false;
 	isInCase = false;
     isInAllocator = false;
+	isInMultlineStatement = false;
+	isInExplicitBlock = 0;
 
 	isFirstPreprocConditional = false;
 	processedFirstConditional = false;
@@ -412,7 +419,7 @@ void ASFormatter::fixOptionVariableConflicts()
 	else if (formattingStyle == STYLE_1TBS)
 	{
 		setBraceFormatMode(LINUX_MODE);
-		setAddBracesMode(true);
+		setAddBracesMode(1);
 		setRemoveBracesMode(false);
 	}
 	else if (formattingStyle == STYLE_GOOGLE)
@@ -450,7 +457,7 @@ void ASFormatter::fixOptionVariableConflicts()
 		// only shouldAddBraces should be set to true
 		if (shouldAddOneLineBraces)
 		{
-			shouldAddBraces = true;
+			shouldAddBraces = 1;
 			shouldAddOneLineBraces = false;
 		}
 	}
@@ -868,6 +875,7 @@ std::string ASFormatter::nextLine()
 		if (passedSemicolon)    // need to break the formattedLine
 		{
 			isInAllocator = false; // GH16
+			isInMultlineStatement = false;
 			passedSemicolon = false;
 			if (parenStack->back() == 0 && !isCharImmediatelyPostComment && currentChar != ';') // allow ;;
 			{
@@ -1060,6 +1068,7 @@ std::string ASFormatter::nextLine()
 		// handle braces
 		if (currentChar == '{' || currentChar == '}')
 		{
+
 			// if appendOpeningBrace this was already done for the original brace
 			if (currentChar == '{' && !appendOpeningBrace)
 			{
@@ -1084,6 +1093,9 @@ std::string ASFormatter::nextLine()
 				needHeaderOpeningBrace = false;
 				shouldKeepLineUnbroken = false;
 				returnTypeChecked = false;
+
+				isInExplicitBlock++;
+
 				objCColonAlign = 0;
 
 				methodBreakCharNum = std::string::npos;
@@ -1122,6 +1134,8 @@ std::string ASFormatter::nextLine()
 				shouldKeepLineUnbroken = false;
 				squareBracketCount = 0;
 				isInAllocator = false;
+				isInMultlineStatement = false;
+				isInExplicitBlock--;
 
 				if (braceTypeStack->size() > 1)
 				{
@@ -1137,6 +1151,7 @@ std::string ASFormatter::nextLine()
 
 				if (!preBraceHeaderStack->empty())
 				{
+					previousHeader = currentHeader;
 					currentHeader = preBraceHeaderStack->back();
 					preBraceHeaderStack->pop_back();
 				}
@@ -1184,6 +1199,7 @@ std::string ASFormatter::nextLine()
 
 		// #126
 		if ( currentChar == '*' && shouldPadOperators &&
+			pointerAlignment != PTR_ALIGN_TYPE &&  // SF 557
 			( currentHeader == &AS_IF || currentHeader == &AS_WHILE || currentHeader == &AS_DO || currentHeader == &AS_FOR)
 			&& ( previousChar == ')' || std::isalpha(previousChar) )
 			&& !isOperatorPaddingDisabled() ) {
@@ -1322,7 +1338,7 @@ std::string ASFormatter::nextLine()
 						isAppendPostBlockEmptyLineRequested = false;
 				}
 
-				const std::string* previousHeader = currentHeader;
+				previousHeader = currentHeader;
 				currentHeader = newHeader;
 				needHeaderOpeningBrace = true;
 
@@ -1601,8 +1617,9 @@ std::string ASFormatter::nextLine()
 
 		if (isPotentialHeader && !isInTemplate)
 		{
-			if (findKeyword(currentLine, charNum, AS_NEW)
-			        || findKeyword(currentLine, charNum, AS_DELETE))
+			//GL30
+			if (!isGHCStyle() && (findKeyword(currentLine, charNum, AS_NEW)
+			        || findKeyword(currentLine, charNum, AS_DELETE)))
 			{
 				isInPotentialCalculation = false;
 				isImmediatelyPostNewDelete = true;
@@ -1958,7 +1975,9 @@ std::string ASFormatter::nextLine()
 			continue;
 		}
 
-		if ((currentChar == '[' || currentChar == ']' ) && (shouldPadBracketsOutside || shouldPadBracketsInside || shouldUnPadBrackets) )
+		//GL31
+		bool isDoubleOpenBrackets = isGHCStyle() && currentChar=='[' && peekNextChar() == '[';
+		if ((currentChar == '[' || currentChar == ']' ) && (shouldPadBracketsOutside || shouldPadBracketsInside || shouldUnPadBrackets) && !isDoubleOpenBrackets)
 		{
 			padParensOrBrackets('[', ']', shouldPadBracketsOutside, shouldPadBracketsInside, shouldUnPadBrackets, false);
 			continue;
@@ -2056,12 +2075,13 @@ void ASFormatter::setFormattingStyle(FormatStyle style)
 /**
  * set the add braces mode.
  * options:
- *    true     braces added to headers for single line statements.
- *    false    braces NOT added to headers for single line statements.
+ *    2    braces added to headers for (nested) single line statements.
+ *    1    braces added to headers for single line statements.
+ *    0    braces NOT added to headers for single line statements.
  *
  * @param state         the add braces state.
  */
-void ASFormatter::setAddBracesMode(bool state)
+void ASFormatter::setAddBracesMode(int state)
 {
 	shouldAddBraces = state;
 }
@@ -2076,7 +2096,7 @@ void ASFormatter::setAddBracesMode(bool state)
  */
 void ASFormatter::setAddOneLineBracesMode(bool state)
 {
-	shouldAddBraces = state;
+	shouldAddBraces = state ? 1 : 0;
 	shouldAddOneLineBraces = state;
 }
 
@@ -6601,14 +6621,14 @@ bool ASFormatter::addBracesToStatement()
 	assert(isImmediatelyPostHeader);
 
 	if (currentHeader != &AS_IF
-	        && currentHeader != &AS_ELSE
-	        && currentHeader != &AS_FOR
-	        && currentHeader != &AS_WHILE
-	        && currentHeader != &AS_DO
-	        && currentHeader != &AS_FOREACH
-	        && currentHeader != &AS_QFOREACH
-	        && currentHeader != &AS_QFOREVER
-	        && currentHeader != &AS_FOREVER)
+		&& currentHeader != &AS_ELSE
+		&& currentHeader != &AS_FOR
+		&& currentHeader != &AS_WHILE
+		&& currentHeader != &AS_DO
+		&& currentHeader != &AS_FOREACH
+		&& currentHeader != &AS_QFOREACH
+		&& currentHeader != &AS_QFOREVER
+		&& currentHeader != &AS_FOREVER)
 		return false;
 
 	if (currentHeader == &AS_WHILE && foundClosingHeader)	// do-while
@@ -6618,23 +6638,105 @@ bool ASFormatter::addBracesToStatement()
 	if (currentChar == ';')
 		return false;
 
-	// do not add if a header follows
-	if (isCharPotentialHeader(currentLine, charNum))
-		if (findHeader(headers) != nullptr)
+
+	bool isLastElseBranch = shouldAddBraces == 2 && (previousHeader == &AS_IF && currentHeader == &AS_ELSE);
+
+	// old behavior
+	if (shouldAddBraces==1 || isLastElseBranch) {
+
+			// do not add if a header follows
+		if (isCharPotentialHeader(currentLine, charNum))
+			if (findHeader(headers) != nullptr)
+				return false;
+
+		// find the next semi-colon
+		size_t nextSemiColon = charNum;
+		if (currentChar != ';')
+			nextSemiColon = findNextChar(currentLine, ';', charNum + 1);
+		if (nextSemiColon == std::string::npos)
 			return false;
 
-	// find the next semi-colon
-	size_t nextSemiColon = charNum;
-	if (currentChar != ';')
-		nextSemiColon = findNextChar(currentLine, ';', charNum + 1);
-	if (nextSemiColon == std::string::npos)
-		return false;
+		// add closing brace before changing the line length
+		if (nextSemiColon == currentLine.length() - 1)
+			currentLine.append(" }");
+		else
+			currentLine.insert(nextSemiColon + 1, " }");
 
-	// add closing brace before changing the line length
-	if (nextSemiColon == currentLine.length() - 1)
-		currentLine.append(" }");
-	else
-		currentLine.insert(nextSemiColon + 1, " }");
+	} else { // nested single line statements
+
+		if (isInExplicitBlock > 1 && !closingBracesCount) {
+			return false;
+		}
+
+		// find the next semi-colon
+		size_t nextSemiColon = charNum;
+		if (currentChar != ';')
+			nextSemiColon = findNextChar(currentLine, ';', charNum + 1);
+
+		bool currentIsForHeader = false;
+		if (nextSemiColon != std::string::npos) {
+			if (isCharPotentialHeader(currentLine, (int) currentLine.find_first_not_of(" \t") )) {
+				if (findHeader(headers) == &AS_FOR) {
+					currentIsForHeader = true;
+					--closingBracesCount;
+				}
+		}
+
+		// add closing brace before changing the line length
+		++closingBracesCount;
+		if (!currentIsForHeader)
+
+			while (closingBracesCount--) {
+				if (nextSemiColon == currentLine.length() - 1)
+					currentLine.append(" }");
+				else
+					currentLine.insert(nextSemiColon + 1, " }");
+			}
+		}
+
+		++closingBracesCount;
+
+		nextSemiColon = currentLine.find('{');
+		if (nextSemiColon != std::string::npos){
+			--closingBracesCount;
+			return false;
+		} else {
+
+			ASPeekStream stream(sourceIterator);
+
+			// loop until { or other symbol is found
+			while (stream.hasMoreLines()) {
+
+				std::string nextLine = ASBeautifier::trim(stream.peekNextLine());
+				if (nextLine.empty())
+					continue;
+
+				if (nextLine[0] == '{' || nextLine[nextLine.size()-1] == '{') {
+					--closingBracesCount;
+					return false;
+				}
+
+				if (isCharPotentialHeader(nextLine, 0) && ASBase::findHeader(nextLine, 0, headers) != nullptr ) {
+					break;
+				}
+
+				// this breaks normal if else blocks
+				if (nextLine[nextLine.size()-1] != ';' && nextLine[nextLine.size()-1] != '}') {
+					isInMultlineStatement = true;
+					continue;
+				}
+
+				if (isInMultlineStatement) {
+					--closingBracesCount;
+					return false;
+				}
+
+				break;
+			}
+		}
+
+	}
+
 	// add opening brace
 	currentLine.insert(charNum, "{ ");
 	assert(computeChecksumIn("{}"));
