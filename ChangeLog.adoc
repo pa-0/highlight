@@ -6,6 +6,16 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.11
+
+14.03.2024
+
+ - updated astyle lib to version 3.4.13
+ - updated java definition ((https://gitlab.com/saalen/highlight/-/issues/244)
+ - updated solidity definition ((https://gitlab.com/saalen/highlight/-/issues/217)
+ - fix backslash symbol in man page
+
+
 == highlight 4.10
 
 20.10.2023
