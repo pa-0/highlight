@@ -2,7 +2,7 @@
                           main.cpp  -  description
                              -------------------
     begin                : Die Apr 23 22:16:35 CEST 2002
-    copyright            : (C) 2002-2023 by Andre Simon
+    copyright            : (C) 2002-2024 by Andre Simon
     email                : a.simon@mailbox.org
 
    Highlight is a universal source code to formatted text converter.
@@ -189,17 +189,14 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
     cerr << "\nLoading language definition:\n" << langDefPath;
     cerr << "\n\nDescription: " << lang->getDescription();
     if (level>1) {
-        Diluculum::LuaState* luaState=lang->getLuaState();
-        if (luaState) {
+
+        if (auto luaState = lang->getLuaState(); luaState) {
             cerr << "\n\nLUA GLOBALS:\n" ;
-            Diluculum::LuaValueMap::iterator it;
-            Diluculum::LuaValueMap glob =luaState->globals();
-            string elemName;
-            for(it = glob.begin(); it != glob.end(); it++) {
-                Diluculum::LuaValue first = it->first;
-                Diluculum::LuaValue second = it->second;
-                elemName = first.asString();
-                std::cerr << elemName<<": ";
+            auto glob = luaState->globals();
+
+            for (const auto &[first, second] : glob) {
+                auto elemName = first.asString();
+                std::cerr << elemName << ": ";
                 switch (second.type()) {
                     case  LUA_TSTRING:
                         cerr << "string [ "<<second.asString()<<" ]";
@@ -217,26 +214,18 @@ void HLCmdLineApp::printDebugInfo ( const highlight::SyntaxReader *lang,
                 }
                 cerr << endl;
             }
-
         }
 
-        highlight::RegexElement *re=NULL;
-        for ( unsigned int i=0; i<lang->getRegexElements().size(); i++ )
-        {
-            if (i==0)
-                cerr << "\nREGEX:\n";
-
-            re = lang->getRegexElements() [i];
-            cerr << "State "<<re->open<< " ("<< HLStateMap[re->open]<<  "):\t"<<re->pattern <<"\n";
+        if (auto regexElements = lang->getRegexElements(); !regexElements.empty()) {
+            std::cerr << "\nREGEX:\n";
+            for (const auto *re : regexElements)
+                std::cerr << "State " << re->open << " (" << HLStateMap[re->open] << "):\t" << re->pattern << "\n";
         }
 
-        highlight::KeywordMap::iterator it;
-        highlight::KeywordMap keys=lang->getKeywords();
-        for ( it=keys.begin(); it!=keys.end(); it++ ) {
-            if (it==keys.begin())
-                cerr << "\nKEYWORDS:\n";
-
-            cerr << " "<< it->first << "("<< it->second << ")";
+        if (auto keys = lang->getKeywords(); !keys.empty()) {
+            std::cerr << "\nKEYWORDS:\n";
+            for (const auto &[keyword, value] : keys)
+                std::cerr << " " << keyword << "(" << value << ")";
         }
     }
     cerr <<"\n\n";
@@ -324,15 +313,16 @@ void HLCmdLineApp::printIOErrorReport ( unsigned int numberErrorFiles,
 vector <string> HLCmdLineApp::collectPluginPaths(const vector<string>& plugins)
 {
     vector<string> absolutePaths;
-    for (unsigned int i=0; i<plugins.size(); i++) {
-        if (Platform::fileExists(plugins[i])) {
-            absolutePaths.push_back(plugins[i]);
+    for (const auto& plugin : plugins) {
+        if (Platform::fileExists(plugin)) {
+            absolutePaths.push_back(plugin);
         } else {
-            absolutePaths.push_back(dataDir.getPluginPath(plugins[i]+".lua"));
+            absolutePaths.push_back(dataDir.getPluginPath(plugin + ".lua"));
         }
     }
     return absolutePaths;
 }
+
 bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator* generator, string &suffix, unsigned int &curFileIndex){
     if (! options.runServiceMode())
         return false;
@@ -585,13 +575,13 @@ int HLCmdLineApp::run ( const int argc, const char*argv[] )
 
     bool styleFileWanted = !options.fragmentOutput() || options.styleOutPathDefined();
 
-    const  vector <string> pluginFileList=collectPluginPaths( options.getPluginPaths());
-    for (unsigned int i=0; i<pluginFileList.size(); i++) {
-        if ( !generator->initPluginScript(pluginFileList[i]) ) {
+    const vector <string> pluginFileList=collectPluginPaths( options.getPluginPaths());
+    for (const auto& pluginFile : pluginFileList) {
+        if ( !generator->initPluginScript(pluginFile) ) {
             cerr << "highlight: "
                  << generator->getPluginScriptError()
                  << " in "
-                 << pluginFileList[i]
+                 << pluginFile
                  <<"\n";
             return EXIT_FAILURE;
         }

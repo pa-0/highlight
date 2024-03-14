@@ -14,6 +14,7 @@
  - updated java definition ((https://gitlab.com/saalen/highlight/-/issues/244)
  - updated solidity definition ((https://gitlab.com/saalen/highlight/-/issues/217)
  - fix backslash symbol in man page
+ - src/makefile: added -std=c++17 to enable modern C++ features
 
 
 == highlight 4.10
