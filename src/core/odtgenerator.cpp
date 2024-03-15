@@ -70,9 +70,8 @@ string ODTGenerator::getStyleDefinition()
            << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() )
            << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() );
 
-        KeywordStyles styles = docStyle.getKeywordStyles();
-        for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
-            os << getAttributes (it->first, it->second );
+        for ( const auto &[first, second] : docStyle.getKeywordStyles() ) {
+            os << getAttributes ( first, second );
         }
 
         os << "<style:page-layout style:name=\"pm1\">"

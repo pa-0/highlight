@@ -45,9 +45,6 @@ namespace highlight
 /** maps keyword class names and the corresponding formatting information*/
 typedef map <std::string, ElementStyle> KeywordStyles;
 
-/** iterator for keyword styles*/
-typedef KeywordStyles::const_iterator KSIterator;
-
 /** \brief Contains information about document formatting properties.
  * @author Andre Simon
  */

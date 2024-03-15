@@ -99,10 +99,10 @@ string SVGGenerator::getStyleDefinition()
            os << getAttributes ( tspan+STY_NAME_ERM, docStyle.getErrorMessageStyle() );
            os << getAttributes ( tspan+STY_NAME_ERR, docStyle.getErrorStyle() );
 
-        KeywordStyles styles = docStyle.getKeywordStyles();
-        for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
-            os << getAttributes ( tspan+it->first, it->second );
+        for ( const auto &[first, second] : docStyle.getKeywordStyles() ) {
+            os << getAttributes ( tspan+first, second );
         }
+
         if ( includeStyleDef ) {
             os << "]]>\n"
                << "</style>";

@@ -191,12 +191,12 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
             Diluculum::LuaValueMap categoryMap;
             categoryMap = ls["Categories"].value().asTable();
 
-            for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+            for (const auto &[first, second] : categoryMap)
             {
-                categories.append(it->second.asString());
-                if (std::next(it) != categoryMap.end()) {
+                if (!categories.empty()) {
                     categories.append(",");
                 }
+                categories.append(second.asString());
             }
         }
 

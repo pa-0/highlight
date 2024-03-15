@@ -349,10 +349,10 @@ string LatexGenerator::getStyleDefinition()
         os << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
         os << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() );
 
-        KeywordStyles styles = docStyle.getKeywordStyles();
-        for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
-            os << getAttributes ( it->first, it->second );
+        for ( const auto &[first, second] : docStyle.getKeywordStyles() ) {
+            os << getAttributes ( first, second );
         }
+
         os << "\\definecolor{bgcolor}{rgb}{"
            << docStyle.getBgColour().getRed ( LATEX ) << ","
            << docStyle.getBgColour().getGreen ( LATEX ) << ","

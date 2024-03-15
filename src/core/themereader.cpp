@@ -368,9 +368,11 @@ ElementStyle ThemeReader::getKeywordStyle ( const string &className )
 vector <string> ThemeReader::getClassNames() const
 {
     vector <string> kwClassNames;
-    for ( KSIterator iter = keywordStyles.begin(); iter != keywordStyles.end(); iter++ ) {
-        kwClassNames.push_back ( ( *iter ).first );
+
+    for ( const auto &[first, second] : keywordStyles ) {
+        kwClassNames.push_back(first);
     }
+
     return kwClassNames;
 }
 

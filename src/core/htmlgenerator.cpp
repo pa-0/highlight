@@ -290,9 +290,8 @@ string HtmlGenerator::getStyleDefinition()
             << getAttributes ( STY_NAME_ERM, docStyle.getErrorMessageStyle() )
             << getAttributes ( STY_NAME_ERR, docStyle.getErrorStyle() );
 
-        KeywordStyles styles = docStyle.getKeywordStyles();
-        for ( KSIterator it=styles.begin(); it!=styles.end(); it++ ) {
-            os << getAttributes ( it->first, it->second );
+        for ( const auto &[first, second] : docStyle.getKeywordStyles() ) {
+            os << getAttributes ( first, second );
         }
         styleDefinitionCache=os.str();
     }

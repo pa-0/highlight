@@ -107,7 +107,7 @@ int HLCmdLineApp::printInstalledFiles(const std::string& where, const std::strin
         categoryFilters.insert ( catFilter );
     }
 
-    for (const auto &path : filePaths ) {
+    for (const auto &path : filePaths) {
         try {
             Diluculum::LuaState ls;
             highlight::SyntaxReader::initLuaState(ls, path,"");
@@ -123,10 +123,10 @@ int HLCmdLineApp::printInstalledFiles(const std::string& where, const std::strin
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                for (Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+                for (const auto &[first, second] : categoryMap)
                 {
-                    categoryNames.insert(it->second.asString());
-                    if (categoryFilters.size() && categoryFilters.count(it->second.asString())) {
+                    categoryNames.insert(second.asString());
+                    if (categoryFilters.size() && categoryFilters.count(second.asString())) {
                         ++filterOKCnt;
                     }
                 }
@@ -139,9 +139,9 @@ int HLCmdLineApp::printInstalledFiles(const std::string& where, const std::strin
                 std::cout << setw ( 30 ) <<setiosflags ( ios::left ) <<desc<<": "<<suffix;
 
                 int extCnt=0;
-                for (StringMap::iterator it=dataDir.assocByExtension.begin(); it!=dataDir.assocByExtension.end(); it++) {
-                    if (it->second==suffix ) {
-                        std::cout << ((++extCnt==1)?" ( ":" ")<<it->first;
+                for (const auto &[first, second] : dataDir.assocByExtension) {
+                    if (second==suffix ) {
+                        std::cout << ((++extCnt==1)?" ( ":" ") << first;
                     }
                 }
                 std::cout << ((extCnt)?" )":"");
@@ -161,8 +161,8 @@ int HLCmdLineApp::printInstalledFiles(const std::string& where, const std::strin
 
         if (!categoryFilters.size()){
             std::cout << "\nFound "<<kind<<" categories:\n\n";
-            for (std::set<string>::iterator it=categoryNames.begin(); it!=categoryNames.end(); ++it)
-                std::cout << *it<< ' ';
+            for ( const auto &catName : categoryNames)
+                std::cout << catName << ' ';
             std::cout << "\n";
         }
 
