@@ -882,8 +882,8 @@ void MainWindow::on_action_About_Highlight_triggered()
     QMessageBox::about( this, "About Highlight",
                         QString("Highlight is a code to formatted text converter.\n\n"
                                 "Highlight GUI %1\n"
-                                "Copyright (C) 2002-2023 Andre Simon <a.simon at mailbox.org>\n\n"
-                                "Artistic Style Classes\n(C) 1998-2023 The Artistic Style Authors\n\n"
+                                "Copyright (C) 2002-2024 Andre Simon <a.simon at mailbox.org>\n\n"
+                                "Artistic Style Classes\n(C) 1998-2024 The Artistic Style Authors\n\n"
                                 "Diluculum Lua wrapper\n"
                                 "Copyright (C) 2005-2013 by Leandro Motta Barros\n\n"
                                 "xterm 256 color matching functions\n"
