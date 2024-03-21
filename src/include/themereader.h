@@ -43,7 +43,7 @@ namespace highlight
 {
 
 /** maps keyword class names and the corresponding formatting information*/
-typedef map <std::string, ElementStyle> KeywordStyles;
+typedef std::map <std::string, ElementStyle> KeywordStyles;
 
 /** \brief Contains information about document formatting properties.
  * @author Andre Simon
@@ -64,7 +64,7 @@ private:
 
     std::vector<Diluculum::LuaFunction*> pluginChunks;
 
-    map<std::string, int> semanticStyleMap;
+    std::map<std::string, int> semanticStyleMap;
 
     bool fileOK, restoreStyles, dirtyAttributes;
 

@@ -32,6 +32,13 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "version.h"
 #include "rtfgenerator.h"
 
+using std::endl;
+using std::ostringstream;
+using std::string;
+using std::stringstream;
+using std::to_string;
+using std::vector;
+
 namespace highlight
 {
 

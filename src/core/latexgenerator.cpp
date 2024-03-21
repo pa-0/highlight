@@ -27,6 +27,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "latexgenerator.h"
 
+using std::ostringstream;
+using std::string;
+
 namespace highlight
 {
 

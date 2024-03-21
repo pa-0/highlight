@@ -57,9 +57,9 @@ private:
 
     /** prints document header
     */
-    string getHeader();
+    std::string getHeader();
 
-    string getHeaderStart ( const string &title );
+    std::string getHeaderStart ( const std::string &title );
 
 };
 

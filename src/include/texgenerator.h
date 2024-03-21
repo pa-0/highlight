@@ -57,10 +57,10 @@ private:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -68,23 +68,23 @@ private:
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
-    string styleDefinitionCache;
+    std::string styleDefinitionCache;
 
-    string getStyleDefinition();
+    std::string getStyleDefinition();
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /**\return text formatting attributes in RTF format */
-    string getAttributes ( const string & elemName, const ElementStyle & elem );
+    std::string getAttributes ( const std::string & elemName, const ElementStyle & elem );
 
     /** @param styleID current style ID
         @return matching sequence to begin a new element formatting*/
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /** @param styleID current style ID
         @return matching  sequence to stop element formatting*/
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 
 };
 

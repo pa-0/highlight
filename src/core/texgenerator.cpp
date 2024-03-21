@@ -31,6 +31,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "version.h"
 #include "texgenerator.h"
 
+using std::ostringstream;
+using std::string;
+
 namespace highlight
 {
 

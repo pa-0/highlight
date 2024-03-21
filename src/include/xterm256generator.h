@@ -64,34 +64,34 @@ private:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param style associated element style
         @return formatting sequence */
-    string getOpenTag (const ElementStyle &style );
+    std::string getOpenTag (const ElementStyle &style );
 
     /** @param styleID current style ID
         @return matching sequence to begin a new element formatting*/
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /** @param styleID current style ID
         @return matching sequence to close element formatting*/
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 
     /** @return Newline string */
-    string getNewLine();
+    std::string getNewLine();
 
     /** convert an xterm color value (0-253) to 3 unsigned chars rgb
         @param color xterm color
@@ -108,7 +108,7 @@ private:
     // set true if "True Color" escape codes should be used instead of 256 color approximation
     bool use16mColours;
 
-    string canvasColSeq;
+    std::string canvasColSeq;
 
     unsigned int canvasPadding;
 

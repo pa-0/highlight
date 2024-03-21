@@ -26,6 +26,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "xhtmlgenerator.h"
 
+using std::string;
+using std::ostringstream;
+
 namespace highlight
 {
 

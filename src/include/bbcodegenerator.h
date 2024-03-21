@@ -55,10 +55,10 @@ public:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -66,24 +66,24 @@ public:
 private:
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /** @return BBcode open tags */
-    string getOpenTag (const ElementStyle & elem );
+    std::string getOpenTag (const ElementStyle & elem );
 
     /** @return BBcode close tags */
-    string  getCloseTag ( const ElementStyle &elem );
+    std::string  getCloseTag ( const ElementStyle &elem );
 
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param styleID current style ID
         @return matching sequence to begin a new element formatting*/
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /** @param styleID current style ID
         @return matching  sequence to stop element formatting*/
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 };
 
 }

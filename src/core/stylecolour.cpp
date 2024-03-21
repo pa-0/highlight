@@ -33,6 +33,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 #include <cmath>
 
+using std::istringstream;
+using std::ostringstream;
 using std::string;
 
 namespace highlight

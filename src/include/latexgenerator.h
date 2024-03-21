@@ -94,10 +94,10 @@ private:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -105,15 +105,15 @@ private:
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
-    string styleDefinitionCache;
-    string longLineTag;
+    std::string styleDefinitionCache;
+    std::string longLineTag;
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /**\return text formatting attributes in LaTeX format */
-    string getAttributes ( const string & elemName,
-                           const ElementStyle & elem );
+    std::string getAttributes ( const std::string & elemName,
+                                const ElementStyle & elem );
 
     /** test if double quotes should be replaced by \dq{} */
     bool replaceQuotes;
@@ -126,12 +126,12 @@ private:
 
     bool beamerMode;
 
-    string getNewLine();
+    std::string getNewLine();
 
-    string getStyleDefinition();
+    std::string getStyleDefinition();
 
-    string getKeywordOpenTag ( unsigned int styleID );
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 };
 
 }

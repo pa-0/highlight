@@ -26,6 +26,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 #include "elementstyle.h"
 
+using std::istringstream;
+using std::string;
+
 namespace highlight
 {
 

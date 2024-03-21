@@ -52,6 +52,23 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "xterm256generator.h"
 #endif
 
+using std::cin;
+using std::cout;
+using std::ifstream;
+using std::ios;
+using std::istringstream;
+using std::iterator;
+using std::flush;
+using std::make_pair;
+using std::map;
+using std::ofstream;
+using std::ostream;
+using std::ostringstream;
+using std::right;
+using std::setw;
+using std::string;
+using std::vector;
+
 namespace highlight
 {
 const unsigned int CodeGenerator::NUMBER_BUILTIN_STATES = highlight::KEYWORD;

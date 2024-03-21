@@ -46,20 +46,17 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #define GLOBAL_SR_INSTANCE_NAME "HL_SRInstance"
 
-using namespace std;
-
-
 namespace highlight
 {
 class RegexElement;
 
 /** maps keywords and the corresponding class IDs*/
-typedef map <string, int> KeywordMap;
+typedef std::map <std::string, int> KeywordMap;
 
 /** maps embedded language names to exit delimiter regexes*/
-typedef map <string, string> DelimiterMap;
+typedef std::map <std::string, std::string> DelimiterMap;
 
-typedef map <string, bool> AllowInnerSectionsMap;
+typedef std::map <std::string, bool> AllowInnerSectionsMap;
 
 
 /**\brief Contains specific data of the programming language being processed.
@@ -83,23 +80,23 @@ public:
         \param pluginReadFilePath path to file which is read by plugin
         \param outputType output format
         \return LoadResult  */
-    LoadResult load( const string& langDefPath, const string& pluginReadFilePath,  OutputType outputType );
+    LoadResult load( const std::string& langDefPath, const std::string& pluginReadFilePath,  OutputType outputType );
 
     /** \return True if the next load() call would load a new language definition
         \param  langDefPath Path to language definition  */
-    bool needsReload ( const string &langDefPath ) const
+    bool needsReload ( const std::string &langDefPath ) const
     {
         return currentPath!=langDefPath;
     }
 
     /** \return Failed regular expression */
-    string getFailedRegex() const
+    std::string getFailedRegex() const
     {
         return regexErrorMsg;
     }
 
     /** \return Failed Lua exception description */
-    string getLuaErrorText() const
+    std::string getLuaErrorText() const
     {
         return luaErrorMsg;
     }
@@ -130,11 +127,11 @@ public:
 
     /** \param s String
          \return true if s is not a known keyword */
-    bool isKeyword ( const string &s ) ;
+    bool isKeyword ( const std::string &s ) ;
 
     /** \param s String
          \return keyword list group id */
-    int getKeywordListGroup ( const string &s );
+    int getKeywordListGroup ( const std::string &s );
 
     /** \return True if multi line comments may be nested */
     bool allowNestedMLComments() const
@@ -167,19 +164,19 @@ public:
     }
 
     /** \return keyword classes*/
-    const vector<string>& getKeywordClasses() const
+    const std::vector<std::string>& getKeywordClasses() const
     {
         return keywordClasses;
     }
 
     /** \return regular expressions */
-    const vector<RegexElement*>& getRegexElements() const
+    const std::vector<RegexElement*>& getRegexElements() const
     {
         return regex;
     }
 
     /** \return list of Lua code snippets to be stored on disk */
-    const vector<string>& getPersistentSnippets() const
+    const std::vector<std::string>& getPersistentSnippets() const
     {
         return persistentSnippets;
     }
@@ -191,31 +188,31 @@ public:
     }
 
     /** \return list of format override flags defined in syntax definitions */
-    vector<int>& getOverrideStyleAttributes()
+    std::vector<int>& getOverrideStyleAttributes()
     {
         return overrideStyles;
     }
 
     /** \return description of the programming language */
-    const string & getDescription () const
+    const std::string & getDescription () const
     {
         return langDesc;
     }
 
-    const string & getCategoryDescription() const
+    const std::string & getCategoryDescription() const
     {
         return categories;
     }
 
 
     /** \return header string defined by a plug-in */
-    const string & getHeaderInjection () const
+    const std::string & getHeaderInjection () const
     {
         return headerInjection;
     }
 
     /** \return footer string defined by a plug-in */
-    const string & getFooterInjection () const
+    const std::string & getFooterInjection () const
     {
         return footerInjection;
     }
@@ -241,7 +238,7 @@ public:
                      \param s State of delimiter
          \return delimiter ID
      */
-    int getOpenDelimiterID ( const string& token, State s);
+    int getOpenDelimiterID ( const std::string& token, State s);
 
     /**  Pairs of open/close delimiters have a unique ID to test if two tokens act as delimiters
          \param token delimiter token
@@ -249,21 +246,21 @@ public:
                      \param openDelimId opening delimiter retrieved with getOpenDelimiterID
          \return true if delimiter id of token matches openDelimID
      */
-    bool matchesOpenDelimiter ( const string& token, State s, int openDelimId);
+    bool matchesOpenDelimiter ( const std::string& token, State s, int openDelimId);
 
     /** initializes end delimiter regex to switch back to host language
     	\param langPath path of embedded language definition
     */
-    void restoreLangEndDelim(const string&langPath);
+    void restoreLangEndDelim(const std::string&langPath);
 
-    bool allowsInnerSection(const string& langPath);
+    bool allowsInnerSection(const std::string& langPath);
 
     bool requiresTwoPassRun();
 
     bool requiresParamUpdate();
 
 
-    string getPersistentHookConditions();
+    std::string getPersistentHookConditions();
 
     void clearPersistentSnippets();
 
@@ -271,12 +268,12 @@ public:
     	\param lang language definition name  (no path, no ".lang" extension)
     	\return absolute path based on the previously loaded definition
     */
-    string getNewPath(const string& lang);
+    std::string getNewPath(const std::string& lang);
 
     /**
     	\return absolute path of currently loaded definition
     */
-    string getCurrentPath() const
+    std::string getCurrentPath() const
     {
         return currentPath;
     }
@@ -284,7 +281,7 @@ public:
     /**
     	\return encoding which is normally used for input files of this syntax
     */
-    string getEncodingHint() const
+    std::string getEncodingHint() const
     {
         return encodingHint;
     }
@@ -292,7 +289,7 @@ public:
      /**
     	\return test function
     */
-    string getOverrideConfigVal(const string& name) const
+    std::string getOverrideConfigVal(const std::string& name) const
     {
         return pluginConfigOverride.count(name) ? pluginConfigOverride[name] : "";
     }
@@ -347,20 +344,20 @@ public:
     /**
     	\param fn name of the processed input file
     */
-    void setInputFileName(const string& fn) { currentInputFile=fn; }
+    void setInputFileName(const std::string& fn) { currentInputFile=fn; }
 
     /**
     	\return name of the processed input file
     */
 
-    string getInputFileName() const { return currentInputFile; }
+    std::string getInputFileName() const { return currentInputFile; }
 
     /**
     	\param groupID keyword group to be stored on disk
     	\param kw keyword token to be stored on disk
     */
 
-    void addPersistentKeyword(unsigned int groupID, const string& kw);
+    void addPersistentKeyword(unsigned int groupID, const std::string& kw);
 
     /**
     	\param groupID keyword group to be stored on disk
@@ -369,14 +366,14 @@ public:
     	\param lineNumber line number
     	\param fileName file name of processed file containing the line
     	*/
-    void addPersistentStateRange(unsigned int groupID, unsigned int column,unsigned int length, unsigned int lineNumber, const string& fileName);
+    void addPersistentStateRange(unsigned int groupID, unsigned int column,unsigned int length, unsigned int lineNumber, const std::string& fileName);
 
     /**
         \param ls Lua state to be initialized with constants
         \param langDefPath absolute path of language definition
         \param pluginReadFilePath absolute path of plugin input file
     */
-    static void initLuaState(Diluculum::LuaState& ls, const string& langDefPath, const string& pluginReadFilePath, OutputType outputType=HTML );
+    static void initLuaState(Diluculum::LuaState& ls, const std::string& langDefPath, const std::string& pluginReadFilePath, OutputType outputType=HTML );
 
     // generate a keyword class
     unsigned int generateNewKWClass ( int classID, const char *prefix="kw" );
@@ -385,32 +382,32 @@ public:
 
 private:
 
-    static const string REGEX_IDENTIFIER;
-    static const string REGEX_NUMBER;
-    static const string REGEX_ESCSEQ;
+    static const std::string REGEX_IDENTIFIER;
+    static const std::string REGEX_NUMBER;
+    static const std::string REGEX_ESCSEQ;
 
     // path to loaded language definition
-    string currentPath;
+    std::string currentPath;
 
     // name of file being processed
-    string currentInputFile;
+    std::string currentInputFile;
 
     // Language description
-    string langDesc, categories, encodingHint;
+    std::string langDesc, categories, encodingHint;
 
-    string headerInjection, footerInjection;
+    std::string headerInjection, footerInjection;
 
-    string regexErrorMsg, luaErrorMsg;
+    std::string regexErrorMsg, luaErrorMsg;
 
     KeywordMap keywords;
 
-    vector <string> keywordClasses;
-    static vector <string> persistentSnippets;
-    static set <string> persistentSyntaxDescriptions;
+    std::vector <std::string> keywordClasses;
+    static std::vector <std::string> persistentSnippets;
+    static std::set <std::string> persistentSyntaxDescriptions;
 
-    vector <RegexElement*> regex;
+    std::vector <RegexElement*> regex;
 
-    vector <int>overrideStyles;
+    std::vector <int>overrideStyles;
 
     // collect delimiters or get current delimiter in CodeGenerator::loadEmbeddedLang
     static DelimiterMap nestedStateEndDelimiters;
@@ -420,11 +417,11 @@ private:
     static AllowInnerSectionsMap allowInnerSections;
 
     // saves if delimiter pair consists of the same delimiter symbol
-    map <int, bool> delimiterDistinct;
+    std::map <int, bool> delimiterDistinct;
 
-    map <int, bool> rawStringOpenDelims;
+    std::map <int, bool> rawStringOpenDelims;
 
-    map <int, int> matchingDelimiters;
+    std::map <int, int> matchingDelimiters;
 
     // keywords are not case sensitive if set
     bool ignoreCase,
@@ -465,11 +462,11 @@ private:
 
 
 
-    void addKeyword(unsigned int groupID, const string& kw);
+    void addKeyword(unsigned int groupID, const std::string& kw);
 
-    void removeKeyword(const string& kw);
+    void removeKeyword(const std::string& kw);
 
-    void overrideParam(const string& name, const string& val);
+    void overrideParam(const std::string& name, const std::string& val);
 
 
     // Functions accessible in Lua State
@@ -478,7 +475,7 @@ private:
 
     Diluculum::LuaState* luaState; // make member to allow interaction with codeparser instance
 
-    static vector<Diluculum::LuaFunction*> pluginChunks;
+    static std::vector<Diluculum::LuaFunction*> pluginChunks;
 };
 
 }

@@ -39,6 +39,21 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "syntaxreader.h"
 #include "lspprofile.h"
 
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::flush;
+using std::ifstream;
+using std::istringstream;
+using std::ios;
+using std::map;
+using std::ostream_iterator;
+using std::setiosflags;
+using std::setw;
+using std::string;
+using std::unique_ptr;
+using std::vector;
+
 void HLCmdLineApp::printVersionInfo(bool quietMode)
 {
     if (quietMode) {
