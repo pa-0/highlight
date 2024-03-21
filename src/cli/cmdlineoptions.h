@@ -587,7 +587,7 @@ private:
     std::vector <std::string> lsOptions;
 
     /** list of file types which should be ignored */
-    set <std::string> ignoredFileTypes;
+    std::set <std::string> ignoredFileTypes;
 
     /** \return file suffix */
     std::string getFileSuffix ( const std::string & fileName ) const;

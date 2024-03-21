@@ -62,7 +62,7 @@ struct PageSize {
 };
 
 /** mapping of page size names and dimensions */
-typedef  map<string, struct PageSize> PagesizeMap;
+typedef  std::map<std::string, struct PageSize> PagesizeMap;
 
 /**
    \brief This class generates RTF.
@@ -84,7 +84,7 @@ public:
 
     /**  Define RTF page size
          @param ps RTF page size (a3, a4, a5, b4, b5, b6, letter, legal) */
-    void setRTFPageSize ( const string & ps );
+    void setRTFPageSize ( const std::string & ps );
 
     /** @param cs flag to enable character styles*/
     void setRTFCharStyles ( bool cs );
@@ -96,10 +96,10 @@ private:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -111,7 +111,7 @@ private:
     PagesizeMap psMap;
 
     /** name of page size which is mapped to page dimensions*/
-    string pageSize;
+    std::string pageSize;
 
     /** flag to add character styles */
     bool addCharStyles;
@@ -127,33 +127,33 @@ private:
     size_t utf8SeqLen;
 
     /** @return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /**\return text formatting attributes in RTF format */
-    string  getAttributes ( const ElementStyle & col );
+    std::string  getAttributes ( const ElementStyle & col );
 
     /** @param styleNumber number of current style
         @param elem associated element style
         @return RTF formatting sequence (colour index + bold + italic)*/
-    string getOpenTag ( int styleNumber,const ElementStyle &elem );
+    std::string getOpenTag ( int styleNumber,const ElementStyle &elem );
 
     /** @param styleNumber number of current style
         @param elem associated element style
         @param styleName style name
         @return RTF character style definition */
-    string getCharStyle ( int styleNumber,const ElementStyle &elem, const string&styleName );
+    std::string getCharStyle ( int styleNumber,const ElementStyle &elem, const std::string&styleName );
 
     /** @param elem associated element style
         @return RTF formatting sequence to close element formatting */
-    string getCloseTag ( const ElementStyle &elem );
+    std::string getCloseTag ( const ElementStyle &elem );
 
     /** @param styleID current style ID
         @return matching sequence to begin a new element formatting*/
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /** @param styleID current style ID
         @return matching  sequence to stop element formatting*/
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 };
 
 }

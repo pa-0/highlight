@@ -42,6 +42,12 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 //#include <QDebug>
 
+using std::ifstream;
+using std::iterator;
+using std::string;
+using std::unique_ptr;
+using std::vector;
+
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent), ui(new Ui::MainWindowClass),
 lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)

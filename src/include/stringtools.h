@@ -32,8 +32,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <sstream>
 
-using namespace std;
-
 /// Contains methods for string manipulation
 
 namespace StringTools
@@ -52,22 +50,22 @@ enum KeywordCase {
     \param kcase case modification indicator
     \return modified string
 */
-string change_case ( const string & s,
+std::string change_case ( const std::string & s,
                      const KeywordCase kcase = CASE_LOWER ) throw();
 
 /** Trim string (remove whitespace)
    \param value String
    \return string trimmed on the right
 */
-string trimRight ( const string &value );
+std::string trimRight ( const std::string &value );
 
-string trim(const string& s);
+std::string trim(const std::string& s);
 
 /** Split string and return items separated by a delimiter
     \param s string containing tokens
     \param delim Token delimiter
     \return vector containing found tokens */
-vector<string> splitString ( const string& s, unsigned char delim );
+std::vector<std::string> splitString ( const std::string& s, unsigned char delim );
 
 /** Convert string to a numeric value of the given type
     \param val variable of specified type which will contain the numeric value
@@ -81,13 +79,13 @@ bool str2num ( T &val, const std::string& s, std::ios_base& ( *f ) ( std::ios_ba
     return ! ( iss >> f >> val ).fail();
 }
 
-int calcWeight(const string&s);
+int calcWeight(const std::string&s);
 
-string getPathAcronym(const string&path, char delim);
+std::string getPathAcronym(const std::string&path, char delim);
 
 bool endsWith(std::string const & value, std::string const & ending);
 
-int utf8_strlen(const string& str);
+int utf8_strlen(const std::string& str);
 }
 
 #endif

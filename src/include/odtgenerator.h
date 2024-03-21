@@ -54,10 +54,10 @@ public:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -65,27 +65,27 @@ public:
 private:
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /** @return ODT open tags */
-    string getOpenTag ( const string& styleName );
+    std::string getOpenTag ( const std::string& styleName );
 
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
     /** @param styleID current style ID
         @return matching sequence to begin a new element formatting*/
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /** @param styleID current style ID
         @return matching  sequence to stop element formatting*/
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 
-    string styleDefinitionCache;
+    std::string styleDefinitionCache;
 
-    string getStyleDefinition();
+    std::string getStyleDefinition();
 
-    string getAttributes ( const string &, const ElementStyle & );
+    std::string getAttributes ( const std::string &, const ElementStyle & );
 };
 
 }

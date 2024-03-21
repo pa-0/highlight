@@ -54,16 +54,16 @@ public:
         \param w page width
         \param h page height
     */
-    void setSVGSize ( const string& w, const string& h );
+    void setSVGSize ( const std::string& w, const std::string& h );
 
 private:
 
     /** prints document header
      */
-    string getHeader();
+    std::string getHeader();
 
     /** Prints document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** Prints document body*/
     void printBody();
@@ -71,23 +71,23 @@ private:
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
 
-    string styleDefinitionCache;
-    string width, height;
+    std::string styleDefinitionCache;
+    std::string width, height;
 
-    string getStyleDefinition();
+    std::string getStyleDefinition();
 
-    string getAttributes ( const string &, const ElementStyle & );
+    std::string getAttributes ( const std::string &, const ElementStyle & );
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
-    string getOpenTag ( const string& );
+    std::string getOpenTag ( const std::string& );
 
-    string getKeywordOpenTag ( unsigned int styleID );
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 
     /** @return Newline string */
-    string getNewLine();
+    std::string getNewLine();
 };
 
 }

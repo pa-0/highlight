@@ -68,8 +68,8 @@ private:
 
     DataDir dataDir;
 
-    bool serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator * generator, string &suffix, unsigned int &curFileIndex);
-    string service_mode_tag;
+    bool serviceModeCheck(CmdLineOptions &options, highlight::CodeGenerator * generator, std::string &suffix, unsigned int &curFileIndex);
+    std::string service_mode_tag;
 
 
     /** print version info*/
@@ -82,14 +82,14 @@ private:
     void printBadInstallationInfo();
 
     /** print input and output errors */
-    void printIOErrorReport ( unsigned int numberErrorFiles, vector<string> & fileList,
-                              const string &action, const string &streamName );
+    void printIOErrorReport ( unsigned int numberErrorFiles, std::vector<std::string> & fileList,
+                              const std::string &action, const std::string &streamName );
 
     /** list installed  files
         \return true if files were found
     */
-    int printInstalledFiles(const string& where, const string& wildcard, const string& kind,
-                            const string&option, const string& categoryFilterList="");
+    int printInstalledFiles(const std::string& where, const std::string& wildcard, const std::string& kind,
+                            const std::string&option, const std::string& categoryFilterList="");
 
     /** print debug information
         \param lang language definition
@@ -98,22 +98,22 @@ private:
 
     */
     void printDebugInfo ( const highlight::SyntaxReader *lang,
-                          const string &langDefPath, int level );
+                          const std::string &langDefPath, int level );
 
     void printPersistentStates ( const highlight::SyntaxReader *lang);
 
     int getNumDigits ( int i );
 
     void printProgressBar ( int total, int count );
-    void printCurrentAction ( const string&outfilePath,
+    void printCurrentAction ( const std::string&outfilePath,
                               int total, int count, int countWidth );
 
-    bool readInputFilePaths ( vector<string> &fileList, string wildcard,
+    bool readInputFilePaths ( std::vector<std::string> &fileList, std::string wildcard,
                               bool recursiveSearch );
 
     void printInstalledFiles();
 
-    vector <string> collectPluginPaths(const vector<string>& plugins);
+    std::vector <std::string> collectPluginPaths(const std::vector<std::string>& plugins);
 };
 
 #endif

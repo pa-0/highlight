@@ -32,6 +32,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "arg_parser.h"
 
+using std::cerr;
+using std::endl;
+using std::string;
+using std::vector;
 
 enum Optcode {
         S_OPT_ENCLOSE_PRE = 256, S_OPT_FORCE_OUTPUT,

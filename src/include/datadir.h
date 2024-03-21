@@ -150,9 +150,9 @@ public:
      */
     bool loadLSPConfig ( const std::string& name);
 
-    bool profileExists(const string &profile);
+    bool profileExists(const std::string &profile);
 
-    highlight::LSPProfile &getProfile(const string &profile);
+    highlight::LSPProfile &getProfile(const std::string &profile);
 };
 
 #endif

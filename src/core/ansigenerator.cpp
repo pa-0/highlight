@@ -29,6 +29,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ansigenerator.h"
 
+using std::ostringstream;
+using std::string;
+
 namespace highlight
 {
 

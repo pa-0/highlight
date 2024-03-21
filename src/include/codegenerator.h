@@ -126,10 +126,10 @@ public:
      \param loadSemanticStyles set true if semantic styles should be read
      \return true if successful
     */
-    bool initTheme ( const string& themePath, bool loadSemanticStyles=false );
+    bool initTheme ( const std::string& themePath, bool loadSemanticStyles=false );
 
-    LSResult initLanguageServer ( const string& executable, const vector<string> &options, const string& workspace,
-                                  const string& syntax, int delay, int logLevel, bool legacy = false );
+    LSResult initLanguageServer ( const std::string& executable, const std::vector<std::string> &options, const std::string& workspace,
+                                  const std::string& syntax, int delay, int logLevel, bool legacy = false );
 
     void exitLanguageServer ();
 
@@ -137,25 +137,25 @@ public:
     /**
      \return description of the theme init error
     */
-    string getThemeInitError();
+    std::string getThemeInitError();
 
     /**
      \return description of the plug-in script error
     */
-    string getPluginScriptError();
+    std::string getPluginScriptError();
 
     /** initialize source code indentation and reformatting scheme;
         needs to be called before using a generate* method
         \param indentScheme Name of indentation scheme
         \return true if successful
      */
-    bool initIndentationScheme ( const string& indentScheme );
+    bool initIndentationScheme ( const std::string& indentScheme );
 
     /** \param langDefPath Absolute path to language definition, may be used multiple times for a generator instance
      *  \param embedded set True if method is called to load an embedded language
         \return   LOAD_OK, LOAD_FAILED, LOAD_FAILED_REGEX, LOAD_FAILED_LUA
     */
-    LoadResult loadLanguage ( const string& langDefPath, bool embedded=false );
+    LoadResult loadLanguage ( const std::string& langDefPath, bool embedded=false );
 
     /**
      Generate output file from input file
@@ -163,41 +163,41 @@ public:
      \param outFileName Path of output file (if empty use stdout)
      \return ParseError
     */
-    ParseError generateFile ( const string &inFileName, const string &outFileName );
+    ParseError generateFile ( const std::string &inFileName, const std::string &outFileName );
 
     /**
      Generate output string from input string
      \param input input code string
      \return formatted output code
     */
-    string generateString ( const string &input );
+    std::string generateString ( const std::string &input );
 
     /**
      Generate output string from input file
      \param inFileName file path
      \return formatted output code
     */
-    string generateStringFromFile ( const string &inFileName );
+    std::string generateStringFromFile ( const std::string &inFileName );
 
     /** Print style definitions to external file or stdout
       \param outFile Path of external style definition; print to stdout if empty
        \return true if successful
       */
-    bool printExternalStyle ( const string &outFile );
+    bool printExternalStyle ( const std::string &outFile );
 
     /** Print persistent state snippets to external file
       \param outFile Path of plugin file to generate
        \return true if successful
       */
-    bool printPersistentState ( const string &outFile );
+    bool printPersistentState ( const std::string &outFile );
 
     /** Print index file with all input file names
        \param fileList List of output file names
        \param outPath Output path
         \return true if successful
      */
-    virtual bool printIndexFile ( const vector<string> & fileList,
-                                  const string &outPath );
+    virtual bool printIndexFile ( const std::vector<std::string> & fileList,
+                                  const std::string &outPath );
 
     /** define the preformatting parameters. Preformatting takes place before
         the optional astyle reformatting and indenting is performed (defined by initIndentationScheme)
@@ -294,23 +294,23 @@ public:
     bool getIsolateTags ();
 
     /** \return style path */
-    const string& getStyleName();
+    const std::string& getStyleName();
 
     /** use this font as base font
       * \param fontName the font name, e.g. "Courier New"
      */
-    void setBaseFont ( const string& fontName);
+    void setBaseFont ( const std::string& fontName);
 
     /** \return base font */
-    const string getBaseFont() const ;
+    const std::string getBaseFont() const ;
 
     /** use this size as base font size
       * \param fontSize the font size, e.g. "12"
      */
-    void setBaseFontSize ( const string& fontSize );
+    void setBaseFontSize ( const std::string& fontSize );
 
     /** \return base font size*/
-    const string getBaseFontSize();
+    const std::string getBaseFontSize();
 
     /** tell parser the include style definition in output
         \param flag true if style should be included
@@ -326,29 +326,29 @@ public:
     /** Set style input path
         \param path path to style input file
       */
-    void setStyleInputPath ( const string& path );
+    void setStyleInputPath ( const std::string& path );
 
     /** Set style output path
       \param path path to style output file
     */
-    void setStyleOutputPath ( const string& path );
+    void setStyleOutputPath ( const std::string& path );
 
     /** Set encoding (output encoding must match input file)
       \param encodingName encoding name
     */
-    void setEncoding ( const string& encodingName );
+    void setEncoding ( const std::string& encodingName );
 
     /** \return style input file path */
-    const string&  getStyleInputPath();
+    const std::string&  getStyleInputPath();
 
     /** \return style output file path */
-    const string&  getStyleOutputPath();
+    const std::string&  getStyleOutputPath();
 
     /** \param title Document title */
-    void setTitle ( const string & title );
+    void setTitle ( const std::string & title );
 
     /** \return Document title */
-    string getTitle();
+    std::string getTitle();
 
     /** \param begin number of the first input line to be processed */
     void setStartingInputLine ( unsigned int begin );
@@ -368,14 +368,14 @@ public:
 
     /** \param param path of plugin input file
     */
-    void setPluginParameter ( const string& param );
+    void setPluginParameter ( const std::string& param );
 
     void resetSyntaxReaders();
 
     /** Load the Lua functions og the plug-in script
     	\param script path of the plug-in script
     */
-    bool initPluginScript(const string& script);
+    bool initPluginScript(const std::string& script);
 
     bool syntaxRequiresTwoPassRun();
 
@@ -385,30 +385,30 @@ public:
     void setStyleCaching ( bool flag );
 
     /** \return Syntaxreader Regex error message */
-    string getSyntaxRegexError();
+    std::string getSyntaxRegexError();
 
     /** \return Syntaxreader Lua error message */
-    string getSyntaxLuaError();
+    std::string getSyntaxLuaError();
 
     /** \return Syntaxreader description */
-    string getSyntaxDescription();
+    std::string getSyntaxDescription();
 
     /** \return Encoding hint */
-    string getSyntaxEncodingHint();
+    std::string getSyntaxEncodingHint();
 
     /** \return Theme description */
-    string getThemeDescription();
+    std::string getThemeDescription();
 
     /** \return Syntaxreader category description */
-    string getSyntaxCatDescription();
+    std::string getSyntaxCatDescription();
 
     /** \return Encoding contrast of Canvas and Default colours */
     float getThemeContrast();
 
     /** \return Theme category description */
-    string getThemeCatDescription();
+    std::string getThemeCatDescription();
 
-    vector<string> getPosTestErrors() { return failedPosTests; }
+    std::vector<std::string> getPosTestErrors() { return failedPosTests; }
 
     /** \return Pointer Syntaxreader, intended for debug output  */
     SyntaxReader* getSyntaxReader()
@@ -417,29 +417,29 @@ public:
     }
 
     /** \return Content of user defined input style */
-    string readUserStyleDef();
+    std::string readUserStyleDef();
 
     /** \return Style definition of the chosen output format */
-    virtual string getStyleDefinition()
+    virtual std::string getStyleDefinition()
     {
         return "";
     }
 
-    virtual string getHoverTagOpen(const string & hoverText)
+    virtual std::string getHoverTagOpen(const std::string & hoverText)
     {
         return "";
     }
 
-    virtual string getHoverTagClose()
+    virtual std::string getHoverTagClose()
     {
         return "";
     }
 
-    bool lsOpenDocument(const string& fileName, const string & suffix);
+    bool lsOpenDocument(const std::string& fileName, const std::string & suffix);
 
-    bool lsCloseDocument(const string& fileName, const string & suffix);
+    bool lsCloseDocument(const std::string& fileName, const std::string & suffix);
 
-    bool lsAddSemanticInfo(const string& fileName, const string & suffix);
+    bool lsAddSemanticInfo(const std::string& fileName, const std::string & suffix);
 
     void lsAddHoverInfo(bool hover);
 
@@ -471,11 +471,11 @@ public:
 
     /** set HTML output anchor prefix
      */
-    virtual void setHTMLAnchorPrefix ( const string& )  {};
+    virtual void setHTMLAnchorPrefix ( const std::string& )  {};
 
     /** set HTML output class name
      */
-    virtual void setHTMLClassName ( const string& )  {};
+    virtual void setHTMLClassName ( const std::string& )  {};
 
     /** set LaTeX replace quotes flag
      */
@@ -493,7 +493,7 @@ public:
 
     /** set RTF page size
      */
-    virtual void setRTFPageSize ( const string& )  {};
+    virtual void setRTFPageSize ( const std::string& )  {};
 
     /** set RTF output character styles flag
      */
@@ -505,7 +505,7 @@ public:
 
     /** set SVG page size
      */
-    virtual void setSVGSize ( const string&, const string& )  {};
+    virtual void setSVGSize ( const std::string&, const std::string& )  {};
 
     /** set True Color flag
      */
@@ -519,21 +519,21 @@ protected:
 
     static const unsigned int NUMBER_BUILTIN_STATES;  ///< number of token states (without keyword group IDs)
 
-    static const string STY_NAME_STD;
-    static const string STY_NAME_STR;
-    static const string STY_NAME_NUM;
-    static const string STY_NAME_SLC;
-    static const string STY_NAME_COM;
-    static const string STY_NAME_ESC;
-    static const string STY_NAME_DIR;
-    static const string STY_NAME_DST;
-    static const string STY_NAME_LIN;
-    static const string STY_NAME_SYM;
-    static const string STY_NAME_IPL;
+    static const std::string STY_NAME_STD;
+    static const std::string STY_NAME_STR;
+    static const std::string STY_NAME_NUM;
+    static const std::string STY_NAME_SLC;
+    static const std::string STY_NAME_COM;
+    static const std::string STY_NAME_ESC;
+    static const std::string STY_NAME_DIR;
+    static const std::string STY_NAME_DST;
+    static const std::string STY_NAME_LIN;
+    static const std::string STY_NAME_SYM;
+    static const std::string STY_NAME_IPL;
 
-    static const string STY_NAME_HVR;
-    static const string STY_NAME_ERR;
-    static const string STY_NAME_ERM;
+    static const std::string STY_NAME_HVR;
+    static const std::string STY_NAME_ERR;
+    static const std::string STY_NAME_ERM;
 
     /** \param type Output type */
     CodeGenerator ( highlight::OutputType type );
@@ -541,13 +541,13 @@ protected:
 
     /** \param c Character to be masked
         \return Escape sequence of output format */
-    virtual string maskCharacter ( unsigned char c ) = 0;
+    virtual std::string maskCharacter ( unsigned char c ) = 0;
 
     /** \param ss destination stream
         \param s string */
-    void maskString ( ostream& ss, const string &s ) ;
+    void maskString ( std::ostream& ss, const std::string &s ) ;
 
-    void printSyntaxError ( ostream& ss ) ;
+    void printSyntaxError ( std::ostream& ss ) ;
 
     /** Get current line number
       \return line number  */
@@ -555,8 +555,8 @@ protected:
 
     bool AtEnd(char c = -1) const;
 
-    vector <string> openTags,   ///< list of format delimiters (open new format descriptions)
-           closeTags;   ///< list of format delimiters (close format descriptions)
+    std::vector <std::string> openTags,   ///< list of format delimiters (open new format descriptions)
+                              closeTags;   ///< list of format delimiters (close format descriptions)
 
     /** Description of document colour style*/
     ThemeReader docStyle;
@@ -565,37 +565,37 @@ protected:
     SyntaxReader* currentSyntax;
 
     /** Tag for inserting line feeds*/
-    string newLineTag;
+    std::string newLineTag;
 
     /** String that represents a white space in output */
-    string spacer, initialSpacer;
+    std::string spacer, initialSpacer;
 
     /** file input*/
-    istream *in;
+    std::istream *in;
 
     /** file output*/
-    ostream *out;
+    std::ostream *out;
 
-    string maskWsBegin,  ///< open whitespace mask
-           maskWsEnd;    ///< close whitespace mask
+    std::string maskWsBegin,  ///< open whitespace mask
+                maskWsEnd;    ///< close whitespace mask
 
-    string styleCommentOpen,  ///< open comment delimiter
-           styleCommentClose; ///< close comment delimiter
+    std::string styleCommentOpen,  ///< open comment delimiter
+                styleCommentClose; ///< close comment delimiter
 
-    string embedBlockOpen,  ///< open block delimiter to highlight embedded code
-           embedBlockClose; ///< close block delimiter
+    std::string embedBlockOpen,  ///< open block delimiter to highlight embedded code
+                embedBlockClose; ///< close block delimiter
 
     /** Encoding name */
-    string encoding;
+    std::string encoding;
 
     /** document title */
-    string docTitle;
+    std::string docTitle;
 
-    string inFile,   ///< input file name
-           outFile;  ///< output file name
+    std::string inFile,   ///< input file name
+                outFile;  ///< output file name
 
     /// LSP syntax error description
-    string lsSyntaxErrorDesc;
+    std::string lsSyntaxErrorDesc;
 
     /** Test if maskWsBegin and maskWsEnd should be applied */
     bool maskWs;
@@ -627,13 +627,13 @@ protected:
     bool disableStyleCache;
 
     /** The base font to use */
-    string baseFont ;
+    std::string baseFont ;
 
     /** The base font size to use */
-    string baseFontSize ;
+    std::string baseFontSize ;
 
     /** Current line of input file*/
-    string line;
+    std::string line;
 
     /** Current line number */
     unsigned int lineNumber;
@@ -651,7 +651,7 @@ protected:
     void processRootState();
 
     /** \return line break sequence */
-    virtual string getNewLine();
+    virtual std::string getNewLine();
 
     /**
        \param s current state
@@ -676,7 +676,7 @@ protected:
     }
 
     /** Invoke plugin decorate user function */
-    Diluculum::LuaValueList callDecorateFct(const string& token);
+    Diluculum::LuaValueList callDecorateFct(const std::string& token);
 
     /** Invoke plugin decorate line user function
      @param isLineStart set true if line start function should be called,
@@ -684,7 +684,7 @@ protected:
     Diluculum::LuaValueList callDecorateLineFct(bool isLineStart);
 
     /** contains white space, which will be printed after a closing tag */
-    string wsBuffer;
+    std::string wsBuffer;
 
     /** Flag to test if style definition should be included in output document */
     bool includeStyleDef;
@@ -703,7 +703,7 @@ protected:
 
 private:
 
-    void printTrace(const string &s);
+    void printTrace(const std::string &s);
 
     CodeGenerator ( const CodeGenerator& ) {}
 
@@ -719,11 +719,11 @@ private:
 
     /** returns output specific document footer
         @return footer */
-    virtual string getFooter() = 0;
+    virtual std::string getFooter() = 0;
 
     /** returns output specific document header
       * @return header */
-    virtual string getHeader() = 0;
+    virtual std::string getHeader() = 0;
 
     /** Prints document header*/
     void printHeader();
@@ -740,11 +740,11 @@ private:
 
     /** \param styleID keyword style id
     	\return  open tag  */
-    virtual string getKeywordOpenTag ( unsigned int styleID) = 0;
+    virtual std::string getKeywordOpenTag ( unsigned int styleID) = 0;
 
     /** \param styleID keyword style id
     	\return  close tag  */
-    virtual string getKeywordCloseTag ( unsigned int styleID) = 0;
+    virtual std::string getKeywordCloseTag ( unsigned int styleID) = 0;
 
     /** open a new tag, set current state to s*/
     void openTag ( State s );
@@ -759,16 +759,16 @@ private:
     void openKWTag ( unsigned int styleID );
 
     /// path to style definition file
-    string themePath;
+    std::string themePath;
 
     /// path to host language definition
-    string hostLangDefPath;
+    std::string hostLangDefPath;
 
     /// path to embedded language definition
-    string embedLangDefPath;
+    std::string embedLangDefPath;
 
     /// path to plugin input file
-    string pluginParameter;
+    std::string pluginParameter;
 
     /// contains current position in line
     unsigned int lineIndex;
@@ -845,14 +845,14 @@ private:
     StringTools::KeywordCase keywordCase;
 
     /** contains the current token*/
-    string token;
+    std::string token;
 
-    string styleInputPath,   ///< style input file path
-           styleOutputPath;  ///< style output file path
+    std::string styleInputPath,   ///< style input file path
+                styleOutputPath;  ///< style output file path
 
-    string userScriptError;  ///< Plug-In script error message
+    std::string userScriptError;  ///< Plug-In script error message
 
-    string lsDocumentPath;   ///< Language Server input file name
+    std::string lsDocumentPath;   ///< Language Server input file name
 
     /** end-of-line delimiter*/
     char eolDelimiter;
@@ -861,7 +861,7 @@ private:
     void reset();
 
     /** read new line from in stream */
-    bool readNewLine ( string &newLine );
+    bool readNewLine ( std::string &newLine );
 
     /** return next character from in stream */
     unsigned char getInputChar();
@@ -893,7 +893,7 @@ private:
     void runSyntaxTestcases(unsigned int column);
 
     /* returns name of testcase state */
-    string getTestcaseName(State s, unsigned int kwClass);
+    std::string getTestcaseName(State s, unsigned int kwClass);
 
     /** print escaped token and clears it
        \param flushWhiteSpace set true if white space should be flushed
@@ -905,7 +905,7 @@ private:
     void updateKeywordClasses();
 
     /** association of matched regexes and the corresponding keyword class ids*/
-    map <int, RegexToken> regexGroups;
+    std::map <int, RegexToken> regexGroups;
 
     /** history of states per line position in the current line of input code (max 200 entries) */
 
@@ -918,17 +918,17 @@ private:
             if (s!=KEYWORD) kwClass=0;
         }
     };
-    vector<PositionState> stateTraceCurrent, stateTraceTest;
+    std::vector<PositionState> stateTraceCurrent, stateTraceTest;
 
-    vector<string> failedPosTests;
+    std::vector<std::string> failedPosTests;
 
     /** association of syntax definitions and their paths*/
-    map <string, SyntaxReader*> syntaxReaders;
+    std::map <std::string, SyntaxReader*> syntaxReaders;
 
     /** test for regular expressions
         \param line current input line
         \param skipState state which should be ignored*/
-    void matchRegex ( const string &line, State skipState=_UNKNOWN );
+    void matchRegex ( const std::string &line, State skipState=_UNKNOWN );
 
     /** \return true if input is no binary stream */
     bool validateInputStream();
@@ -936,7 +936,7 @@ private:
     /** load syntax description of embedded snippet's language
      \param embedLangDefPath path to language definition
       \return true if successful */
-    bool loadEmbeddedLang(const string&embedLangDefPath);
+    bool loadEmbeddedLang(const std::string&embedLangDefPath);
 
     /** call user script OnStateChange function if defined to confirm state change
      \param newState new state
@@ -954,13 +954,13 @@ private:
         pluginChunks.push_back(new Diluculum::LuaFunction(chunk));
     }
 
-    void applyPluginChunk(const string& fctName, string *result, bool *keepDefault);
+    void applyPluginChunk(const std::string& fctName, std::string *result, bool *keepDefault);
 
     void initASStream();
 
     void setOverrideParams();
 
-    static vector<Diluculum::LuaFunction*> pluginChunks;
+    static std::vector<Diluculum::LuaFunction*> pluginChunks;
 
     highlight::LSPClient LSPClient;
 };

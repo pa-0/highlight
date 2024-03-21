@@ -32,6 +32,13 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "htmlgenerator.h"
 #include "version.h"
 
+using std::ofstream;
+using std::ostringstream;
+using std::right;
+using std::setw;
+using std::string;
+using std::vector;
+
 namespace highlight
 {
 

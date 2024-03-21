@@ -30,8 +30,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "stylecolour.h"
 
-using namespace std;
-
 namespace highlight
 {
 
@@ -53,7 +51,7 @@ public:
 
     /** Constructor
          \param elementStyleString String with formatting information (eg "00 aa ff bold") */
-    ElementStyle ( const string & elementStyleString );
+    ElementStyle ( const std::string & elementStyleString );
 
     /** Constructor */
     ElementStyle();
@@ -90,7 +88,7 @@ public:
                 color can be HTML hex notation or a hex RGB tuple (ie "#2244ff" or "22 44 ff")
                 attr can be a combination of "italic, "bold" and "underline")
     */
-    void set ( const string & elementStyleString );
+    void set ( const std::string & elementStyleString );
 
     /** \return True if italic */
     bool isItalic() const;
@@ -118,7 +116,7 @@ public:
 
     std::string getCustomStyle() const;
 
-    void setCustomStyle(const string & style);
+    void setCustomStyle(const std::string & style);
 
     bool getCustomOverride() const;
 

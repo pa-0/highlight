@@ -31,6 +31,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <cmath>
 
+using std::string;
+using std::vector;
+
 namespace highlight
 {
 

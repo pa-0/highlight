@@ -68,8 +68,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include "enums.h"
 
-typedef multimap<string, string> MMap;
-typedef map<string, string> SMap;
+typedef std::multimap<std::string, std::string> MMap;
+typedef std::map<std::string, std::string> SMap;
 
 namespace Ui
 {
@@ -121,7 +121,7 @@ private:
     QString getUserScriptPath(QString type);
 
     QString getDistThemePath();
-    QString getDistLangPath(const string & suffix);
+    QString getDistLangPath(const std::string & suffix);
     QString getDistPluginPath();
     QString getDistFileConfigPath(QString name);
     QString getDistFileFilterPath();
@@ -141,11 +141,11 @@ private:
 
     void highlight2Clipboard(bool getDataFromCP);
 
-    string analyzeFile(const string& file);
-    string getFileType(const string& suffix, const string &inputFile);
-    string getFileSuffix(const string& fileName);
-    string getFileBaseName(const string& fileName);
-    void readLuaList(const string& paramName, const string& langName, Diluculum::LuaValue &luaVal, MMap* extMap);
+    std::string analyzeFile(const std::string& file);
+    std::string getFileType(const std::string& suffix, const std::string &inputFile);
+    std::string getFileSuffix(const std::string& fileName);
+    std::string getFileBaseName(const std::string& fileName);
+    void readLuaList(const std::string& paramName, const std::string& langName, Diluculum::LuaValue &luaVal, MMap* extMap);
     void fillThemeCombo(int);
     void showHelpFile(const QString& file);
 

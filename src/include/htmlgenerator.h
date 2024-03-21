@@ -61,13 +61,13 @@ public:
     /** Print style definitions to external file
      \param outFile Path of external style definition
      */
-    bool printExternalStyle ( const string &outFile );
+    bool printExternalStyle ( const std::string &outFile );
 
     /** Print index file with all input file names
       \param fileList List of output file names
       \param outPath Output path
     */
-    bool printIndexFile ( const vector<string> & fileList, const string &outPath );
+    bool printIndexFile ( const std::vector<std::string> & fileList, const std::string &outPath );
 
     /**
       \param  b set true if anchors should be attached to line numbers
@@ -80,7 +80,7 @@ public:
     /**
       \param  prefix anchor prefix
     */
-    void setHTMLAnchorPrefix ( const string & prefix )
+    void setHTMLAnchorPrefix ( const std::string & prefix )
     {
         anchorPrefix = prefix;
     }
@@ -109,20 +109,20 @@ public:
     /**
       \param name CSS Class name
     */
-    void setHTMLClassName ( const string& name )
+    void setHTMLClassName ( const std::string& name )
     {
         cssClassName  = (StringTools::change_case ( name ) =="none") ? "" : name;
     }
 
 protected:
 
-    string brTag,       ///< break tag
-           hrTag,       ///< horizontal ruler tag
-           fileSuffix,   ///< filename extension
-           cssClassName; ///< css class name prefix
+    std::string brTag,       ///< break tag
+                hrTag,       ///< horizontal ruler tag
+                fileSuffix,   ///< filename extension
+                cssClassName; ///< css class name prefix
 
     /** caches style definition */
-    string styleDefinitionCache;
+    std::string styleDefinitionCache;
 
     /** line count should be replaced by ordered list*/
     bool orderedList;
@@ -134,17 +134,17 @@ protected:
     bool enclosePreTag;
 
     /** \return CSS definition */
-    string  getStyleDefinition();
+    std::string  getStyleDefinition();
 
     /** \return Content of user defined style file */
-    string readUserStyleDef();
+    std::string readUserStyleDef();
 
     /** \param title Dociment title
         \return Start of file header */
-    virtual string getHeaderStart ( const string &title );
+    virtual std::string getHeaderStart ( const std::string &title );
 
     /** \return Comment with program information */
-    string getGeneratorComment();
+    std::string getGeneratorComment();
 
 private:
 
@@ -157,13 +157,13 @@ private:
 
     /** Print document header
     */
-    string getHeader();
+    std::string getHeader();
 
     /** Print document body*/
     void printBody();
 
     /** Print document footer*/
-    string getFooter();
+    std::string getFooter();
 
     /** initialize tags in specific format according to colouring information provided in DocumentStyle */
     void initOutputTags();
@@ -171,38 +171,38 @@ private:
     /**  \param styleName Style name
          \return Opening tag of the given style
     */
-    string getOpenTag ( const string& styleName );
+    std::string getOpenTag ( const std::string& styleName );
 
-    string getOpenTag ( const ElementStyle& elem );
+    std::string getOpenTag ( const ElementStyle& elem );
 
     /** \return escaped character*/
-    virtual string maskCharacter ( unsigned char );
+    virtual std::string maskCharacter ( unsigned char );
 
     /** test if anchors should be applied to line numbers*/
     bool attachAnchors;
 
     /**Optional anchor prefix */
-    string anchorPrefix;
+    std::string anchorPrefix;
 
     /**\return text formatting attributes in HTML format */
-    string  getAttributes ( const string & elemName, const ElementStyle & elem );
+    std::string  getAttributes ( const std::string & elemName, const ElementStyle & elem );
 
     /**  \param styleID Style ID
          \return Opening tag of the given style
     */
-    string getKeywordOpenTag ( unsigned int styleID );
+    std::string getKeywordOpenTag ( unsigned int styleID );
 
     /**  \param styleID Style ID
          \return Closing tag of the given style
     */
-    string getKeywordCloseTag ( unsigned int styleID );
+    std::string getKeywordCloseTag ( unsigned int styleID );
 
     /** @return Newline string */
-    string getNewLine();
+    std::string getNewLine();
 
-    virtual string getHoverTagOpen(const string & hoverText);
+    virtual std::string getHoverTagOpen(const std::string & hoverText);
 
-    virtual string getHoverTagClose();
+    virtual std::string getHoverTagClose();
 };
 
 }

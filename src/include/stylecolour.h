@@ -33,8 +33,6 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 
-using namespace std;
-
 namespace highlight
 {
 
@@ -56,12 +54,12 @@ public:
         \param green Blue value in hex notation
         \param blue Green value in hex notation
     */
-    Colour ( const string & red, const string & green, const string & blue );
+    Colour ( const std::string & red, const std::string & green, const std::string & blue );
 
     /** Constructor
         \param ColourString String with rgb values
     */
-    Colour ( const string & colourString );
+    Colour ( const std::string & colourString );
 
     Colour();
     ~Colour() {};
@@ -69,31 +67,31 @@ public:
     /** Sets red, green and blue values
       \param ColourString String containing colour attributes
     */
-    void setRGB ( const string & colourString );
+    void setRGB ( const std::string & colourString );
 
     /** Sets red value
         \param red New red value */
-    void setRed ( const string & red );
+    void setRed ( const std::string & red );
 
     /** Sets green value
         \param green New green value */
-    void setGreen ( const string & green );
+    void setGreen ( const std::string & green );
 
     /** Sets blue value
         \param blue New blue value */
-    void setBlue ( const string & blue );
+    void setBlue ( const std::string & blue );
 
     /**  @param type Output type
          @return Red value in color representation according to output type */
-    string getRed ( OutputType type ) const;
+    std::string getRed ( OutputType type ) const;
 
     /**  @param type Output type
          @return Green value in color representation according to output type */
-    string getGreen ( OutputType type ) const;
+    std::string getGreen ( OutputType type ) const;
 
     /**  @param type Output type
          @return Blue value in color representation according to output type */
-    string getBlue ( OutputType type ) const;
+    std::string getBlue ( OutputType type ) const;
 
     /**  @return red value */
     int getRed () const;
@@ -106,8 +104,8 @@ public:
 
 private:
     RGBVal rgb;
-    string int2str ( int, std::ios_base& ( *f ) ( std::ios_base& ) ) const;
-    string float2str ( double ) const;
+    std::string int2str ( int, std::ios_base& ( *f ) ( std::ios_base& ) ) const;
+    std::string float2str ( double ) const;
 };
 
 }
