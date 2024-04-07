@@ -1361,14 +1361,25 @@ void ASBeautifier::registerContinuationIndent(const std::string& line, int i, in
 	if (nextNonWSChar == remainingCharNum || shouldIndentAfterParen)
 	{
 		int previousIndent = spaceIndentCount_;
+
 		if (!continuationIndentStack->empty())
 			previousIndent = continuationIndentStack->back();
+
 		int currIndent = continuationIndent * indentLength + previousIndent;
+
+		// GL29
+		if (shouldIndentAfterParen) {
+			currIndent = indentLength;
+		}
+
 		if (currIndent > maxContinuationIndent && line[i] != '{')
 			currIndent = indentLength * 2 + spaceIndentCount_;
+
 		continuationIndentStack->emplace_back(currIndent);
-		if (updateParenStack)
+		if (updateParenStack) {
 			parenIndentStack->emplace_back(previousIndent);
+		}
+
 		return;
 	}
 

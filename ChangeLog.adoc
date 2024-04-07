@@ -6,6 +6,13 @@
 :toc: left
 :toclevels: 1
 
+== highlight 4.12
+
+14.03.2024
+
+ - updated astyle lib to version 3.4.14
+ - Remove `using namespace std;` in header files (merge request saalen/highlight!147)
+
 
 == highlight 4.11
 

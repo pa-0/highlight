@@ -3648,10 +3648,13 @@ bool ASFormatter::isPointerOrReferenceVariable(const std::string& word) const
 	        || word == "NSString"
 	        || word == "int"
 	        || word == "void"
+	        || word == "short"
+	        || word == "long"
+	        || word == "double"
+	        || word == "float"
 	        || (word.length() >= 6     // check end of word for _t
 	            && word.compare(word.length() - 2, 2, "_t") == 0)
-	        || word == "INT"
-	        || word == "VOID")
+		)
 		retval = true;
 
 	// check for C# object type "x is std::string"
@@ -4444,6 +4447,7 @@ void ASFormatter::formatPointerOrReferenceToMiddle()
 	else
 		wsBefore = charNum - wsBefore - 1;
 	std::string sequenceToInsert(1, currentChar);
+
 	if (currentChar == peekNextChar())
 	{
 		for (size_t i = charNum + 1; currentLine.length() > i; i++)
@@ -4459,6 +4463,7 @@ void ASFormatter::formatPointerOrReferenceToMiddle()
 	}
 	// if reference to a pointer check for conflicting alignment
 	else if (currentChar == '*' && peekNextChar() == '&'
+	         && ASBeautifier::peekNextChar(currentLine, charNum + 1) != '&'
 	         && (referenceAlignment == REF_ALIGN_TYPE
 	             || referenceAlignment == REF_ALIGN_MIDDLE
 	             || referenceAlignment == REF_SAME_AS_PTR))
@@ -4584,7 +4589,7 @@ void ASFormatter::formatPointerOrReferenceToName()
 
 	// if reference to a pointer align both to name
 
-	else if (currentChar == '*' && peekNextChar() == '&')
+	else if (currentChar == '*' && peekNextChar() == '&' && ASBeautifier::peekNextChar(currentLine, charNum + 1) != '&')
 	{
 		sequenceToInsert = "*&";
 		goForward(1);
