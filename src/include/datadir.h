@@ -29,6 +29,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #define DATADIR_H
 
 #include <map>
+#include <string>
+#include <string_view>
+
 #include <boost/xpressive/xpressive_dynamic.hpp>
 #include <Diluculum/LuaState.hpp>
 
@@ -52,7 +55,7 @@ class DataDir
 
 private:
 
-    const std::string searchFile(const std::string path);
+    std::string searchFile(std::string_view path);
 
     std::string getFileBaseName(const std::string& fileName);
 

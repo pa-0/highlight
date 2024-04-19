@@ -2,7 +2,7 @@
                           elementstyle.h  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2023 by Andre Simon
+    copyright            : (C) 2002-2024 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -27,6 +27,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef ELEMENTSTYLE_H
 #define ELEMENTSTYLE_H
+
+#include <string_view>
+
 
 #include "stylecolour.h"
 
@@ -88,7 +91,7 @@ public:
                 color can be HTML hex notation or a hex RGB tuple (ie "#2244ff" or "22 44 ff")
                 attr can be a combination of "italic, "bold" and "underline")
     */
-    void set ( const std::string & elementStyleString );
+    void set ( const std::string &elementStyleString );
 
     /** \return True if italic */
     bool isItalic() const;
@@ -116,7 +119,7 @@ public:
 
     std::string getCustomStyle() const;
 
-    void setCustomStyle(const std::string & style);
+    void setCustomStyle( std::string_view style);
 
     bool getCustomOverride() const;
 

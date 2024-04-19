@@ -2,7 +2,7 @@
                           elementstyle.cpp  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2023 by Andre Simon
+    copyright            : (C) 2002-2024 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -28,6 +28,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 using std::istringstream;
 using std::string;
+using std::string_view;
 
 namespace highlight
 {
@@ -36,7 +37,7 @@ ElementStyle::ElementStyle (const Colour &col, bool b, bool i, bool u )
 : colour ( col ) , bold ( b ), italic ( i ), underline ( u ), customOverride(false)
 {}
 
-ElementStyle:: ElementStyle ( const string & elementStyleString )
+ElementStyle:: ElementStyle ( const std::string & elementStyleString )
 : bold ( false ), italic ( false ), underline ( false ), customOverride(false)
 {
     set ( elementStyleString );
@@ -46,7 +47,7 @@ ElementStyle::ElementStyle()
 : bold ( false ), italic ( false ), underline ( false ), customOverride(false)
 {}
 
-void ElementStyle::set ( const string & elementStyleString )
+void ElementStyle::set ( const std::string & elementStyleString )
 {
     istringstream valueStream ( elementStyleString );
     string r, g, b, attr;
@@ -128,7 +129,7 @@ std::string ElementStyle::getCustomStyle() const {
     return customStyle;
 }
 
-void ElementStyle::setCustomStyle(const string & style) {
+void ElementStyle::setCustomStyle(std::string_view style) {
     customStyle = style;
 }
 

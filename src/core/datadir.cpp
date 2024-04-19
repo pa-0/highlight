@@ -2,7 +2,7 @@
                           dataDir.cpp  -  description
                              -------------------
     begin                : Sam March 1 2003
-    copyright            : (C) 2003-2023 by Andre Simon
+    copyright            : (C) 2003-2024 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -26,6 +26,7 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <string>
+#include <string_view>
 #include <fstream>
 #include <vector>
 #include "platform_fs.h"
@@ -38,6 +39,8 @@ using std::cout;
 using std::ifstream;
 using std::ios;
 using std::string;
+using std::string_view;
+
 
 string DataDir::LSB_DATA_DIR="/usr/share/highlight/";
 string DataDir::LSB_CFG_DIR="/etc/highlight/";
@@ -77,28 +80,30 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
 #endif
 }
 
-const string DataDir::searchFile(const string path)
+std::string DataDir::searchFile(std::string_view path)
 {
-    for ( unsigned int i=0; i<possibleDirs.size(); i++ ) {
-
-        //cerr << "Searching "<<possibleDirs[i]<< path<<"\n";
-        if ( Platform::fileExists ( possibleDirs[i] + path ) )
-            return possibleDirs[i]+ path;
+    for (const auto& dir : possibleDirs) {
+        std::string fullPath = dir;
+        fullPath.append(path);
+        // cerr << "Searching " << fullPath << "\n";
+        if (Platform::fileExists(fullPath))
+            return fullPath;
     }
-    return path;
+    return std::string(path);
 }
+
 
 const void DataDir::printConfigPaths()
 {
-    for ( unsigned int i=0; i<possibleDirs.size(); i++ ) {
-        if ( Platform::fileExists ( possibleDirs[i] ) )
-            cout <<possibleDirs[i]<<"\n";
+    for ( const auto& dir : possibleDirs ) {
+        if ( Platform::fileExists ( dir ) )
+            cout << dir <<"\n";
     }
 }
 
 const string DataDir::getLangPath ( const string & file )
 {
-    return searchFile(string("langDefs")+Platform::pathSeparator+file);
+    return searchFile(string("langDefs") + Platform::pathSeparator + file);
 }
 
 const string DataDir::getThemePath ( const string & file, bool base16)
@@ -338,4 +343,3 @@ string DataDir::getFileBaseName(const string& fileName){
     size_t psPos = fileName.rfind ( /*Platform::pathSeparator*/ '/' );
     return  (psPos==string::npos) ? fileName : fileName.substr(psPos+1, fileName.length());
 }
-
