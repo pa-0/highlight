@@ -125,12 +125,12 @@ void ElementStyle::setColour (const Colour& col )
     colour = col;
 }
 
-std::string ElementStyle::getCustomStyle() const {
-    return customStyle;
+std::string ElementStyle::getCustomAttribute() const {
+    return customAttribute;
 }
 
-void ElementStyle::setCustomStyle(std::string_view style) {
-    customStyle = style;
+void ElementStyle::setCustomAttribute(std::string_view style) {
+    customAttribute = style;
 }
 
 bool ElementStyle::getCustomOverride() const {

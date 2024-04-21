@@ -135,7 +135,7 @@ string SVGGenerator::getAttributes ( const string & elemName,
             << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
     }
 
-    string customStyle(elem.getCustomStyle());
+    string customStyle(elem.getCustomAttribute());
 
     if (!customStyle.empty()) {
         if (!elem.getCustomOverride()) {

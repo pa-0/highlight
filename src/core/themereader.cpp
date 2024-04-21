@@ -2,7 +2,7 @@
                           themereader.cpp  -  description
                              -------------------
     begin                : Son Nov 10 2002
-    copyright            : (C) 2002-2023 by Andre Simon
+    copyright            : (C) 2002-2024 by Andre Simon
     email                : a.simon@mailbox.org
  ***************************************************************************/
 
@@ -69,7 +69,7 @@ OutputType ThemeReader::getOutputType(const string &typeDesc) {
 void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& var)
 {
 
-    style.setCustomStyle(""); // Init with a default value.
+    style.setCustomAttribute(""); // Init with a default value.
 
     if (var["Custom"].value()!=Diluculum::Nil) {
 
@@ -79,7 +79,7 @@ void ThemeReader::initStyle(ElementStyle& style, const Diluculum::LuaVariable& v
 
             if (getOutputType(var["Custom"][idx]["Format"].value().asString()) == outputType) {
 
-                style.setCustomStyle (var["Custom"][idx]["Style"].value().asString() );
+                style.setCustomAttribute (var["Custom"][idx]["Style"].value().asString() );
                 style.setCustomOverride ( true );
                 break;
             }
@@ -187,17 +187,17 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
 
         if (outputType==HTML || outputType==XHTML) {
             hover.setCustomOverride(true);
-            hover.setCustomStyle ("cursor:help");
-            errorMessages.setCustomStyle ("border:solid 1px red; margin-left: 3em");
+            hover.setCustomAttribute ("cursor:help");
+            errorMessages.setCustomAttribute ("border:solid 1px red; margin-left: 3em");
 
-            if (line.getCustomStyle().empty()) {
-                line.setCustomStyle("user-select: none");
+            if (line.getCustomAttribute().empty()) {
+                line.setCustomAttribute("user-select: none");
             }
         }
 
         if (outputType==LATEX) {
             errorMessages.setCustomOverride(true);
-            errorMessages.setCustomStyle ("\\marginpar{\\small\\itshape\\color{red}#1}");
+            errorMessages.setCustomAttribute ("\\marginpar{\\small\\itshape\\color{red}#1}");
         }
 
         if (ls["ErrorMessage"].value() !=Diluculum::Nil){
