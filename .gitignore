@@ -30,3 +30,4 @@ src/gui-qt/ui_*
 src/gui-qt/moc_*
 src/gui-qt/.qmake.stash
 src/gui-qt/Makefile
+src/gui-qt/*.qm
