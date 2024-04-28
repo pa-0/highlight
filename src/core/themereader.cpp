@@ -191,7 +191,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             errorMessages.setCustomStyle ("border:solid 1px red; margin-left: 3em");
 
             if (line.getCustomStyle().empty()) {
-                line.setCustomStyle("user-select: none");
+                line.setCustomStyle("user-select: none;-webkit-user-select: none");
             }
         }
 
