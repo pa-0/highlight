@@ -96,7 +96,7 @@ string TexGenerator::getAttributes ( const string & elemName,const ElementStyle 
             << ( elem.getColour().getBlue ( TEX ) ) <<" 0.0}";
     }
 
-    string customStyle(elem.getCustomStyle());
+    string customStyle(elem.getCustomAttribute());
 
     if (!customStyle.empty()) {
         s << customStyle;

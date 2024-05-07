@@ -209,7 +209,7 @@ string HtmlGenerator::getAttributes ( const string & elemName, const ElementStyl
             << ( elem.isUnderline() ? "; text-decoration:underline" :"" );
     }
 
-    string customStyle(elem.getCustomStyle());
+    string customStyle(elem.getCustomAttribute());
 
     if (!customStyle.empty()) {
         if (!elem.getCustomOverride()) {

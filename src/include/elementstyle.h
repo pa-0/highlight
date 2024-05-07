@@ -67,7 +67,7 @@ public:
         italic = other.isItalic();
         underline = other.isUnderline();
         customOverride = other.getCustomOverride();
-        customStyle = other.getCustomStyle();
+        customAttribute = other.getCustomAttribute();
     }
 
     /** operator overloading */
@@ -78,7 +78,7 @@ public:
         italic = other.isItalic();
         underline = other.isUnderline();
         customOverride = other.getCustomOverride();
-        customStyle = other.getCustomStyle();
+        customAttribute = other.getCustomAttribute();
 
         return *this;
     }
@@ -117,9 +117,9 @@ public:
     /** \param col colour of this element */
     void setColour (const Colour& col );
 
-    std::string getCustomStyle() const;
+    std::string getCustomAttribute() const;
 
-    void setCustomStyle( std::string_view style);
+    void setCustomAttribute( std::string_view style);
 
     bool getCustomOverride() const;
 
@@ -128,7 +128,7 @@ public:
 private:
     Colour colour;
     bool bold, italic, underline, customOverride;
-    std::string customStyle;
+    std::string customAttribute;
 };
 
 }

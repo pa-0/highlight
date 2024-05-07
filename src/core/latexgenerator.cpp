@@ -227,7 +227,7 @@ string LatexGenerator::getAttributes ( const string & elemName,
         s  <<"}";
     }
 
-    string customStyle(elem.getCustomStyle());
+    string customStyle(elem.getCustomAttribute());
     if (!customStyle.empty()) {
         s << customStyle;
     }

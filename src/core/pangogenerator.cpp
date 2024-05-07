@@ -55,7 +55,7 @@ string PangoGenerator::getAttributes ( const ElementStyle & elem )
         << ( elem.isUnderline() ? " underline=\"single\"" :"" );
     }
 
-    string customStyle(elem.getCustomStyle());
+    string customStyle(elem.getCustomAttribute());
 
     if (!customStyle.empty()) {
         if (!elem.getCustomOverride()) {
