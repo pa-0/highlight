@@ -8,10 +8,12 @@
 
 == highlight 4.12
 
-14.03.2024
+07.05.2024
 
- - updated astyle lib to version 3.4.14
+ - updated astyle lib to version 3.4.15
  - Remove `using namespace std;` in header files (merge request saalen/highlight!147)
+ - added `-webkit-user-select` to line number style (https://gitlab.com/saalen/highlight/-/issues/214)
+ - added plug-in outhtml-focus.lua
 
 
 == highlight 4.11
@@ -22,7 +24,7 @@
  - updated java definition (https://gitlab.com/saalen/highlight/-/issues/244)
  - updated solidity definition (https://gitlab.com/saalen/highlight/-/issues/217)
  - fix backslash symbol in man page
- - src/makefile: added -std=c++17 to enable modern C++ features
+ - src/makefile: added `-std=c++17` to enable modern C++ features
 
 
 == highlight 4.10
