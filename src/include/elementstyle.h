@@ -119,7 +119,17 @@ public:
 
     std::string getCustomAttribute() const;
 
+    [[deprecated("Replaced by getCustomAttribute")]]
+    std::string getCustomStyle() const {
+        return getCustomAttribute();
+    }
+
     void setCustomAttribute( std::string_view style);
+
+    [[deprecated("Replaced by setCustomAttribute")]]
+    void setCustomStyle( std::string_view style){
+        setCustomAttribute(style);
+    }
 
     bool getCustomOverride() const;
 
