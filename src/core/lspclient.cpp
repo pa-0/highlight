@@ -563,6 +563,11 @@ namespace highlight
                 continue;
             }
 
+            // metals sometimes returns id in window/showMessageRequest as string
+            if ( !jsonResponse.get("id").is<double>()) {
+                continue;
+            }
+
             if ( myId != jsonResponse.get("id").get<double>()) {
                 continue;
             }
@@ -899,4 +904,3 @@ namespace highlight
  *
  * Note: The client does not ask the server for diagnostics. The server pushes the diagnostic information to the client.
  */
-
