@@ -172,7 +172,7 @@ Comments = {
   },
   {
     Block=false,
-    Delimiter = { [[\!]] }
+    Delimiter = { [=[(^|\s)(\!)]=] }
   }
 }
 
