@@ -8,13 +8,16 @@
 
 == highlight 4.12
 
-17.05.2024
+22.05.2024
 
  - updated astyle lib to version 3.4.16
- - Remove `using namespace std;` in header files (merge request saalen/highlight!147)
+ - remove `using namespace std;` in header files (merge request saalen/highlight!147)
  - added `-webkit-user-select` to line number style (https://gitlab.com/saalen/highlight/-/issues/214)
  - added plug-in outhtml-focus.lua
  - updated lsp.conf to include metals and clojure-lsp
+ - fixed Yaml URL recognition
+ - fixed Rust raw literal recognition (https://gitlab.com/saalen/highlight/-/issues/187)
+ - fixed Factor comment recognition (https://gitlab.com/saalen/highlight/-/issues/239)
 
 
 == highlight 4.11
