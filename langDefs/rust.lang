@@ -82,7 +82,7 @@ function OnStateChange(oldState, newState, token, groupID)
   end
 
   if  groupID==6 and oldState ~= HL_STRING then
-    endDelim = "\"" .. string.rep("#", #token-1)
+    endDelim = string.reverse(token)
     return HL_STRING
   end
 

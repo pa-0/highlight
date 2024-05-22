@@ -1,6 +1,6 @@
 = HIGHLIGHT LANGUAGE SERVER PROTOCOL CLIENT
 André Simon
-:revdate: February 2021
+:revdate: May 2024
 :lang: en
 :toc: left
 :toc-title: Contents
@@ -24,7 +24,7 @@ What does this mean?
 Many editors make use of "Language Servers" to get syntax information of various
 programming languages without the need to implement a deep understanding of the
 files'' syntax they process. Well known code editors with LSP support are VSCode,
-Kate, vim, Emacs and Eclipse.
+Kate, vim, neovim, Emacs and Eclipse.
 
 More information about LSP and editor support:
 https://langserver.org/
@@ -55,12 +55,20 @@ Servers = {
   { Server="rust-analyzer", Exec="rust-analyzer", Syntax="rust", Delay=250, Options={} },
 
   { Server="pyls", Exec="pyls", Syntax="python", Options={"--check-parent-process"} },
+  { Server="pylsp", Exec="pylsp", Syntax="python", Options={"--check-parent-process"} },
+
+  { Server="pyright", Exec="pyright-langserver", Syntax="python", Options={"--stdio"}, Legacy=true },
 
   { Server="R", Exec="R", Syntax="r", Options={"--slave", "-e", "languageserver::run()"} },
 
-  { Server="clangd-win", Exec="F:\\LLVM\\bin\\clangd.exe", Syntax="c", Options={"--log=error"} },
+  { Server="typescript-language-server", Exec="typescript-language-server", Syntax="typescript", Options={"--stdio"}, Legacy=true },
+
+  { Server="clojure-lsp", Exec="clojure-lsp", Syntax="clojure", Options={} },
+
+  { Server="metals", Exec="metals", Syntax="scala", Options={}, Legacy=true },
 
 }
+
 ..........................................................................
 
 These profile settings may also be set with corresponding `--ls-*` options.

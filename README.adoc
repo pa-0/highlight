@@ -1,6 +1,6 @@
 = HIGHLIGHT MANUAL
 André Simon
-v4.9, October 2023
+v4.12, May 2024
 :lang: en
 :toc: left
 :toc-title: Contents
