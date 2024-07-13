@@ -79,7 +79,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 
     // fill themes combo
 
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     QDir themesDirClassic(QCoreApplication::applicationDirPath() + "/../Resources/themes");
     QDir themesDirBase16(QCoreApplication::applicationDirPath() + "/../Resources/themes/base16");
 
@@ -100,9 +100,9 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     Diluculum::LuaValueMap categoryMap;
 
     try {
-        for (QStringList::const_iterator constIterator = filesClassic.constBegin();
-                constIterator != filesClassic.constEnd(); ++constIterator) {
-            QString tPath(*constIterator);
+
+        for (const auto& fileName : filesClassic) {
+            QString tPath(fileName);
             QString tCat;
 
             ls.doFile (themesDirClassic.absoluteFilePath(tPath).toStdString());
@@ -121,9 +121,8 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
             themesList.append(themeEntry);
         }
 
-        for (QStringList::const_iterator constIterator = filesBase16.constBegin();
-                constIterator != filesBase16.constEnd(); ++constIterator) {
-            QString tPath(*constIterator);
+        for (const auto& fileName : filesBase16) {
+            QString tPath(fileName);
             QString tCat;
 
             ls.doFile (themesDirBase16.absoluteFilePath(tPath).toStdString());
@@ -178,7 +177,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     }
 
     //avoid ugly buttons in MacOS
-    #ifndef Q_OS_OSX
+    #ifndef Q_OS_MACOS
     ui->pbPluginReadFilePath->setMaximumWidth(30);
     ui->pbOutputDest->setMaximumWidth(30);
     ui->pbHTMLChooseStyleIncFile->setMaximumWidth(30);
@@ -249,8 +248,6 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(updatePreview()));
     QObject::connect(ui->lvUserScripts, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(plausibility()));
 
-
-
     QObject::connect(ui->cbIncLineNo, SIGNAL(clicked()), this, SLOT(updatePreview()));
     QObject::connect(ui->cbKwCase, SIGNAL(clicked()), this, SLOT(updatePreview()));
     QObject::connect(ui->cbPadZeroes, SIGNAL(clicked()), this, SLOT(updatePreview()));
@@ -269,7 +266,6 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     QObject::connect(ui->comboThemeFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePreview()));
 
     QObject::connect(ui->comboLSProfiles, SIGNAL(currentIndexChanged(int)), this, SLOT(loadLSProfile()));
-
 
     QObject::connect(ui->sbLineNoWidth, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
     QObject::connect(ui->sbLineNoStart, SIGNAL(valueChanged(int)), this, SLOT(updatePreview()));
@@ -362,19 +358,18 @@ void MainWindow::addToView(const QStringList& list, QListWidget* listWidget, con
 {
     QListWidgetItem *listItem;
     QString croppedName;
-    for (QStringList::const_iterator constIterator = list.constBegin();
-            constIterator != list.constEnd(); ++constIterator) {
+    for (const auto& listElement : list) {
 
         for (int i = 0; i < listWidget->count(); ++i) {
-            if (listWidget->item(i)->data(Qt::UserRole).toString()==*constIterator)
+            if (listWidget->item(i)->data(Qt::UserRole).toString()==listElement)
                 return;
         }
 
-        croppedName = baseName ? QFileInfo(*constIterator).baseName(): QFileInfo(*constIterator).fileName() ;
+        croppedName = baseName ? QFileInfo(listElement).baseName(): QFileInfo(listElement).fileName() ;
         if (croppedName.isEmpty()) break;
         listItem=new QListWidgetItem(QIcon(iconName), croppedName );
-        listItem->setData(Qt::UserRole, *constIterator);
-        listItem->setToolTip(*constIterator);
+        listItem->setData(Qt::UserRole, listElement);
+        listItem->setToolTip(listElement);
         if (checkable) listItem->setCheckState( Qt::Unchecked);
         listWidget->addItem(listItem );
     }
@@ -385,10 +380,136 @@ void MainWindow::on_pbOutputDest_clicked()
     ui->leOutputDest->setText(QFileDialog::getExistingDirectory(this, tr("Select destination directory"), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
 }
 
+
+void MainWindow::readSettings()
+{
+    ui->tabIOSelection->setCurrentIndex(0);
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "andre-simon.de", "highlight-gui");
+
+    if (!QFile(settings.fileName()).exists()) return;
+
+    settings.beginGroup("MainWindow");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
+    settings.endGroup();
+
+    settings.beginGroup("input");
+    const char* name = "objectName";
+
+    auto setCheckbox = [&](QCheckBox* box) {
+        box->setChecked(settings.value(box->property(name).toString()).toBool());
+    };
+
+    auto setLineEdit = [&](QLineEdit* edit) {
+        edit->setText(settings.value(edit->property(name).toString()).toString());
+    };
+
+    auto setComboBox = [&](QComboBox* combo, bool useString=false) {
+        if (useString) {
+            combo->insertItem(0, settings.value(combo->property(name).toString()).toString());
+            combo->setCurrentIndex(0);
+        } else {
+            combo->setCurrentIndex(settings.value(combo->property(name).toString()).toInt());
+        }
+    };
+
+    auto setSpinBox = [&](QSpinBox* spin) {
+        spin->setValue(settings.value(spin->property(name).toString()).toInt());
+    };
+
+    auto setTabWidget = [&](QTabWidget* tab) {
+       tab->setCurrentIndex(settings.value(tab->property(name).toString()).toInt());
+    };
+
+    addToView(settings.value(ui->lvInputFiles->property(name).toString()).toStringList(), ui->lvInputFiles);
+    addToView(settings.value(ui->lvPluginScripts->property(name).toString()).toStringList(), ui->lvPluginScripts, ":/plugin.png", true, true);
+    addToView(settings.value(ui->lvUserScripts->property(name).toString()).toStringList(), ui->lvUserScripts, ":/script.png", true, false);
+
+    auto setSelectedItems = [&](QListWidget* view, const QString& key) {
+        QVariantList selected = settings.value(key).toList();
+        for (const auto& item : std::as_const(selected)) {
+            view->item(item.toInt())->setCheckState(Qt::Checked);
+            if (view == ui->lvUserScripts) on_lvUserScripts_itemClicked(view->item(item.toInt()));
+        }
+    };
+
+    setSelectedItems(ui->lvPluginScripts, "selectedPlugins");
+    setSelectedItems(ui->lvUserScripts, "selectedUserScripts");
+
+    setLineEdit(ui->leOutputDest);
+    setCheckbox(ui->cbWrite2Src);
+    setCheckbox(ui->cbAdvWrapping);
+    setCheckbox(ui->cbEncoding);
+    setCheckbox(ui->cbFragment);
+    setCheckbox(ui->cbKeepInjections);
+    setCheckbox(ui->cbOmitVersionInfo);
+
+    setCheckbox(ui->cbHTMLAnchors);
+    setCheckbox(ui->cbHTMLEmbedStyle);
+    setCheckbox(ui->cbHTMLEnclosePreTags);
+    setCheckbox(ui->cbHTMLFileNameAnchor);
+    setCheckbox(ui->cbHTMLIndex);
+    setCheckbox(ui->cbHTMLInlineCSS);
+    setCheckbox(ui->cbHTMLOrderedList);
+    setCheckbox(ui->cbIncLineNo);
+    setCheckbox(ui->cbKwCase);
+    setCheckbox(ui->cbLATEXBabel);
+    setCheckbox(ui->cbLATEXBeamer);
+    setCheckbox(ui->cbLATEXEscQuotes);
+    setCheckbox(ui->cbLATEXPrettySymbols);
+    setCheckbox(ui->cbPadZeroes);
+    setCheckbox(ui->cbReformat);
+    setCheckbox(ui->cbRTFCharStyles);
+    setCheckbox(ui->cbRTFPageColor);
+    setCheckbox(ui->cbWrapping);
+    setCheckbox(ui->cbValidateInput);
+    setCheckbox(ui->cbLSHover);
+    setCheckbox(ui->cbLSSemantic);
+    setCheckbox(ui->cbLSSyntaxErrors);
+    setCheckbox(ui->cbLSLegacy);
+
+    setComboBox(ui->comboEncoding, true);
+    setComboBox(ui->comboFontName, true);
+
+    setComboBox(ui->comboFormat);
+    setComboBox(ui->comboKwCase);
+    setComboBox(ui->comboReformat);
+    setComboBox(ui->comboRTFPageSize);
+    setComboBox(ui->comboSelectSyntax);
+    setComboBox(ui->comboLSProfiles);
+    setComboBox(ui->comboThemeFilter);
+
+    setLineEdit(ui->leHTMLStyleFile);
+    setLineEdit(ui->leHTMLStyleIncFile);
+    setLineEdit(ui->leLATEXStyleFile);
+    setLineEdit(ui->leTEXStyleFile);
+    setLineEdit(ui->leLATEXStyleIncFile);
+    setLineEdit(ui->leTEXStyleIncFile);
+    setLineEdit(ui->leSVGHeight);
+    setLineEdit(ui->leSVGWidth);
+    setLineEdit(ui->leFontSize);
+    setLineEdit(ui->leHTMLCssPrefix);
+    setLineEdit(ui->lePluginReadFilePath);
+    setLineEdit(ui->leLSWorkspace);
+
+    setSpinBox(ui->sbLineLength);
+    setSpinBox(ui->sbTabWidth);
+    setSpinBox(ui->sbLineNoWidth);
+    setSpinBox(ui->sbLineNoStart);
+
+    setTabWidget(ui->tabWidget);
+    setTabWidget(ui->tabIOSelection);
+    setTabWidget(ui->tabWidgetOptions);
+
+    oldThemeIndex = settings.value(ui->comboTheme->property(name).toString()).toInt();
+
+    runFirstTime = settings.value("runFirstTime", true).toBool();
+    settings.endGroup();
+}
+
 void MainWindow::writeSettings()
 {
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                       "andre-simon.de", "highlight-gui");
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "andre-simon.de", "highlight-gui");
 
     settings.beginGroup("MainWindow");
     settings.setValue("geometry", saveGeometry());
@@ -396,298 +517,131 @@ void MainWindow::writeSettings()
     settings.endGroup();
 
     settings.beginGroup("input");
-    QStringList inFiles;
-    for (int i=0; i<ui->lvInputFiles->count(); i++) {
-        inFiles<<ui->lvInputFiles->item(i)->data(Qt::UserRole).toString();
-    }
+    QStringList inFiles, plugins, userScripts;
+    QVariantList selectedPlugins, selectedUserScripts;
 
-    QStringList plugins;
-    for (int i=0; i<ui->lvPluginScripts->count(); i++) {
-        plugins<<ui->lvPluginScripts->item(i)->data(Qt::UserRole).toString();
-    }
+    auto collectItems = [&](QListWidget* view, QStringList& list, QVariantList& selected) {
+        for (int i = 0; i < view->count(); ++i) {
+            list << view->item(i)->data(Qt::UserRole).toString();
+            if (view->item(i)->checkState() == Qt::Checked)
+                selected.push_back(QVariant(i));
+        }
+    };
 
-    QVariantList selectedPlugins;
-    for (int i=0; i<ui->lvPluginScripts->count(); i++) {
-        if (ui->lvPluginScripts->item(i)->checkState()==Qt::Checked )
-            selectedPlugins.push_back(QVariant(i));
-    }
+    collectItems(ui->lvInputFiles, inFiles, selectedPlugins);
+    collectItems(ui->lvPluginScripts, plugins, selectedPlugins);
+    collectItems(ui->lvUserScripts, userScripts, selectedUserScripts);
 
-    QStringList userScripts;
-    for (int i=0; i<ui->lvUserScripts->count(); i++) {
-        userScripts<<ui->lvUserScripts->item(i)->data(Qt::UserRole).toString();
-    }
-
-    QVariantList selectedUserScripts;
-    for (int i=0; i<ui->lvUserScripts->count(); i++) {
-        if (ui->lvUserScripts->item(i)->checkState()==Qt::Checked )
-            selectedUserScripts.push_back(QVariant(i));
-    }
-
-    const char* name="objectName";
-    settings.setValue(ui->lvInputFiles->property(name).toString(),
-                      inFiles);
-    settings.setValue(ui->lvPluginScripts->property(name).toString(),
-                      plugins);
+    const char* name = "objectName";
+    settings.setValue(ui->lvInputFiles->property(name).toString(), inFiles);
+    settings.setValue(ui->lvPluginScripts->property(name).toString(), plugins);
     settings.setValue("selectedPlugins", selectedPlugins);
-    settings.setValue(ui->lvUserScripts->property(name).toString(),
-                      userScripts);
+    settings.setValue(ui->lvUserScripts->property(name).toString(), userScripts);
     settings.setValue("selectedUserScripts", selectedUserScripts);
 
-    settings.setValue(ui->leOutputDest->property(name).toString(),
-                      ui->leOutputDest->text());
-    settings.setValue(ui->cbWrite2Src->property(name).toString(),
-                      ui->cbWrite2Src->isChecked());
-    settings.setValue(ui->cbAdvWrapping->property(name).toString(),
-                      ui->cbAdvWrapping->isChecked());
-    settings.setValue(ui->cbEncoding->property(name).toString(),
-                      ui->cbEncoding->isChecked());
-    settings.setValue(ui->cbFragment->property(name).toString(),
-                      ui->cbFragment->isChecked());
-    settings.setValue(ui->cbKeepInjections->property(name).toString(),
-                      ui->cbKeepInjections->isChecked());
-    settings.setValue(ui->cbHTMLAnchors->property(name).toString(),
-                      ui->cbHTMLAnchors->isChecked());
-    settings.setValue(ui->cbOmitVersionInfo->property(name).toString(),
-                      ui->cbOmitVersionInfo->isChecked());
+    auto saveCheckbox = [&](QCheckBox* box) {
+        settings.setValue(box->property(name).toString(), box->isChecked());
+    };
 
-    settings.setValue(ui->cbHTMLEmbedStyle->property(name).toString(),
-                      ui->cbHTMLEmbedStyle->isChecked());
-    settings.setValue(ui->cbHTMLEnclosePreTags->property(name).toString(),
-                      ui->cbHTMLEnclosePreTags->isChecked());
-    settings.setValue(ui->cbHTMLFileNameAnchor->property(name).toString(),
-                      ui->cbHTMLFileNameAnchor->isChecked());
-    settings.setValue(ui->cbHTMLIndex->property(name).toString(),
-                      ui->cbHTMLIndex->isChecked());
-    settings.setValue(ui->cbHTMLInlineCSS->property(name).toString(),
-                      ui->cbHTMLInlineCSS->isChecked());
-    settings.setValue(ui->cbHTMLOrderedList->property(name).toString(),
-                      ui->cbHTMLOrderedList->isChecked());
-    settings.setValue(ui->cbIncLineNo->property(name).toString(),
-                      ui->cbIncLineNo->isChecked());
-    settings.setValue(ui->cbKwCase->property(name).toString(),
-                      ui->cbKwCase->isChecked());
-    settings.setValue(ui->cbLATEXBabel->property(name).toString(),
-                      ui->cbLATEXBabel->isChecked());
-    settings.setValue(ui->cbLATEXBeamer->property(name).toString(),
-                      ui->cbLATEXBeamer->isChecked());
-    settings.setValue(ui->cbLATEXEscQuotes->property(name).toString(),
-                      ui->cbLATEXEscQuotes->isChecked());
-    settings.setValue(ui->cbLATEXPrettySymbols->property(name).toString(),
-                      ui->cbLATEXPrettySymbols->isChecked());
-    settings.setValue(ui->cbPadZeroes->property(name).toString(),
-                      ui->cbPadZeroes->isChecked());
-    settings.setValue(ui->cbReformat->property(name).toString(),
-                      ui->cbReformat->isChecked());
-    settings.setValue(ui->cbRTFCharStyles->property(name).toString(),
-                      ui->cbRTFCharStyles->isChecked());
-    settings.setValue(ui->cbRTFPageColor->property(name).toString(),
-                      ui->cbRTFPageColor->isChecked());
-    settings.setValue(ui->cbWrapping->property(name).toString(),
-                      ui->cbWrapping->isChecked());
-    settings.setValue(ui->cbValidateInput->property(name).toString(),
-                      ui->cbValidateInput->isChecked());
+    auto saveLineEdit = [&](QLineEdit* edit) {
+        settings.setValue(edit->property(name).toString(), edit->text());
+    };
 
-    settings.setValue(ui->comboFormat->property(name).toString(),
-                      ui->comboFormat->currentIndex());
-    settings.setValue(ui->comboKwCase->property(name).toString(),
-                      ui->comboKwCase->currentIndex());
-    settings.setValue(ui->comboReformat->property(name).toString(),
-                      ui->comboReformat->currentIndex());
-    settings.setValue(ui->comboRTFPageSize->property(name).toString(),
-                      ui->comboRTFPageSize->currentIndex());
-    settings.setValue(ui->comboLSProfiles->property(name).toString(),
-                      ui->comboLSProfiles->currentIndex());
+    auto saveComboBox = [&](QComboBox* combo, bool useString = false) {
+        if (useString)
+            settings.setValue(combo->property(name).toString(), combo->currentText());
+        else
+            settings.setValue(combo->property(name).toString(), combo->currentIndex());
+    };
 
-    settings.setValue(ui->comboTheme->property(name).toString(),
-                      ui->comboTheme->currentIndex());
-    settings.setValue(ui->comboThemeFilter->property(name).toString(),
-                      ui->comboThemeFilter->currentIndex());
+    auto saveSpinBox = [&](QSpinBox* spin) {
+        settings.setValue(spin->property(name).toString(), spin->value());
+    };
 
-    settings.setValue(ui->comboEncoding->property(name).toString(),
-                      ui->comboEncoding->currentText());
-    settings.setValue(ui->comboFontName->property(name).toString(),
-                      ui->comboFontName->currentText());
-    settings.setValue(ui->comboSelectSyntax->property(name).toString(),
-                      ui->comboSelectSyntax->currentIndex());
+    auto saveTab = [&](QTabWidget* tab) {
+        settings.setValue(tab->property(name).toString(), tab->currentIndex());
+    };
 
-    settings.setValue(ui->leHTMLStyleFile->property(name).toString(),
-                      ui->leHTMLStyleFile->text());
-    settings.setValue(ui->leHTMLStyleIncFile->property(name).toString(),
-                      ui->leHTMLStyleIncFile->text());
-    settings.setValue(ui->leLATEXStyleFile->property(name).toString(),
-                      ui->leLATEXStyleFile->text());
-    settings.setValue(ui->leLATEXStyleIncFile->property(name).toString(),
-                      ui->leLATEXStyleIncFile->text());
-    settings.setValue(ui->leTEXStyleFile->property(name).toString(),
-                      ui->leTEXStyleFile->text());
-    settings.setValue(ui->leTEXStyleIncFile->property(name).toString(),
-                      ui->leTEXStyleIncFile->text());
-    settings.setValue(ui->leSVGStyleFile->property(name).toString(),
-                      ui->leSVGStyleFile->text());
-    settings.setValue(ui->leSVGStyleIncFile->property(name).toString(),
-                      ui->leSVGStyleIncFile->text());
-    settings.setValue(ui->lePluginReadFilePath->property(name).toString(),
-                      ui->lePluginReadFilePath->text());
+    saveCheckbox(ui->cbWrite2Src);
+    saveCheckbox(ui->cbAdvWrapping);
+    saveCheckbox(ui->cbEncoding);
+    saveCheckbox(ui->cbFragment);
+    saveCheckbox(ui->cbKeepInjections);
+    saveCheckbox(ui->cbHTMLAnchors);
+    saveCheckbox(ui->cbOmitVersionInfo);
+    saveCheckbox(ui->cbHTMLEmbedStyle);
+    saveCheckbox(ui->cbHTMLEnclosePreTags);
+    saveCheckbox(ui->cbHTMLFileNameAnchor);
+    saveCheckbox(ui->cbHTMLIndex);
+    saveCheckbox(ui->cbHTMLInlineCSS);
+    saveCheckbox(ui->cbHTMLOrderedList);
+    saveCheckbox(ui->cbIncLineNo);
+    saveCheckbox(ui->cbKwCase);
+    saveCheckbox(ui->cbLATEXBabel);
+    saveCheckbox(ui->cbLATEXBeamer);
+    saveCheckbox(ui->cbLATEXEscQuotes);
+    saveCheckbox(ui->cbLATEXPrettySymbols);
+    saveCheckbox(ui->cbPadZeroes);
+    saveCheckbox(ui->cbReformat);
+    saveCheckbox(ui->cbRTFCharStyles);
+    saveCheckbox(ui->cbRTFPageColor);
+    saveCheckbox(ui->cbWrapping);
+    saveCheckbox(ui->cbHTMLPasteMIME);
 
-    settings.setValue(ui->cbSVGEmbedStyle->property(name).toString(),
-                      ui->cbSVGEmbedStyle->isChecked());
-    settings.setValue(ui->cbLATEXEmbedStyle->property(name).toString(),
-                      ui->cbLATEXEmbedStyle->isChecked());
-    settings.setValue(ui->cbTEXEmbedStyle->property(name).toString(),
-                      ui->cbTEXEmbedStyle->isChecked());
-    settings.setValue(ui->cbHTMLPasteMIME->property(name).toString(),
-                      ui->cbHTMLPasteMIME->isChecked());
-    settings.setValue(ui->cbLSHover->property(name).toString(),
-                      ui->cbLSHover->isChecked());
-    settings.setValue(ui->cbLSSemantic->property(name).toString(),
-                      ui->cbLSSemantic->isChecked());
-    settings.setValue(ui->cbLSSyntaxErrors->property(name).toString(),
-                      ui->cbLSSyntaxErrors->isChecked());
-    settings.setValue(ui->cbLSLegacy->property(name).toString(),
-                      ui->cbLSLegacy->isChecked());
+    saveCheckbox(ui->cbLATEXEmbedStyle);
+    saveCheckbox(ui->cbTEXEmbedStyle);
+    saveCheckbox(ui->cbSVGEmbedStyle);
+    saveCheckbox(ui->cbLSHover);
+    saveCheckbox(ui->cbLSSemantic);
+    saveCheckbox(ui->cbLSSyntaxErrors);
+    saveCheckbox(ui->cbLSLegacy);
+    saveCheckbox(ui->cbValidateInput);
+    saveCheckbox(ui->cbLSHover);
+    saveCheckbox(ui->cbLSHover);
 
-    settings.setValue(ui->leSVGHeight->property(name).toString(),
-                      ui->leSVGHeight->text());
-    settings.setValue(ui->leSVGWidth->property(name).toString(),
-                      ui->leSVGWidth->text());
-    settings.setValue(ui->leFontSize->property(name).toString(),
-                      ui->leFontSize->text());
-    settings.setValue(ui->leLSWorkspace->property(name).toString(),
-                      ui->leLSWorkspace->text());
+    saveComboBox(ui->comboFormat);
+    saveComboBox(ui->comboKwCase);
+    saveComboBox(ui->comboReformat);
+    saveComboBox(ui->comboRTFPageSize);
+    saveComboBox(ui->comboLSProfiles);
+    saveComboBox(ui->comboTheme);
+    saveComboBox(ui->comboThemeFilter);
+    saveComboBox(ui->comboSelectSyntax);
+    saveComboBox(ui->comboEncoding, true);
+    saveComboBox(ui->comboFontName, true);
 
-    settings.setValue(ui->sbLineLength->property(name).toString(),
-                      ui->sbLineLength->value());
-    settings.setValue(ui->sbTabWidth->property(name).toString(),
-                      ui->sbTabWidth->value());
-    settings.setValue(ui->tabWidget->property(name).toString(),
-                      ui->tabWidget->currentIndex());
-    settings.setValue(ui->leHTMLCssPrefix->property(name).toString(),
-                      ui->leHTMLCssPrefix->text());
-    settings.setValue(ui->tabIOSelection->property(name).toString(),
-                      ui->tabIOSelection->currentIndex());
-    settings.setValue(ui->sbLineNoWidth->property(name).toString(),
-                      ui->sbLineNoWidth->value());
-    settings.setValue(ui->sbLineNoStart->property(name).toString(),
-                      ui->sbLineNoStart->value());
-    settings.setValue(ui->tabWidgetOptions->property(name).toString(),
-                      ui->tabWidgetOptions->currentIndex());
+    saveLineEdit(ui->leOutputDest);
+    saveLineEdit(ui->leHTMLStyleFile);
+    saveLineEdit(ui->leHTMLStyleIncFile);
+    saveLineEdit(ui->leLATEXStyleFile);
+    saveLineEdit(ui->leLATEXStyleIncFile);
+    saveLineEdit(ui->leTEXStyleFile);
+    saveLineEdit(ui->leTEXStyleIncFile);
+    saveLineEdit(ui->leSVGStyleFile);
+    saveLineEdit(ui->leSVGStyleIncFile);
+    saveLineEdit(ui->lePluginReadFilePath);
+    saveLineEdit(ui->leSVGHeight);
+    saveLineEdit(ui->leSVGWidth);
+    saveLineEdit(ui->leFontSize);
+    saveLineEdit(ui->leLSWorkspace);
+    saveLineEdit(ui->leHTMLCssPrefix);
+
+    saveSpinBox(ui->sbLineLength);
+    saveSpinBox(ui->sbTabWidth);
+    saveSpinBox(ui->sbLineNoWidth);
+    saveSpinBox(ui->sbLineNoStart);
+    saveSpinBox(ui->sbLineLength);
+
+
+    saveTab(ui->tabWidget);
+    saveTab(ui->tabIOSelection);
+    saveTab(ui->tabWidgetOptions);
 
     settings.setValue("runFirstTime", false);
 
     settings.endGroup();
 }
 
-void MainWindow::readSettings()
-{
-    ui->tabIOSelection->setCurrentIndex(0); // wie default setzen?
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                       "andre-simon.de", "highlight-gui");
-
-    //QMessageBox::information(this, "path", settings.fileName());
-    if (!QFile(settings.fileName()).exists()) return;
-
-    settings.beginGroup("MainWindow");
-
-    restoreGeometry(settings.value("geometry").toByteArray());
-    restoreState(settings.value("windowState").toByteArray());
-
-    settings.endGroup();
-
-    settings.beginGroup("input");
-    const char*  name="objectName";
-
-    addToView(settings.value(ui->lvInputFiles->property(name).toString()).toStringList(), ui->lvInputFiles ) ;
-    addToView(settings.value(ui->lvPluginScripts->property(name).toString()).toStringList(), ui->lvPluginScripts, ":/plugin.png", true, true ) ;
-    addToView(settings.value(ui->lvUserScripts->property(name).toString()).toStringList(), ui->lvUserScripts, ":/script.png", true, false ) ;
-
-    QVariantList selectedPlugins=settings.value("selectedPlugins").toList();
-    for (int i=0; i<selectedPlugins.size(); i++) {
-        ui->lvPluginScripts->item(selectedPlugins[i].toInt())->setCheckState(Qt::Checked);
-    }
-    QVariantList selectedUserScripts=settings.value("selectedUserScripts").toList();
-    for (int i=0; i<selectedUserScripts.size(); i++) {
-        ui->lvUserScripts->item(selectedUserScripts[i].toInt())->setCheckState(Qt::Checked);
-        on_lvUserScripts_itemClicked(ui->lvUserScripts->item(selectedUserScripts[i].toInt()));
-    }
-    ui->leOutputDest->setText(settings.value(ui->leOutputDest->property(name).toString()).toString());
-    ui->cbWrite2Src->setChecked(settings.value(ui->cbWrite2Src->property(name).toString()).toBool());
-    ui->cbAdvWrapping->setChecked(settings.value(ui->cbAdvWrapping->property(name).toString()).toBool());
-    ui->cbEncoding->setChecked(settings.value(ui->cbEncoding->property(name).toString()).toBool());
-    ui->cbFragment->setChecked(settings.value(ui->cbFragment->property(name).toString()).toBool());
-    ui->cbKeepInjections->setChecked(settings.value(ui->cbKeepInjections->property(name).toString()).toBool());
-    ui->cbOmitVersionInfo->setChecked(settings.value(ui->cbOmitVersionInfo->property(name).toString()).toBool());
-
-    ui->cbHTMLAnchors->setChecked(settings.value(ui->cbHTMLAnchors->property(name).toString()).toBool());
-    ui->cbHTMLEmbedStyle->setChecked(settings.value(ui->cbHTMLEmbedStyle->property(name).toString()).toBool());
-    ui->cbHTMLEnclosePreTags->setChecked(settings.value(ui->cbHTMLEnclosePreTags->property(name).toString()).toBool());
-    ui->cbHTMLFileNameAnchor->setChecked(settings.value(ui->cbHTMLFileNameAnchor->property(name).toString()).toBool());
-    ui->cbHTMLIndex->setChecked(settings.value(ui->cbHTMLIndex->property(name).toString()).toBool());
-    ui->cbHTMLInlineCSS->setChecked(settings.value(ui->cbHTMLInlineCSS->property(name).toString()).toBool());
-    ui->cbHTMLOrderedList->setChecked(settings.value(ui->cbHTMLOrderedList->property(name).toString()).toBool());
-    ui->cbIncLineNo->setChecked(settings.value(ui->cbIncLineNo->property(name).toString()).toBool());
-    ui->cbKwCase->setChecked(settings.value(ui->cbKwCase->property(name).toString()).toBool());
-    ui->cbLATEXBabel->setChecked(settings.value(ui->cbLATEXBabel->property(name).toString()).toBool());
-    ui->cbLATEXBeamer->setChecked(settings.value(ui->cbLATEXBeamer->property(name).toString()).toBool());
-
-    ui->cbLATEXEscQuotes->setChecked(settings.value(ui->cbLATEXEscQuotes->property(name).toString()).toBool());
-    ui->cbLATEXPrettySymbols->setChecked(settings.value(ui->cbLATEXPrettySymbols->property(name).toString()).toBool());
-
-    ui->cbPadZeroes->setChecked(settings.value(ui->cbPadZeroes->property(name).toString()).toBool());
-    ui->cbReformat->setChecked(settings.value(ui->cbReformat->property(name).toString()).toBool());
-    ui->cbRTFCharStyles->setChecked(settings.value(ui->cbRTFCharStyles->property(name).toString()).toBool());
-    ui->cbRTFPageColor->setChecked(settings.value(ui->cbRTFPageColor->property(name).toString()).toBool());
-    ui->cbWrapping->setChecked(settings.value(ui->cbWrapping->property(name).toString()).toBool());
-    ui->cbValidateInput->setChecked(settings.value(ui->cbValidateInput->property(name).toString()).toBool());
-    ui->cbLSHover->setChecked(settings.value(ui->cbLSHover->property(name).toString()).toBool());
-    ui->cbLSSemantic->setChecked(settings.value(ui->cbLSSemantic->property(name).toString()).toBool());
-    ui->cbLSSyntaxErrors->setChecked(settings.value(ui->cbLSSyntaxErrors->property(name).toString()).toBool());
-    ui->cbLSLegacy->setChecked(settings.value(ui->cbLSLegacy->property(name).toString()).toBool());
-
-    ui->comboEncoding->insertItem(0, settings.value(ui->comboEncoding->property(name).toString()).toString());
-    ui->comboEncoding->setCurrentIndex(0);
-    ui->comboFontName->insertItem(0, settings.value(ui->comboFontName->property(name).toString()).toString());
-    ui->comboFontName->setCurrentIndex(0);
-    ui->comboFormat->setCurrentIndex(settings.value(ui->comboFormat->property(name).toString()).toInt());
-    ui->comboKwCase->setCurrentIndex(settings.value(ui->comboKwCase->property(name).toString()).toInt());
-    ui->comboReformat->setCurrentIndex(settings.value(ui->comboReformat->property(name).toString()).toInt());
-    ui->comboRTFPageSize->setCurrentIndex(settings.value(ui->comboRTFPageSize->property(name).toString()).toInt());
-    ui->comboSelectSyntax->setCurrentIndex(settings.value(ui->comboSelectSyntax->property(name).toString()).toInt());
-    ui->comboLSProfiles->setCurrentIndex(settings.value(ui->comboLSProfiles->property(name).toString()).toInt());
-
-    oldThemeIndex=settings.value(ui->comboTheme->property(name).toString()).toInt();
-    ui->comboThemeFilter->setCurrentIndex(settings.value(ui->comboThemeFilter->property(name).toString()).toInt());
-
-    ui->leHTMLStyleFile->setText(settings.value(ui->leHTMLStyleFile->property(name).toString()).toString());
-    ui->leHTMLStyleIncFile->setText(settings.value(ui->leHTMLStyleIncFile->property(name).toString()).toString());
-    ui->leLATEXStyleFile->setText(settings.value(ui->leLATEXStyleFile->property(name).toString()).toString());
-    ui->leTEXStyleFile->setText(settings.value(ui->leTEXStyleFile->property(name).toString()).toString());
-    ui->leLATEXStyleIncFile->setText(settings.value(ui->leLATEXStyleIncFile->property(name).toString()).toString());
-    ui->leTEXStyleIncFile->setText(settings.value(ui->leTEXStyleIncFile->property(name).toString()).toString());
-    ui->leSVGHeight->setText(settings.value(ui->leSVGHeight->property(name).toString()).toString());
-    ui->leSVGWidth->setText(settings.value(ui->leSVGWidth->property(name).toString()).toString());
-    ui->leFontSize->setText(settings.value(ui->leFontSize->property(name).toString()).toString());
-    ui->leHTMLCssPrefix->setText(settings.value(ui->leHTMLCssPrefix->property(name).toString()).toString());
-    ui->lePluginReadFilePath->setText(settings.value(ui->lePluginReadFilePath->property(name).toString()).toString());
-    ui->leLSWorkspace->setText(settings.value(ui->leLSWorkspace->property(name).toString()).toString());
-
-    ui->sbLineLength->setValue(settings.value(ui->sbLineLength->property(name).toString()).toInt());
-    ui->sbTabWidth->setValue(settings.value(ui->sbTabWidth->property(name).toString()).toInt());
-    ui->cbTEXEmbedStyle->setChecked(settings.value(ui->cbTEXEmbedStyle->property(name).toString()).toBool());
-    ui->cbLATEXEmbedStyle->setChecked(settings.value(ui->cbLATEXEmbedStyle->property(name).toString()).toBool());
-    ui->cbSVGEmbedStyle->setChecked(settings.value(ui->cbSVGEmbedStyle->property(name).toString()).toBool());
-    ui->cbHTMLPasteMIME->setChecked(settings.value(ui->cbHTMLPasteMIME->property(name).toString()).toBool());
-
-    ui->tabWidget->setCurrentIndex(settings.value(ui->tabWidget->property(name).toString()).toInt());
-    ui->tabIOSelection->setCurrentIndex(settings.value(ui->tabIOSelection->property(name).toString()).toInt());
-    ui->tabWidgetOptions->setCurrentIndex(settings.value(ui->tabWidgetOptions->property(name).toString()).toInt());
-
-    ui->sbLineNoWidth->setValue(settings.value(ui->sbLineNoWidth->property(name).toString(), 2).toInt());
-    ui->sbLineNoStart->setValue(settings.value(ui->sbLineNoStart->property(name).toString(), 1).toInt());
-
-    runFirstTime = settings.value("runFirstTime", true).toBool();
-
-    settings.endGroup();
-}
 
 void MainWindow::readLuaList(const string& paramName, const string& langName,Diluculum::LuaValue &luaVal, MMap* extMap){
     int extIdx=1;
@@ -1412,9 +1366,9 @@ void MainWindow::on_pbStartConversion_clicked()
         }
     }
 
-    vector<string> posTestErrors = generator->getPosTestErrors();
-    for (vector<string>::iterator it=posTestErrors.begin(); it!=posTestErrors.end(); it++ ) {
-           syntaxTestErrors.append(QString::fromStdString(*it));
+    auto posTestErrors = generator->getPosTestErrors();
+    for (const auto& error : posTestErrors ) {
+           syntaxTestErrors.append(QString::fromStdString(error));
     }
 
     statusBar()->showMessage(tr("Converted %1 files in %2 ms").arg(ui->lvInputFiles->count()).arg(t.elapsed()));
@@ -1534,9 +1488,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                 if (initializeLS(generator.get(), false )) {
 
                     generator->lsAddSyntaxErrorInfo(  ui->cbLSSyntaxErrors->isChecked() );
-
                     generator->lsAddHoverInfo( ui->cbLSHover->isChecked() );
-
                     generator->lsOpenDocument(currentFile, suffix);
 
                     if (ui->cbLSSemantic->isChecked())
@@ -1567,11 +1519,13 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                         highlight::OutputType outputType = getOutputType();
                         if ( outputType==highlight::RTF) {
                             QMimeData *mimeData = new QMimeData();
-            #ifdef Q_OS_WIN
+
+                            #ifdef Q_OS_WIN
                             mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
-            #else
+                            #else
                             mimeData->setData("text/rtf", clipBoardData.toLatin1());
-            #endif
+                            #endif
+
                             clipboard->setMimeData(mimeData);
                         }
                         else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
@@ -1598,11 +1552,13 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                 highlight::OutputType outputType = getOutputType();
                 if ( outputType==highlight::RTF) {
                     QMimeData *mimeData = new QMimeData();
-    #ifdef Q_OS_WIN
+
+                    #ifdef Q_OS_WIN
                     mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
-    #else
+                    #else
                     mimeData->setData("text/rtf", clipBoardData.toLatin1());
-    #endif
+                    #endif
+
                     clipboard->setMimeData(mimeData);
                 }
                 else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
@@ -1771,8 +1727,8 @@ void MainWindow::updatePreview()
                 ui->lbPreview->setText(tr("Preview (%1):").arg(
                                            (getDataFromCP)?tr("clipboard data"):croppedName) );
 
-                QString syntaxDesc = tr("Current syntax: %1 %2").arg(QString::fromStdString(pwgenerator.getSyntaxDescription())).arg(langInfo);
-                QString themeDesc = tr("Current theme: %1 %2").arg(QString::fromStdString(pwgenerator.getThemeDescription())).arg(themeInfo);
+                QString syntaxDesc = tr("Current syntax: %1 %2").arg(QString::fromStdString(pwgenerator.getSyntaxDescription()), langInfo);
+                QString themeDesc = tr("Current theme: %1 %2").arg(QString::fromStdString(pwgenerator.getThemeDescription()), themeInfo);
                 float contrast = pwgenerator.getThemeContrast();
                 QString contrastLowHint(contrast<4.5 ? "!":"");
                 QString contrastDesc = tr("Contrast: %1 %2").arg(contrast, 1, 'f', 2).arg(contrastLowHint);
@@ -2079,7 +2035,7 @@ void MainWindow::on_lvPluginScripts_itemClicked(QListWidgetItem *item)
 QString MainWindow::getDistThemePath(){
     QString themeLocation =  ui->comboThemeFilter->currentIndex() >1 ? "themes/base16" : "themes";
     QString selectedTheme = ui->comboTheme->currentData().toString();
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
      return QString("%1/../Resources/%3/%2.theme").arg(
                             QCoreApplication::applicationDirPath()).arg(selectedTheme, themeLocation);
 #else
@@ -2094,7 +2050,7 @@ QString MainWindow::getDistThemePath(){
 }
 
 QString MainWindow::getDistLangPath(const string & suffix){
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     return QDir::toNativeSeparators(QString("%1/../Resources/langDefs/%2.lang").arg(
                            QCoreApplication::applicationDirPath()).arg(QString::fromStdString(suffix)));
 #else
@@ -2109,7 +2065,7 @@ QString MainWindow::getDistLangPath(const string & suffix){
 }
 
 QString MainWindow::getDistPluginPath(){
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     return QString("%1/../Resources/plugins").arg(QCoreApplication::applicationDirPath());
 #else
     #ifdef DATA_DIR
@@ -2121,7 +2077,7 @@ QString MainWindow::getDistPluginPath(){
 }
 
 QString MainWindow::getDistFileConfigPath(QString name){
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     return QDir::toNativeSeparators(QString("%1/../Resources/%2").arg(QCoreApplication::applicationDirPath()).arg(name));
 #else
     #ifdef CONFIG_DIR
@@ -2134,7 +2090,7 @@ QString MainWindow::getDistFileConfigPath(QString name){
 
 
 QString MainWindow::getDistFileFilterPath(){
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     return QCoreApplication::applicationDirPath()+"/../Resources/gui_files/ext/fileopenfilter.conf";
 #else
     #ifdef DATA_DIR
