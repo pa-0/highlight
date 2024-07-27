@@ -65,6 +65,8 @@ README_REGEX            # regular expression manual
 README_RELEASE          # information for packagers
 README_V4_MIGRATION     # version 4 breaking changes
 TODO                    # just ideas, no plans
+CMakeLists.txt          # cmake build file (experimental)
+meson.build             # Meson build file (experimental)
 
 
 2. Dependencies
@@ -111,6 +113,10 @@ The optional GUI requires Qt5 and its development tools (qmake).
  - See the makefile to change the configuration file directory
    (conf_dir variable)
  - See section CONFIG FILE SEARCH in README for run time options
+
+
+The latest highlight packages also include CMake and Meson scripts to compile
+and install highlight.
 
 
 3.2 Windows

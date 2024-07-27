@@ -47,10 +47,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include "odtgenerator.h"
 #include "astyle/astyle.h"
 
-#if !defined (QT)
+//#if !defined (QT)
 #include "ansigenerator.h"
 #include "xterm256generator.h"
-#endif
+//#endif
 
 using std::cin;
 using std::cout;

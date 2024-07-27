@@ -1954,6 +1954,7 @@ void MainWindow::on_pbClearAllPlugins_clicked()
 {
     ui->lvPluginScripts->clear();
 }
+
 void MainWindow::on_pbClearAllScripts_clicked()
 {
     ui->lvUserScripts->clear();

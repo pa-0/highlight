@@ -214,6 +214,10 @@ help:
 	@echo "uninstall        Remove highlight files from system."
 	@echo
 	@echo "See src/makefile for compilation and linking options."
+	@echo
+	@echo "The latest highlight packages also include CMake and Meson"
+	@echo "scripts to compile and install highlight."
+
 
 # Target needed for redhat 9.0 rpmbuild
 install-strip:
