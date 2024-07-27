@@ -48,14 +48,14 @@ unix {
     PKGCONFIG += lua
 
     # to make it run within Qt Creator
-    !contains(DEFINES, DATA_DIR.*) {
-        DEFINES+=DATA_DIR=\\\"/usr/share/highlight/\\\"
+    !contains(DEFINES, HL_DATA_DIR.*) {
+        DEFINES+=HL_DATA_DIR=\\\"/usr/share/highlight/\\\"
     }
-    !contains(DEFINES, CONFIG_DIR.*) {
-        DEFINES+=CONFIG_DIR=\\\"/etc/highlight/\\\"
+    !contains(DEFINES, HL_CONFIG_DIR.*) {
+        DEFINES+=HL_CONFIG_DIR=\\\"/etc/highlight/\\\"
     }
-    !contains(DEFINES, DOC_DIR.*) {
-        DEFINES+=DOC_DIR=\\\"/usr/share/doc/highlight/\\\"
+    !contains(DEFINES, HL_DOC_DIR.*) {
+        DEFINES+=HL_DOC_DIR=\\\"/usr/share/doc/highlight/\\\"
     }
 }
 

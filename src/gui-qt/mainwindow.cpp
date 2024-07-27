@@ -84,9 +84,9 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
     QDir themesDirBase16(QCoreApplication::applicationDirPath() + "/../Resources/themes/base16");
 
 #else
-    #ifdef DATA_DIR
-    QDir themesDirClassic(QString(DATA_DIR) + "/themes");
-    QDir themesDirBase16(QString(DATA_DIR) + "/themes/base16");
+    #ifdef HL_DATA_DIR
+    QDir themesDirClassic(QString(HL_DATA_DIR) + "/themes");
+    QDir themesDirBase16(QString(HL_DATA_DIR) + "/themes/base16");
     #else
     QDir themesDirClassic(QDir::currentPath()+"/themes");
     QDir themesDirBase16(QDir::currentPath()+"/themes/base16");
@@ -2040,9 +2040,9 @@ QString MainWindow::getDistThemePath(){
      return QString("%1/../Resources/%3/%2.theme").arg(
                             QCoreApplication::applicationDirPath()).arg(selectedTheme, themeLocation);
 #else
-    #ifdef DATA_DIR
+    #ifdef HL_DATA_DIR
      return  QString("%1%3/%2.theme").arg(
-                            DATA_DIR).arg(selectedTheme, themeLocation);
+                            HL_DATA_DIR).arg(selectedTheme, themeLocation);
     #else
      return  QString("%1/%3/%2.theme").arg(
                             QDir::currentPath()).arg(selectedTheme, themeLocation);
@@ -2055,9 +2055,9 @@ QString MainWindow::getDistLangPath(const string & suffix){
     return QDir::toNativeSeparators(QString("%1/../Resources/langDefs/%2.lang").arg(
                            QCoreApplication::applicationDirPath()).arg(QString::fromStdString(suffix)));
 #else
-    #ifdef DATA_DIR
+    #ifdef HL_DATA_DIR
     return QDir::toNativeSeparators(QString("%1/langDefs/%2.lang").arg(
-                           DATA_DIR).arg(QString::fromStdString(suffix)));
+                           HL_DATA_DIR).arg(QString::fromStdString(suffix)));
     #else
     return QDir::toNativeSeparators(QString("%1/langDefs/%2.lang").arg(
                            QDir::currentPath()).arg(QString::fromStdString(suffix)));
@@ -2069,8 +2069,8 @@ QString MainWindow::getDistPluginPath(){
 #ifdef Q_OS_MACOS
     return QString("%1/../Resources/plugins").arg(QCoreApplication::applicationDirPath());
 #else
-    #ifdef DATA_DIR
-    return QDir::toNativeSeparators(QString("%1/plugins").arg(DATA_DIR));
+    #ifdef HL_DATA_DIR
+    return QDir::toNativeSeparators(QString("%1/plugins").arg(HL_DATA_DIR));
     #else
     return QDir::toNativeSeparators(QString("%1/plugins").arg(QDir::currentPath()));
     #endif
@@ -2081,8 +2081,8 @@ QString MainWindow::getDistFileConfigPath(QString name){
 #ifdef Q_OS_MACOS
     return QDir::toNativeSeparators(QString("%1/../Resources/%2").arg(QCoreApplication::applicationDirPath()).arg(name));
 #else
-    #ifdef CONFIG_DIR
-    return QDir::toNativeSeparators(QString("%1/%2").arg(CONFIG_DIR).arg(name));
+    #ifdef HL_CONFIG_DIR
+    return QDir::toNativeSeparators(QString("%1/%2").arg(HL_CONFIG_DIR).arg(name));
     #else
     return QDir::toNativeSeparators(QString("%1/%2").arg(QDir::currentPath()).arg(name));
     #endif
@@ -2094,8 +2094,8 @@ QString MainWindow::getDistFileFilterPath(){
 #ifdef Q_OS_MACOS
     return QCoreApplication::applicationDirPath()+"/../Resources/gui_files/ext/fileopenfilter.conf";
 #else
-    #ifdef DATA_DIR
-    return QString(DATA_DIR) + "/gui_files/ext/fileopenfilter.conf";
+    #ifdef HL_DATA_DIR
+    return QString(HL_DATA_DIR) + "/gui_files/ext/fileopenfilter.conf";
     #else
     return QDir::currentPath()+"/gui_files/ext/fileopenfilter.conf";
     #endif

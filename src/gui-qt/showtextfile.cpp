@@ -58,10 +58,10 @@ bool ShowTextFile::setFileName(const QString& fileName)
 #ifdef Q_OS_OSX
     QFile file( QString("%1/../Resources/%2").arg(QCoreApplication::applicationDirPath()).arg( fileName ));
 #else
-    #ifndef DOC_DIR
+    #ifndef HL_DOC_DIR
     QFile file( QString("%1/%2").arg(QDir::currentPath()).arg( fileName ));
     #else
-    QFile file( QString("%1/%2").arg(DOC_DIR).arg(fileName ));
+    QFile file( QString("%1/%2").arg(HL_DOC_DIR).arg(fileName ));
     #endif
 #endif
     if ( file.open( QIODevice::ReadOnly) ) {
