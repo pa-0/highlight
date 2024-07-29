@@ -288,17 +288,18 @@ namespace highlight
 
         std::string resultString;
 
-        resultString.resize(128);
+        const int initialRead = 256;
+        resultString.resize(initialRead);
         bool readOK = false;
 
         #ifdef _WIN32
 
         DWORD headerReadLen = 0;
-        readOK = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), 128, &headerReadLen, NULL);
+        readOK = ReadFile(g_hChildStd_OUT_Rd, (void*)resultString.data(), initialRead, &headerReadLen, NULL);
 
         #else
 
-        ssize_t headerReadLen=read(inpipefd[0], (char*)resultString.data(), 128);
+        ssize_t headerReadLen=read(inpipefd[0], (char*)resultString.data(), initialRead);
         readOK = headerReadLen>0;
 
         #endif
@@ -435,6 +436,11 @@ namespace highlight
         pipe_write_jsonrpc(serialized);
 
         std::string response = pipe_read_jsonrpc();
+
+        // bash-language-server emits error
+        if (response.empty()) {
+            response = pipe_read_jsonrpc();
+        }
 
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);
