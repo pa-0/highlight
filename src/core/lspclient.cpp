@@ -209,7 +209,7 @@ namespace highlight
             // Child
             dup2(outpipefd[0], STDIN_FILENO);
             dup2(inpipefd[1], STDOUT_FILENO);
-            dup2(inpipefd[1], STDERR_FILENO);
+            //dup2(inpipefd[1], STDERR_FILENO);
 
             #if __linux__
             //ask kernel to deliver SIGTERM in case the parent dies
@@ -288,7 +288,7 @@ namespace highlight
 
         std::string resultString;
 
-        const int initialRead = 256;
+        const int initialRead = 128;
         resultString.resize(initialRead);
         bool readOK = false;
 
@@ -437,11 +437,6 @@ namespace highlight
 
         std::string response = pipe_read_jsonrpc();
 
-        // bash-language-server emits error
-        if (response.empty()) {
-            response = pipe_read_jsonrpc();
-        }
-
         picojson::value jsonResponse;
         std::string err = picojson::parse(jsonResponse, response);
 
@@ -551,6 +546,8 @@ namespace highlight
         if (!writeRes) {
             return "";
         }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(initDelay));
 
         while (true) {
 
