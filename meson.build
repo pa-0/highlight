@@ -123,39 +123,38 @@ gui_exe = executable('highlight-gui',
 )
 
 # Installation directories
-prefix = get_option('prefix')
-data_dir = join_paths(prefix, 'share')
-bin_dir = join_paths(prefix, 'bin')
-lib_dir = join_paths(prefix, 'lib')
-man_dir = join_paths(data_dir, 'man')
-doc_dir = join_paths(data_dir, 'doc')
+data_dir = get_option('prefix') / get_option('datadir')
+man_dir = get_option('prefix') / get_option('mandir')
+conf_dir = get_option('prefix') / get_option('sysconfdir') 
 
-highlight_data_dir = join_paths(data_dir, 'highlight')
-highlight_doc_dir = join_paths(doc_dir, 'highlight')
-conf_dir = '/etc/highlight'
-bash_comp_dir = join_paths(data_dir, 'bash-completion/completions')
-fish_comp_dir = join_paths(data_dir, 'fish/vendor_completions.d')
-zsh_comp_dir = join_paths(data_dir, 'zsh/site-functions')
+highlight_conf_dir = conf_dir / 'highlight'
 
-desktop_apps_dir = join_paths(data_dir, 'applications')
-desktop_icons_dir = join_paths(data_dir, 'icons/hicolor/256x256/apps')
-gui_files_dir = join_paths(highlight_data_dir, 'gui_files')
+highlight_data_dir = data_dir / 'highlight'
+highlight_doc_dir = data_dir / 'doc' / 'highlight'
+gui_files_dir = highlight_data_dir / 'gui_files'
+
+bash_comp_dir = data_dir / 'bash-completion' / 'completions'
+fish_comp_dir = data_dir / 'fish' / 'vendor_completions.d'
+zsh_comp_dir = data_dir / 'zsh' / 'site-functions'
+
+desktop_apps_dir = data_dir / 'applications'
+desktop_icons_dir = data_dir / 'icons' / 'hicolor' / '256x256' / 'apps'
 
 # Install files and directories
-install_data('filetypes.conf', install_dir: conf_dir)
+install_data('filetypes.conf', install_dir: highlight_conf_dir)
 install_subdir('langDefs', install_dir: highlight_data_dir)
 install_subdir('themes', install_dir: highlight_data_dir)
 install_subdir('plugins', install_dir: highlight_data_dir)
 install_subdir('extras', install_dir: highlight_doc_dir)
 install_data(['AUTHORS', 'README.adoc', 'README_LSP_CLIENT.adoc', 'README_PLUGINS.adoc', 'ChangeLog.adoc', 'COPYING', 'INSTALL'], install_dir: highlight_doc_dir)
-install_data('man/highlight.1', install_dir: join_paths(man_dir, 'man1'))
-install_data('man/filetypes.conf.5', install_dir: join_paths(man_dir, 'man5'))
+install_data('man/highlight.1', install_dir: man_dir / 'man1')
+install_data('man/filetypes.conf.5', install_dir: man_dir / 'man5')
 install_data('sh-completion/highlight.bash', install_dir: bash_comp_dir)
 install_data('sh-completion/highlight.fish', install_dir: fish_comp_dir)
 install_data('sh-completion/highlight.zsh', install_dir: zsh_comp_dir)
 install_data('highlight.desktop', install_dir: desktop_apps_dir)
 install_data('src/gui-qt/highlight.png', install_dir: desktop_icons_dir)
-install_data('gui_files/ext/fileopenfilter.conf', install_dir: join_paths(gui_files_dir, 'ext'))
+install_data('gui_files/ext/fileopenfilter.conf', install_dir: gui_files_dir / 'ext')
 #install_subdir('gui_files/l10n', install_dir: join_paths(gui_files_dir, 'l10n'), files: '*.qm')
 
 # Platform-specific configurations
