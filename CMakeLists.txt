@@ -146,9 +146,17 @@ install(DIRECTORY extras DESTINATION ${HIGHLIGHT_DOC_DIR})
 install(FILES AUTHORS README.adoc README_LSP_CLIENT.adoc README_PLUGINS.adoc ChangeLog.adoc COPYING INSTALL DESTINATION ${HIGHLIGHT_DOC_DIR})
 install(FILES man/highlight.1 DESTINATION ${MAN_DIR}/man1)
 install(FILES man/filetypes.conf.5 DESTINATION ${MAN_DIR}/man5)
-install(FILES sh-completion/highlight.bash DESTINATION ${BASH_COMP_DIR})
+install(
+    FILES sh-completion/highlight.bash
+    RENAME _highlight
+    DESTINATION ${BASH_COMP_DIR}
+)
 install(FILES sh-completion/highlight.fish DESTINATION ${FISH_COMP_DIR})
-install(FILES sh-completion/highlight.zsh DESTINATION ${ZSH_COMP_DIR})
+install(
+    FILES sh-completion/highlight.zsh
+    RENAME _highlight
+    DESTINATION ${ZSH_COMP_DIR}
+)
 install(FILES highlight.desktop DESTINATION ${DESKTOP_APPS_DIR} COMPONENT gui)
 install(FILES src/gui-qt/highlight.png DESTINATION ${DESKTOP_ICONS_DIR} COMPONENT gui)
 install(FILES gui_files/ext/fileopenfilter.conf DESTINATION ${GUI_FILES_DIR}/ext COMPONENT gui)
