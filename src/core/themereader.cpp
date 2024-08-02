@@ -197,7 +197,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
 
         if (outputType==LATEX) {
             errorMessages.setCustomOverride(true);
-            errorMessages.setCustomAttribute ("\\marginpar{\\small\\itshape\\color{red}#1}");
+            errorMessages.setCustomAttribute (R"(\marginpar{\small\itshape\color{red}#1})");
         }
 
         if (ls["ErrorMessage"].value() !=Diluculum::Nil){

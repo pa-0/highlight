@@ -78,16 +78,16 @@ string ODTGenerator::getStyleDefinition()
         }
 
         os << "<style:page-layout style:name=\"pm1\">"
-           << "<style:page-layout-properties fo:page-width=\"21.001cm\" fo:page-height=\"29.7cm\" style:num-format=\"1\""
-           << " style:print-orientation=\"portrait\" fo:margin=\"2cm\" fo:margin-top=\"2cm\" fo:margin-bottom=\"2cm\" fo:margin-left=\"2cm\" fo:margin-right=\"2cm\" "
+           << R"(<style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1")"
+           << R"( style:print-orientation="portrait" fo:margin="2cm" fo:margin-top="2cm" fo:margin-bottom="2cm" fo:margin-left="2cm" fo:margin-right="2cm" )"
            << "fo:background-color=\"#"
            << ( docStyle.getBgColour().getRed ( HTML ) )
            << ( docStyle.getBgColour().getGreen ( HTML ) )
            << ( docStyle.getBgColour().getBlue ( HTML ) )
            << "\" style:writing-mode=\"lr-tb\" style:footnote-max-height=\"0cm\">\n"
            << " <style:background-image/>\n"
-           << " <style:footnote-sep style:width=\"0.018cm\" style:distance-before-sep=\"0.101cm\" style:distance-after-sep=\"0.101cm\" style:line-style=\"solid\""
-           << " style:adjustment=\"left\" style:rel-width=\"25%\" style:color=\"#000000\"/>"
+           << R"( <style:footnote-sep style:width="0.018cm" style:distance-before-sep="0.101cm" style:distance-after-sep="0.101cm" style:line-style="solid")"
+           << R"( style:adjustment="left" style:rel-width="25%" style:color="#000000"/>)"
            << "</style:page-layout-properties>\n"
            << "<style:header-style/>\n"
            << "<style:footer-style/>\n"
@@ -114,7 +114,7 @@ string ODTGenerator::getAttributes ( const string & elemName,
       << "\""
       << ( elem.isBold() ?     " fo:font-weight=\"bold\"" :"" )
       << ( elem.isItalic() ?   " fo:font-style=\"italic\"" :"" )
-      << ( elem.isUnderline() ? " style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" :"" )
+      << ( elem.isUnderline() ? R"( style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color")" :"" )
       <<"/>\n</style:style>\n" ;
 
     return s.str();
@@ -127,7 +127,7 @@ string ODTGenerator::getHeader()
         enc = encoding;
     }
     ostringstream header;
-    header << "<?xml version=\"1.0\" encoding=\""<<enc<<"\"?>\n"\
+    header << R"(<?xml version="1.0" encoding=")"<<enc<<"\"?>\n"\
            "<office:document xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\""\
            " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\""\
            " xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\" xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\""\

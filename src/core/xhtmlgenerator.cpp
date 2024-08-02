@@ -72,7 +72,7 @@ string XHtmlGenerator::getHeader()
                 os << "]]>\n";
                 os << "</style>\n";
             } else {
-                os << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
+                os << R"(<link rel="stylesheet" type="text/css" href=")"
                    << getStyleOutputPath()
                    << "\""
                    << "/"

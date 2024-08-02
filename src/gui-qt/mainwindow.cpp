@@ -58,7 +58,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 
     // Read file open filter
     QFile  filterDef(getDistFileFilterPath());
-    QRegularExpression rx("(\\S+)\\s?\\(\\*\\.([\\w\\d]+)");
+    QRegularExpression rx(R"((\S+)\s?\(\*\.([\w\d]+))");
 
     if (filterDef.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&filterDef);

@@ -164,14 +164,14 @@ string SVGGenerator::getHeader()
     }
     header << "?>\n";
     if ( !includeStyleDef ) {
-        header  << "<?xml-stylesheet type=\"text/css\" href=\""
+        header  << R"(<?xml-stylesheet type="text/css" href=")"
                 << getStyleOutputPath()
                 << "\"?>\n";
     }
     header << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.2//EN\" "
            << "\"http://www.w3.org/Graphics/SVG/1.2/DTD/svg12.dtd\">\n";
-    header << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.2\" "
-           << "baseProfile=\"full\" xml:space=\"preserve\"";
+    header << R"(<svg xmlns="http://www.w3.org/2000/svg" version="1.2" )"
+           << R"(baseProfile="full" xml:space="preserve")";
     if ( width.size() ) header << " width=\""<<width<<"\"";
     if ( height.size() ) header << " height=\""<<height<<"\"";
     //viewBox=\"0 0 800 600\"

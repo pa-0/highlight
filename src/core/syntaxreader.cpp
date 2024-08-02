@@ -44,10 +44,10 @@ const string SyntaxReader::REGEX_IDENTIFIER =
     "[a-zA-Z_]\\w*";
 
 const string SyntaxReader::REGEX_NUMBER =
-    "(?:0x|0X)[0-9a-fA-F]+|\\d*[\\.]?\\d+(?:[eE][\\-\\+]\\d+)?[lLuU]*";
+    R"((?:0x|0X)[0-9a-fA-F]+|\d*[\.]?\d+(?:[eE][\-\+]\d+)?[lLuU]*)";
 
 const string SyntaxReader::REGEX_ESCSEQ =
-    "\\\\u[[:xdigit:]]{4}|\\\\\\d{3}|\\\\x[[:xdigit:]]{2}|\\\\[ntvbrfa\\\\\\?'\"]";
+    R"(\\u[[:xdigit:]]{4}|\\\d{3}|\\x[[:xdigit:]]{2}|\\[ntvbrfa\\\?'"])";
 
 DelimiterMap SyntaxReader::nestedStateEndDelimiters;
 
