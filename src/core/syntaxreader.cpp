@@ -86,7 +86,7 @@ SyntaxReader::SyntaxReader() :
 
 SyntaxReader::~SyntaxReader()
 {
-    for ( vector<RegexElement*>::iterator it=regex.begin(); it!=regex.end(); it++ ) {
+    for ( auto it=regex.begin(); it!=regex.end(); it++ ) {
         delete *it;
     }
     if (validateStateChangeFct) delete validateStateChangeFct;
@@ -183,7 +183,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
         lua_register (ls.getState(), "OverrideParam", luaOverrideParam);
         lua_register (ls.getState(), "StoreValue", KeyStore::luaStore);
 
-        SyntaxReader **s = (SyntaxReader **)lua_newuserdata(ls.getState(), sizeof(SyntaxReader *));
+        auto **s = (SyntaxReader **)lua_newuserdata(ls.getState(), sizeof(SyntaxReader *));
         *s=this;
         lua_setglobal(ls.getState(), GLOBAL_SR_INSTANCE_NAME);
 
@@ -295,7 +295,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
                         allowNestedComments = ls["Comments"][listIdx]["Nested"].value().asBoolean();
 
                     string openDelim=StringTools::trim(ls["Comments"][listIdx]["Delimiter"][1].value().asString());
-                    RegexElement* elem=new RegexElement ( ML_COMMENT,ML_COMMENT_END, openDelim, 0, -1 );
+                    auto* elem=new RegexElement ( ML_COMMENT,ML_COMMENT_END, openDelim, 0, -1 );
                     openDelimId=elem->instanceId;
                     regex.push_back ( elem );
 
@@ -335,12 +335,12 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
 
             if (ls["Strings"]["Delimiter"].value()!=Diluculum::Nil) {
 
-                RegexElement* elem=new RegexElement ( STRING,STRING_END, StringTools::trim( ls["Strings"]["Delimiter"].value().asString()), 0, -1 );
+                auto* elem=new RegexElement ( STRING,STRING_END, StringTools::trim( ls["Strings"]["Delimiter"].value().asString()), 0, -1 );
                 delimiterDistinct[elem->instanceId]=true;
                 regex.push_back (elem );
             }
             if (ls["Strings"]["Interpolation"].value()!=Diluculum::Nil) {
-                RegexElement* elem=new RegexElement ( STRING_INTERPOLATION, STRING_INTERPOLATION_END,
+                auto* elem=new RegexElement ( STRING_INTERPOLATION, STRING_INTERPOLATION_END,
                                                       StringTools::trim( ls["Strings"]["Interpolation"].value().asString()), 0, -1 );
                 regex.push_back (elem );
             }
@@ -354,7 +354,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
 
                     string openDelim=StringTools::trim(ls["Strings"]["DelimiterPairs"][listIdx]["Open"].value().asString());
 
-                    RegexElement* elem =new RegexElement(STRING, STRING_END, openDelim, 0, -1);
+                    auto* elem =new RegexElement(STRING, STRING_END, openDelim, 0, -1);
                     openDelimId=elem->instanceId;
                     regex.push_back( elem );
 
@@ -485,7 +485,7 @@ int SyntaxReader::luaAddKeyword (lua_State *L)
         const char*keyword=lua_tostring(L, 1);
         unsigned int kwgroupID=lua_tonumber(L, 2);
         lua_getglobal(L, GLOBAL_SR_INSTANCE_NAME);
-        SyntaxReader **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
+        auto **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
         if (*a) {
             (*a)->addKeyword(kwgroupID, keyword);
             retVal=1;
@@ -501,7 +501,7 @@ int SyntaxReader::luaRemoveKeyword (lua_State *L)
     if (lua_gettop(L)==1) {
         const char*keyword=lua_tostring(L, 1);
         lua_getglobal(L, GLOBAL_SR_INSTANCE_NAME);
-        SyntaxReader **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 2));
+        auto **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 2));
         if (*a) {
             (*a)->removeKeyword(keyword);
             retVal=1;
@@ -526,7 +526,7 @@ int SyntaxReader::luaOverrideParam (lua_State *L)
         const char* name = lua_tostring(L, 1);
         const char* val = lua_tostring(L, 2);
         lua_getglobal(L, GLOBAL_SR_INSTANCE_NAME);
-        SyntaxReader **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
+        auto **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
         if (*a) {
             (*a)->overrideParam(name, val);
             retVal=1;
@@ -659,7 +659,7 @@ int SyntaxReader::luaAddPersistentState (lua_State *L)
         const char*keyword=lua_tostring(L, 1);
         unsigned int kwgroupID=lua_tonumber(L, 2);
         lua_getglobal(L, GLOBAL_SR_INSTANCE_NAME);
-        SyntaxReader **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
+        auto **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 3));
         if (*a) {
             if (!(*a)->isKeyword(keyword)) {
                 (*a)->addKeyword(kwgroupID, keyword);
@@ -675,7 +675,7 @@ int SyntaxReader::luaAddPersistentState (lua_State *L)
         unsigned int column=lua_tonumber(L, 3);
         unsigned int length=lua_tonumber(L, 4);
         lua_getglobal(L, GLOBAL_SR_INSTANCE_NAME);
-        SyntaxReader **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 5));
+        auto **a=reinterpret_cast<SyntaxReader **>(lua_touserdata(L, 5));
         if (*a) {
             (*a)->addPersistentStateRange(kwgroupID, column, length, lineNumber, (*a)->getInputFileName() );
             retVal=1;

@@ -152,7 +152,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
             Diluculum::LuaValueMap categoryMap;
             categoryMap = ls["Categories"].value().asTable();
 
-            for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+            for(auto it = categoryMap.begin(); it != categoryMap.end(); ++it)
             {
                 categories.append(it->second.asString());
                 if (std::next(it) != categoryMap.end()) {
@@ -394,7 +394,7 @@ void ThemeReader::overrideAttributes(vector<int>& attributes) {
     if (dirtyAttributes)
         keywordStyles=originalStyles;
 
-    for ( std::vector<int>::iterator it = attributes.begin() ; it != attributes.end(); ++it)
+    for ( auto it = attributes.begin() ; it != attributes.end(); ++it)
     {
         int kwGroup=*it & 0xf;
         char kwName[5];

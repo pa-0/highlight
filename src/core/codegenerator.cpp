@@ -856,7 +856,7 @@ State CodeGenerator::validateState(State newState, State oldState)
 
             setOverrideParams();
 
-            State validatedState = (State)res[0].asInteger();
+            auto validatedState = (State)res[0].asInteger();
             if ( validatedState== _REJECT) {
 
                 // proceed using only the first character of the token
@@ -1153,7 +1153,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
         }
 
         if (luaState.globals().count(fctName)) {
-            Diluculum::LuaFunction* documentFct=new Diluculum::LuaFunction(luaState[fctName].value().asFunction());
+            auto* documentFct=new Diluculum::LuaFunction(luaState[fctName].value().asFunction());
 
             luaState["HL_PLUGIN_PARAM"] = pluginParameter;
             luaState["HL_OUTPUT"] = outputType;
@@ -2471,7 +2471,7 @@ bool CodeGenerator::initPluginScript(const string& script)
 }
 
 void CodeGenerator::resetSyntaxReaders() {
-    for ( map<string, SyntaxReader*>::iterator it=syntaxReaders.begin(); it!=syntaxReaders.end(); it++ ) {
+    for ( auto it=syntaxReaders.begin(); it!=syntaxReaders.end(); it++ ) {
         delete it->second;
     }
     currentSyntax=NULL;
@@ -2494,9 +2494,9 @@ void CodeGenerator::updateKeywordClasses(){
     if (openTags.size()) {
         if ( openTags.size() >NUMBER_BUILTIN_STATES ) {
             // remove dynamic keyword tag delimiters of the old language definition
-            vector<string>::iterator keyStyleOpenBegin =
+            auto keyStyleOpenBegin =
             openTags.begin() + NUMBER_BUILTIN_STATES;
-            vector<string>::iterator keyStyleCloseBegin =
+            auto keyStyleCloseBegin =
             closeTags.begin() + NUMBER_BUILTIN_STATES;
             openTags.erase ( keyStyleOpenBegin, openTags.end() );
             closeTags.erase ( keyStyleCloseBegin, closeTags.end() );

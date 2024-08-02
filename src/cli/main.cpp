@@ -398,7 +398,7 @@ bool HLCmdLineApp::serviceModeCheck(CmdLineOptions &options, highlight::CodeGene
                 options.getLineLength() - options.getNumberWidth() : options.getLineLength(),
                 options.getNumberSpaces());
         } else if (modeKey == "eof") {
-            unsigned char eof = (unsigned char)modeVal[0];
+            auto eof = (unsigned char)modeVal[0];
             generator->setAdditionalEOFChar(eof);
             modeRes += "eof char val: " + std::to_string(eof) + " ";
         } else if (modeKey == "tag") {

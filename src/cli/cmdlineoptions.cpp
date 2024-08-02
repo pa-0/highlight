@@ -260,9 +260,9 @@ CmdLineOptions::CmdLineOptions ( const int argc, const char *argv[] ) :
             ignoredFileTypes.insert ( elem );
         }
 
-        std::vector<std::string>::iterator file=inputFileNames.begin();
+        auto file=inputFileNames.begin();
         while ( file!=inputFileNames.end()) {
-            for ( std::set<std::string>::iterator ext=ignoredFileTypes.begin(); ext!=ignoredFileTypes.end(); ext++ ) {
+            for ( auto ext=ignoredFileTypes.begin(); ext!=ignoredFileTypes.end(); ext++ ) {
                 if (file!=inputFileNames.end() && StringTools::endsWith(  *file, *ext )) {
                     file = inputFileNames.erase ( file );
                     break;

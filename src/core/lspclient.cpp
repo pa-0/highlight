@@ -470,13 +470,13 @@ namespace highlight
         if (semanticTokensProvider) {
             picojson::array list = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenTypes").get<picojson::array>();
             int cnt=0;
-            for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
+            for (auto iter = list.begin(); iter != list.end(); ++iter) {
                 tokenTypes.insert( make_pair( cnt++, iter->get<std::string>()));
             }
 
             picojson::array modifiersList = serverCapabilities.get("semanticTokensProvider").get("legend").get("tokenModifiers").get<picojson::array>();
             cnt=0;
-            for (picojson::array::iterator iter = modifiersList.begin(); iter != modifiersList.end(); ++iter) {
+            for (auto iter = modifiersList.begin(); iter != modifiersList.end(); ++iter) {
                 tokenModifiers.insert( make_pair( cnt++, iter->get<std::string>()));
             }
         }
@@ -489,7 +489,7 @@ namespace highlight
         if (json.contains("method") && json.get("method").get<std::string>()=="textDocument/publishDiagnostics") {
             picojson::array diagnostics = json.get("params").get("diagnostics").get<picojson::array>();
 
-            for (picojson::array::iterator iter = diagnostics.begin(); iter != diagnostics.end(); ++iter) {
+            for (auto iter = diagnostics.begin(); iter != diagnostics.end(); ++iter) {
 
                 if ((int)iter->get("severity").get<double>() != 1){
                     continue;
@@ -591,7 +591,7 @@ namespace highlight
             else if (jsonResponse.get("result").get("contents").is<picojson::array>()){
 
                 picojson::array list = jsonResponse.get("result").get("contents").get<picojson::array>();
-                for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
+                for (auto iter = list.begin(); iter != list.end(); ++iter) {
                     if ((*iter).is<std::string>()){
                         // pyls
                         hoverList.append( (*iter).get<std::string>());
@@ -675,7 +675,7 @@ namespace highlight
 
         vector<unsigned int> semAttributes;
         picojson::array list = jsonResponse.get("result").get("data").get<picojson::array>();
-        for (picojson::array::iterator iter = list.begin(); iter != list.end(); ++iter) {
+        for (auto iter = list.begin(); iter != list.end(); ++iter) {
             semAttributes.push_back((unsigned int)iter->get<double>());
         }
 
