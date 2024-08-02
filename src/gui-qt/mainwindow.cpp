@@ -111,7 +111,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+                for(auto it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
                     tCat.append( QString::fromStdString( it->second.asString()));
                     tCat.append(",");
@@ -131,7 +131,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 
                 categoryMap = ls["Categories"].value().asTable();
 
-                for(Diluculum::LuaValueMap::const_iterator it = categoryMap.begin(); it != categoryMap.end(); ++it)
+                for(auto it = categoryMap.begin(); it != categoryMap.end(); ++it)
                 {
                     tCat.append( QString::fromStdString( it->second.asString()));
                     tCat.append(",");
@@ -778,14 +778,14 @@ string MainWindow::getFileType(const string& suffix, const string &inputFile)
     if (assocByExtension.count(lcSuffix)) {
 
         string langAssociation;
-        MMap::iterator it = assocByExtension.find(lcSuffix);
+        auto it = assocByExtension.find(lcSuffix);
         if (it!=assocByExtension.end()) langAssociation = it->second;
 
         std::pair <MMap::iterator, MMap::iterator> ret;
         ret = assocByExtension.equal_range(lcSuffix);
 
         std::list<std::string> lst;
-        for (MMap::iterator it=ret.first; it!=ret.second; ++it){
+        for (auto it=ret.first; it!=ret.second; ++it){
            lst.push_back( it->second );
         }
 
@@ -795,7 +795,7 @@ string MainWindow::getFileType(const string& suffix, const string &inputFile)
 
             syntax_chooser chooser;
             chooser.setUnclearExtension(QString(lcSuffix.c_str()));
-             for (std::list<string>::iterator it=lst.begin(); it != lst.end(); ++it){
+             for (auto it=lst.begin(); it != lst.end(); ++it){
                  chooser.addSyntaxName(QString((*it).c_str()));
             }
             chooser.exec();
@@ -1518,7 +1518,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                     if (clipboard) {
                         highlight::OutputType outputType = getOutputType();
                         if ( outputType==highlight::RTF) {
-                            QMimeData *mimeData = new QMimeData();
+                            auto *mimeData = new QMimeData();
 
                             #ifdef Q_OS_WIN
                             mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
@@ -1529,7 +1529,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                             clipboard->setMimeData(mimeData);
                         }
                         else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
-                            QMimeData *mimeData = new QMimeData();
+                            auto *mimeData = new QMimeData();
 
                                 if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
                                     mimeData->setHtml(clipBoardData.toUtf8());
@@ -1551,7 +1551,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
             if (clipboard) {
                 highlight::OutputType outputType = getOutputType();
                 if ( outputType==highlight::RTF) {
-                    QMimeData *mimeData = new QMimeData();
+                    auto *mimeData = new QMimeData();
 
                     #ifdef Q_OS_WIN
                     mimeData->setData("Rich Text Format", clipBoardData.toLatin1());
@@ -1562,7 +1562,7 @@ void MainWindow::highlight2Clipboard(bool getDataFromCP)
                     clipboard->setMimeData(mimeData);
                 }
                 else if ( (outputType==highlight::HTML || outputType==highlight::XHTML) && ui->cbHTMLPasteMIME->isChecked()) {
-                    QMimeData *mimeData = new QMimeData();
+                    auto *mimeData = new QMimeData();
 
                     if (ui->cbEncoding->isChecked() && ui->comboEncoding->currentText().toLower()=="utf-8") {
                         mimeData->setHtml(clipBoardData.toUtf8());
