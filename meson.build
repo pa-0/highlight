@@ -6,14 +6,39 @@
 ### The script tries to compile the GUI using Qt6, with Qt5 5.15 as fallback.
 
 project('highlight-all', 'cpp',
-  meson_version: '>=0.49',
-  default_options : ['cpp_std=c++17'])
+  meson_version: '>=0.63',
+  default_options : ['cpp_std=c++17', 'warning_level=3', 'optimization=2'])
 
 cmake = import('cmake')
 pkg = import('pkgconfig')
 
+
+# Installation directories
+data_dir = get_option('prefix') / get_option('datadir')
+man_dir = get_option('prefix') / get_option('mandir')
+conf_dir = get_option('prefix') / get_option('sysconfdir')
+
+highlight_conf_dir = conf_dir / 'highlight'
+
+highlight_data_dir = data_dir / 'highlight'
+highlight_doc_dir = data_dir / 'doc' / 'highlight'
+gui_files_dir = highlight_data_dir / 'gui_files'
+
+
 # Compiler options
-add_project_arguments('-Wall', '-O2', '-DNDEBUG', '-D_FILE_OFFSET_BITS=64', language: 'cpp')
+
+
+add_project_arguments(
+    '-DNDEBUG',
+    '-D_FILE_OFFSET_BITS=64',
+    f'-DHL_CONFIG_DIR="@highlight_conf_dir@/"',
+    f'-DHL_DATA_DIR="@highlight_data_dir@/"',
+    f'-DHL_DOC_DIR="@highlight_doc_dir@/"',
+    language: 'cpp'
+)
+
+
+
 
 # Include directories
 inc = include_directories('src/include')
@@ -124,16 +149,6 @@ gui_exe = executable('highlight-gui',
   install: true
 )
 
-# Installation directories
-data_dir = get_option('prefix') / get_option('datadir')
-man_dir = get_option('prefix') / get_option('mandir')
-conf_dir = get_option('prefix') / get_option('sysconfdir') 
-
-highlight_conf_dir = conf_dir / 'highlight'
-
-highlight_data_dir = data_dir / 'highlight'
-highlight_doc_dir = data_dir / 'doc' / 'highlight'
-gui_files_dir = highlight_data_dir / 'gui_files'
 
 bash_comp_dir = data_dir / 'bash-completion' / 'completions'
 fish_comp_dir = data_dir / 'fish' / 'vendor_completions.d'
@@ -149,8 +164,8 @@ install_subdir('themes', install_dir: highlight_data_dir)
 install_subdir('plugins', install_dir: highlight_data_dir)
 install_subdir('extras', install_dir: highlight_doc_dir)
 install_data(['AUTHORS', 'README.adoc', 'README_LSP_CLIENT.adoc', 'README_PLUGINS.adoc', 'ChangeLog.adoc', 'COPYING', 'INSTALL'], install_dir: highlight_doc_dir)
-install_data('man/highlight.1', install_dir: join_paths(man_dir, 'man1'))
-install_data('man/filetypes.conf.5', install_dir: join_paths(man_dir, 'man5'))
+install_data('man/highlight.1', install_dir: man_dir / 'man1')
+install_data('man/filetypes.conf.5', install_dir: man_dir / 'man5')
 install_data(
   'sh-completion/highlight.bash',
   rename: 'highlight',

@@ -48,6 +48,9 @@ Strings = {
   Delimiter=[["|']],
   RawPrefix="R",
   Interpolation = [[ %\w ]],
+  DelimiterPairs= {
+    { Open=[[R\"\(]], Close=[[\)\"]] },
+  }
 }
 
 Comments = {
@@ -72,9 +75,9 @@ Operators=[[\(|\)|\[|\]|\{|\}|\,|\;|\.|\:|\&|<|>|\!|=|\/|\*|\%|\+|\-|\~|\||\^|\?
 
 EnableIndentation=true
 
--- resolve issue with C++14 number separator syntax
 function OnStateChange(oldState, newState, token)
 
+  -- resolve issue with C++14 number separator syntax
   if token=="'" and oldState==HL_NUMBER and newState==HL_STRING then
     return HL_NUMBER
   end
