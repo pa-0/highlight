@@ -75,11 +75,11 @@ SyntaxReader::SyntaxReader() :
     rawStringPrefix(0),
     continuationChar(0),
     keywordCount(0),
-    validateStateChangeFct(NULL),
-    decorateFct(NULL),
-    decorateLineBeginFct(NULL),
-    decorateLineEndFct(NULL),
-    luaState(NULL)
+    validateStateChangeFct(nullptr),
+    decorateFct(nullptr),
+    decorateLineBeginFct(nullptr),
+    decorateLineEndFct(nullptr),
+    luaState(nullptr)
 {
 
 }

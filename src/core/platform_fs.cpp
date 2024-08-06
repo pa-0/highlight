@@ -112,7 +112,7 @@ std::string getAppPath()
 std::string getHomePath()
 {
     struct passwd *pw = getpwuid(getuid());
-    return pw != NULL ? string(pw->pw_dir) : "";
+    return pw != nullptr ? string(pw->pw_dir) : "";
 }
 
 int isColorEscCapable() {
@@ -123,13 +123,13 @@ int isColorEscCapable() {
 
     char* colorOption=getenv("COLORTERM");
 
-    if (colorOption!=NULL) {
+    if (colorOption!=nullptr) {
         if (!strncmp(colorOption, "truecolor", 9)){
             return 2;
         }
     }
     colorOption=getenv("TERM");
-    if (colorOption!=NULL) {
+    if (colorOption!=nullptr) {
         if (!strncmp(colorOption, "xterm-256color", 14)){
             return 1;
         }
@@ -141,7 +141,7 @@ int isColorEscCapable() {
 int isDarkTerminal() {
 
     char* colorOption=getenv("COLORFGBG");
-    if (colorOption!=NULL) {
+    if (colorOption!=nullptr) {
         if (!strncmp(colorOption, "0;15", 4)){
             return 0;
         }
@@ -275,7 +275,7 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
     if ( errno ) return;
 
     // save files and sub directories
-    while ( ( entry = readdir ( dp ) ) != NULL ) {
+    while ( ( entry = readdir ( dp ) ) != nullptr ) {
         // get file status
         string entryFilepath = directory + pathSeparator + entry->d_name;
 
@@ -326,7 +326,7 @@ void getFileNames ( const string &directory,const string &wildcard, vector<strin
 
 int wildcmp ( const char *wild, const char *data )
 {
-    const char *cp = NULL, *mp = NULL;
+    const char *cp = nullptr, *mp = nullptr;
     bool cmpval;
 
     while ( ( *data ) && ( *wild != '*' ) ) {

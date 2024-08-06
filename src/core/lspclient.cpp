@@ -225,7 +225,7 @@ namespace highlight
                 cmdArgs.push_back(const_cast<char*>(option.c_str()));
             }
 
-            cmdArgs.push_back(NULL);
+            cmdArgs.push_back(nullptr);
 
             // pass the vector's internal array to execvp
             char **command = cmdArgs.data();

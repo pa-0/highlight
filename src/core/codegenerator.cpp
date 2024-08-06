@@ -95,7 +95,7 @@ vector<Diluculum::LuaFunction*> CodeGenerator::pluginChunks;
 
 CodeGenerator * CodeGenerator::getInstance ( OutputType type )
 {
-    CodeGenerator* generator=NULL;
+    CodeGenerator* generator=nullptr;
     switch ( type ) {
     case HTML:
         generator = new HtmlGenerator();
@@ -140,9 +140,9 @@ CodeGenerator * CodeGenerator::getInstance ( OutputType type )
 
 
 CodeGenerator::CodeGenerator ( highlight::OutputType type )
-    :currentSyntax(NULL),
-     in ( NULL ),
-     out ( NULL ),
+    :currentSyntax(nullptr),
+     in ( nullptr ),
+     out ( nullptr ),
      encoding ( "none" ),
      docTitle ( "Source file" ),
      maskWs ( false ),
@@ -177,8 +177,8 @@ CodeGenerator::CodeGenerator ( highlight::OutputType type )
      noTrailingNewLine(0),
 
      terminatingChar ( '\0' ),
-     formatter ( NULL ),
-     streamIterator ( NULL ),
+     formatter ( nullptr ),
+     streamIterator ( nullptr ),
      formattingEnabled ( false ),
      formattingPossible ( false ),
      validateInput ( false ),
@@ -1007,7 +1007,7 @@ bool CodeGenerator::printIndexFile ( const vector<string> &fileList, const strin
 bool CodeGenerator::initIndentationScheme ( const string &indentScheme )
 {
 
-    if ( formatter!=NULL ) {
+    if ( formatter!=nullptr ) {
         return true;
     }
 
@@ -1114,7 +1114,7 @@ bool CodeGenerator::validateInputStream()
                            magic_gif, magic_png, magic_jpeg, magic_bmp, magic_pdf,
                            magic_java,
                            magic_rar, magic_zip, magic_ace, magic_tgz, magic_bzip,
-                           0
+                           nullptr
                           };
 
     char buffer [10]= {0};
@@ -1269,11 +1269,11 @@ ParseError CodeGenerator::generateFile ( const string &inFileName,
 
     if ( !outFileName.empty() ) {
         delete out;
-        out=NULL;
+        out=nullptr;
     }
     if ( !inFileName.empty() ) {
         delete in;
-        in=NULL;
+        in=nullptr;
     }
     return error;
 }
@@ -1303,15 +1303,15 @@ string CodeGenerator::generateString ( const string &input )
     string result = static_cast<ostringstream*> ( out )->str();
 
     delete out;
-    out=NULL;
+    out=nullptr;
     delete in;
-    in=NULL;
+    in=nullptr;
 
     return result;
 }
 
 void CodeGenerator::initASStream() {
-    if ( formatter != NULL ) {
+    if ( formatter != nullptr ) {
         if (streamIterator) delete streamIterator;
         streamIterator =  new astyle::ASStreamIterator ( in, extraEOFChar );
         formatter->init ( streamIterator );
@@ -1364,9 +1364,9 @@ string CodeGenerator::generateStringFromFile ( const string &inFileName )
     string result = static_cast<ostringstream*> ( out )->str();
 
     delete out;
-    out=NULL;
+    out=nullptr;
     delete in;
-    in=NULL;
+    in=nullptr;
 
     return result;
 }
@@ -2474,7 +2474,7 @@ void CodeGenerator::resetSyntaxReaders() {
     for ( auto it=syntaxReaders.begin(); it!=syntaxReaders.end(); it++ ) {
         delete it->second;
     }
-    currentSyntax=NULL;
+    currentSyntax=nullptr;
     syntaxReaders.clear();
 }
 

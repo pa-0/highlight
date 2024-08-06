@@ -77,9 +77,9 @@ void Xterm256Generator::initOutputTags ( )
         ostringstream bgs;
         Colour bg=docStyle.getBgColour();
         unsigned char  bg_rgb[3];
-        bg_rgb[0] = ( unsigned char ) strtoll ( bg.getRed ( HTML ).c_str(), NULL, 16 );
-        bg_rgb[1] = ( unsigned char ) strtoll ( bg.getGreen ( HTML ).c_str(), NULL, 16 );
-        bg_rgb[2] = ( unsigned char ) strtoll ( bg.getBlue ( HTML ).c_str(), NULL, 16 );
+        bg_rgb[0] = ( unsigned char ) strtoll ( bg.getRed ( HTML ).c_str(), nullptr, 16 );
+        bg_rgb[1] = ( unsigned char ) strtoll ( bg.getGreen ( HTML ).c_str(), nullptr, 16 );
+        bg_rgb[2] = ( unsigned char ) strtoll ( bg.getBlue ( HTML ).c_str(), nullptr, 16 );
 
         if (use16mColours) {
             //use 24bit true colour ("888" colours (aka 16 million))
@@ -117,9 +117,9 @@ string  Xterm256Generator::getOpenTag ( const ElementStyle &col )
 {
     Colour c= col.getColour();
     unsigned char  rgb[3];
-    rgb[0] = ( unsigned char ) strtoll ( c.getRed ( HTML ).c_str(), NULL, 16 );
-    rgb[1] = ( unsigned char ) strtoll ( c.getGreen ( HTML ).c_str(), NULL, 16 );
-    rgb[2] = ( unsigned char ) strtoll ( c.getBlue ( HTML ).c_str(), NULL, 16 );
+    rgb[0] = ( unsigned char ) strtoll ( c.getRed ( HTML ).c_str(), nullptr, 16 );
+    rgb[1] = ( unsigned char ) strtoll ( c.getGreen ( HTML ).c_str(), nullptr, 16 );
+    rgb[2] = ( unsigned char ) strtoll ( c.getBlue ( HTML ).c_str(), nullptr, 16 );
 
     ostringstream s;
 

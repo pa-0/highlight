@@ -57,7 +57,7 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
     if ( !userDefinedDir.empty() ) possibleDirs.push_back ( userDefinedDir );
 
     char* hlEnvPath=getenv("HIGHLIGHT_DATADIR");
-    if (hlEnvPath!=NULL) {
+    if (hlEnvPath!=nullptr) {
         possibleDirs.push_back ( hlEnvPath );
     }
 
