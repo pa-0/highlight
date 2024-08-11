@@ -424,29 +424,29 @@ private:
     std::map <int, int> matchingDelimiters;
 
     // keywords are not case sensitive if set
-    bool ignoreCase,
+    bool ignoreCase{ false },
 
          // highlighting is disabled
-         disableHighlighting,
+         disableHighlighting{ false },
 
          // allow nested multi line comment blocks
-         allowNestedComments,
+         allowNestedComments{ true },
 
          // code formatting is enabled if set
-         reformatCode,
+         reformatCode{ false },
 
          // string open and close delimiters must have the same length
-         assertEqualLength,
+         assertEqualLength{false},
 
-         paramsNeedUpdate;
+         paramsNeedUpdate{false};
 
     // character which is prefix of raw string (c#)
-    unsigned char rawStringPrefix;
+    unsigned char rawStringPrefix{0};
 
     //character which continues current style on next line
-    unsigned char continuationChar;
+    unsigned char continuationChar{0};
 
-    int keywordCount;
+    int keywordCount{0};
 
     bool readFlag(const Diluculum::LuaVariable& var) ;
 
@@ -470,10 +470,10 @@ private:
 
 
     // Functions accessible in Lua State
-    Diluculum::LuaFunction* validateStateChangeFct;
-    Diluculum::LuaFunction* decorateFct, *decorateLineBeginFct, *decorateLineEndFct;
+    Diluculum::LuaFunction* validateStateChangeFct{nullptr};
+    Diluculum::LuaFunction* decorateFct{nullptr}, *decorateLineBeginFct{nullptr}, *decorateLineEndFct{nullptr};
 
-    Diluculum::LuaState* luaState; // make member to allow interaction with codeparser instance
+    Diluculum::LuaState* luaState{nullptr}; // make member to allow interaction with codeparser instance
 
     static std::vector<Diluculum::LuaFunction*> pluginChunks;
 };

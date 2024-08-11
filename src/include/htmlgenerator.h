@@ -125,13 +125,13 @@ protected:
     std::string styleDefinitionCache;
 
     /** line count should be replaced by ordered list*/
-    bool orderedList;
+    bool orderedList{ false };
 
     /** CSS definition should be outputted inline */
-    bool useInlineCSS;
+    bool useInlineCSS{ false };
 
     /** pre tag should be outputted in fragment mode*/
-    bool enclosePreTag;
+    bool enclosePreTag{ false };
 
     /** \return CSS definition */
     std::string  getStyleDefinition();
@@ -179,7 +179,7 @@ private:
     virtual std::string maskCharacter ( unsigned char );
 
     /** test if anchors should be applied to line numbers*/
-    bool attachAnchors;
+    bool attachAnchors{ false };
 
     /**Optional anchor prefix */
     std::string anchorPrefix;

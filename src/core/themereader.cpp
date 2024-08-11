@@ -37,7 +37,7 @@ using std::vector;
 namespace highlight
 {
 
-    ThemeReader::ThemeReader() : fileOK ( false ), restoreStyles(false), dirtyAttributes(false), keywordStyleCnt(0), outputType(HTML)
+    ThemeReader::ThemeReader()  
 {}
 
 ThemeReader::~ThemeReader()

@@ -66,11 +66,11 @@ private:
 
     std::map<std::string, int> semanticStyleMap;
 
-    bool fileOK, restoreStyles, dirtyAttributes;
+    bool fileOK{ false }, restoreStyles{false}, dirtyAttributes{false};
 
-    int keywordStyleCnt;
+    int keywordStyleCnt{0};
 
-    OutputType outputType;
+    OutputType outputType{HTML};
 
     KeywordStyles keywordStyles, originalStyles;
 

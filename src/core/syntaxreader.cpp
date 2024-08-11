@@ -65,21 +65,8 @@ set<string> SyntaxReader::persistentSyntaxDescriptions;
 int RegexElement::instanceCnt=0;
 
 
-SyntaxReader::SyntaxReader() :
-    ignoreCase ( false ),
-    disableHighlighting ( false ),
-    allowNestedComments ( true ),
-    reformatCode ( false ),
-    assertEqualLength(false),
-    paramsNeedUpdate(false),
-    rawStringPrefix(0),
-    continuationChar(0),
-    keywordCount(0),
-    validateStateChangeFct(nullptr),
-    decorateFct(nullptr),
-    decorateLineBeginFct(nullptr),
-    decorateLineEndFct(nullptr),
-    luaState(nullptr)
+SyntaxReader::SyntaxReader() 
+    
 {
 
 }

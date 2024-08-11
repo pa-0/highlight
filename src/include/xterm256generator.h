@@ -106,11 +106,11 @@ private:
     unsigned char rgb2xterm ( unsigned char* rgb );
 
     // set true if "True Color" escape codes should be used instead of 256 color approximation
-    bool use16mColours;
+    bool use16mColours{false};
 
     std::string canvasColSeq;
 
-    unsigned int canvasPadding;
+    unsigned int canvasPadding{0};
 
     /// Flag to determine if colourtable is calculated
     static bool initialized;

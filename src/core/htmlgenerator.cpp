@@ -48,10 +48,7 @@ HtmlGenerator::HtmlGenerator () :
     hrTag ( "<hr>" ),
     fileSuffix ( ".html" ),
     cssClassName ( "hl" ),
-    orderedList ( false ),
-    useInlineCSS ( false ),
-    enclosePreTag ( false ),
-    attachAnchors ( false ),
+    
     anchorPrefix ( "l" )
 {
     spacer = initialSpacer = " ";

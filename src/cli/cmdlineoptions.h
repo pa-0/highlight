@@ -476,21 +476,21 @@ public:
 
 private:
 
-    int numberSpaces;   // number of spaces which replace a tab
-    int lineNrWidth;    // width of line number (left padding)
-    int lineLength;    // length of line before wrapping
-    int lineNrStart;    // line number start count
-    int lineRangeStart;    // line range start
-    int lineRangeEnd;    // line range end
-    int opt_no_trailing_nl;
-    int verbosity;
-    int lsDelay;
+    int numberSpaces{ 0 };   // number of spaces which replace a tab
+    int lineNrWidth{ 5 };    // width of line number (left padding)
+    int lineLength{ 80 };    // length of line before wrapping
+    int lineNrStart{ 1 };    // line number start count
+    int lineRangeStart{ 0 };    // line range start
+    int lineRangeEnd{ 0 };    // line range end
+    int opt_no_trailing_nl{0};
+    int verbosity{0};
+    int lsDelay{0};
 
-    unsigned int canvasPaddingWidth;    // line number start count
+    unsigned int canvasPaddingWidth{0};    // line number start count
 
-    highlight::WrapMode wrappingStyle; // line wrapping mode
-    highlight::OutputType outputType;
-    StringTools::KeywordCase keywordCase;
+    highlight::WrapMode wrappingStyle{ highlight::WRAP_DISABLED }; // line wrapping mode
+    highlight::OutputType outputType{ highlight::HTML };
+    StringTools::KeywordCase keywordCase{ StringTools::CASE_UNCHANGED };
 
     // name of single output file
     std::string outFilename,
@@ -518,53 +518,53 @@ private:
     std::string svg_height, svg_width;
     std::string absThemePath, absLangPath/*, twoPassFile*/;
 
-    bool opt_syntax;
-    bool opt_include_style;
-    bool opt_help;
-    bool opt_version ;
-    bool opt_print_config;
-    bool opt_linenumbers;
-    bool opt_batch_mode;
-    bool opt_fragment;
-    bool opt_attach_line_anchors;
-    bool opt_printindex;
-    bool opt_quiet;
-    bool opt_replacequotes;
-    bool opt_babel;
-    bool opt_beamer;
-    bool opt_print_progress;
-    bool opt_fill_zeroes;
-    bool opt_stylepath_explicit;
-    bool opt_force_output;
-    bool opt_ordered_list;
-    bool opt_fnames_as_anchors;
-    bool opt_validate;
-    bool opt_number_wrapped_lines;
-    bool opt_inline_css;
-    bool opt_enclose_pre;
-    bool opt_char_styles;
-    bool opt_page_color;
-    bool opt_pretty_symbols;
-    bool opt_delim_CR;
-    bool opt_print_style;
-    bool opt_base16_theme;
-    bool opt_keep_injections;
-    bool opt_force_stdout;
-    bool opt_no_version_info;
-    bool explicit_output_format;
-    bool opt_isolate;
-    bool opt_encoding_explicit;
-    bool opt_syntax_supported_check;
-    bool opt_service_mode;
-    bool opt_disable_echo;
+    bool opt_syntax{ false };
+    bool opt_include_style{ false };
+    bool opt_help{ false };
+    bool opt_version{ false } ;
+    bool opt_print_config{ false };
+    bool opt_linenumbers{ false };
+    bool opt_batch_mode{ false };
+    bool opt_fragment{ false };
+    bool opt_attach_line_anchors{ false };
+    bool opt_printindex{ false };
+    bool opt_quiet{ false };
+    bool opt_replacequotes{ false };
+    bool opt_babel{ false };
+    bool opt_beamer{ false };
+    bool opt_print_progress{ false };
+    bool opt_fill_zeroes{ false };
+    bool opt_stylepath_explicit{ false };
+    bool opt_force_output{ false };
+    bool opt_ordered_list{ false };
+    bool opt_fnames_as_anchors{ false };
+    bool opt_validate{ false };
+    bool opt_number_wrapped_lines{ true };
+    bool opt_inline_css{ false };
+    bool opt_enclose_pre{ false };
+    bool opt_char_styles{ false };
+    bool opt_page_color{false};
+    bool opt_pretty_symbols{ false };
+    bool opt_delim_CR{false};
+    bool opt_print_style{false};
+    bool opt_base16_theme{false};
+    bool opt_keep_injections{false};
+    bool opt_force_stdout{false};
+    bool opt_no_version_info{false};
+    bool explicit_output_format{false};
+    bool opt_isolate{false};
+    bool opt_encoding_explicit{false};
+    bool opt_syntax_supported_check{false};
+    bool opt_service_mode{false};
+    bool opt_disable_echo{false};
 
-    bool opt_ls_hover;
-    bool opt_ls_semantic;
-    bool opt_ls_rainbow;
-    bool opt_ls_syntax_error;
-    bool opt_ls_legacy;
+    bool opt_ls_hover{false};
+    bool opt_ls_semantic{false};
+    bool opt_ls_rainbow{false};
+    bool opt_ls_syntax_error{false};
+    bool opt_ls_legacy{false};
 
-    off_t maxFileSize;
+    off_t maxFileSize{268435456};
 
     std::string fallbackSyntax, anchorPrefix;
     std::string helpLang, encodingName;

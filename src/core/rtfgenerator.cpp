@@ -44,12 +44,8 @@ namespace highlight
 
 RtfGenerator::RtfGenerator()
     : CodeGenerator ( RTF ),
-      pageSize ( "a4" ), // Default: DIN A4
-      addCharStyles ( false ),
-      addPageColor(false),
-      isUtf8(false),
-      utf16Char(0),
-      utf8SeqLen(0)
+      pageSize ( "a4" )
+      
 {
     newLineTag = "}\\par\\pard\n\\cbpat1{";
     spacer = initialSpacer = " ";

@@ -114,17 +114,17 @@ private:
     std::string pageSize;
 
     /** flag to add character styles */
-    bool addCharStyles;
+    bool addCharStyles{ false };
 
     /** flag to add page color */
-    bool addPageColor;
+    bool addPageColor{false};
 
     /** flag to enable Unicode conversion */
-    bool isUtf8;
+    bool isUtf8{false};
 
     /** utf-8 to utf-16 conversion variables */
-    unsigned long utf16Char;
-    size_t utf8SeqLen;
+    unsigned long utf16Char{0};
+    size_t utf8SeqLen{0};
 
     /** @return escaped character*/
     virtual std::string maskCharacter ( unsigned char );

@@ -59,11 +59,11 @@ class LSPClient
 
 private:
 
-    bool initialized;
-    bool hoverProvider;
-    bool semanticTokensProvider;
-    bool logRequests;
-    bool legacyProtocol;
+    bool initialized{false};
+    bool hoverProvider{false};
+    bool semanticTokensProvider{false};
+    bool logRequests{false};
+    bool legacyProtocol{false};
 
     std::string executable, workspace;
     std::string serverName, serverVersion;
@@ -79,7 +79,7 @@ private:
     std::map< std::tuple<int, int>, highlight::SemanticToken > errorMap;
 
 
-    int initDelay;
+    int initDelay{0};
 
 #ifdef _WIN32
     HANDLE g_hChildStd_IN_Rd ;
@@ -93,9 +93,9 @@ private:
     int outpipefd[2];
 #endif
 
-    float msgId;
+    float msgId{1.0};
 
-    int lastErrorCode;
+    int lastErrorCode{0};
     std::string lastErrorMessage;
 
     bool pipe_write_jsonrpc(const std::string &message);

@@ -40,16 +40,9 @@ const std::string PreFormatter::WS_CHARS = " \n\r\t";
 const std::string PreFormatter::INDENT_MARKERS = "{(=";
 
 PreFormatter::PreFormatter() :
-    maxLineLength ( 80 ),
-    index ( 0 ),
-    numberSpaces ( 0 ),
-    lineNumber ( 0 ),
-    wsPrefixLength ( string::npos ),
-    hasMore ( false ),
-    indentAfterOpenBraces ( true ),
-    redefineWsPrefix ( false ),
-    wrapLines ( false ),
-    replaceTabs ( false )
+    
+    wsPrefixLength ( string::npos )
+    
 {
 }
 

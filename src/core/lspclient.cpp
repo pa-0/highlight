@@ -47,15 +47,8 @@ using std::vector;
 namespace highlight
 {
 
-    LSPClient::LSPClient():
-    initialized(false),
-    hoverProvider(false),
-    semanticTokensProvider(false),
-    logRequests(false),
-    legacyProtocol(false),
-    initDelay(0),
-    msgId(1.0),
-    lastErrorCode(0)
+    LSPClient::LSPClient()
+    
     {
         serverName=serverVersion="?";
 

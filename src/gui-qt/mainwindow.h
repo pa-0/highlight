@@ -99,7 +99,7 @@ private:
     std::string lsProfile;
     std::string lsExecutable;               ///< server executable path
     std::string lsSyntax;                   ///< language definition which can be enhanced using the LS
-    int lsDelay;
+    int lsDelay{0};
     std::vector<std::string> lsOptions; ///< server executable start options
 
     QShortcut *copyShortcut;
@@ -109,9 +109,9 @@ private:
     QStringList themesBase16;
     QList< QList<QString> > themesList;
 
-    int oldThemeIndex;
+    int oldThemeIndex{0};
 
-    bool getDataFromCP, runFirstTime;
+    bool getDataFromCP{false}, runFirstTime{true};
 
     void readSettings();
     void writeSettings();

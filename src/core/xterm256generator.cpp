@@ -40,9 +40,8 @@ using std::string;
 namespace highlight
 {
 Xterm256Generator::Xterm256Generator() :
-    CodeGenerator ( ESC_XTERM256 ),
-    use16mColours(false),
-    canvasPadding(0)
+    CodeGenerator ( ESC_XTERM256 )
+    
 {
     newLineTag = "\n";
     spacer = initialSpacer = " ";

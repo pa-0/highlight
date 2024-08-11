@@ -49,8 +49,7 @@ using std::unique_ptr;
 using std::vector;
 
 MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent), ui(new Ui::MainWindowClass),
-lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
+: QMainWindow(parent), ui(new Ui::MainWindowClass) 
 {
 
     ui->setupUi(this);

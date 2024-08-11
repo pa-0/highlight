@@ -34,11 +34,8 @@ namespace highlight
 {
 
 LatexGenerator::LatexGenerator()
-    : CodeGenerator ( LATEX ),
-      replaceQuotes ( false ),
-      disableBabelShortHand ( false ),
-      prettySymbols ( false ),
-      beamerMode ( false )
+    : CodeGenerator ( LATEX )
+      
 {
     // avoid "Underfull \hbox (badness 10000)" warnings
     newLineTag = "\\\\\n";

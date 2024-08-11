@@ -137,16 +137,16 @@ public:
 
 private:
 
-    unsigned int maxLineLength;
+    unsigned int maxLineLength{ 80 };
 
     std::string line, wsPrefix;
-    unsigned int index;
-    unsigned int numberSpaces;
-    unsigned int lineNumber;
+    unsigned int index{ 0 };
+    unsigned int numberSpaces{ 0 };
+    unsigned int lineNumber{ 0 };
     size_t wsPrefixLength;
-    bool hasMore, indentAfterOpenBraces;
-    bool redefineWsPrefix;
-    bool wrapLines, replaceTabs;
+    bool hasMore{ false }, indentAfterOpenBraces{ true };
+    bool redefineWsPrefix{ false };
+    bool wrapLines{ false }, replaceTabs{ false };
 
     std::set<int> wrappedLines;
 

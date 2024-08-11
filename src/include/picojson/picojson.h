@@ -652,11 +652,11 @@ inline std::string value::_serialize(int indent) const {
 template <typename Iter> class input {
 protected:
   Iter cur_, end_;
-  bool consumed_;
-  int line_;
+  bool consumed_{false};
+  int line_{1};
 
 public:
-  input(const Iter &first, const Iter &last) : cur_(first), end_(last), consumed_(false), line_(1) {
+  input(const Iter &first, const Iter &last) : cur_(first), end_(last) {
   }
   int getc() {
     if (consumed_) {

@@ -116,15 +116,15 @@ private:
                                 const ElementStyle & elem );
 
     /** test if double quotes should be replaced by \dq{} */
-    bool replaceQuotes;
+    bool replaceQuotes{ false };
 
     /** test if Babel shorthand for " should be disabled */
-    bool disableBabelShortHand;
+    bool disableBabelShortHand{ false };
 
     /** test if symbols like <,>,{,},~ should be replaced by nicer definitions */
-    bool prettySymbols;
+    bool prettySymbols{ false };
 
-    bool beamerMode;
+    bool beamerMode{ false };
 
     std::string getNewLine();
 
