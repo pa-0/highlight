@@ -30,9 +30,8 @@
 #include <Diluculum/LuaState.hpp>
 
 
-namespace Diluculum
-{
-   namespace Impl
+
+   namespace Diluculum::Impl
    {
       /** Calls the function on the top of the stack, passing the given
        *  parameters. Returns the values returned by the called function.
@@ -77,7 +76,7 @@ namespace Diluculum
                                     size_t* size);
    }
 
-} // namespace Diluculum
+
 
 
 #endif // _DILUCULUM_INTERNAL_UTILS_HPP_

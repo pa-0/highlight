@@ -36,9 +36,8 @@
 #include <Diluculum/LuaUtils.hpp>
 
 
-namespace Diluculum
-{
-   namespace Impl
+
+   namespace Diluculum::Impl
    {
       /** Calls \c lua_error() with a proper error message. The error message is
        *  composed of things that may help to find out what's the error, like
@@ -77,14 +76,7 @@ namespace Diluculum
             }
       };
    }
-}
 
-
-
-/** Returns the name of the wrapper function that is created by
- *  \c DILUCULUM_WRAP_FUNCTION() for a given function name.
- *  @param FUNC The function whose wrapper name is desired.
- */
 #define DILUCULUM_WRAPPER_FUNCTION(FUNC)        \
    Diluculum__ ## FUNC ## __Wrapper_Function
 

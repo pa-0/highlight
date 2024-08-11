@@ -28,9 +28,8 @@
 #ifndef _DILUCULUM_CPP_OBJECT_HPP_
 #define _DILUCULUM_CPP_OBJECT_HPP_
 
-namespace Diluculum
-{
-   namespace Impl
+
+   namespace Diluculum::Impl
    {
       /** The data that is stored as userdata when a C++ object is exported to
        *  or instantiated in Lua.
@@ -49,8 +48,8 @@ namespace Diluculum
             bool deleteMe;
       };
 
-   } // namespace Impl
+   } // namespace Diluculum::Impl
 
-} // namespace Diluculum
+
 
 #endif // _DILUCULUM_CPP_OBJECT_HPP_

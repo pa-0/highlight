@@ -28,9 +28,8 @@
 #include <cassert>
 
 
-namespace Diluculum
-{
-   namespace Impl
+
+   namespace Diluculum::Impl
    {
       // - ReportErrorFromCFunction --------------------------------------------
       void ReportErrorFromCFunction (lua_State* ls, const::std::string& what)
@@ -54,4 +53,4 @@ namespace Diluculum
          lua_error (ls);
       }
    }
-}
+

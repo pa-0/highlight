@@ -31,9 +31,8 @@
 #include <boost/scoped_array.hpp>
 
 
-namespace Diluculum
-{
-   namespace Impl
+
+   namespace Diluculum::Impl
    {
       // - CallFunctionOnTop ---------------------------------------------------
       LuaValueList CallFunctionOnTop (lua_State* ls, const LuaValueList& params)
@@ -140,6 +139,6 @@ namespace Diluculum
          return reinterpret_cast<const char*>(f->getData());
       }
 
-   } // namespace Impl
+   } // namespace Diluculum::Impl
 
-} // namespace Diluculum
+
