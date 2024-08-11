@@ -108,7 +108,7 @@ void Xterm256Generator::initOutputTags ( )
     openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle()) );
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "\033[m" );
+        closeTags.emplace_back("\033[m" );
     }
 }
 

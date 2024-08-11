@@ -389,7 +389,7 @@ namespace highlight
 
         picojson::array myTokenTypes;
         for (auto const &type : supportedTokenTypes)  {
-            myTokenTypes.push_back(picojson::value(type));
+            myTokenTypes.emplace_back(type);
         }
 
         vector<std::string> supportedModifiers {"documentation","declaration","definition","static","abstract","deprecated",
@@ -397,11 +397,11 @@ namespace highlight
 
         picojson::array myTokenModifiers;
         for (auto const &mod : supportedModifiers) {
-            myTokenModifiers.push_back(picojson::value(mod));
+            myTokenModifiers.emplace_back(mod);
         }
 
         picojson::array formats;
-        formats.push_back(picojson::value("relative"));
+        formats.emplace_back("relative");
 
         semanticTokensClientCapabilities["requests"] = picojson::value(requests);
 
@@ -418,7 +418,7 @@ namespace highlight
 
         //https://clangd.llvm.org/extensions.html#utf-8-offsets
         picojson::array offsetEncodings;
-        offsetEncodings.push_back(picojson::value("utf-8"));
+        offsetEncodings.emplace_back("utf-8");
         capabilities["offsetEncoding"] = picojson::value(offsetEncodings);
 
         params["capabilities"] = picojson::value(capabilities);

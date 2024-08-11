@@ -78,7 +78,7 @@ PangoGenerator::~PangoGenerator() {}
 
 void PangoGenerator::initOutputTags()
 {
-    openTags.push_back ( "" );
+    openTags.emplace_back("" );
     openTags.push_back ( getOpenTag ( docStyle.getStringStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getNumberStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getSingleLineCommentStyle() ) );
@@ -93,9 +93,9 @@ void PangoGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( docStyle.getErrorStyle() ) );
     openTags.push_back ( getOpenTag ( docStyle.getErrorMessageStyle() ) );
 
-    closeTags.push_back ( "" );
+    closeTags.emplace_back("" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "</span>" );
+        closeTags.emplace_back("</span>" );
     }
 }
 

@@ -659,7 +659,7 @@ void CmdLineOptions::parseRuntimeOptions( const int argc, const char *argv[], bo
                 }
             }
         } else if ( inputFileNames.empty() ) {
-            inputFileNames.push_back ( "" );
+            inputFileNames.emplace_back("" );
         }
     }
 }

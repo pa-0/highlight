@@ -840,12 +840,12 @@ State CodeGenerator::validateState(State newState, State oldState)
 
     if (currentSyntax->getValidateStateChangeFct()) {
         Diluculum::LuaValueList params;
-        params.push_back(Diluculum::LuaValue(oldState));
-        params.push_back(Diluculum::LuaValue(newState));
-        params.push_back(Diluculum::LuaValue(token));
-        params.push_back(Diluculum::LuaValue(getCurrentKeywordClassId()) );
-        params.push_back(Diluculum::LuaValue(lineNumber) );
-        params.push_back(Diluculum::LuaValue(lineIndex-(unsigned int)token.length()) );
+        params.emplace_back(oldState);
+        params.emplace_back(newState);
+        params.emplace_back(token);
+        params.emplace_back(getCurrentKeywordClassId() );
+        params.emplace_back(lineNumber );
+        params.emplace_back(lineIndex-(unsigned int)token.length() );
 
         Diluculum::LuaValueList res=
             currentSyntax->getLuaState()->call ( *currentSyntax->getValidateStateChangeFct(),
@@ -958,12 +958,12 @@ Diluculum::LuaValueList CodeGenerator::callDecorateFct(const string& token)
 {
 
     Diluculum::LuaValueList params;
-    params.push_back(Diluculum::LuaValue(token));
-    params.push_back(Diluculum::LuaValue(currentState));
-    params.push_back(Diluculum::LuaValue(currentKeywordClass));
-    params.push_back(Diluculum::LuaValue(lineContainedStmt));
-    params.push_back(Diluculum::LuaValue(lineNumber) );
-    params.push_back(Diluculum::LuaValue(lineIndex-(unsigned int)token.length()) );
+    params.emplace_back(token);
+    params.emplace_back(currentState);
+    params.emplace_back(currentKeywordClass);
+    params.emplace_back(lineContainedStmt);
+    params.emplace_back(lineNumber );
+    params.emplace_back(lineIndex-(unsigned int)token.length() );
 
     return currentSyntax->getLuaState()->call ( *currentSyntax->getDecorateFct(),
             params,"getDecorateFct call")  ;
@@ -1147,7 +1147,7 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
         Diluculum::LuaState luaState;
 
         Diluculum::LuaValueList chunkParams;
-        chunkParams.push_back(currentSyntax->getDescription());
+        chunkParams.emplace_back(currentSyntax->getDescription());
         for (unsigned int i=0; i<pluginChunks.size(); i++) {
             luaState.call(*pluginChunks[i], chunkParams, "format user function");
         }
@@ -1178,9 +1178,9 @@ void CodeGenerator::applyPluginChunk(const string& fctName, string *result, bool
             options[Diluculum::LuaValue("font")] =  Diluculum::LuaValue(getBaseFont());
             options[Diluculum::LuaValue("fontsize")] =  Diluculum::LuaValue(getBaseFontSize());
 
-            params.push_back(inputFilesCnt);
-            params.push_back(processedFilesCnt);
-            params.push_back(options);
+            params.emplace_back(inputFilesCnt);
+            params.emplace_back(processedFilesCnt);
+            params.emplace_back(options);
 
             Diluculum::LuaValueList res=luaState.call ( *documentFct, params, fctName+" call");
             if (res.size()>=1) {
@@ -2266,7 +2266,7 @@ Diluculum::LuaValueList CodeGenerator::callDecorateLineFct(bool isLineStart)
 {
 
     Diluculum::LuaValueList params;
-    params.push_back(Diluculum::LuaValue(lineNumber));
+    params.emplace_back(lineNumber);
 
     return currentSyntax->getLuaState()->call ( isLineStart ?
             *currentSyntax->getDecorateLineBeginFct(): *currentSyntax->getDecorateLineEndFct(),

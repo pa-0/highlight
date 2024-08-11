@@ -172,7 +172,7 @@ string  ODTGenerator::getOpenTag ( const string& styleName )
 
 void ODTGenerator::initOutputTags ()
 {
-    openTags.push_back ( "" );
+    openTags.emplace_back("" );
     openTags.push_back ( getOpenTag ( STY_NAME_STR ) );
     openTags.push_back ( getOpenTag ( STY_NAME_NUM ) );
     openTags.push_back ( getOpenTag ( STY_NAME_SLC ) );
@@ -186,9 +186,9 @@ void ODTGenerator::initOutputTags ()
 
     openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
     openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
-    closeTags.push_back ( "" );
+    closeTags.emplace_back("" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "</text:span>" );
+        closeTags.emplace_back("</text:span>" );
     }
 
 }

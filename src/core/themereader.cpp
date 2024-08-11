@@ -163,7 +163,7 @@ bool ThemeReader::load ( const string &styleDefinitionPath , OutputType type, bo
 
         if (pluginChunks.size()) {
             Diluculum::LuaValueList params;
-            params.push_back(desc);
+            params.emplace_back(desc);
             for (unsigned int i=0; i<pluginChunks.size(); i++) {
                 ls.call(*pluginChunks[i], params, "theme user function");
             }

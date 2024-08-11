@@ -58,19 +58,19 @@ void DataDir::initSearchDirectories ( const string &userDefinedDir )
 
     char* hlEnvPath=getenv("HIGHLIGHT_DATADIR");
     if (hlEnvPath!=nullptr) {
-        possibleDirs.push_back ( hlEnvPath );
+        possibleDirs.emplace_back(hlEnvPath );
     }
 
 #ifndef _WIN32
 
 #ifdef HL_DATA_DIR
-    possibleDirs.push_back ( HL_DATA_DIR );
+    possibleDirs.emplace_back(HL_DATA_DIR );
 #else
     possibleDirs.push_back ( LSB_DATA_DIR );
 #endif
 
 #ifdef HL_CONFIG_DIR
-    possibleDirs.push_back ( HL_CONFIG_DIR);
+    possibleDirs.emplace_back(HL_CONFIG_DIR);
 #else
     possibleDirs.push_back ( LSB_CFG_DIR);
 #endif

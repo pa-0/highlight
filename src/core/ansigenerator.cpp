@@ -74,9 +74,9 @@ void AnsiGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( "01", "31" ) );//error
     openTags.push_back ( getOpenTag ( "01", "31" ) );//warning
 
-    closeTags.push_back ( "" );
+    closeTags.emplace_back("" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "\033[m" );
+        closeTags.emplace_back("\033[m" );
     }
 }
 

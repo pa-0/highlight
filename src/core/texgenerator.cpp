@@ -74,7 +74,7 @@ void TexGenerator::initOutputTags()
     openTags.push_back ( "{\\hl"+STY_NAME_ERM+" " );
 
     for (unsigned int i=0; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "}" );
+        closeTags.emplace_back("}" );
     }
 }
 

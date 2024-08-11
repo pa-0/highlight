@@ -1002,7 +1002,7 @@ public:
   }
   template <typename Iter> bool parse_array_item(input<Iter> &in, size_t) {
     array &a = out_->get<array>();
-    a.push_back(value());
+    a.emplace_back();
     default_parse_context ctx(&a.back(), depths_);
     return _parse(ctx, in);
   }

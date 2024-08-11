@@ -195,7 +195,7 @@ LoadResult SyntaxReader::load ( const string& langDefPath, const string& pluginR
 
         if (pluginChunks.size()) {
             Diluculum::LuaValueList params;
-            params.push_back(langDesc);
+            params.emplace_back(langDesc);
             for (unsigned int i=0; i<pluginChunks.size(); i++) {
                 ls.call(*pluginChunks[i], params, "syntax user function");
             }
@@ -550,7 +550,7 @@ unsigned int SyntaxReader::generateNewKWClass ( int classID, const char *prefix 
     if ( !found ) {
         newClassID++;
 
-        keywordClasses.push_back ( className );
+        keywordClasses.emplace_back(className );
     }
     return newClassID;
 }

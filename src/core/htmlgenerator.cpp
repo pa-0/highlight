@@ -151,7 +151,7 @@ void HtmlGenerator::printBody()
 
 void HtmlGenerator::initOutputTags ()
 {
-    openTags.push_back ( "" );
+    openTags.emplace_back("" );
     if ( useInlineCSS ) {
         openTags.push_back ( getOpenTag ( docStyle.getStringStyle() ) );
         openTags.push_back ( getOpenTag ( docStyle.getNumberStyle() ) );
@@ -180,9 +180,9 @@ void HtmlGenerator::initOutputTags ()
         openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
     }
 
-    closeTags.push_back ( "" );
+    closeTags.emplace_back("" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "</span>" );
+        closeTags.emplace_back("</span>" );
     }
 
 }

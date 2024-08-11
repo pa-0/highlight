@@ -51,7 +51,7 @@ SVGGenerator::~SVGGenerator() {}
 
 void SVGGenerator::initOutputTags()
 {
-    openTags.push_back ( "" );
+    openTags.emplace_back("" );
     openTags.push_back ( getOpenTag ( STY_NAME_STR ) );
     openTags.push_back ( getOpenTag ( STY_NAME_NUM ) );
     openTags.push_back ( getOpenTag ( STY_NAME_SLC ) );
@@ -65,9 +65,9 @@ void SVGGenerator::initOutputTags()
     openTags.push_back ( getOpenTag ( STY_NAME_ERR ) );
     openTags.push_back ( getOpenTag ( STY_NAME_ERM ) );
 
-    closeTags.push_back ( "" );
+    closeTags.emplace_back("" );
     for (unsigned int i=1; i<NUMBER_BUILTIN_STATES; i++ ) {
-        closeTags.push_back ( "</tspan>" );
+        closeTags.emplace_back("</tspan>" );
     }
 }
 

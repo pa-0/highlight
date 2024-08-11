@@ -56,7 +56,7 @@ bool Arg_parser::parse_long_option( const char * const opt, const char * const a
     }
 
   ++argind;
-  data.push_back( Record( options[index].code ) );
+  data.emplace_back( options[index].code );
 
   if( opt[len+2] )		// `--<long_option>=<argument>' syntax
     {
@@ -113,7 +113,7 @@ bool Arg_parser::parse_short_option( const char * const opt, const char * const 
       return false;
       }
 
-    data.push_back( Record( code ) );
+    data.emplace_back( code );
     if( opt[++cind] == 0 ) { ++argind; cind = 0; }	// opt finished
 
     if( options[index].has_arg != no && cind > 0 && opt[cind] )
@@ -160,17 +160,17 @@ Arg_parser::Arg_parser( const int argc, const char * const argv[],
       }
     else
       {
-      if( !in_order ) non_options.push_back( argv[argind++] );
-      else { data.push_back( Record() ); data.back().argument = argv[argind++]; }
+      if( !in_order ) non_options.emplace_back(argv[argind++] );
+      else { data.emplace_back( ); data.back().argument = argv[argind++]; }
       }
     }
   if( _error.size() ) data.clear();
   else
     {
     for( unsigned int i = 0; i < non_options.size(); ++i )
-      { data.push_back( Record() ); data.back().argument.swap( non_options[i] ); }
+      { data.emplace_back( ); data.back().argument.swap( non_options[i] ); }
     while( argind < argc )
-      { data.push_back( Record() ); data.back().argument = argv[argind++]; }
+      { data.emplace_back( ); data.back().argument = argv[argind++]; }
     }
   }
 
@@ -189,5 +189,5 @@ Arg_parser::Arg_parser( const char * const opt, const char * const arg,
       parse_short_option( opt, arg, options, argind );
     if( _error.size() ) data.clear();
     }
-  else { data.push_back( Record() ); data.back().argument = opt; }
+  else { data.emplace_back( ); data.back().argument = opt; }
   }
