@@ -7,7 +7,8 @@
 // headers
 //-----------------------------------------------------------------------------
 
-#include "astyle/astyle.h"
+
+#include "astyle/ASStreamIterator.h"
 
 #include <algorithm>
 #include <fstream>
@@ -47,6 +48,8 @@ ASFormatter::ASFormatter()
 	isInStruct = false;
 	shouldPadCommas = false;
 	shouldPadOperators = false;
+	negationPadMode = NEGATION_PAD_NO_CHANGE;
+	includeDirectivePaddingMode = INCLUDE_PAD_NO_CHANGE;
 	shouldPadParensOutside = false;
 	shouldPadFirstParen = false;
 	shouldPadEmptyParens = false;
@@ -550,6 +553,7 @@ std::string ASFormatter::nextLine()
 			charNum = (int) currentLine.length() - 1;
 			continue;
 		}
+
 		if ((lineIsLineCommentOnly || lineIsCommentOnly)
 		        && currentLine.find("*INDENT-OFF*", charNum) != std::string::npos)
 		{
@@ -597,13 +601,13 @@ std::string ASFormatter::nextLine()
 
 		// not in quote or comment or line comment
 
-		if (isSequenceReached("//"))
+		if (isSequenceReached(AS_OPEN_LINE_COMMENT))
 		{
 			formatLineCommentOpener();
 			testForTimeToSplitFormattedLine();
 			continue;
 		}
-		if (isSequenceReached("/*"))
+		if (isSequenceReached(AS_OPEN_COMMENT) || (isGSCStyle() && isSequenceReached(AS_GSC_OPEN_COMMENT)))
 		{
 			formatCommentOpener();
 			testForTimeToSplitFormattedLine();
@@ -622,32 +626,6 @@ std::string ASFormatter::nextLine()
 		        && currentLine.find_first_not_of(" \t") == (size_t) charNum)
 		{
 			isInContinuedPreProc = currentLine[currentLine.size() - 1] == '\\';
-
-			/*
-			std::string preproc = trim(currentLine.c_str() + charNum + 1);
-			if (preproc.length() > 0
-			        && isCharPotentialHeader(preproc, 0)
-			        && getFileType() != C_TYPE
-			        && (findKeyword(preproc, 0, "region")
-			            || findKeyword(preproc, 0, "endregion")
-			            || findKeyword(preproc, 0, "error")
-			            || findKeyword(preproc, 0, "warning")
-			            || findKeyword(preproc, 0, "line")))
-			{
-				currentLine = rtrim(currentLine);	// trim the end only
-				// check for run-in
-				if (formattedLine.length() > 0 && formattedLine[0] == '{')
-				{
-					isInLineBreak = true;
-					isInBraceRunIn = false;
-				}
-				if (previousCommandChar == '}')
-					currentHeader = nullptr;
-				isInLineComment = true;
-				appendCurrentChar();
-				continue;
-			}
-			*/
 		}
 
 		if (isInPreprocessor)
@@ -695,40 +673,6 @@ std::string ASFormatter::nextLine()
 				isInBraceRunIn = false;
 			}
 			processPreprocessor();
-			// if top level it is potentially indentable
-			if (shouldIndentPreprocBlock
-			        && (isBraceType(braceTypeStack->back(), NULL_TYPE)
-			            || isBraceType(braceTypeStack->back(), NAMESPACE_TYPE)
-
-			            /* #521 enables preprocessor indent within { ... } block, but disables indent of code between #ifdefs  */
-			            //|| getFileType() == C_TYPE
-			           )
-			        && !foundClassHeader
-			        && !isInClassInitializer
-			        && sourceIterator->tellg() > preprocBlockEnd)
-			{
-				// indent the #if preprocessor blocks
-				std::string preproc = ASBeautifier::extractPreprocessorStatement(currentLine);
-				if (preproc.length() >= 2 && preproc.substr(0, 2) == "if") // #if, #ifdef, #ifndef
-				{
-					if (isImmediatelyPostPreprocessor)
-						breakLine();
-					isIndentablePreprocessorBlck = isIndentablePreprocessorBlock(currentLine, charNum);
-					isIndentablePreprocessor = isIndentablePreprocessorBlck;
-				}
-			}
-			if (isIndentablePreprocessorBlck
-			        && charNum < (int) currentLine.length() - 1
-			        && isWhiteSpace(currentLine[charNum + 1]))
-			{
-				size_t nextText = currentLine.find_first_not_of(" \t", charNum + 1);
-				if (nextText != std::string::npos)
-					currentLine.erase(charNum + 1, nextText - charNum - 1);
-			}
-			if (isIndentablePreprocessorBlck
-			        && sourceIterator->tellg() >= preprocBlockEnd)
-				isIndentablePreprocessorBlck = false;
-			//  need to fall thru here to reset the variables
 		}
 
 		/* not in preprocessor ... */
@@ -1619,7 +1563,7 @@ std::string ASFormatter::nextLine()
 		if (isPotentialHeader && !isInTemplate)
 		{
 			//GL30
-			if (!isGHCStyle() && (findKeyword(currentLine, charNum, AS_NEW)
+			if (!isGSCStyle() && (findKeyword(currentLine, charNum, AS_NEW)
 			        || findKeyword(currentLine, charNum, AS_DELETE)))
 			{
 				isInPotentialCalculation = false;
@@ -1896,7 +1840,7 @@ std::string ASFormatter::nextLine()
 			continue;
 		}
 
-		if (shouldPadOperators && newHeader != nullptr && !isOperatorPaddingDisabled())
+		if ((shouldPadOperators || negationPadMode!=NEGATION_PAD_NO_CHANGE) && newHeader != nullptr && !isOperatorPaddingDisabled())
 		{
 			padOperators(newHeader);
 			continue;
@@ -1950,7 +1894,7 @@ std::string ASFormatter::nextLine()
 			}
 
 			if (shouldPadParensOutside || shouldPadParensInside || shouldUnPadParens || shouldPadFirstParen)
-				padParensOrBrackets('(', ')', shouldPadParensOutside, shouldPadParensInside, shouldUnPadParens, shouldPadFirstParen);
+				padParensOrBrackets('(', ')', shouldPadFirstParen);
 			else
 				appendCurrentChar();
 
@@ -1977,10 +1921,10 @@ std::string ASFormatter::nextLine()
 		}
 
 		//GL31
-		bool isDoubleOpenBrackets = isGHCStyle() && currentChar=='[' && peekNextChar() == '[';
+		bool isDoubleOpenBrackets = isGSCStyle() && currentChar=='[' && peekNextChar() == '[';
 		if ((currentChar == '[' || currentChar == ']' ) && (shouldPadBracketsOutside || shouldPadBracketsInside || shouldUnPadBrackets) && !isDoubleOpenBrackets)
 		{
-			padParensOrBrackets('[', ']', shouldPadBracketsOutside, shouldPadBracketsInside, shouldUnPadBrackets, false);
+			padParensOrBrackets('[', ']', false);
 			continue;
 		}
 
@@ -2228,6 +2172,24 @@ void ASFormatter::setMaxCodeLength(int max)
 void ASFormatter::setOperatorPaddingMode(bool state)
 {
 	shouldPadOperators = state;
+}
+
+/**
+ * set negation padding mode.
+ * @param state         the padding mode.
+ */
+void ASFormatter::setNegationPaddingMode(NegationPaddingMode mode)
+{
+	negationPadMode = mode;
+}
+
+/**
+ * set include directive padding mode.
+ * @param state         the padding mode.
+ */
+void ASFormatter::setIncludeDirectivePaddingMode(IncludeDirectivePaddingMode mode)
+{
+	includeDirectivePaddingMode = mode;
 }
 
 /**
@@ -2763,8 +2725,9 @@ bool ASFormatter::getNextChar()
 		        && !isImmediatelyPostComment
 		        && !isImmediatelyPostLineComment
 		        && !isInPreprocessor
-		        && !isSequenceReached("/*")
-		        && !isSequenceReached("//"))
+		        && !isSequenceReached(AS_OPEN_COMMENT)
+				&& !(isGSCStyle() && isSequenceReached(AS_GSC_OPEN_COMMENT))
+		        && !isSequenceReached(AS_OPEN_LINE_COMMENT))
 			previousCommandChar = currentChar;
 	}
 
@@ -2819,6 +2782,13 @@ bool ASFormatter::getNextLine(bool emptyLineWasDeleted /*false*/)
 
 	if (currentLine.length() == 0)
 	{
+		//#574 avoid deletion of empty lines after continuation
+		if (!isInComment && previousNonWSChar == '\\')
+		{
+			isInPreprocessor = true;
+			return false;
+		}
+
 		isInContinuedPreProc = false;
 		currentLine = std::string(" ");        // a null is inserted if this is not done
 	}
@@ -2843,6 +2813,7 @@ bool ASFormatter::getNextLine(bool emptyLineWasDeleted /*false*/)
 	// check if is in preprocessor before line trimming
 	// a blank line after a \ will remove the flag
 	isImmediatelyPostPreprocessor = isInPreprocessor;
+
 	if (!isInComment
 	        && (previousNonWSChar != '\\'
 	            || isEmptyLine(currentLine)))
@@ -2958,14 +2929,14 @@ void ASFormatter::initNewLine()
 	}
 	leadingSpaces = charNum + tabIncrementIn;
 
-	if (isSequenceReached("/*"))
+	if (isSequenceReached(AS_OPEN_COMMENT) || (isGSCStyle() && isSequenceReached(AS_GSC_OPEN_COMMENT)))
 	{
 		doesLineStartComment = true;
 		if ((int) currentLine.length() > charNum + 2
 		        && currentLine.find("*/", charNum + 2) != std::string::npos)
 			lineIsCommentOnly = true;
 	}
-	else if (isSequenceReached("//"))
+	else if (isSequenceReached(AS_OPEN_LINE_COMMENT))
 	{
 		lineIsLineCommentOnly = true;
 	}
@@ -3380,8 +3351,15 @@ bool ASFormatter::isPointerOrReference() const
 		return false;
 
 	if ((foundCastOperator && nextChar == '>')
-	        || isPointerOrReferenceVariable(lastWord))
+	        || isPointerOrReferenceVariable(lastWord)) {
 		return true;
+	}
+
+	if (pointerAlignment == PTR_ALIGN_TYPE
+		&& !shouldPadOperators //TODO 578
+		&& !isPointerOrReferenceVariable(lastWord)) {
+		return false;
+	}
 
 	if (isInClassInitializer
 	        && previousNonWSChar != '('
@@ -3409,6 +3387,7 @@ bool ASFormatter::isPointerOrReference() const
 			return false;
 		return true;
 	}
+
 	if (nextChar == '*'
 	        || previousNonWSChar == '='
 	        || previousNonWSChar == '('
@@ -3418,8 +3397,10 @@ bool ASFormatter::isPointerOrReference() const
 	        || isCharImmediatelyPostTemplate
 	        || currentHeader == &AS_CATCH
 	        || currentHeader == &AS_FOREACH
-	        || currentHeader == &AS_QFOREACH)
+	        || currentHeader == &AS_QFOREACH) {
 		return true;
+	}
+
 
 	if (isBraceType(braceTypeStack->back(), ARRAY_TYPE)
 	        && isLegalNameChar(lastWord[0])
@@ -3442,8 +3423,10 @@ bool ASFormatter::isPointerOrReference() const
 		        && followingOperator != &AS_MULT
 		        && followingOperator != &AS_BIT_AND)
 		{
-			if (followingOperator == &AS_ASSIGN || followingOperator == &AS_COLON)
+			if (followingOperator == &AS_ASSIGN || followingOperator == &AS_COLON) {
 				return true;
+			}
+
 			return false;
 		}
 
@@ -3538,7 +3521,6 @@ bool ASFormatter::isDereferenceOrAddressOf() const
 		return false;
 	}
 
-
 	if (previousNonWSChar == '(' && currentChar == '&' && pointerAlignment == PTR_ALIGN_TYPE) {
 		return true;
 	}
@@ -3569,12 +3551,12 @@ bool ASFormatter::isDereferenceOrAddressOf() const
 	std::string lastWord = getPreviousWord(currentLine, charNum);
 	if (lastWord == "else" || lastWord == "delete")
 		return true;
-	if (isPointerOrReferenceVariable(lastWord))
-		return false;
+
 	bool isDA = (!(isLegalNameChar(previousNonWSChar) || previousNonWSChar == '>')          // TODO GH14
 	             || (nextText.length() > 0 && !isLegalNameChar(nextText[0]) && nextText[0] != '/')
 	             || (ispunct((unsigned char)previousNonWSChar) && previousNonWSChar != '.') // TODO GH14
-	             || isCharImmediatelyPostReturn);
+	             || isCharImmediatelyPostReturn
+	             || !isPointerOrReferenceVariable(lastWord));
 
 	return isDA;
 }
@@ -3634,14 +3616,33 @@ bool ASFormatter::isPointerOrReferenceCentered() const
 bool ASFormatter::isPointerOrReferenceVariable(std::string_view word) const
 {
 	assert(currentChar == '*' || currentChar == '&' || currentChar == '^');
-	bool retval = true;
+	bool retval = false;
 
 	// to avoid problem with multiplications - we need LSP
+	if (currentChar == '*'
+		&& (pointerAlignment == PTR_ALIGN_TYPE || pointerAlignment == PTR_ALIGN_NAME )
+		&& parenthesesCount <= 0) {
+		return false;
+	}
+
 	for (char c: word){
-		if (!isLegalNameChar(c)) {
-			retval = false;
+		if (isLegalNameChar(c)) {
+			retval = true;
 			break;
 		}
+	}
+
+	if (currentChar == '&' &&
+		(currentHeader == &AS_IF
+		|| currentHeader == &AS_ELSE
+		|| currentHeader == &AS_FOR
+		|| currentHeader == &AS_WHILE
+		|| currentHeader == &AS_DO)) {
+		retval = false;
+	}
+
+	if (pointerAlignment == PTR_ALIGN_TYPE) {
+		return retval;
 	}
 
 	// check for C# object type "x is std::string"
@@ -3655,6 +3656,7 @@ bool ASFormatter::isPointerOrReferenceVariable(std::string_view word) const
 		if (prevWord == "is")
 			retval = false;
 	}
+
 	return retval;
 }
 
@@ -4117,18 +4119,21 @@ std::string ASFormatter::peekNextText(std::string_view firstLine,
 void ASFormatter::adjustComments()
 {
 	assert(spacePadNum != 0);
-	assert(isSequenceReached("//") || isSequenceReached("/*"));
+	assert(isSequenceReached(AS_OPEN_LINE_COMMENT) || isSequenceReached(AS_OPEN_COMMENT)  || isSequenceReached(AS_GSC_OPEN_COMMENT));
 
 	// block comment must be closed on this line with nothing after it
-	if (isSequenceReached("/*"))
+	bool isCppComment = isSequenceReached(AS_OPEN_COMMENT);
+	bool isGSCComment = isSequenceReached(AS_GSC_OPEN_COMMENT);
+
+	if (isCppComment || isGSCComment)
 	{
-		size_t endNum = currentLine.find("*/", charNum + 2);
+		size_t endNum = currentLine.find(isCppComment ? AS_CLOSE_COMMENT : AS_GSC_CLOSE_COMMENT, charNum + 2);
 		if (endNum == std::string::npos)
 			return;
 		// following line comments may be a tag from AStyleWx //[[)>
 		size_t nextNum = currentLine.find_first_not_of(" \t", endNum + 2);
 		if (nextNum != std::string::npos
-		        && currentLine.compare(nextNum, 2, "//") != 0)
+		        && currentLine.compare(nextNum, 2, AS_OPEN_LINE_COMMENT) != 0)
 			return;
 	}
 
@@ -4207,17 +4212,16 @@ void ASFormatter::appendCharInsideComments()
  */
 void ASFormatter::padOperators(const std::string* newOperator)
 {
-	assert(shouldPadOperators);
+	assert(shouldPadOperators || negationPadMode != NEGATION_PAD_NO_CHANGE);
 	assert(newOperator != nullptr);
 
 	char nextNonWSChar = ASBase::peekNextChar(currentLine, charNum);
 	std::set<char> allowedChars = {'(', '[', '=', ',', ':', '{'};
 
-// #566
 	bool shouldPad = (newOperator != &AS_SCOPE_RESOLUTION
 	                  && newOperator != &AS_PLUS_PLUS
 	                  && newOperator != &AS_MINUS_MINUS
-	                  && newOperator != &AS_NOT
+	                  && (newOperator != &AS_NOT || negationPadMode != NEGATION_PAD_NO_CHANGE)  // TODO 571
 	                  && newOperator != &AS_BIT_NOT
 	                  && newOperator != &AS_ARROW
 	                  && !(newOperator == &AS_COLON && !foundQuestionMark			// objC methods
@@ -4255,6 +4259,7 @@ void ASFormatter::padOperators(const std::string* newOperator)
 
 	// pad before operator
 	if (shouldPad
+	        && (newOperator != &AS_NOT || (newOperator == &AS_NOT && negationPadMode == NEGATION_PAD_BEFORE ) )
 	        && !(newOperator == &AS_COLON
 	             && (!foundQuestionMark && !isInEnum) && currentHeader != &AS_FOR)
 	        && !(newOperator == &AS_QUESTION && isSharpStyle() // check for C# nullable type (e.g. int?)
@@ -4279,8 +4284,9 @@ void ASFormatter::padOperators(const std::string* newOperator)
 	        && !(peekNextChar() == ',')
 	        && !(newOperator == &AS_QUESTION && isSharpStyle() // check for C# nullable type (e.g. int?)
 	             && peekNextChar() == '[')
-	   )
+	) {
 		appendSpaceAfter();
+	}
 }
 
 /**
@@ -4692,7 +4698,7 @@ void ASFormatter::formatPointerOrReferenceCast()
 	                    ? pa : ((ra == REF_SAME_AS_PTR) ? pa : ra);
 
 	std::string sequenceToInsert(1, currentChar);
-	if (isSequenceReached("**") || isSequenceReached("&&"))
+	if (isSequenceReached("**") || isSequenceReached(AS_AND))
 	{
 		goForward(1);
 		sequenceToInsert.append(1, currentLine[charNum]);
@@ -4747,7 +4753,7 @@ void ASFormatter::formatPointerOrReferenceCast()
  * the parens and necessary padding will be appended to formattedLine
  * the calling function should have a continue statement after calling this method
  */
-void ASFormatter::padParensOrBrackets(char openDelim, char closeDelim, bool shouldPadParensOutside, bool shouldPadParensInside, bool shouldUnPadParens, bool shouldPadFirstParen)
+void ASFormatter::padParensOrBrackets(char openDelim, char closeDelim, bool padFirstParen)
 {
 	assert(currentChar == openDelim || currentChar == closeDelim);
 
@@ -4832,7 +4838,7 @@ void ASFormatter::padParensOrBrackets(char openDelim, char closeDelim, bool shou
 
 		// pad open paren outside
 		char peekedCharOutside = peekNextChar();
-		if (shouldPadFirstParen && ( (previousChar != openDelim && peekedCharOutside != closeDelim)  || shouldPadEmptyParens ) )
+		if (padFirstParen && ( (previousChar != openDelim && peekedCharOutside != closeDelim)  || shouldPadEmptyParens ) )
 			appendSpacePad();
 		else if (shouldPadParensOutside)
 		{
@@ -5843,6 +5849,62 @@ void ASFormatter::processPreprocessor()
 		isInPreprocessorDefineDef = true;
 
 
+	//https://sourceforge.net/p/astyle/tickets/117/
+	const size_t preprocPos = currentLine.find_first_not_of(" \t", charNum + 1);
+
+	if (includeDirectivePaddingMode != INCLUDE_PAD_NO_CHANGE
+		&& currentLine.compare(preprocPos, 7, "include") == 0) {
+		size_t firstChar = currentLine.find_first_not_of(" \t", preprocPos + 7);
+		if (firstChar != std::string::npos) {
+			currentLine.erase (preprocPos + 7, firstChar - (preprocPos + 7));
+		}
+
+		if (includeDirectivePaddingMode == INCLUDE_PAD_AFTER && (currentLine[preprocPos+7]=='<' || currentLine[preprocPos+7]=='"')) {
+			currentLine.insert(preprocPos+7, 1, ' ');
+		}
+	}
+
+	// if top level it is potentially indentable
+	if (shouldIndentPreprocBlock
+		&& (isBraceType(braceTypeStack->back(), NULL_TYPE)
+		|| isBraceType(braceTypeStack->back(), NAMESPACE_TYPE)
+
+		/* #521 enables preprocessor indent within { ... } block, but disables indent of code between #ifdefs  */
+		//|| getFileType() == C_TYPE
+		)
+		&& !foundClassHeader
+		&& !isInClassInitializer
+		&& sourceIterator->tellg() > preprocBlockEnd)
+	{
+		std::string preproc = ASBeautifier::extractPreprocessorStatement(currentLine);
+
+		// indent the #if preprocessor blocks
+		if (preproc.length() >= 2 && preproc.substr(0, 2) == "if") // #if, #ifdef, #ifndef
+		{
+			if (isImmediatelyPostPreprocessor)
+				breakLine();
+			isIndentablePreprocessorBlck = isIndentablePreprocessorBlock(currentLine, charNum);
+			isIndentablePreprocessor = isIndentablePreprocessorBlck;
+		}
+	}
+
+	if (isIndentablePreprocessorBlck
+		&& charNum < (int) currentLine.length() - 1
+		&& isWhiteSpace(currentLine[charNum + 1]))
+	{
+		size_t nextText = currentLine.find_first_not_of(" \t", charNum + 1);
+		if (nextText != std::string::npos) {
+			//std::cerr << "erase 2 " << currentLine<<"\n";
+			currentLine.erase(charNum + 1, nextText - charNum - 1);
+			//std::cerr << "erase 3 " << currentLine<<"\n";
+		}
+
+	}
+
+	if (isIndentablePreprocessorBlck
+		&& sourceIterator->tellg() >= preprocBlockEnd)
+		isIndentablePreprocessorBlck = false;
+	//  need to fall thru here to reset the variables
 }
 
 /**
@@ -6018,7 +6080,7 @@ void ASFormatter::formatCommentBody()
 	while (charNum < (int) currentLine.length())
 	{
 		currentChar = currentLine[charNum];
-		if (isSequenceReached("*/"))
+		if (isSequenceReached(AS_CLOSE_COMMENT) || (isGSCStyle() && isSequenceReached(AS_GSC_CLOSE_COMMENT)) )
 		{
 			formatCommentCloser();
 			break;
@@ -6039,7 +6101,9 @@ void ASFormatter::formatCommentBody()
  */
 void ASFormatter::formatCommentOpener()
 {
-	assert(isSequenceReached("/*"));
+	assert(isSequenceReached(AS_OPEN_COMMENT) || isSequenceReached(AS_GSC_OPEN_COMMENT));
+
+	bool isCppComment = isSequenceReached(AS_OPEN_COMMENT);
 
 	isInComment = isInCommentStartLine = true;
 	isImmediatelyPostLineComment = false;
@@ -6104,7 +6168,7 @@ void ASFormatter::formatCommentOpener()
 		caseHeaderFollowsComments = true;
 
 	// appendSequence will write the previous line
-	appendSequence(AS_OPEN_COMMENT);
+	appendSequence(isCppComment ? AS_OPEN_COMMENT : AS_GSC_OPEN_COMMENT);
 	goForward(1);
 
 	// must be done AFTER appendSequence
@@ -6136,11 +6200,11 @@ void ASFormatter::formatCommentOpener()
  */
 void ASFormatter::formatCommentCloser()
 {
-	assert(isSequenceReached("*/"));
+	assert(isSequenceReached(AS_CLOSE_COMMENT) || (isGSCStyle() && isSequenceReached(AS_GSC_CLOSE_COMMENT)) );
 	isInComment = false;
 	noTrimCommentContinuation = false;
 	isImmediatelyPostComment = true;
-	appendSequence(AS_CLOSE_COMMENT);
+	appendSequence(isSequenceReached(AS_CLOSE_COMMENT) ? AS_CLOSE_COMMENT : AS_GSC_CLOSE_COMMENT);
 	goForward(1);
 	if (doesLineStartComment
 	        && (currentLine.find_first_not_of(" \t", charNum + 1) == std::string::npos))
@@ -6192,7 +6256,7 @@ void ASFormatter::formatLineCommentBody()
  */
 void ASFormatter::formatLineCommentOpener()
 {
-	assert(isSequenceReached("//"));
+	assert(isSequenceReached(AS_OPEN_LINE_COMMENT));
 
 	if ((int) currentLine.length() > charNum + 2
 	        && currentLine[charNum + 2] == '\xf2')     // check for windows line marker

@@ -7,7 +7,8 @@
 // headers
 //-----------------------------------------------------------------------------
 
-#include "astyle/astyle.h"
+
+#include "astyle/ASStreamIterator.h"
 #include <algorithm>
 
 //-----------------------------------------------------------------------------
@@ -102,6 +103,9 @@ const std::string ASResource::AS_CLOSE_BRACE = std::string("}");
 const std::string ASResource::AS_OPEN_LINE_COMMENT = std::string("//");
 const std::string ASResource::AS_OPEN_COMMENT = std::string("/*");
 const std::string ASResource::AS_CLOSE_COMMENT = std::string("*/");
+
+const std::string ASResource::AS_GSC_OPEN_COMMENT = std::string("/#");
+const std::string ASResource::AS_GSC_CLOSE_COMMENT = std::string("#/");
 
 const std::string ASResource::AS_ASSIGN = std::string("=");
 const std::string ASResource::AS_PLUS_ASSIGN = std::string("+=");
