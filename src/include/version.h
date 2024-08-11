@@ -31,12 +31,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 #define HIGHLIGHT_MAJOR "4"
-#define HIGHLIGHT_MINOR "12"
+#define HIGHLIGHT_MINOR "13"
 
-#define HIGHLIGHT_VERSION  HIGHLIGHT_MAJOR "." HIGHLIGHT_MINOR
-
-#define HIGHLIGHT_URL "http://www.andre-simon.de/"
-#define HIGHLIGHT_EMAIL "a.simon@mailbox.org"
 
 namespace highlight
 {
@@ -46,15 +42,15 @@ class Info
 public:
 
     static std::string getVersion() {
-        return HIGHLIGHT_VERSION;
+        return HIGHLIGHT_MAJOR "." HIGHLIGHT_MINOR;
     }
 
     static std::string getWebsite() {
-        return HIGHLIGHT_URL;
+        return "http://andre-simon.de/";
     }
 
     static std::string getEmail() {
-        return HIGHLIGHT_EMAIL;
+        return "a.simon@mailbox.org";
     }
 };
 

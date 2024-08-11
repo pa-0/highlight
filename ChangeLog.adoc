@@ -6,6 +6,19 @@
 :toc: left
 :toclevels: 1
 
+
+== highlight 4.13
+
+11.08.2024
+
+ - updated astyle lib to version 3.6
+ - added Gleam and V definitions
+ - added Meson and CMake build files (https://gitlab.com/saalen/highlight/-/issues/232)
+ - improved LSP compatibility with bash-language-server and haskell-language-server
+ - applied several clang-tidy modernize fixes
+ - GUI: refactored settings retore code
+
+
 == highlight 4.12
 
 22.05.2024

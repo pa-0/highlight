@@ -54,7 +54,7 @@ lsDelay(0), oldThemeIndex(0), getDataFromCP(false), runFirstTime(true)
 {
 
     ui->setupUi(this);
-    this->setWindowTitle(QString("Highlight %1").arg( HIGHLIGHT_VERSION));
+    this->setWindowTitle(QString("Highlight %1").arg(QString::fromStdString( highlight::Info::getVersion())));
 
     // Read file open filter
     QFile  filterDef(getDistFileFilterPath());
