@@ -25,9 +25,9 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <sstream>
 
 #include "xterm256generator.h"

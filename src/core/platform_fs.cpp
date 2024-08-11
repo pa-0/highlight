@@ -24,8 +24,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #include <windows.h>
 #include <sys/stat.h>
 #else
+#include <cerrno>
 #include <dirent.h>
-#include <errno.h>
 #include <sys/stat.h>
 #ifdef __VMS
 #include <unixlib.h>
@@ -38,8 +38,8 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <algorithm>
+#include <cerrno>
 #include <iostream>
-#include <errno.h>
 
 #ifdef _WIN32
 
@@ -47,10 +47,10 @@ along with Highlight.  If not, see <http://www.gnu.org/licenses/>.
 
 #else
 
-#include <unistd.h>
-#include <sys/types.h>
+#include <cstring>
 #include <pwd.h>
-#include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #endif
 
