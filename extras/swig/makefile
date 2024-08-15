@@ -1,6 +1,6 @@
 
 CXX=g++
-CFLAGS=-g -O2 -fPIC
+CFLAGS=-g -O2 -fPIC -std=c++17
 
 HL_INC=../../src/include/
 HL_SRC=../../src/
@@ -17,17 +17,17 @@ lib-stamp:
 	touch $@
 
 python: lib-stamp
-	swig -c++ -python -o highlight_wrap.cpp  highlight.i
+	swig -c++ -std=c++17 -python -o highlight_wrap.cpp  highlight.i
 	${CXX} ${CFLAGS} -c highlight_wrap.cpp ${LUA_CFLAGS} ${PYTHON_CFLAGS} -I${HL_INC}
 	${CXX} -shared -s highlight_wrap.o  -L${HL_SRC} -lhighlight ${LUA_LIBS} -lpython2.7 -o _highlight.so
 
 perl: lib-stamp
-	swig -c++ -perl -o highlight_wrap.cpp  highlight.i
+	swig -c++ -std=c++17 -perl -o highlight_wrap.cpp  highlight.i
 	${CXX} ${CFLAGS} -c highlight_wrap.cpp ${LUA_CFLAGS} ${PERL_INC} -I${HL_INC}
 	${CXX} -shared -s highlight_wrap.o  -L${HL_SRC} -lhighlight ${LUA_LIBS} -o highlight.so
 
 php: lib-stamp
-	swig -c++ -php -o highlight_wrap.cpp highlight.i
+	swig -c++ -std=c++17 -php -o highlight_wrap.cpp highlight.i
 	${CXX} ${CFLAGS} -c highlight_wrap.cpp ${LUA_CFLAGS} ${PHP_INC} -I${HL_INC}
 	${CXX} -shared -s highlight_wrap.o -L${HL_SRC} -lhighlight ${LUA_LIBS} -o highlight.so
 
