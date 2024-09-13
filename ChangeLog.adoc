@@ -11,7 +11,9 @@
 
 19.08.2024
 
+ - updated astyle lib to version 3.6.2
  - fixed SWIG lib compilation (https://gitlab.com/saalen/highlight/-/issues/247)
+ - updated Terraform file suffix list (https://gitlab.com/saalen/highlight/-/issues/250)
 
 
 == highlight 4.13

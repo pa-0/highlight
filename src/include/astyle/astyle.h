@@ -1,5 +1,5 @@
 // astyle.h
-// Copyright (c) 2023 The Artistic Style Authors.
+// Copyright (c) 2024 The Artistic Style Authors.
 // This code is licensed under the MIT License.
 // License.md describes the conditions under which this software may be distributed.
 
@@ -10,15 +10,10 @@
 // headers
 //-----------------------------------------------------------------------------
 
-#ifdef __VMS
-	#define __USE_STD_IOSTREAM 1
-	#include <assert>
-#else
-	#include <cassert>
-#endif
+#include <cassert>
 
 #include <cctype>
-#include <iostream>		// for cout
+#include <iostream>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -28,36 +23,7 @@
 	#include <cstring>              // need both string and cstring for GCC
 #endif
 
-//-----------------------------------------------------------------------------
-// declarations
-//-----------------------------------------------------------------------------
-
-#ifdef _MSC_VER
-	#pragma warning(disable: 4267)  // conversion from size_t to int
-#endif
-
-#ifdef __BORLANDC__
-	#pragma warn -8004	            // variable is assigned a value that is never used
-#endif
-
-#ifdef __GNUC__
-	#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-
-#ifdef __INTEL_COMPILER
-	// #pragma warning disable 383  // value copied to temporary, reference to temporary used
-	// #pragma warning disable 981  // operands are evaluated in unspecified order
-#endif
-
-#ifdef __clang__
-	#pragma clang diagnostic ignored "-Wshorten-64-to-32"
-#endif
-
-#define ASTYLE_VERSION "3.6"
-
-//-----------------------------------------------------------------------------
-// astyle namespace
-//-----------------------------------------------------------------------------
+#define ASTYLE_VERSION "3.6.2"
 
 namespace astyle {
 
@@ -244,17 +210,17 @@ public:
 class ASResource
 {
 public:
-	void buildAssignmentOperators(std::vector<const std::string*>* assignmentOperators);
-	void buildCastOperators(std::vector<const std::string*>* castOperators);
-	void buildHeaders(std::vector<const std::string*>* headers, int fileType, bool beautifier = false);
-	void buildIndentableMacros(std::vector<const std::pair<const std::string, const std::string>* >* indentableMacros);
-	void buildIndentableHeaders(std::vector<const std::string*>* indentableHeaders);
-	void buildNonAssignmentOperators(std::vector<const std::string*>* nonAssignmentOperators);
-	void buildNonParenHeaders(std::vector<const std::string*>* nonParenHeaders, int fileType, bool beautifier = false);
-	void buildOperators(std::vector<const std::string*>* operators, int fileType);
-	void buildPreBlockStatements(std::vector<const std::string*>* preBlockStatements, int fileType);
-	void buildPreCommandHeaders(std::vector<const std::string*>* preCommandHeaders, int fileType);
-	void buildPreDefinitionHeaders(std::vector<const std::string*>* preDefinitionHeaders, int fileType);
+	static void buildAssignmentOperators(std::vector<const std::string*>* assignmentOperators);
+	static void buildCastOperators(std::vector<const std::string*>* castOperators);
+	static void buildHeaders(std::vector<const std::string*>* headers, int fileType, bool beautifier = false);
+	static void buildIndentableMacros(std::vector<const std::pair<const std::string, const std::string>* >* indentableMacros);
+	static void buildIndentableHeaders(std::vector<const std::string*>* indentableHeaders);
+	static void buildNonAssignmentOperators(std::vector<const std::string*>* nonAssignmentOperators);
+	static void buildNonParenHeaders(std::vector<const std::string*>* nonParenHeaders, int fileType, bool beautifier = false);
+	static void buildOperators(std::vector<const std::string*>* operators, int fileType);
+	static void buildPreBlockStatements(std::vector<const std::string*>* preBlockStatements, int fileType);
+	static void buildPreCommandHeaders(std::vector<const std::string*>* preCommandHeaders, int fileType);
+	static void buildPreDefinitionHeaders(std::vector<const std::string*>* preDefinitionHeaders, int fileType);
 
 public:
 	static const std::string AS_IF, AS_ELSE;
@@ -307,7 +273,7 @@ public:
 // Functions definitions are at the end of ASResource.cpp.
 //-----------------------------------------------------------------------------
 
-class ASBase : protected ASResource
+class ASBase
 {
 private:
 	// all variables should be set by the "init" function
