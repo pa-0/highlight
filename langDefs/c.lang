@@ -82,5 +82,10 @@ function OnStateChange(oldState, newState, token)
     return HL_NUMBER
   end
 
+  --resolve issue with raw string delimiters: cout << (uint8_t*)"1";
+  if token==")\"" and oldState ~= HL_STRING then
+    return HL_REJECT
+  end
+
   return newState
 end
